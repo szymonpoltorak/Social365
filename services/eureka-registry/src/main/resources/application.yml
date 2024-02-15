@@ -1,1 +1,5 @@
-
+spring:
+    application:
+        name: eureka-registry
+    config:
+        import: optional:configserver:http://localhost:8888
