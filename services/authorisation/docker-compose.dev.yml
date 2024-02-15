@@ -37,8 +37,10 @@ services:
             - '8081:8080'
         healthcheck:
             test: "curl -f http://localhost:8080/admin || exit 1"
-        volumes:
-            - "./keycloak-theme/themes/social365/:/opt/keycloak/themes/social365/"
+            interval: 1s
+            retries: 30
+            start_period: 15s
+            timeout: 5s
 
     social365-keycloak-postgres:
         container_name: social365-keycloak-postgres
@@ -51,3 +53,7 @@ services:
             - "5001:5432"
         healthcheck:
             test: "pg_isready -U keycloak"
+            interval: 1s
+            retries: 30
+            start_period: 15s
+            timeout: 5s
