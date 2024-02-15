@@ -1,4 +1,4 @@
-package keycloakinitializer.realm.corn;
+package keycloakinitializer.realm.social365;
 
 import keycloakinitializer.ExternalConfig;
 import org.keycloak.representations.idm.RealmRepresentation;
@@ -15,6 +15,11 @@ public class Social365Realm extends RealmRepresentation {
         setClients(List.of(new Social365Client()));
         setIdentityProviders(ExternalConfig.getIdentityProviders());
         setPasswordPolicy(buildPasswordPolicy());
+        setRevokeRefreshToken(true);
+        setDisplayName(REALM_NAME);
+        setRememberMe(true);
+        setBruteForceProtected(true);
+        setDefaultSignatureAlgorithm("ES512");
 
         if(ExternalConfig.KCCFG_LOGIN_THEME_NAME != null) {
             setLoginTheme(ExternalConfig.KCCFG_LOGIN_THEME_NAME);
@@ -22,12 +27,12 @@ public class Social365Realm extends RealmRepresentation {
     }
 
     private String buildPasswordPolicy() {
-        String length = "8";
-        String digits = "1";
-        String specialChars = "1";
-        String upperCase = "1";
-        String lowerCase = "1";
-        String notUsername = "1";
+        String length = "length(8)";
+        String digits = "digits(1)";
+        String specialChars = "specialChars(1)";
+        String upperCase = "upperCase(1)";
+        String lowerCase = "lowerCase(1)";
+        String notUsername = "notUsername(1)";
 
         return String.format("%s and %s and %s and %s and %s and %s",
                 length, digits, specialChars, upperCase, lowerCase, notUsername);

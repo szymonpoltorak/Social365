@@ -1,6 +1,6 @@
 package keycloakinitializer;
 
-import keycloakinitializer.realm.corn.Social365Realm;
+import keycloakinitializer.realm.social365.Social365Realm;
 import org.keycloak.admin.client.Keycloak;
 
 public class Main {

@@ -1,4 +1,4 @@
-package keycloakinitializer.realm.corn;
+package keycloakinitializer.realm.social365;
 
 import org.keycloak.representations.idm.ClientRepresentation;
 
