@@ -12,7 +12,6 @@ services:
                 condition: service_healthy
         environment:
             - KCCFG_OVERRIDE_EXISTING=false
-#            - KCCFG_LOGIN_THEME_NAME=social365
             - KC_SERVER_URL=http://social365-keycloak:8080
 
     social365-keycloak:
