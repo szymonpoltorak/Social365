@@ -1,19 +1,19 @@
 version: "3.8"
 
 services:
-    eureka-server:
-        container_name: eureka-server
-        image: eureka-server
+    api-gateway:
+        container_name: api-gateway
+        image: api-gateway
         build:
             context: .
             dockerfile: Dockerfile.prod
         env_file:
             - ../../envs/ports.env
         healthcheck:
-            test: "curl -f http://localhost:${EUREKA_REGISTRY_PORT}/actuator/health || exit 1"
+            test: "curl -f http://localhost:${API_GATEWAY_PORT}/actuator/health || exit 1"
             interval: 1s
             retries: 30
             start_period: 15s
             timeout: 5s
         ports:
-            - "${EUREKA_REGISTRY_PORT}:${EUREKA_REGISTRY_PORT}"
+            - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"

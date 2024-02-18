@@ -1,5 +1,5 @@
 server:
-    port: 8761
+    port: ${EUREKA_REGISTRY_PORT}
 
     http2:
         enabled: true

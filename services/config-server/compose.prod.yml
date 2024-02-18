@@ -7,11 +7,13 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.prod
+        env_file:
+            -   ../../envs/ports.env
         healthcheck:
-            test: "curl -f http://localhost:8888/actuator/health || exit 1"
+            test: "curl -f http://localhost:${CONFIG_SERVER_PORT}/actuator/health || exit 1"
             interval: 1s
             retries: 30
             start_period: 15s
             timeout: 5s
         ports:
-            - "8888:8888"
+            - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"

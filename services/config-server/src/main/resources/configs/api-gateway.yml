@@ -1,5 +1,5 @@
 server:
-    port: 8222
+    port: ${API_GATEWAY_PORT}
 
     http2:
         enabled: true
