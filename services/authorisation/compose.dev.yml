@@ -3,6 +3,8 @@ version: "3.8"
 services:
     social365-keycloak-initializer:
         container_name: social365-keycloak-initializer
+        env_file:
+            -   .env
         image: social365-keycloak-initializer
         build:
             context: keycloak-initializer
@@ -12,8 +14,6 @@ services:
                 condition: service_healthy
         environment:
             - KCCFG_OVERRIDE_EXISTING=true
-            - KCCFG_LOGIN_THEME_NAME=social365
-            - KC_SERVER_URL=http://social365-keycloak:8080
         volumes:
             - "./keycloak-initializer:/keycloak-initializer"
             - "./.cache/keycloak-initializer/.gradle:/keycloak-initializer/.gradle"
@@ -25,13 +25,8 @@ services:
         depends_on:
             social365-keycloak-postgres:
                 condition: service_healthy
-        environment:
-            - KC_DB=postgres
-            - KC_DB_URL=jdbc:postgresql://social365-keycloak-postgres:5432/keycloak
-            - KEYCLOAK_ADMIN=admin
-            - KEYCLOAK_ADMIN_PASSWORD=admin
-            - KC_DB_USERNAME=keycloak
-            - KC_DB_PASSWORD=none
+        env_file:
+            - .env
         command: start-dev
         ports:
             - '8081:8080'
@@ -45,10 +40,8 @@ services:
     social365-keycloak-postgres:
         container_name: social365-keycloak-postgres
         image: postgres:alpine
-        environment:
-            - POSTGRES_DB=keycloak
-            - POSTGRES_USER=keycloak
-            - POSTGRES_PASSWORD=none
+        env_file:
+            - .env
         ports:
             - "5001:5432"
         healthcheck:
