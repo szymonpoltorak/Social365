@@ -1,0 +1,11 @@
+services:
+    reverse-proxy:
+        container_name: reverse-proxy
+        image: reverse-proxy
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        ports:
+            - "80:80"
+        networks:
+            - social365-network

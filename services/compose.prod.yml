@@ -9,6 +9,8 @@ include:
             - ./authorization/compose.prod.yml
     -   path:
             - ./eureka-registry/compose.prod.yml
+    -   path:
+            - ./reverse-proxy/compose.prod.yml
 
 services: {}
 
