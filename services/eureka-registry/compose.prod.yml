@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    eureka-server:
+        container_name: eureka-server
+        image: eureka-server
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        healthcheck:
+            test: "curl -f http://localhost:8761/actuator/health || exit 1"
+            interval: 1s
+            retries: 30
+            start_period: 15s
+            timeout: 5s
+        ports:
+            - "8761:8761"
