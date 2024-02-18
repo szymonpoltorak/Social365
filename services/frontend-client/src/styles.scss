@@ -1,3 +1,4 @@
+
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
@@ -20,11 +21,11 @@ $frontend-client-warn: mat.define-palette(mat.$red-palette);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $frontend-client-theme: mat.define-light-theme((
-        color: (
-                primary: $frontend-client-primary,
-                accent: $frontend-client-accent,
-                warn: $frontend-client-warn,
-        )
+  color: (
+    primary: $frontend-client-primary,
+    accent: $frontend-client-accent,
+    warn: $frontend-client-warn,
+  )
 ));
 
 // Include theme styles for core and each component used in your app.
@@ -34,11 +35,5 @@ $frontend-client-theme: mat.define-light-theme((
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
