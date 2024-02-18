@@ -1,0 +1,29 @@
+server:
+    port: ${API_GATEWAY_PORT}
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+eureka:
+    client:
+        register-with-eureka: false
+
+spring:
+    application:
+        name: api-gateway
+
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                    enabled: true
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0

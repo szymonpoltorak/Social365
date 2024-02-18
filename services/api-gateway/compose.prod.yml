@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+    api-gateway:
+        container_name: api-gateway
+        image: api-gateway
+        depends_on:
+            eureka-registry:
+                condition: service_started
+            config-server:
+                condition: service_started
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        env_file: .env
+        ports:
+            - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
+        networks:
+            - social365-network

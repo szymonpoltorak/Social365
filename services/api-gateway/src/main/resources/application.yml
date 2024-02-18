@@ -1,0 +1,5 @@
+spring:
+    application:
+        name: api-gateway
+    config:
+        import: optional:configserver:http://${CONFIG_HOSTNAME}:${CONFIG_SERVER_PORT}

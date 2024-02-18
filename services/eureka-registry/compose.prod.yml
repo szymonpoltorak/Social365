@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+    eureka-registry:
+        container_name: eureka-registry
+        image: eureka-registry
+        hostname: eureka-registry
+        depends_on:
+            config-server:
+                condition: service_started
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        env_file: .env
+        ports:
+            - "${EUREKA_REGISTRY_PORT}:${EUREKA_REGISTRY_PORT}"
+        networks:
+            - social365-network

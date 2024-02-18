@@ -6,18 +6,15 @@ services:
         image: social365-keycloak-initializer
         build:
             context: keycloak-initializer
-            dockerfile: Dockerfile.dev
+            dockerfile: Dockerfile.prod
         depends_on:
             social365-keycloak:
                 condition: service_healthy
+        env_file: .env
         environment:
-            - KCCFG_OVERRIDE_EXISTING=true
-            - KCCFG_LOGIN_THEME_NAME=social365
-            - KC_SERVER_URL=http://social365-keycloak:8080
-        volumes:
-            - "./keycloak-initializer:/keycloak-initializer"
-            - "./.cache/keycloak-initializer/.gradle:/keycloak-initializer/.gradle"
-            - "./.cache/keycloak-initializer/build:/keycloak-initializer/build"
+            - KCCFG_OVERRIDE_EXISTING=false
+        networks:
+            - social365-network
 
     social365-keycloak:
         container_name: social365-keycloak
@@ -25,35 +22,30 @@ services:
         depends_on:
             social365-keycloak-postgres:
                 condition: service_healthy
-        environment:
-            - KC_DB=postgres
-            - KC_DB_URL=jdbc:postgresql://social365-keycloak-postgres:5432/keycloak
-            - KEYCLOAK_ADMIN=admin
-            - KEYCLOAK_ADMIN_PASSWORD=admin
-            - KC_DB_USERNAME=keycloak
-            - KC_DB_PASSWORD=none
+        env_file: .env
         command: start-dev
         ports:
-            - '8081:8080'
+            - "${KEYCLOAK_PORT}:${KEYCLOAK_PORT}"
         healthcheck:
-            test: "curl -f http://localhost:8080/admin || exit 1"
+            test: "curl -f http://localhost:${KEYCLOAK_PORT}/admin || exit 1"
             interval: 1s
             retries: 30
             start_period: 15s
             timeout: 5s
+        networks:
+            - social365-network
 
     social365-keycloak-postgres:
         container_name: social365-keycloak-postgres
         image: postgres:alpine
-        environment:
-            - POSTGRES_DB=keycloak
-            - POSTGRES_USER=keycloak
-            - POSTGRES_PASSWORD=none
+        env_file: .env
         ports:
-            - "5001:5432"
+            - "${KEYCLOAK_POSTGRES_PORT}:${POSTGRES_PORT}"
         healthcheck:
             test: "pg_isready -U keycloak"
             interval: 1s
             retries: 30
             start_period: 15s
             timeout: 5s
+        networks:
+            - social365-network
