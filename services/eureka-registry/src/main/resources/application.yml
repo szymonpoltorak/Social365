@@ -1,5 +1,24 @@
 spring:
     application:
         name: eureka-registry
-    config:
-        import: optional:configserver:http://localhost:8888
+
+server:
+    port: ${EUREKA_REGISTRY_PORT}
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+eureka:
+    instance:
+        hostname: ${EUREKA_HOSTNAME}
+
+    client:
+        register-with-eureka: false
+        fetch-registry: false
+        service-url:
+            defaultZone: http://${EUREKA_HOSTNAME}:${EUREKA_REGISTRY_PORT}/eureka/

@@ -3,8 +3,7 @@ version: "3.8"
 services:
     social365-keycloak-initializer:
         container_name: social365-keycloak-initializer
-        env_file:
-            - ../../envs/keycloak.env
+        env_file: .env
         image: social365-keycloak-initializer
         build:
             context: keycloak-initializer
@@ -25,9 +24,7 @@ services:
         depends_on:
             social365-keycloak-postgres:
                 condition: service_healthy
-        env_file:
-            - ../../envs/keycloak.env
-            - ../../envs/ports.env
+        env_file: .env
         command: start-dev
         ports:
             - '8081:8080'
@@ -41,9 +38,7 @@ services:
     social365-keycloak-postgres:
         container_name: social365-keycloak-postgres
         image: postgres:alpine
-        env_file:
-            - ../../envs/keycloak.env
-            - ../../envs/ports.env
+        env_file: .env
         ports:
             - "5001:${POSTGRES_PORT}"
         healthcheck:

@@ -4,16 +4,16 @@ services:
     api-gateway:
         container_name: api-gateway
         image: api-gateway
+        depends_on:
+            eureka-registry:
+                condition: service_started
+            config-server:
+                condition: service_started
         build:
             context: .
             dockerfile: Dockerfile.prod
-        env_file:
-            - ../../envs/ports.env
-        healthcheck:
-            test: "curl -f http://localhost:${API_GATEWAY_PORT}/actuator/health || exit 1"
-            interval: 1s
-            retries: 30
-            start_period: 15s
-            timeout: 5s
+        env_file: .env
         ports:
             - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
+        networks:
+            - social365-network

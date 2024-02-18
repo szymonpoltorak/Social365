@@ -9,6 +9,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
 
+
 spring:
     profiles:
         active: native
@@ -19,3 +20,8 @@ spring:
             server:
                 native:
                     search-locations: classpath:/configs
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health
