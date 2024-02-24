@@ -4,6 +4,8 @@ export const content = [
     "./src/**/*.{html,ts}",
 ];
 
-export const theme = {};
+export const theme = {
+    extend: {}
+};
 
 export const plugins = [];
