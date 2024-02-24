@@ -5,7 +5,7 @@ import org.keycloak.representations.idm.RealmRepresentation;
 
 import java.util.List;
 
-public class Social365Realm extends RealmRepresentation {
+public final class Social365Realm extends RealmRepresentation {
     private static final String REALM_NAME = "Social365";
 
     public Social365Realm() {

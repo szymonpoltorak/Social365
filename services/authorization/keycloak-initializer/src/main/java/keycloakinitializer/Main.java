@@ -3,7 +3,9 @@ package keycloakinitializer;
 import keycloakinitializer.realm.social365.Social365Realm;
 import org.keycloak.admin.client.Keycloak;
 
-public class Main {
+public final class Main {
+    private Main() {
+    }
 
     public static void main(String[] args) {
         Keycloak admin = ExternalConfig.getAdmin();
@@ -25,5 +27,4 @@ public class Main {
                         () -> admin.realms().create(realm)
                 );
     }
-
 }
