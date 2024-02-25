@@ -1,21 +1,26 @@
-<div class="grid grid-cols-2 grid-rows-1 justify-center">
-    <div class="flex justify-center h-screen items-center">
-        <h1>Social365</h1>
+<div class="ms:flex ms:flex-col ms:items-center md:grid md:grid-cols-2 md:grid-rows-1 justify-center overflow-y-hidden ms:h-screen">
+    <div class="flex justify-center items-center">
+        <h1 class="hover:cursor-default text-6xl font-bold">Social<span class="text-primary">365</span></h1>
     </div>
 
-    <div class="flex justify-center flex-col h-screen items-center">
-        <button mat-raised-button color="primary">Login</button>
+    <div class="flex justify-center flex-col m-8 md:h-screen">
+        <h1 class="text-4xl font-bold">Connections made easier</h1>
 
-        <div></div>
+        <h1 class="font-extralight mb-6">Don't wait just join us!</h1>
 
-        <button mat-raised-button color="accent">Register</button>
+        <button class="mb-5 home-page-button" mat-fab extended color="primary">
+            Login
+        </button>
 
-        <div></div>
+        <button class="mb-3 home-page-button" mat-fab extended color="primary">
+            Register
+        </button>
 
-        <button mat-raised-button color="warn">Register</button>
-
-        <mat-card>
-            <mat-card-header>Hello World</mat-card-header>
-        </mat-card>
+        <p class="font-extralight text-xs">
+            By signing up, you agree to the
+            <span matTooltip="Check terms of service policy" class="link">Terms of Service</span>
+            and <span matTooltip="Check privacy policy" class="link">Privacy Policy</span>,
+            including <span matTooltip="Check cookie use policy" class="link">Cookie Use</span>.
+        </p>
     </div>
 </div>

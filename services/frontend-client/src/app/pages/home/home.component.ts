@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
-import { MatButton } from "@angular/material/button";
-import { MatCard, MatCardHeader } from "@angular/material/card";
+import { MatButton, MatFabButton } from "@angular/material/button";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
+    selector: 'app-home',
+    standalone: true,
     imports: [
         MatButton,
-        MatCard,
-        MatCardHeader
+        MatFabButton,
+        MatTooltip
     ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 

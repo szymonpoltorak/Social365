@@ -54,5 +54,6 @@ $dark-background: map-merge($dark-background, (
     raised-button: map-get($map: $dark-color-settings, $key: container-background-color),
 ));
 $dark-theme: replace-color($dark-theme, #424242, map-get($map: $dark-color-settings, $key: container-background-color));
+$dark-theme: replace-color($dark-theme, #616161, map-get($map: $dark-color-settings, $key: container-background-color));
 
 @include mat.all-component-themes($dark-theme);
