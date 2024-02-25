@@ -8,8 +8,18 @@ export const routes: Routes = [
             .then(m => m.HomeComponent)
     },
     {
+        path: RouterPaths.FEED,
+        loadComponent: () => import("./pages/feed/feed.component")
+            .then(m => m.FeedComponent)
+    },
+    {
         path: RouterPaths.CURRENT_PATH,
-        redirectTo: RouterPaths.HOME,
+        redirectTo: RouterPaths.HOME_DIRECT,
+        pathMatch: 'full'
+    },
+    {
+        path: RouterPaths.UNKNOWN_PATH,
+        redirectTo: RouterPaths.HOME_DIRECT,
         pathMatch: 'full'
     }
 ];
