@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButton, MatFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
     selector: 'app-home',
@@ -8,7 +9,8 @@ import { MatTooltip } from "@angular/material/tooltip";
     imports: [
         MatButton,
         MatFabButton,
-        MatTooltip
+        MatTooltip,
+        MatIcon
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
