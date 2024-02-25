@@ -1,0 +1,69 @@
+<div class="bg-secondary w-full h-fit top-0 flex p-3 items-center">
+    <h1 class="hover:cursor-pointer text-xl font-bold"
+        matTooltip="Get back to the feed"
+        routerLink="/feed">
+        Social<span class="text-primary">365</span>
+    </h1>
+
+    <span class="flex flex-grow flex-shrink flex-auto"></span>
+
+    <form>
+        <div class="flex items-center bg-tertiary p-1.5 rounded-md w-96">
+            <mat-icon>search</mat-icon>
+
+            <input matInput
+                   type="text"
+                   class="ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none w-96"
+                   aria-label="Search Social365"
+                   [formControl]="searchSocialControl"
+                   [matAutocomplete]="auto"
+                   placeholder="Your friend name">
+        </div>
+
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            @for (option of filteredOptions | async; track option) {
+                <mat-option class="text-xs" [value]="option">{{ option }}</mat-option>
+            }
+        </mat-autocomplete>
+    </form>
+
+    <span class="flex flex-grow flex-shrink flex-auto"></span>
+
+    <div class="flex gap-3">
+        <button mat-mini-fab
+                aria-label="Messages"
+                matTooltip="Messages"
+                color="basic">
+            <mat-icon>message</mat-icon>
+        </button>
+
+        <button mat-mini-fab
+                aria-label="Notifications"
+                matTooltip="Notifications"
+                color="basic">
+            <mat-icon>notifications</mat-icon>
+        </button>
+
+        <button mat-mini-fab
+                aria-label="Profile"
+                matTooltip="Profile"
+                [matMenuTriggerFor]="profileMenu"
+                color="basic">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+
+        <mat-menu #profileMenu="matMenu">
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>settings</mat-icon>
+
+                <span>Settings</span>
+            </button>
+
+            <button mat-menu-item aria-label="logout">
+                <mat-icon>logout</mat-icon>
+
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </div>
+</div>
