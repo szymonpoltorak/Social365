@@ -12,6 +12,7 @@ export const theme = {
             "warn": "#e20d0d",
             "main": "#201b31",
             "secondary": "#2c2745",
+            "tertiary": "#413955"
         },
         screens: {
             "ms": "320px",
