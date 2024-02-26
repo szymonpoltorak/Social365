@@ -1,69 +1,11 @@
-<app-toolbar></app-toolbar>
+<div class="h-screen">
+    <app-toolbar></app-toolbar>
 
-<div class="grid grid-cols-3 h-screen m-4">
-    <div class="flex flex-col h-screen m-4">
-        <mat-card class="p-3">
-            <div class="flex flex-col justify-center items-center mb-3">
-                <div class="absolute bg-primary rounded-3xl w-24 h-24 mb-8"></div>
+    <div class="grid grid-cols-3 m-4 h-fit">
+        <app-profile></app-profile>
 
-                <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
+        <div class="flex flex-col items-center overflow-y-auto"></div>
 
-                <mat-card-title>{{ fullName }}</mat-card-title>
-
-                <mat-card-subtitle>{{ jobPosition }}</mat-card-subtitle>
-            </div>
-
-            <mat-card-content class="text-justify">
-                {{ description }}
-            </mat-card-content>
-
-            <div class="mb-3 mt-3">
-                <mat-divider></mat-divider>
-            </div>
-
-            <div class="flex justify-center items-center gap-20">
-                <div class="flex flex-col items-center">
-                    <p class="font-semibold">{{ postCount }}</p>
-
-                    <p class="text-xs font-extralight">Posts</p>
-                </div>
-
-                <div class="bg-divider w-px h-full"></div>
-
-                <div class="flex flex-col items-center">
-                    <p class="font-semibold">{{ numberOfFriends }}</p>
-
-                    <p class="text-xs font-extralight">Friends</p>
-                </div>
-            </div>
-
-            <div class="mb-3 mt-3">
-                <mat-divider></mat-divider>
-            </div>
-
-            <button class="option-button" mat-button>
-                <mat-icon class="transform scale-150">home</mat-icon>
-                Home
-            </button>
-
-            <button class="option-button" mat-button>
-                <mat-icon class="transform scale-150">people</mat-icon>
-                Friends
-            </button>
-
-            <button class="option-button" mat-button>
-                <mat-icon class="transform scale-150">messages</mat-icon>
-                Messages
-            </button>
-
-            <button class="option-button" mat-button>
-                <mat-icon class="transform scale-150">groups</mat-icon>
-                Groups
-            </button>
-        </mat-card>
+        <div class="flex flex-col items-center h-fit overflow-y-auto"></div>
     </div>
-
-    <div class="flex flex-col h-screen items-center"></div>
-
-    <div class="flex flex-col h-screen items-center"></div>
 </div>

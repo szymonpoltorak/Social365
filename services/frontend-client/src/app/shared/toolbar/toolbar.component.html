@@ -5,13 +5,11 @@
         Social<span class="text-primary">365</span>
     </h1>
 
-    <span class="flex flex-grow flex-shrink flex-auto"></span>
-
-    <form>
-        <div class="flex items-center bg-tertiary p-1.5 rounded-md">
+    <form class="ml-5">
+        <div class="flex items-center bg-tertiary p-1.5 rounded-xl">
             <input matInput
                    type="text"
-                   class="ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none w-96"
+                   class="ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none w-80"
                    aria-label="Search Social365"
                    [formControl]="searchSocialControl"
                    [matAutocomplete]="auto"
@@ -32,6 +30,16 @@
             }
         </mat-autocomplete>
     </form>
+
+    <nav class="ml-52" mat-tab-nav-bar [tabPanel]="tabPanel">
+        @for (link of links; track link) {
+            <a class="w-36" mat-tab-link [active]="activeLink == link" (click)="activeLink = link">
+                <mat-icon>{{ link }}</mat-icon>
+            </a>
+        }
+    </nav>
+
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 

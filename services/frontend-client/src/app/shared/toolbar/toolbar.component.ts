@@ -9,6 +9,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { map, Observable, startWith } from "rxjs";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @Component({
     selector: 'app-toolbar',
@@ -26,7 +27,8 @@ import { map, Observable, startWith } from "rxjs";
         MatTooltip,
         ReactiveFormsModule,
         RouterLink,
-        MatMenuTrigger
+        MatMenuTrigger,
+        MatTabsModule
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -35,6 +37,8 @@ export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
     filteredOptions !: Observable<string[]>;
+    links: string[] = ["home", "groups"];
+    activeLink: string = "home";
 
     ngOnInit(): void {
         this.filteredOptions = this.searchSocialControl.valueChanges.pipe(
