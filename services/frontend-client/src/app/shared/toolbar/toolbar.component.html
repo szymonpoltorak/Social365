@@ -1,4 +1,4 @@
-<div class="bg-secondary w-full h-fit top-0 flex p-3 items-center">
+<div class="bg-secondary w-full h-fit top-0 flex p-3 items-center sticky z-50">
     <h1 class="hover:cursor-pointer text-xl font-bold"
         matTooltip="Get back to the feed"
         routerLink="/feed">
@@ -8,9 +8,7 @@
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
     <form>
-        <div class="flex items-center bg-tertiary p-1.5 rounded-md w-96">
-            <mat-icon>search</mat-icon>
-
+        <div class="flex items-center bg-tertiary p-1.5 rounded-md">
             <input matInput
                    type="text"
                    class="ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none w-96"
@@ -18,6 +16,14 @@
                    [formControl]="searchSocialControl"
                    [matAutocomplete]="auto"
                    placeholder="Your friend name">
+
+            <button mat-mini-fab
+                    aria-label="Search"
+                    matTooltip="Search"
+                    color="primary"
+                    type="submit">
+                <mat-icon>search</mat-icon>
+            </button>
         </div>
 
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
@@ -33,14 +39,14 @@
         <button mat-mini-fab
                 aria-label="Messages"
                 matTooltip="Messages"
-                color="basic">
+                color="primary">
             <mat-icon>message</mat-icon>
         </button>
 
         <button mat-mini-fab
                 aria-label="Notifications"
                 matTooltip="Notifications"
-                color="basic">
+                color="primary">
             <mat-icon>notifications</mat-icon>
         </button>
 
@@ -48,7 +54,7 @@
                 aria-label="Profile"
                 matTooltip="Profile"
                 [matMenuTriggerFor]="profileMenu"
-                color="basic">
+                color="primary">
             <mat-icon>account_circle</mat-icon>
         </button>
 

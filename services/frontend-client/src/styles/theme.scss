@@ -20,6 +20,12 @@
     @return $new-map;
 }
 
+$scrollbar: (
+    width: 8px,
+    border-radius: 20px,
+    background-color: #4f4b60
+);
+
 $primary-dark: mat.define-palette(
     $base-palette: $primary,
     $default: 500
