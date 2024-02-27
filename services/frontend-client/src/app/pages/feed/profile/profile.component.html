@@ -5,13 +5,13 @@
 
             <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
 
-            <mat-card-title>{{ fullName }}</mat-card-title>
+            <mat-card-title>{{ profile.fullName }}</mat-card-title>
 
-            <mat-card-subtitle>{{ jobPosition }}</mat-card-subtitle>
+            <mat-card-subtitle>{{ profile.jobPosition }}</mat-card-subtitle>
         </div>
 
         <mat-card-content class="text-justify">
-            {{ description }}
+            {{ profile.description }}
         </mat-card-content>
 
         <div class="mb-3 mt-3">
@@ -20,7 +20,7 @@
 
         <div class="flex justify-center items-center gap-20">
             <div class="flex flex-col items-center">
-                <p class="font-semibold">{{ postCount }}</p>
+                <p class="font-semibold">{{ profile.postCount }}</p>
 
                 <p class="text-xs font-extralight">Posts</p>
             </div>
@@ -28,7 +28,7 @@
             <div class="bg-divider w-px h-full"></div>
 
             <div class="flex flex-col items-center">
-                <p class="font-semibold">{{ numberOfFriends }}</p>
+                <p class="font-semibold">{{ profile.numberOfFriends }}</p>
 
                 <p class="text-xs font-extralight">Friends</p>
             </div>

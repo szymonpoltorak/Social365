@@ -1,9 +1,11 @@
-<mat-card>
+<mat-card class="mb-4">
     <div class="flex justify-between items-center">
         <mat-card-header>
             <div mat-card-avatar class="example-header-image"></div>
 
-            <mat-card-title>Shiba Inu &middot; <span class="text-sm font-extralight">2h</span></mat-card-title>
+            <mat-card-title>
+                {{ post.authorFullName }} &middot; <span class="text-sm font-extralight">2h</span>
+            </mat-card-title>
 
             <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
         </mat-card-header>
@@ -15,28 +17,34 @@
 
     <mat-card-content class="mb-3">
         <p class="text-justify font-light">
-            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-            bred for hunting.
+            {{ post.content }}
         </p>
     </mat-card-content>
 
-    <img mat-card-image
-         class="mb-4"
-         src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-         alt="Photo of a Shiba Inu">
+    @if (post.imageLink !== "") {
+        <img mat-card-image
+             class="mb-4"
+             src="{{ post.imageLink }}"
+             alt="Photo of a Shiba Inu">
+    }
 
     <div class="flex justify-between p-2">
         <div class="flex items-center gap-2">
-            <mat-icon class="transform scale-75">thumb_up</mat-icon>
+            @if (post.isPostLiked) {
+                <mat-icon class="transform scale-75">thumb_up</mat-icon>
 
-            <span class="text-sm">445</span>
+                <span class="text-sm">You and {{ post.likes - 1 }} others</span>
+            } @else {
+                <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
+
+                <span class="text-sm">{{ post.likes }}</span>
+            }
         </div>
 
         <div class="flex justify-center items-center gap-3">
-            <div class="text-sm">155 comments</div>
+            <div class="text-sm">{{ post.comments }} comments</div>
 
-            <div class="text-sm">25 shares</div>
+            <div class="text-sm">{{ post.shares }} shares</div>
         </div>
     </div>
 
@@ -44,7 +52,11 @@
 
     <mat-card-actions class="flex justify-between">
         <button mat-button aria-label="Like" type="button">
-            <mat-icon>thumb_up</mat-icon>
+            @if (post.isPostLiked) {
+                <mat-icon>thumb_up</mat-icon>
+            } @else {
+                <mat-icon>thumb_up_off_alt</mat-icon>
+            }
             LIKE
         </button>
 

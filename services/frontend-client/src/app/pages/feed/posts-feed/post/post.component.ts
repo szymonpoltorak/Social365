@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
     MatCard,
     MatCardActions,
@@ -12,6 +12,7 @@ import {
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
+import { Post } from "@core/data/feed/Post";
 
 @Component({
     selector: 'app-post',
@@ -34,5 +35,5 @@ import { MatDivider } from "@angular/material/divider";
     styleUrl: './post.component.scss'
 })
 export class PostComponent {
-
+    @Input() post !: Post;
 }

@@ -37,5 +37,7 @@
         </mat-card>
     </form>
 
-    <app-post></app-post>
+    @for (post of posts; track post) {
+        <app-post [post]="post"></app-post>
+    }
 </div>
