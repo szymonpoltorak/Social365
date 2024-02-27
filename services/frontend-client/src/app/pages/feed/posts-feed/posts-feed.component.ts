@@ -5,6 +5,7 @@ import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
 import { MatFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
+import { PostComponent } from "@pages/feed/posts-feed/post/post.component";
 
 @Component({
     selector: 'app-posts-feed',
@@ -16,7 +17,8 @@ import { MatIcon } from "@angular/material/icon";
         MatLabel,
         MatDivider,
         MatIcon,
-        MatFabButton
+        MatFabButton,
+        PostComponent
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
