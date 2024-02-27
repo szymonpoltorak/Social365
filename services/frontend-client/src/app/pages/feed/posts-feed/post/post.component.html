@@ -10,9 +10,23 @@
             <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
         </mat-card-header>
 
-        <button mat-icon-button aria-label="More">
+        <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
             <mat-icon>more_vert</mat-icon>
         </button>
+
+        <mat-menu #postOptions="matMenu" xPosition="before">
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>bookmark</mat-icon>
+
+                <span>Bookmark</span>
+            </button>
+
+            <button mat-menu-item aria-label="logout">
+                <mat-icon>notifications</mat-icon>
+
+                <span>Turn off notifications</span>
+            </button>
+        </mat-menu>
     </div>
 
     <mat-card-content class="mb-3">

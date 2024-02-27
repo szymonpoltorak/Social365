@@ -13,6 +13,7 @@ import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { Post } from "@core/data/feed/Post";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
     selector: 'app-post',
@@ -29,7 +30,10 @@ import { Post } from "@core/data/feed/Post";
         MatCardTitle,
         MatIcon,
         MatDivider,
-        MatIconButton
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
