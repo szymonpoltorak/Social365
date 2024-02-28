@@ -1,0 +1,28 @@
+.friend-option {
+    @apply flex justify-start gap-3 w-full mb-2 h-12;
+}
+
+.mat-card-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}
+
+.mat-button-ripple {
+    @apply flex justify-start gap-3 w-full mb-2 p-2 rounded-md;
+}
+
+.mat-button-ripple:hover {
+    @apply cursor-pointer bg-mat-hover;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+}

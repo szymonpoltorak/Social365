@@ -3,6 +3,7 @@ import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileComponent } from "@pages/feed/profile/profile.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Profile } from "@core/data/feed/Profile";
+import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 
 @Component({
     selector: 'app-feed',
@@ -10,7 +11,8 @@ import { Profile } from "@core/data/feed/Profile";
     imports: [
         ToolbarComponent,
         ProfileComponent,
-        PostsFeedComponent
+        PostsFeedComponent,
+        FriendsFeedComponent
     ],
     templateUrl: './feed.component.html',
     styleUrl: './feed.component.scss'
