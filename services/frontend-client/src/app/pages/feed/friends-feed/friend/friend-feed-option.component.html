@@ -1,13 +1,13 @@
 <div matRipple class="mat-button-ripple">
-    <img src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+    <img src="{{ feedOption.imageLink }}"
          alt="Avatar"
          class="mat-card-avatar">
 
-    @if (friend.isOnline) {
+    @if (feedOption.isOnline) {
         <div class="rounded-full bg-available w-3 h-3 absolute top-9 left-9 border-2 border-card"></div>
     } @else {
         <div class="rounded-full bg-unavailable w-3 h-3 absolute top-9 left-9 border-2 border-card"></div>
     }
 
-    <span class="font-semibold">{{ friend.fullName }}</span>
+    <span class="font-semibold">{{ feedOption.fullName }}</span>
 </div>

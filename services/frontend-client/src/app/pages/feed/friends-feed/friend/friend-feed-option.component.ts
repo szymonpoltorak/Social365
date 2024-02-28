@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { Friend } from "@core/data/feed/Friend";
+import { FriendFeedOption } from "@core/data/feed/FriendFeedOption";
 import { MatCard, MatCardAvatar, MatCardHeader, MatCardImage } from "@angular/material/card";
 import { MatButton } from "@angular/material/button";
 import { NgOptimizedImage } from "@angular/common";
 import { MatRipple } from "@angular/material/core";
 
 @Component({
-    selector: 'app-friend',
+    selector: 'app-friend-feed-option',
     standalone: true,
     imports: [
         MatCardImage,
@@ -17,9 +17,9 @@ import { MatRipple } from "@angular/material/core";
         NgOptimizedImage,
         MatRipple
     ],
-    templateUrl: './friend.component.html',
-    styleUrl: './friend.component.scss'
+    templateUrl: './friend-feed-option.component.html',
+    styleUrl: './friend-feed-option.component.scss'
 })
-export class FriendComponent {
-    @Input() friend !: Friend;
+export class FriendFeedOptionComponent {
+    @Input() feedOption !: FriendFeedOption;
 }

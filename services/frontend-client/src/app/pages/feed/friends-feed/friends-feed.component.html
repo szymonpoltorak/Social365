@@ -2,7 +2,7 @@
     <mat-card class="p-3 w-full h-full">
         <h1 class="text-xl mb-2">Birthdays</h1>
 
-        <button mat-button class="birthday-button mb-4">
+        <button mat-button class="birthday-button mb-4" aria-label="New chat">
             <mat-icon>cake</mat-icon>
 
             <strong>Shiba Inu</strong> birthday is today!
@@ -15,9 +15,27 @@
         <div class="flex flex-col">
             <h1 class="text-xl mb-2">Friends</h1>
 
-            @for (friend of friends; track friend) {
-                <app-friend [friend]="friend"></app-friend>
+            @for (friend of friends | async; track friend) {
+                <app-friend-feed-option [feedOption]="friend"></app-friend-feed-option>
             }
+        </div>
+
+        <div class="mb-4 mt-4">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="flex flex-col">
+            <h1 class="text-xl mb-2">Group Chats</h1>
+
+            @for (chat of chats | async; track chat) {
+                <app-friend-feed-option [feedOption]="chat"></app-friend-feed-option>
+            }
+
+            <button mat-button class="birthday-button" aria-label="New chat">
+                <mat-icon>add</mat-icon>
+
+                New group chat
+            </button>
         </div>
     </mat-card>
 </div>
