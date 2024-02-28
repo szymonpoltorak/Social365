@@ -40,4 +40,10 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 })
 export class PostComponent {
     @Input() post !: Post;
+
+    likePost(): void {
+        this.post.isPostLiked = !this.post.isPostLiked;
+
+        this.post.likes = this.post.isPostLiked ? this.post.likes + 1 : this.post.likes - 1;
+    }
 }
