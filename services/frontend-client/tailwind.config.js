@@ -15,6 +15,9 @@ export const theme = {
             "tertiary": "#413955",
             "divider": "#4f4b60"
         },
+        flexGrow: {
+            "0.6": "0.6"
+        },
         screens: {
             "ms": "320px",
             "mm": "320px",
