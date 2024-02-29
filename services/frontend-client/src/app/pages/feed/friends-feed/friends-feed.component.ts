@@ -7,7 +7,8 @@ import { FriendFeedOptionComponent } from "@pages/feed/friends-feed/friend/frien
 import { FriendFeedOption } from "@core/data/feed/FriendFeedOption";
 import { Observable, of } from "rxjs";
 import { AsyncPipe } from "@angular/common";
-import { BirthdayInfoSummary } from "@core/data/feed/BirthdayInfo";
+import { BirthdayComponent } from "@pages/feed/friends-feed/birthday/birthday.component";
+import { BirthdayInfo } from "@core/data/feed/BirthdayInfo";
 
 @Component({
     selector: 'app-friends-feed',
@@ -18,16 +19,25 @@ import { BirthdayInfoSummary } from "@core/data/feed/BirthdayInfo";
         MatIcon,
         MatDivider,
         FriendFeedOptionComponent,
-        AsyncPipe
+        AsyncPipe,
+        BirthdayComponent
     ],
     templateUrl: './friends-feed.component.html',
     styleUrl: './friends-feed.component.scss'
 })
 export class FriendsFeedComponent {
-    protected birthdayInfo: BirthdayInfoSummary = {
-        birthdayPersonFullName: "Jan Kowalski",
-        otherBirthdaysCount: 5
-    };
+    protected birthdayInfos: BirthdayInfo[] = [
+        {
+            fullName: "Jan Kowalski",
+            age: 25,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        },
+        {
+            fullName: "Marek Nowak",
+            age: 30,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        }
+    ];
 
     protected friends: Observable<FriendFeedOption[]> = of([
         {

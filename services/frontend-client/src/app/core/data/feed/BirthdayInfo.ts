@@ -1,5 +1,5 @@
-export interface BirthdayInfoSummary {
-    birthdayPersonFullName: string;
-
-    otherBirthdaysCount: number;
+export interface BirthdayInfo {
+    fullName: string;
+    age: number;
+    imageLink: string;
 }

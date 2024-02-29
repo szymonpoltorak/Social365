@@ -1,22 +1,6 @@
 <div class="flex flex-col items-center h-fit max-h-full overflow-y-auto m-4">
     <mat-card class="p-3 w-full h-full">
-        <h1 class="text-xl mb-2">Birthdays</h1>
-
-        <button mat-button class="birthday-button mb-4" aria-label="Birthday">
-            <mat-icon>cake</mat-icon>
-
-            @if (birthdayInfo.otherBirthdaysCount === 0) {
-                <strong>No one</strong> has birthday today.
-            } @else if (birthdayInfo.otherBirthdaysCount === 1) {
-                <strong>Shiba Inu</strong> birthday is today!
-            } @else {
-                <strong>Shiba Inu</strong> and <strong>{{ birthdayInfo.otherBirthdaysCount }}</strong> others have birthday today!
-            }
-        </button>
-
-        <div class="mb-4">
-            <mat-divider></mat-divider>
-        </div>
+        <app-birthday [birthdayInfos]="birthdayInfos"></app-birthday>
 
         <div class="flex flex-col">
             <h1 class="text-xl mb-2">Friends</h1>

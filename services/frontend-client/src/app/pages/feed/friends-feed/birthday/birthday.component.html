@@ -1,0 +1,44 @@
+@if (birthdayInfos.length !== 0) {
+    <div>
+        <h1 class="text-xl mb-2">Birthdays</h1>
+
+        <button mat-button class="birthday-button mb-4" aria-label="Birthday" (click)="isExpanded = !isExpanded">
+            <mat-icon>cake</mat-icon>
+
+            @if (birthdayInfos.length === 1) {
+                <strong>Shiba Inu</strong> birthday is today!
+            } @else {
+                <strong>Shiba Inu</strong> and
+                <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
+            }
+        </button>
+
+        @if (isExpanded) {
+            @for (birthdayInfo of birthdayInfos; track birthdayInfo) {
+                <form (ngSubmit)="createBirthdayPost()"
+                      class="flex justify-start gap-3 w-full mb-2 p-2 rounded-md items-center">
+                    <img src="{{ birthdayInfo.imageLink }}"
+                         alt="Avatar"
+                         class="mat-card-avatar">
+
+                    <div class="flex flex-col">
+                        <span class="font-semibold mb-1">{{ birthdayInfo.fullName }}</span>
+
+                        <span class="text-xs font-extralight mb-1">{{ birthdayInfo.age }} years old</span>
+
+                        <input matInput
+                               type="text"
+                               class="bg-tertiary p-2.5 rounded-xl focus:outline-none w-80"
+                               [formControl]="birthdayFormControl"
+                               aria-label="Search Social365"
+                               placeholder="Wish {{ birthdayInfo.fullName.split(' ')[0] }} a Happy Birthday!">
+                    </div>
+                </form>
+            }
+        }
+    </div>
+
+    <div class="mb-4">
+        <mat-divider></mat-divider>
+    </div>
+}
