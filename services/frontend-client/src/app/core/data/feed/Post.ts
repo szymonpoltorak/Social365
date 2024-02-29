@@ -1,4 +1,6 @@
 export interface Post {
+    areNotificationTurnedOn: boolean;
+    isBookmarked: boolean;
     authorFullName: string;
     creationDate: Date;
     content: string;

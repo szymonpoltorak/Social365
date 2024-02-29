@@ -36,7 +36,9 @@ export class PostsFeedComponent {
             imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
             comments: 155,
             shares: 25,
-            isPostLiked: true
+            isPostLiked: true,
+            isBookmarked: false,
+            areNotificationTurnedOn: true
         },
         {
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
@@ -46,7 +48,9 @@ export class PostsFeedComponent {
             imageLink: "",
             comments: 112,
             shares: 79,
-            isPostLiked: false
+            isPostLiked: false,
+            isBookmarked: true,
+            areNotificationTurnedOn: false
         }
     ];
 }

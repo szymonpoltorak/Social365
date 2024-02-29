@@ -15,14 +15,24 @@
         </button>
 
         <mat-menu #postOptions="matMenu" xPosition="before">
-            <button mat-menu-item aria-label="settings">
-                <mat-icon>bookmark</mat-icon>
+            <button mat-menu-item aria-label="settings"
+                    (click)="post.isBookmarked = !post.isBookmarked">
+                @if (post.isBookmarked) {
+                    <mat-icon>bookmark</mat-icon>
+                } @else {
+                    <mat-icon>bookmark_border</mat-icon>
+                }
 
                 <span>Bookmark</span>
             </button>
 
-            <button mat-menu-item aria-label="logout">
-                <mat-icon>notifications</mat-icon>
+            <button mat-menu-item aria-label="logout"
+                    (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
+                @if (post.areNotificationTurnedOn) {
+                    <mat-icon>notifications</mat-icon>
+                } @else {
+                    <mat-icon>notifications_none</mat-icon>
+                }
 
                 <span>Turn off notifications</span>
             </button>
