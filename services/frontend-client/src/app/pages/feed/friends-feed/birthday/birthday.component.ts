@@ -24,8 +24,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 })
 export class BirthdayComponent {
     @Input() birthdayInfos !: BirthdayInfo[];
-    protected isExpanded: boolean = false;
     birthdayFormControl: FormControl<string | null> = new FormControl<string>("", []);
+    protected isExpanded: boolean = false;
 
     createBirthdayPost(): void {
         if (this.birthdayFormControl.value?.length === 0) {

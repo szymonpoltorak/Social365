@@ -4,7 +4,7 @@
             <div mat-card-avatar class="example-header-image"></div>
 
             <mat-card-title>
-                {{ post.authorFullName }} &middot; <span class="text-sm font-extralight">2h</span>
+                {{ post.authorFullName }} &middot; <span class="text-sm font-extralight">{{ post.creationDate | postAge }}</span>
             </mat-card-title>
 
             <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>

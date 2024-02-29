@@ -14,6 +14,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { Post } from "@core/data/feed/Post";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { PostAgePipe } from "@core/pipes/post-age.pipe";
 
 @Component({
     selector: 'app-post',
@@ -33,7 +34,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
         MatIconButton,
         MatMenu,
         MatMenuItem,
-        MatMenuTrigger
+        MatMenuTrigger,
+        PostAgePipe
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'

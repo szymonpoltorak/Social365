@@ -43,7 +43,7 @@ export class PostsFeedComponent {
         {
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             authorFullName: "Shiba Inu",
-            creationDate: new Date(),
+            creationDate: new Date("2021-01-01T12:00:00"),
             likes: 225,
             imageLink: "",
             comments: 112,
