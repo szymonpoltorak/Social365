@@ -27,30 +27,34 @@ import { Post } from "@core/data/feed/Post";
 export class PostsFeedComponent {
     protected posts: Post[] = [
         {
+            postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             authorFullName: "Shiba Inu",
-            creationDate: new Date(),
+            creationDateTime: new Date(),
             likes: 445,
             imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
             comments: 155,
             shares: 25,
             isPostLiked: true,
             isBookmarked: false,
-            areNotificationTurnedOn: true
+            areNotificationTurnedOn: true,
+            postAuthorIconLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         },
         {
+            postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             authorFullName: "Shiba Inu",
-            creationDate: new Date("2021-01-01T12:00:00"),
+            creationDateTime: new Date("2021-01-01T12:00:00"),
             likes: 225,
             imageLink: "",
             comments: 112,
             shares: 79,
             isPostLiked: false,
             isBookmarked: true,
-            areNotificationTurnedOn: false
+            areNotificationTurnedOn: false,
+            postAuthorIconLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         }
     ];
 }

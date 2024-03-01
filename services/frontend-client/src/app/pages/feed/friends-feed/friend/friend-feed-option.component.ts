@@ -4,6 +4,7 @@ import { MatCard, MatCardAvatar, MatCardHeader, MatCardImage } from "@angular/ma
 import { MatButton } from "@angular/material/button";
 import { NgOptimizedImage } from "@angular/common";
 import { MatRipple } from "@angular/material/core";
+import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 
 @Component({
     selector: 'app-friend-feed-option',
@@ -15,7 +16,8 @@ import { MatRipple } from "@angular/material/core";
         MatCardHeader,
         MatButton,
         NgOptimizedImage,
-        MatRipple
+        MatRipple,
+        AvatarPhotoComponent
     ],
     templateUrl: './friend-feed-option.component.html',
     styleUrl: './friend-feed-option.component.scss'

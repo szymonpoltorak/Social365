@@ -6,7 +6,7 @@
             <mat-icon>cake</mat-icon>
 
             @if (birthdayInfos.length === 1) {
-                <strong>{{ birthdayInfos[0].fullName }}</strong> birthday is today!
+                <strong>{{ birthdayInfos[0].fullName }}'s</strong> birthday is today!
             } @else {
                 <strong>{{ birthdayInfos[0].fullName }}</strong> and
                 <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
@@ -16,9 +16,7 @@
         @if (isExpanded) {
             @for (birthdayInfo of birthdayInfos; track birthdayInfo) {
                 <div class="flex justify-start gap-3 w-full mb-2 p-2 rounded-md items-center">
-                    <img src="{{ birthdayInfo.imageLink }}"
-                         alt="Avatar"
-                         class="mat-card-avatar">
+                    <app-avatar-photo [imageLink]="birthdayInfo.imageLink"></app-avatar-photo>
 
                     <div class="flex flex-col w-full">
                         <div class="flex justify-between w-full">

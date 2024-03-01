@@ -1,0 +1,23 @@
+<div class="flex gap-3 items-center ml-2 mb-2 mr-2 mt-2">
+    <app-avatar-photo [imageLink]="comment.profileImageLink"></app-avatar-photo>
+
+    <div class="flex flex-col w-full">
+        <div class="bg-secondary rounded-xl p-3">
+            <div class="font-semibold">{{ comment.authorFullName }}</div>
+
+            <div class="font-extralight w-full text-justify">{{ comment.content }}</div>
+        </div>
+
+        <div class="flex m-2 gap-3 items-center">
+            <span class="text-xs font-extralight">{{ comment.creationDateTime | postAge }}</span>
+
+            <span class="text-xs font-semibold hover:underline hover:cursor-pointer">
+                LIKE
+            </span>
+
+            <span class="text-xs font-semibold hover:underline hover:cursor-pointer">
+                REPLY
+            </span>
+        </div>
+    </div>
+</div>

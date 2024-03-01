@@ -3,6 +3,7 @@ import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { BirthdayInfo } from "@core/data/feed/BirthdayInfo";
+import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 
 @Component({
     selector: 'app-birthday',
@@ -11,6 +12,7 @@ import { BirthdayInfo } from "@core/data/feed/BirthdayInfo";
         MatButton,
         MatIcon,
         MatDivider,
+        AvatarPhotoComponent,
     ],
     templateUrl: './birthday.component.html',
     styleUrl: './birthday.component.scss'

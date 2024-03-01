@@ -1,8 +1,10 @@
 export interface Post {
+    postId: number;
     areNotificationTurnedOn: boolean;
     isBookmarked: boolean;
     authorFullName: string;
-    creationDate: Date;
+    postAuthorIconLink: string;
+    creationDateTime: Date;
     content: string;
     likes: number;
     comments: number;

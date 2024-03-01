@@ -1,14 +1,21 @@
 <mat-card class="mb-4">
     <div class="flex justify-between items-center">
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
+        <div class="flex items-center p-3 gap-3">
+            <app-avatar-photo [imageLink]="post.postAuthorIconLink"></app-avatar-photo>
 
-            <mat-card-title>
-                {{ post.authorFullName }} &middot; <span class="text-sm font-extralight">{{ post.creationDate | postAge }}</span>
-            </mat-card-title>
+            <div>
+                <mat-card-title>
+                    {{ post.authorFullName }} &middot;
+                    <span matTooltip="{{ post.creationDateTime | date: 'medium' }}"
+                          [matTooltipPosition]="'above'"
+                          class="text-sm font-extralight hover:cursor-pointer">
+                        {{ post.creationDateTime | postAge }}
+                    </span>
+                </mat-card-title>
 
-            <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
-        </mat-card-header>
+                <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
+            </div>
+        </div>
 
         <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
             <mat-icon>more_vert</mat-icon>
@@ -84,7 +91,7 @@
             LIKE
         </button>
 
-        <button mat-button aria-label="Comments" type="button">
+        <button mat-button aria-label="Comments" type="button" (click)="getCommentsForPost()">
             <mat-icon>comment</mat-icon>
             COMMENT
         </button>
@@ -94,4 +101,10 @@
             SHARE
         </button>
     </mat-card-actions>
+
+    @if (areCommentsVisible) {
+        @for (comment of comments; track comment) {
+            <app-comment [comment]="comment"></app-comment>
+        }
+    }
 </mat-card>
