@@ -62,7 +62,8 @@ export class PostComponent implements OnInit {
                 content: "This is a great post!",
                 authorFullName: "John Doe",
                 creationDateTime: new Date(),
-                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
+                isLiked: false
             },
             {
                 commentId: 2,
@@ -70,7 +71,8 @@ export class PostComponent implements OnInit {
                 content: "I love this post! Especially the part about the new Angular version!",
                 authorFullName: "Jacek Kowalski",
                 creationDateTime: new Date("2021-01-01T12:00:00"),
-                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
+                isLiked: true
             }
         ];
     }
@@ -83,24 +85,5 @@ export class PostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.areCommentsVisible = !this.areCommentsVisible;
-
-        // this.comments = [
-        //     {
-        //         commentId: 1,
-        //         commentLikesCount: 5,
-        //         content: "This is a great post!",
-        //         authorFullName: "John Doe",
-        //         creationDateTime: new Date(),
-        //         profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-        //     },
-        //     {
-        //         commentId: 2,
-        //         commentLikesCount: 15,
-        //         content: "I love this post!",
-        //         authorFullName: "Jacek Kowalski",
-        //         creationDateTime: new Date("2021-01-01T12:00:00"),
-        //         profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-        //     }
-        // ];
     }
 }

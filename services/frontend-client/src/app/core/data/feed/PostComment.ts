@@ -5,4 +5,5 @@ export interface PostComment {
     authorFullName: string;
     creationDateTime: Date;
     profileImageLink: string;
+    isLiked: boolean;
 }

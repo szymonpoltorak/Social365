@@ -82,7 +82,9 @@
     <mat-divider class="divider"></mat-divider>
 
     <mat-card-actions class="flex justify-between">
-        <button mat-button aria-label="Like" type="button" (click)="likePost()">
+        <button mat-button aria-label="Like"
+                [color]="post.isPostLiked ? 'primary': 'basic'"
+                type="button" (click)="likePost()">
             @if (post.isPostLiked) {
                 <mat-icon>thumb_up</mat-icon>
             } @else {

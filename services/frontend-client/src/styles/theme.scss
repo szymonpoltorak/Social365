@@ -20,6 +20,10 @@
     @return $new-map;
 }
 
+$default-tooltip-background-color: #616161;
+
+$default-main-background-color: #424242;
+
 $scrollbar: (
     width: 8px,
     border-radius: 20px,
@@ -30,14 +34,17 @@ $primary-dark: mat.define-palette(
     $base-palette: $primary,
     $default: 500
 );
+
 $accent-dark: mat.define-palette(
     $base-palette: $accent,
     $default: 500
 );
+
 $warn-dark: mat.define-palette(
     $base-palette: $warn,
     $default: 500
 );
+
 $typography: mat.define-typography-config(
     $font-family: 'Open Sans'
 );
@@ -59,7 +66,17 @@ $dark-background: map-merge($dark-background, (
     selected-disabled-button: map-get($map: $dark-color-settings, $key: container-background-color),
     raised-button: map-get($map: $dark-color-settings, $key: container-background-color),
 ));
-$dark-theme: replace-color($dark-theme, #424242, map-get($map: $dark-color-settings, $key: container-background-color));
-$dark-theme: replace-color($dark-theme, #616161, map-get($map: $dark-color-settings, $key: container-background-color));
+
+$dark-theme: replace-color(
+        $dark-theme,
+        $default-main-background-color,
+        map-get($map: $dark-color-settings, $key: container-background-color)
+);
+
+$dark-theme: replace-color(
+        $dark-theme,
+        $default-tooltip-background-color,
+        map-get($map: $dark-color-settings, $key: tooltip-background-color)
+);
 
 @include mat.all-component-themes($dark-theme);
