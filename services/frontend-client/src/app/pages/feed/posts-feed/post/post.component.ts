@@ -20,6 +20,9 @@ import { CommentComponent } from "@pages/feed/posts-feed/comment/comment.compone
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { MatTooltip } from "@angular/material/tooltip";
 import { DatePipe } from "@angular/common";
+import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatInput } from "@angular/material/input";
 
 @Component({
     selector: 'app-post',
@@ -44,14 +47,20 @@ import { DatePipe } from "@angular/common";
         CommentComponent,
         AvatarPhotoComponent,
         MatTooltip,
-        DatePipe
+        DatePipe,
+        MatFormField,
+        ReactiveFormsModule,
+        MatInput,
+        MatLabel,
+        MatSuffix,
+        MatHint
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
     @Input() post !: Post;
-    protected areCommentsVisible: boolean = true;
+    protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
 
     ngOnInit(): void {

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { MatCard } from "@angular/material/card";
+import { MatCard, MatCardActions } from "@angular/material/card";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
-import { MatFabButton } from "@angular/material/button";
+import { MatButton, MatFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { PostComponent } from "@pages/feed/posts-feed/post/post.component";
 import { Post } from "@core/data/feed/Post";
+import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 
 @Component({
     selector: 'app-posts-feed',
@@ -19,7 +20,9 @@ import { Post } from "@core/data/feed/Post";
         MatDivider,
         MatIcon,
         MatFabButton,
-        PostComponent
+        PostComponent,
+        MatButton,
+        MatCardActions
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
