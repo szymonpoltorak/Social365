@@ -19,12 +19,14 @@ import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.comp
 })
 export class FeedComponent {
     protected profile: Profile = {
+        id: "1",
         fullName: "John Doe",
-        jobPosition: "Web developer at Google",
+        subtitle: "Web developer at Google",
         description: "I am a simple man with big ambitions. " +
             "I love to code and I am passionate about web development. " +
             "I am a team player and I am always looking for new challenges.",
         postCount: 256,
-        numberOfFriends: 1025
+        numberOfFriends: 1025,
+        profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
     };
 }

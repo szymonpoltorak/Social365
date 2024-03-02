@@ -1,13 +1,15 @@
 <div class="flex flex-col m-4 h-fit sticky top-26">
     <mat-card class="p-3 sticky">
         <div class="flex flex-col justify-center items-center mb-3">
-            <div class="absolute bg-primary rounded-3xl w-24 h-24 mb-8"></div>
+            <div class="absolute rounded-3xl w-24 h-24 mb-8">
+                <img class="rounded-xl h-24 w-24" src="{{ profile.profilePhotoLink }}" alt="Profile Picture">
+            </div>
 
             <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
 
             <mat-card-title>{{ profile.fullName }}</mat-card-title>
 
-            <mat-card-subtitle>{{ profile.jobPosition }}</mat-card-subtitle>
+            <mat-card-subtitle>{{ profile.subtitle }}</mat-card-subtitle>
         </div>
 
         <mat-card-content class="text-justify">
