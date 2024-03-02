@@ -1,0 +1,43 @@
+@if (birthdayInfos.length !== 0) {
+    <div>
+        <h1 class="text-xl mb-2">Birthdays</h1>
+
+        <button mat-button class="birthday-button mb-4" aria-label="Birthday" (click)="isExpanded = !isExpanded">
+            <mat-icon>cake</mat-icon>
+
+            @if (birthdayInfos.length === 1) {
+                <strong>{{ birthdayInfos[0].fullName }}'s</strong> birthday is today!
+            } @else {
+                <strong>{{ birthdayInfos[0].fullName }}</strong> and
+                <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
+            }
+        </button>
+
+        @if (isExpanded) {
+            @for (birthdayInfo of birthdayInfos; track birthdayInfo) {
+                <div class="flex justify-start gap-3 w-full mb-2 p-2 rounded-md items-center">
+                    <app-avatar-photo [imageLink]="birthdayInfo.imageLink"></app-avatar-photo>
+
+                    <div class="flex flex-col w-full">
+                        <div class="flex justify-between w-full">
+                            <span class="font-semibold mb-1">{{ birthdayInfo.fullName }}</span>
+
+                            <span class="text-xs font-extralight mb-1">{{ birthdayInfo.age }} years old</span>
+                        </div>
+
+                        <div>
+                            <button mat-button color="basic">
+                                <mat-icon>message</mat-icon>
+                                Send a message!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="mb-4">
+        <mat-divider></mat-divider>
+    </div>
+}

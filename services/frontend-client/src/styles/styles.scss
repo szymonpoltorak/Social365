@@ -11,7 +11,7 @@
 }
 
 *::-webkit-scrollbar {
-    width: 8px;
+    width: map-get($map: $scrollbar, $key: width);
 }
 
 *::-webkit-scrollbar-track {
@@ -19,8 +19,8 @@
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: #393d45;
-    border-radius: 20px;
+    background-color: map-get($map: $scrollbar, $key: background-color);
+    border-radius: map-get($map: $scrollbar, $key: border-radius);
 }
 
 html, body {

@@ -1,0 +1,44 @@
+<div class="flex flex-col h-fit m-4 overflow-y-auto">
+    <form class="mb-8">
+        <mat-card class="p-3">
+            <div class="flex items-center gap-8">
+                <div class="bg-primary rounded-3xl min-w-16 h-16 mb-8"></div>
+
+                <mat-form-field class="w-full min-h-28">
+                    <mat-label>What's on your mind ?</mat-label>
+
+                    <textarea matInput [cdkTextareaAutosize]="true"
+                              [formControl]="contentControl"
+                              #postContent maxlength="300"
+                              placeholder="I am thinking about...">
+                    </textarea>
+
+                    <mat-hint align="end">{{ postContent.value.length }} / 300</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <mat-divider class="divider"></mat-divider>
+
+            <mat-card-actions class="flex items-center justify-evenly">
+                <button mat-raised-button color="basic" aria-label="Attach Image" type="button">
+                    <mat-icon>image</mat-icon>
+                    Image
+                </button>
+
+                <button mat-raised-button color="basic" aria-label="Add Feeling" type="button">
+                    <mat-icon>mood</mat-icon>
+                    Feeling
+                </button>
+
+                <button mat-raised-button color="primary" aria-label="New Post" type="submit">
+                    <mat-icon>send</mat-icon>
+                    Post
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+
+    @for (post of posts; track post) {
+        <app-post [post]="post"></app-post>
+    }
+</div>

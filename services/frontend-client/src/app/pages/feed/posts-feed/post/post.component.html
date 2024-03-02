@@ -1,0 +1,173 @@
+<mat-card class="mb-4">
+    <div class="flex justify-between items-center">
+        <div class="flex items-center p-3 gap-3">
+            <app-avatar-photo [imageLink]="post.author.profilePhotoLink"></app-avatar-photo>
+
+            <div>
+                <mat-card-title>
+                    {{ post.author.fullName }} &middot;
+                    <span matTooltip="{{ post.creationDateTime | date: 'medium' }}"
+                          [matTooltipPosition]="'above'"
+                          class="text-sm font-extralight hover:cursor-pointer">
+                        {{ post.creationDateTime | postAge }}
+                    </span>
+                </mat-card-title>
+
+                <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
+            </div>
+        </div>
+
+        <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #postOptions="matMenu" xPosition="before">
+            @if (post.author.id === user.id) {
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon color="warn">delete</mat-icon>
+
+                    <span>Delete Post</span>
+                </button>
+
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                </button>
+            }
+
+            <button mat-menu-item aria-label="settings"
+                    (click)="post.isBookmarked = !post.isBookmarked">
+                @if (post.isBookmarked) {
+                    <mat-icon>bookmark</mat-icon>
+                } @else {
+                    <mat-icon>bookmark_border</mat-icon>
+                }
+
+                <span>Bookmark</span>
+            </button>
+
+            <button mat-menu-item aria-label="logout"
+                    (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
+                @if (post.areNotificationTurnedOn) {
+                    <mat-icon>notifications</mat-icon>
+                } @else {
+                    <mat-icon>notifications_none</mat-icon>
+                }
+
+                <span>Turn off notifications</span>
+            </button>
+        </mat-menu>
+    </div>
+
+    <mat-card-content class="mb-3">
+        <p class="text-justify font-light">
+            {{ post.content }}
+        </p>
+    </mat-card-content>
+
+    @if (post.imageLink !== "") {
+        <img mat-card-image
+             class="mb-4"
+             src="{{ post.imageLink }}"
+             alt="Photo of a Shiba Inu">
+    }
+
+    <div class="flex justify-between p-2">
+        <div class="flex items-center gap-2">
+            @if (post.isPostLiked) {
+                <mat-icon class="transform scale-75">thumb_up</mat-icon>
+
+                <span class="text-sm">You and {{ post.likes - 1 }} others</span>
+            } @else {
+                <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
+
+                <span class="text-sm">{{ post.likes }}</span>
+            }
+        </div>
+
+        <div class="flex justify-center items-center gap-3">
+            <div class="text-sm">{{ post.comments }} comments</div>
+
+            <div class="text-sm">{{ post.shares }} shares</div>
+        </div>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <mat-card-actions class="flex justify-between">
+        <button mat-button aria-label="Like"
+                [color]="post.isPostLiked ? 'primary': 'basic'"
+                type="button" (click)="likePost()">
+            @if (post.isPostLiked) {
+                <mat-icon>thumb_up</mat-icon>
+            } @else {
+                <mat-icon>thumb_up_off_alt</mat-icon>
+            }
+            LIKE
+        </button>
+
+        <button mat-button aria-label="Comments" type="button" (click)="getCommentsForPost()">
+            <mat-icon>comment</mat-icon>
+            COMMENT
+        </button>
+
+        <button mat-button aria-label="Share" type="button">
+            <mat-icon>share</mat-icon>
+            SHARE
+        </button>
+    </mat-card-actions>
+
+    @if (areCommentsVisible) {
+        <div class="flex m-2 gap-3 items-center">
+            <app-avatar-photo
+                    [imageLink]="user.profilePhotoLink"></app-avatar-photo>
+
+            <div class="flex flex-col w-full">
+                <span class="font-semibold">{{ user.fullName }}</span>
+
+                <mat-form-field>
+                    <mat-label>What's on your mind ?</mat-label>
+
+                    <textarea #comment maxlength="300" type="text"
+                              [formControl]="contentControl"
+                              [cdkTextareaAutosize]="true"
+                              matInput placeholder="I think...">
+
+                    </textarea>
+
+                    <button mat-icon-button matSuffix>
+                        <mat-icon>insert_emoticon</mat-icon>
+                    </button>
+
+                    <button mat-icon-button matSuffix>
+                        <mat-icon>image</mat-icon>
+                    </button>
+
+                    <mat-hint align="end">{{ comment.value.length }} / 300</mat-hint>
+                </mat-form-field>
+
+                @if (comment.value.length !== 0) {
+                    <div>
+                        <button mat-button color="primary" type="button">
+                            <mat-icon>send</mat-icon>
+                            Comment
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (areCommentsVisible) {
+        @for (comment of comments; track comment) {
+            <app-comment [comment]="comment"></app-comment>
+        }
+
+        <div class="m-2">
+            <button mat-button type="button">
+                <mat-icon>expand_more</mat-icon>
+                Load More Comments
+            </button>
+        </div>
+    }
+</mat-card>

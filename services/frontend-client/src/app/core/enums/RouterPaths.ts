@@ -1,5 +1,10 @@
 export enum RouterPaths {
     HOME = 'home',
+    HOME_DIRECT = '/home',
 
-    CURRENT_PATH = ''
+    CURRENT_PATH = '',
+
+    FEED = "feed",
+
+    UNKNOWN_PATH = "**",
 }

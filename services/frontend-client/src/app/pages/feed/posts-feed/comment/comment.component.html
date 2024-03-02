@@ -1,0 +1,35 @@
+<div class="flex gap-3 items-center ml-2 mr-2 mb-1">
+    <app-avatar-photo [imageLink]="comment.author.profilePhotoLink"></app-avatar-photo>
+
+    <div class="flex flex-col w-full">
+        <div class="bg-secondary rounded-xl p-3">
+            <div class="flex justify-between">
+                <div class="font-semibold">{{ comment.author.fullName }}</div>
+
+                <span matTooltip="{{ comment.creationDateTime | date: 'medium' }}"
+                      class="text-xs font-extralight hover:cursor-pointer">
+                    {{ comment.creationDateTime | postAge }}
+                </span>
+            </div>
+
+            <div class="font-extralight w-full text-justify">{{ comment.content }}</div>
+        </div>
+
+        <div class="flex m-1 gap-3 items-center">
+            <div matRipple
+                 (click)="onLikeComment()"
+                 [ngClass]="{
+                    'text-primary': comment.isLiked,
+                    'hover:bg-mat-primary-hover': comment.isLiked,
+                    'hover:bg-mat-hover': !comment.isLiked
+                 }"
+                 class="mini-button text-primary">
+                <span class="mr-1">{{ comment.commentLikesCount }}</span> LIKE
+            </div>
+
+            <div matRipple class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover">
+                REPLY
+            </div>
+        </div>
+    </div>
+</div>

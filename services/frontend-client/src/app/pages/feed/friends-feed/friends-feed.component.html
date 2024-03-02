@@ -1,0 +1,31 @@
+<div class="flex flex-col items-center h-fit max-h-full overflow-y-auto m-4 sticky top-26">
+    <mat-card class="p-3 w-full h-full">
+        <app-birthday [birthdayInfos]="birthdayInfos"></app-birthday>
+
+        <div class="flex flex-col">
+            <h1 class="text-xl mb-2">Friends</h1>
+
+            @for (friend of friends | async; track friend) {
+                <app-friend-feed-option [feedOption]="friend"></app-friend-feed-option>
+            }
+        </div>
+
+        <div class="mb-4 mt-4">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="flex flex-col">
+            <h1 class="text-xl mb-2">Group Chats</h1>
+
+            @for (chat of chats | async; track chat) {
+                <app-friend-feed-option [feedOption]="chat"></app-friend-feed-option>
+            }
+
+            <button mat-button class="birthday-button" aria-label="New chat">
+                <mat-icon>add</mat-icon>
+
+                New group chat
+            </button>
+        </div>
+    </mat-card>
+</div>
