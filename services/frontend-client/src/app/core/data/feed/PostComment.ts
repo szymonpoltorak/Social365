@@ -1,9 +1,10 @@
+import { Author } from "@core/data/feed/Author";
+
 export interface PostComment {
     commentId: number;
     commentLikesCount: number;
     content: string;
-    authorFullName: string;
+    author: Author;
     creationDateTime: Date;
-    profileImageLink: string;
     isLiked: boolean;
 }

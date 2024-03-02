@@ -40,7 +40,12 @@ export class PostsFeedComponent {
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
-            authorFullName: "Shiba Inu",
+            author: {
+                id: "1",
+                fullName: "Shiba Inu",
+                subtitle: "Software Developer",
+                profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            },
             creationDateTime: new Date(),
             likes: 445,
             imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
@@ -49,12 +54,16 @@ export class PostsFeedComponent {
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            postAuthorIconLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         },
         {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
-            authorFullName: "Shiba Inu",
+            author: {
+                id: "1",
+                fullName: "Shiba Inu",
+                subtitle: "Software Developer",
+                profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             likes: 225,
             imageLink: "",
@@ -63,7 +72,6 @@ export class PostsFeedComponent {
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            postAuthorIconLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         }
     ];
 }

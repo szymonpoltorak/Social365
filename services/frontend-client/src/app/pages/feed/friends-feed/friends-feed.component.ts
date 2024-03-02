@@ -41,16 +41,19 @@ export class FriendsFeedComponent {
 
     protected friends: Observable<FriendFeedOption[]> = of([
         {
+            id: "1",
             fullName: "Jacek Kowalski",
             isOnline: true,
             imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         },
         {
+            id: "2",
             fullName: "Marek Nowak",
             isOnline: false,
             imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         },
         {
+            id: "3",
             fullName: "Krzysztof Krawczyk",
             isOnline: true,
             imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
@@ -59,16 +62,19 @@ export class FriendsFeedComponent {
 
     protected chats: Observable<FriendFeedOption[]> = of([
         {
+            id: "1",
             fullName: "My Friends",
             isOnline: true,
             imageLink: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         },
         {
+            id: "2",
             fullName: "Family",
             isOnline: false,
             imageLink: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         },
         {
+            id: "3",
             fullName: "Students of WUT",
             isOnline: true,
             imageLink: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"

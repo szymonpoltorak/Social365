@@ -24,6 +24,7 @@ import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/fo
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
+import { Author } from "@core/data/feed/Author";
 
 @Component({
     selector: 'app-post',
@@ -65,6 +66,12 @@ export class PostComponent implements OnInit {
     protected contentControl: FormControl<any> = new FormControl<string>("", []);
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
+    user: Author = {
+        id: "1",
+        fullName: "Shiba Inu",
+        subtitle: "Cutest dog you see today",
+        profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+    };
 
     ngOnInit(): void {
         this.comments = [
@@ -72,18 +79,26 @@ export class PostComponent implements OnInit {
                 commentId: 1,
                 commentLikesCount: 5,
                 content: "This is a great post!",
-                authorFullName: "John Doe",
+                author: {
+                    id: "1",
+                    fullName: "John Doe",
+                    subtitle: "Software Developer",
+                    profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                },
                 creationDateTime: new Date(),
-                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
                 isLiked: false
             },
             {
                 commentId: 2,
                 commentLikesCount: 15,
                 content: "I love this post! Especially the part about the new Angular version!",
-                authorFullName: "Jacek Kowalski",
+                author: {
+                    id: "1",
+                    fullName: "Jacek Kowalski",
+                    subtitle: "Business Analyst",
+                    profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                },
                 creationDateTime: new Date("2021-01-01T12:00:00"),
-                profileImageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
                 isLiked: true
             }
         ];

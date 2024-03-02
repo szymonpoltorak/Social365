@@ -1,9 +1,9 @@
+import { Author } from "@core/data/feed/Author";
+
 export interface Post {
     postId: number;
     areNotificationTurnedOn: boolean;
     isBookmarked: boolean;
-    authorFullName: string;
-    postAuthorIconLink: string;
     creationDateTime: Date;
     content: string;
     likes: number;
@@ -11,4 +11,5 @@ export interface Post {
     shares: number;
     imageLink: string;
     isPostLiked: boolean;
+    author: Author;
 }
