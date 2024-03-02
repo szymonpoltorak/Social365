@@ -21,8 +21,9 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
 import { MatTooltip } from "@angular/material/tooltip";
 import { DatePipe } from "@angular/common";
 import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
+import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 
 @Component({
     selector: 'app-post',
@@ -53,13 +54,15 @@ import { MatInput } from "@angular/material/input";
         MatInput,
         MatLabel,
         MatSuffix,
-        MatHint
+        MatHint,
+        CdkTextareaAutosize
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
     @Input() post !: Post;
+    protected contentControl: FormControl<any> = new FormControl<string>("", []);
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
 

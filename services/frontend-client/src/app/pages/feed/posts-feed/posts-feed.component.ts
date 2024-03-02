@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatCard, MatCardActions } from "@angular/material/card";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
 import { MatButton, MatFabButton } from "@angular/material/button";
@@ -8,6 +8,8 @@ import { MatIcon } from "@angular/material/icon";
 import { PostComponent } from "@pages/feed/posts-feed/post/post.component";
 import { Post } from "@core/data/feed/Post";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
+import { CdkTextareaAutosize } from "@angular/cdk/text-field";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
     selector: 'app-posts-feed',
@@ -22,12 +24,16 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
         MatFabButton,
         PostComponent,
         MatButton,
-        MatCardActions
+        MatCardActions,
+        CdkTextareaAutosize,
+        MatHint,
+        ReactiveFormsModule
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
 })
 export class PostsFeedComponent {
+    protected contentControl: FormControl<any> = new FormControl<string>("", []);
     protected posts: Post[] = [
         {
             postId: 1,

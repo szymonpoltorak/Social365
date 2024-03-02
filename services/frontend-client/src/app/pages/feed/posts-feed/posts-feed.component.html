@@ -7,7 +7,13 @@
                 <mat-form-field class="w-full min-h-28">
                     <mat-label>What's on your mind ?</mat-label>
 
-                    <textarea matInput placeholder="I am thinking about..."></textarea>
+                    <textarea matInput [cdkTextareaAutosize]="true"
+                              [formControl]="contentControl"
+                              #postContent maxlength="300"
+                              placeholder="I am thinking about...">
+                    </textarea>
+
+                    <mat-hint align="end">{{ postContent.value.length }} / 300</mat-hint>
                 </mat-form-field>
             </div>
 
