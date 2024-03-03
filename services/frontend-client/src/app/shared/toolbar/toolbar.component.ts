@@ -42,7 +42,7 @@ export class ToolbarComponent implements OnInit {
     links: string[] = ["home", "groups"];
     activeLink: string = "home";
     newMessages: number = 5;
-    newNotifications: number = 15;
+    newNotifications: number = 0;
 
     ngOnInit(): void {
         this.filteredOptions = this.searchSocialControl.valueChanges.pipe(

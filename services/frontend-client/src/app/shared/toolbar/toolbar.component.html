@@ -49,6 +49,7 @@
         <button mat-mini-fab
                 aria-label="Messages"
                 matBadge="{{ newMessages }}"
+                matBadgeHidden="{{ newMessages === 0 }}"
                 matBadgeColor="warn"
                 color="primary">
             <mat-icon>message</mat-icon>
@@ -57,6 +58,7 @@
         <button mat-mini-fab
                 aria-label="Notifications"
                 matBadge="{{ newNotifications }}"
+                matBadgeHidden="{{ newNotifications === 0 }}"
                 matBadgeColor="warn"
                 color="primary">
             <mat-icon>notifications</mat-icon>
