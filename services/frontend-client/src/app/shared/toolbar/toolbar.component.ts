@@ -10,6 +10,7 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { map, Observable, startWith } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
+import { MatBadge } from "@angular/material/badge";
 
 @Component({
     selector: 'app-toolbar',
@@ -28,7 +29,8 @@ import { MatTabsModule } from "@angular/material/tabs";
         ReactiveFormsModule,
         RouterLink,
         MatMenuTrigger,
-        MatTabsModule
+        MatTabsModule,
+        MatBadge
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -39,6 +41,8 @@ export class ToolbarComponent implements OnInit {
     filteredOptions !: Observable<string[]>;
     links: string[] = ["home", "groups"];
     activeLink: string = "home";
+    newMessages: number = 5;
+    newNotifications: number = 15;
 
     ngOnInit(): void {
         this.filteredOptions = this.searchSocialControl.valueChanges.pipe(

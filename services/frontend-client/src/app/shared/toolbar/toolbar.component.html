@@ -45,24 +45,25 @@
 
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
-    <div class="flex gap-3">
+    <div class="flex gap-5">
         <button mat-mini-fab
                 aria-label="Messages"
-                matTooltip="Messages"
+                matBadge="{{ newMessages }}"
+                matBadgeColor="warn"
                 color="primary">
             <mat-icon>message</mat-icon>
         </button>
 
         <button mat-mini-fab
                 aria-label="Notifications"
-                matTooltip="Notifications"
+                matBadge="{{ newNotifications }}"
+                matBadgeColor="warn"
                 color="primary">
             <mat-icon>notifications</mat-icon>
         </button>
 
         <button mat-mini-fab
                 aria-label="Profile"
-                matTooltip="Profile"
                 [matMenuTriggerFor]="profileMenu"
                 color="primary">
             <mat-icon>account_circle</mat-icon>
