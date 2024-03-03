@@ -1,6 +1,6 @@
-<div class="flex flex-col h-fit m-4 overflow-y-auto">
+<div class="flex flex-col h-fit feed-sm:m-4 max-feed-sm:mt-2 overflow-y-auto">
     <form class="mb-8">
-        <mat-card class="p-3">
+        <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
             <div class="flex items-center gap-8">
                 <div class="bg-primary rounded-3xl min-w-16 h-16 mb-8"></div>
 
@@ -21,12 +21,12 @@
 
             <mat-card-actions class="flex items-center justify-evenly">
                 <button mat-raised-button color="basic" aria-label="Attach Image" type="button">
-                    <mat-icon>image</mat-icon>
+                    <mat-icon class="hide-icon">image</mat-icon>
                     Image
                 </button>
 
                 <button mat-raised-button color="basic" aria-label="Add Feeling" type="button">
-                    <mat-icon>mood</mat-icon>
+                    <mat-icon class="hide-icon">mood</mat-icon>
                     Feeling
                 </button>
 
