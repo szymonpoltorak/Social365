@@ -56,4 +56,6 @@ export class ToolbarComponent implements OnInit {
 
         return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
+
+    protected readonly window = window;
 }
