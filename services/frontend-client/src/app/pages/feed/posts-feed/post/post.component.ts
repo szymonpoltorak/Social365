@@ -25,6 +25,8 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { Author } from "@core/data/feed/Author";
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
+import { Subject } from "rxjs";
 
 @Component({
     selector: 'app-post',
@@ -56,7 +58,8 @@ import { Author } from "@core/data/feed/Author";
         MatLabel,
         MatSuffix,
         MatHint,
-        CdkTextareaAutosize
+        CdkTextareaAutosize,
+        PickerComponent
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
@@ -72,6 +75,7 @@ export class PostComponent implements OnInit {
         subtitle: "Cutest dog you see today",
         profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
+    isOpened: boolean = false;
 
     ngOnInit(): void {
         this.comments = [
@@ -112,5 +116,10 @@ export class PostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.areCommentsVisible = !this.areCommentsVisible;
+    }
+
+    emojiSelected($event: any): void {
+        this.contentControl.setValue(this.contentControl.value + $event.emoji.native);
+        this.isOpened = !this.isOpened;
     }
 }

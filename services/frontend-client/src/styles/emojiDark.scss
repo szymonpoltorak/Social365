@@ -1,0 +1,28 @@
+@import "palette";
+
+.emoji-mart {
+    @apply bg-secondary rounded-xl;
+
+    font-family: 'Open Sans', Roboto, "Helvetica Neue", sans-serif;
+
+    .emoji-mart-preview-name {
+        @apply text-white;
+    }
+
+    .emoji-mart-category-label {
+        background-color: unset;
+    }
+
+    .emoji-mart-category .emoji-mart-emoji:hover:before,
+    .emoji-mart-emoji-selected:before {
+        @apply bg-mat-hover;
+    }
+}
+
+.emoji-mart-dark .emoji-mart-category-label span {
+    @apply bg-mat-hover rounded-md w-full;
+}
+
+.emoji-mart-dark .emoji-mart-search input {
+    @apply bg-mat-hover rounded-md mb-2 w-full;
+}

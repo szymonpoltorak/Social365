@@ -1,4 +1,6 @@
-@import "theme";
+@import "@ctrl/ngx-emoji-mart/picker";
+@import "darkTheme";
+@import "emojiDark";
 
 @tailwind base;
 @tailwind components;
