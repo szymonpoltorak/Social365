@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatCard, MatCardActions } from "@angular/material/card";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
@@ -10,6 +10,9 @@ import { Post } from "@core/data/feed/Post";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
+import { Profile } from "@core/data/feed/Profile";
+import { NgOptimizedImage } from "@angular/common";
 
 @Component({
     selector: 'app-posts-feed',
@@ -27,12 +30,15 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
         MatCardActions,
         CdkTextareaAutosize,
         MatHint,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        PickerComponent,
+        NgOptimizedImage
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
 })
 export class PostsFeedComponent {
+    @Input() profile !: Profile;
     protected contentControl: FormControl<any> = new FormControl<string>("", []);
     protected posts: Post[] = [
         {
@@ -74,4 +80,11 @@ export class PostsFeedComponent {
             areNotificationTurnedOn: false,
         }
     ];
+    isOpened: boolean = false;
+
+    emojiSelected($event: any): void {
+        this.contentControl.setValue(this.contentControl.value + $event.emoji.native);
+
+        this.isOpened = !this.isOpened;
+    }
 }
