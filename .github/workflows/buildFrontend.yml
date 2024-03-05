@@ -1,0 +1,31 @@
+name: Build Angular App
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [18+.x]
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                node-version: ${{ matrix.node-version }}
+
+            - name: Navigate to frontend client directory
+              run: cd services/frontend-client
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build Developer
+              run: npm run ng build
+
+            - name: Build production
+              run: npm run ng build --configuration=production
