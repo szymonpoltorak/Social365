@@ -1,26 +1,23 @@
 name: Build Angular App
 
-on: [push]
+on: [ push ]
 
 jobs:
     build:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            -   uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v4
-              with:
-                node-version: 20
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 20
 
-            - name: Navigate to frontend client directory
-              run: cd services/frontend-client
+            -   name: Install dependencies
+                run: cd services/frontend-client; npm install
 
-            - name: Install dependencies
-              run: npm install
+            -   name: Build Developer
+                run: cd services/frontend-client; npm run ng build
 
-            - name: Build Developer
-              run: npm run ng build
-
-            - name: Build production
-              run: npm run ng build --configuration=production
+            -   name: Build production
+                run: cd services/frontend-client; npm run ng build --configuration=production
