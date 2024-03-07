@@ -16,7 +16,7 @@ import { Post } from "@core/data/feed/Post";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { PostAgePipe } from "@core/pipes/post-age.pipe";
 import { PostComment } from "@core/data/feed/PostComment";
-import { CommentComponent } from "@pages/feed/posts-feed/comment/comment.component";
+import { CommentComponent } from "@pages/feed/posts-feed/post/comment/comment.component";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { MatTooltip } from "@angular/material/tooltip";
 import { DatePipe } from "@angular/common";
@@ -25,45 +25,39 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { Author } from "@core/data/feed/Author";
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
+import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/post-header.component";
+import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
 
 @Component({
     selector: 'app-post',
     standalone: true,
     imports: [
         MatCard,
-        MatButton,
-        MatCardActions,
-        MatCardAvatar,
+        PostHeaderComponent,
         MatCardContent,
-        MatCardHeader,
         MatCardImage,
-        MatCardSubtitle,
-        MatCardTitle,
         MatIcon,
         MatDivider,
-        MatIconButton,
-        MatMenu,
-        MatMenuItem,
-        MatMenuTrigger,
-        PostAgePipe,
-        CommentComponent,
+        MatCardActions,
+        MatButton,
         AvatarPhotoComponent,
-        MatTooltip,
-        DatePipe,
         MatFormField,
-        ReactiveFormsModule,
-        MatInput,
         MatLabel,
-        MatSuffix,
+        ReactiveFormsModule,
+        CdkTextareaAutosize,
+        MatInput,
+        MatIconButton,
+        PickerComponent,
+        CommentComponent,
         MatHint,
-        CdkTextareaAutosize
+        CommentCreateComponent
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
     @Input() post !: Post;
-    protected contentControl: FormControl<any> = new FormControl<string>("", []);
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
     user: Author = {

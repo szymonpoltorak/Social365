@@ -1,11 +1,11 @@
 <div class="h-screen">
     <app-toolbar></app-toolbar>
 
-    <div class="grid grid-cols-3 m-4 h-fit">
-        <app-profile [profile]="profile"></app-profile>
+    <div class="feed-sm:grid feed-md:grid-cols-3 max-feed-md:grid-cols-2 feed-sm:m-4 h-fit">
+        <app-profile class="max-feed-md:hidden" [profile]="profile"></app-profile>
 
-        <app-posts-feed></app-posts-feed>
+        <app-posts-feed [profile]="profile"></app-posts-feed>
 
-        <app-friends-feed></app-friends-feed>
+        <app-friends-feed class="max-feed-sm:hidden"></app-friends-feed>
     </div>
 </div>

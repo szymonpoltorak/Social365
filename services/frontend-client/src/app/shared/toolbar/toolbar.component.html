@@ -1,15 +1,15 @@
-<div class="bg-secondary w-full h-fit top-0 flex p-3 items-center sticky z-50">
-    <h1 class="hover:cursor-pointer text-xl font-bold"
+<div class="bg-secondary w-full h-fit top-0 flex sm:p-3 max-sm:p-1.5 items-center sticky z-50">
+    <h1 class="hover:cursor-pointer ml:text-xl max-ml:text-sm font-bold"
         matTooltip="Get back to the feed"
         routerLink="/feed">
         Social<span class="text-primary">365</span>
     </h1>
 
-    <form class="ml-5">
-        <div class="flex items-center bg-tertiary p-1.5 rounded-xl">
+    <form class="ml:ml-5 max-sm:ml-1">
+        <div class="flex items-center bg-tertiary mm:p-1.5 rounded-xl">
             <input matInput
                    type="text"
-                   class="ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none w-80"
+                   class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
                    aria-label="Search Social365"
                    [formControl]="searchSocialControl"
                    [matAutocomplete]="auto"
@@ -33,47 +33,71 @@
 
     <span class="flex flex-grow-0.6 flex-auto"></span>
 
-    <nav class="" mat-tab-nav-bar [tabPanel]="tabPanel">
-        @for (link of links; track link) {
-            <a class="w-36" mat-tab-link [active]="activeLink == link" (click)="activeLink = link">
-                <mat-icon>{{ link }}</mat-icon>
-            </a>
-        }
-    </nav>
+    <div class="max-md:hidden">
+        <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+            @for (link of links; track link) {
+                <a class="w-36" mat-tab-link [active]="activeLink == link" (click)="activeLink = link">
+                    <mat-icon>{{ link }}</mat-icon>
+                </a>
+            }
+        </nav>
 
-    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+        <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+    </div>
 
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
     <div class="flex gap-5">
         <button mat-mini-fab
+                class="toolbar-button"
                 aria-label="Messages"
                 matBadge="{{ newMessages }}"
+                matBadgeHidden="{{ newMessages === 0 }}"
                 matBadgeColor="warn"
                 color="primary">
             <mat-icon>message</mat-icon>
         </button>
 
         <button mat-mini-fab
+                class="toolbar-button"
                 aria-label="Notifications"
                 matBadge="{{ newNotifications }}"
+                matBadgeHidden="{{ newNotifications === 0 }}"
                 matBadgeColor="warn"
                 color="primary">
             <mat-icon>notifications</mat-icon>
         </button>
 
         <button mat-mini-fab
-                aria-label="Profile"
-                [matMenuTriggerFor]="profileMenu"
+                aria-label="Menu"
+                [matMenuTriggerFor]="menu"
                 color="primary">
-            <mat-icon>account_circle</mat-icon>
+            <mat-icon>menu</mat-icon>
         </button>
 
-        <mat-menu #profileMenu="matMenu">
+        <mat-menu #menu="matMenu">
             <button mat-menu-item aria-label="settings">
                 <mat-icon>account_circle</mat-icon>
 
                 <span>Profile</span>
+            </button>
+
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>message</mat-icon>
+
+                <span>Messages</span>
+            </button>
+
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>notifications</mat-icon>
+
+                <span>Notifications</span>
+            </button>
+
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>people</mat-icon>
+
+                <span>Groups</span>
             </button>
 
             <button mat-menu-item aria-label="settings">

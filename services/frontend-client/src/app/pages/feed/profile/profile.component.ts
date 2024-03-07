@@ -4,6 +4,7 @@ import { MatCard, MatCardContent, MatCardSubtitle, MatCardTitle } from "@angular
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
 import { Profile } from "@core/data/feed/Profile";
+import { NgOptimizedImage } from "@angular/common";
 
 @Component({
     selector: 'app-profile',
@@ -15,7 +16,8 @@ import { Profile } from "@core/data/feed/Profile";
         MatCardSubtitle,
         MatCardTitle,
         MatDivider,
-        MatIcon
+        MatIcon,
+        NgOptimizedImage
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'

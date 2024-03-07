@@ -1,0 +1,51 @@
+<div class="flex m-2 gap-3 items-center">
+    <app-avatar-photo
+            [imageLink]="user.profilePhotoLink"></app-avatar-photo>
+
+    <div class="flex flex-col w-full">
+        <span class="font-semibold">{{ user.fullName }}</span>
+
+        <div class="relative w-full">
+            <mat-form-field class="w-full">
+                <mat-label class="max-feed-sm:font-extralight">What's on your mind ?</mat-label>
+
+                <textarea #comment maxlength="300" type="text"
+                          [formControl]="contentControl"
+                          [cdkTextareaAutosize]="true"
+                          matInput placeholder="I think...">
+                        </textarea>
+
+                <button mat-icon-button matSuffix (click)="this.isOpened = !this.isOpened;">
+                    <mat-icon>insert_emoticon</mat-icon>
+                </button>
+
+                <button mat-icon-button matSuffix>
+                    <mat-icon>image</mat-icon>
+                </button>
+
+                <mat-hint align="end">{{ comment.value.length }} / 300</mat-hint>
+            </mat-form-field>
+
+            @if (isOpened) {
+                <emoji-mart
+                        class="picker"
+                        color="#0df4e2"
+                        set="twitter"
+                        title="Pick your emoji…"
+                        emoji="point_up"
+                        (emojiSelect)="emojiSelected($event)"
+                        [darkMode]="true">
+                </emoji-mart>
+            }
+        </div>
+
+        @if (comment.value.length !== 0) {
+            <div>
+                <button mat-button color="primary" type="button">
+                    <mat-icon>send</mat-icon>
+                    Comment
+                </button>
+            </div>
+        }
+    </div>
+</div>

@@ -27,12 +27,15 @@ export const theme = {
             "0.6": "0.6"
         },
         screens: {
-            "ms": "320px",
             "mm": "320px",
             "ml": "425px",
+            "md": "900px",
+            "sm": "580px",
             "tb": "768px",
             "lm": "1024px",
-            "ll": "1440px"
+            "ll": "1440px",
+            "feed-md": "1142px",
+            "feed-sm": "838px"
         }
     }
 };

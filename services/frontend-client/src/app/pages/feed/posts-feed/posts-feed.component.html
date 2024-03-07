@@ -1,10 +1,13 @@
-<div class="flex flex-col h-fit m-4 overflow-y-auto">
+<div class="flex flex-col h-fit feed-sm:m-4 max-feed-sm:mt-2 overflow-y-auto">
     <form class="mb-8">
-        <mat-card class="p-3">
-            <div class="flex items-center gap-8">
-                <div class="bg-primary rounded-3xl min-w-16 h-16 mb-8"></div>
+        <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
+            <div class="flex items-center gap-5 mb-4">
+                <div class="rounded-3xl min-w-24 min-h-24">
+                    <img class="rounded-3xl h-24"
+                         ngSrc="{{ profile.profilePhotoLink }}" width="96" height="96" alt="Profile Picture">
+                </div>
 
-                <mat-form-field class="w-full min-h-28">
+                <mat-form-field class="w-full">
                     <mat-label>What's on your mind ?</mat-label>
 
                     <textarea matInput [cdkTextareaAutosize]="true"
@@ -19,13 +22,15 @@
 
             <mat-divider class="divider"></mat-divider>
 
-            <mat-card-actions class="flex items-center justify-evenly">
+            <mat-card-actions class="flex items-center justify-evenly relative">
                 <button mat-raised-button color="basic" aria-label="Attach Image" type="button">
                     <mat-icon>image</mat-icon>
                     Image
                 </button>
 
-                <button mat-raised-button color="basic" aria-label="Add Feeling" type="button">
+                <button mat-raised-button color="basic"
+                        (click)="isOpened = !isOpened"
+                        aria-label="Add Feeling" type="button">
                     <mat-icon>mood</mat-icon>
                     Feeling
                 </button>
@@ -34,6 +39,18 @@
                     <mat-icon>send</mat-icon>
                     Post
                 </button>
+
+                @if (isOpened) {
+                    <emoji-mart
+                            class="picker"
+                            color="#0df4e2"
+                            set="twitter"
+                            title="Pick your emoji…"
+                            emoji="point_up"
+                            (emojiSelect)="emojiSelected($event)"
+                            [darkMode]="true">
+                    </emoji-mart>
+                }
             </mat-card-actions>
         </mat-card>
     </form>
