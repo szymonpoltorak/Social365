@@ -1,0 +1,59 @@
+<div class="flex justify-between items-center">
+    <div class="flex items-center p-3 gap-3">
+        <app-avatar-photo [imageLink]="post.author.profilePhotoLink"></app-avatar-photo>
+
+        <div>
+            <mat-card-title>
+                {{ post.author.fullName }} &middot;
+                <span matTooltip="{{ post.creationDateTime | date: 'medium' }}"
+                      [matTooltipPosition]="'above'"
+                      class="text-sm font-extralight hover:cursor-pointer">
+                        {{ post.creationDateTime | postAge }}
+                    </span>
+            </mat-card-title>
+
+            <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
+        </div>
+    </div>
+
+    <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #postOptions="matMenu" xPosition="before">
+        @if (post.author.id === userId) {
+            <button mat-menu-item aria-label="settings">
+                <mat-icon color="warn">delete</mat-icon>
+
+                <span>Delete Post</span>
+            </button>
+
+            <button mat-menu-item aria-label="settings">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+            </button>
+        }
+
+        <button mat-menu-item aria-label="settings"
+                (click)="post.isBookmarked = !post.isBookmarked">
+            @if (post.isBookmarked) {
+                <mat-icon>bookmark</mat-icon>
+            } @else {
+                <mat-icon>bookmark_border</mat-icon>
+            }
+
+            <span>Bookmark</span>
+        </button>
+
+        <button mat-menu-item aria-label="logout"
+                (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
+            @if (post.areNotificationTurnedOn) {
+                <mat-icon>notifications</mat-icon>
+            } @else {
+                <mat-icon>notifications_none</mat-icon>
+            }
+
+            <span>Turn off notifications</span>
+        </button>
+    </mat-menu>
+</div>
