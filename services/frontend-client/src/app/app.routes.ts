@@ -13,13 +13,18 @@ export const routes: Routes = [
             .then(m => m.FeedComponent)
     },
     {
+        path: RouterPaths.PROFILE,
+        loadComponent: () => import("./pages/profile/profile.component")
+            .then(m => m.ProfileComponent)
+    },
+    {
         path: RouterPaths.CURRENT_PATH,
         redirectTo: RouterPaths.HOME_DIRECT,
         pathMatch: 'full'
     },
-    {
-        path: RouterPaths.UNKNOWN_PATH,
-        redirectTo: RouterPaths.HOME_DIRECT,
-        pathMatch: 'full'
-    }
+    // {
+    //     path: RouterPaths.UNKNOWN_PATH,
+    //     redirectTo: RouterPaths.HOME_DIRECT,
+    //     pathMatch: 'full'
+    // }
 ];

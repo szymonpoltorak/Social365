@@ -21,6 +21,7 @@ export class FeedComponent {
     protected profile: Profile = {
         id: "1",
         fullName: "John Doe",
+        username: "john@gmail.com",
         subtitle: "Web developer at Google",
         description: "I am a simple man with big ambitions. " +
             "I love to code and I am passionate about web development. " +

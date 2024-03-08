@@ -7,10 +7,11 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { map, Observable, startWith } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
+import { RouterPaths } from "@enums/RouterPaths";
 
 @Component({
     selector: 'app-toolbar',
@@ -44,6 +45,9 @@ export class ToolbarComponent implements OnInit {
     newMessages: number = 5;
     newNotifications: number = 0;
 
+    constructor(protected router: Router) {
+    }
+
     ngOnInit(): void {
         this.filteredOptions = this.searchSocialControl.valueChanges.pipe(
             startWith(''),
@@ -56,4 +60,6 @@ export class ToolbarComponent implements OnInit {
 
         return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
+
+    protected readonly RouterPaths = RouterPaths;
 }

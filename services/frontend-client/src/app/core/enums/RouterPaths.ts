@@ -7,4 +7,7 @@ export enum RouterPaths {
     FEED = "feed",
 
     UNKNOWN_PATH = "**",
+
+    PROFILE = "profile/:username",
+    PROFILE_DIRECT = "/profile",
 }

@@ -5,6 +5,8 @@ import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
 import { Profile } from "@core/data/feed/Profile";
 import { NgOptimizedImage } from "@angular/common";
+import { Router, RouterLink } from "@angular/router";
+import { RouterPaths } from "@enums/RouterPaths";
 
 @Component({
     selector: 'app-profile-feed',
@@ -17,11 +19,16 @@ import { NgOptimizedImage } from "@angular/common";
         MatCardTitle,
         MatDivider,
         MatIcon,
-        NgOptimizedImage
+        NgOptimizedImage,
+        RouterLink
     ],
     templateUrl: './profile-feed.component.html',
     styleUrl: './profile-feed.component.scss'
 })
 export class ProfileFeedComponent {
     @Input() profile !: Profile;
+    protected readonly RouterPaths = RouterPaths;
+
+    constructor(protected router: Router) {
+    }
 }
