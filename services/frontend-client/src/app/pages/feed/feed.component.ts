@@ -27,6 +27,7 @@ export class FeedComponent {
             "I am a team player and I am always looking for new challenges.",
         postCount: 256,
         numberOfFriends: 1025,
+        numberOfFollowers: 300,
         profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
     };
 }

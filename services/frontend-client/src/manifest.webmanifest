@@ -1,6 +1,6 @@
 {
-    "name": "frontend-client",
-    "short_name": "frontend-client",
+    "name": "Social365",
+    "short_name": "Social365",
     "theme_color": "#1976d2",
     "background_color": "#fafafa",
     "display": "standalone",
