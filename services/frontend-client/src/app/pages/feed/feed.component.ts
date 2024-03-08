@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
-import { ProfileComponent } from "@pages/feed/profile/profile.component";
+import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Profile } from "@core/data/feed/Profile";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
@@ -10,7 +10,7 @@ import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.comp
     standalone: true,
     imports: [
         ToolbarComponent,
-        ProfileComponent,
+        ProfileFeedComponent,
         PostsFeedComponent,
         FriendsFeedComponent
     ],

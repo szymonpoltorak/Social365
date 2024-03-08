@@ -7,7 +7,7 @@ import { Profile } from "@core/data/feed/Profile";
 import { NgOptimizedImage } from "@angular/common";
 
 @Component({
-    selector: 'app-profile',
+    selector: 'app-profile-feed',
     standalone: true,
     imports: [
         MatButton,
@@ -19,9 +19,9 @@ import { NgOptimizedImage } from "@angular/common";
         MatIcon,
         NgOptimizedImage
     ],
-    templateUrl: './profile.component.html',
-    styleUrl: './profile.component.scss'
+    templateUrl: './profile-feed.component.html',
+    styleUrl: './profile-feed.component.scss'
 })
-export class ProfileComponent {
+export class ProfileFeedComponent {
     @Input() profile !: Profile;
 }
