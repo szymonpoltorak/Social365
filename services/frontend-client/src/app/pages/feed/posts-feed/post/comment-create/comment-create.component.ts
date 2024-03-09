@@ -7,7 +7,7 @@ import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
-import { Author } from "@core/data/feed/Author";
+import { User } from "@core/data/feed/User";
 
 @Component({
     selector: 'app-comment-create',
@@ -31,7 +31,7 @@ import { Author } from "@core/data/feed/Author";
 })
 export class CommentCreateComponent {
     protected contentControl: FormControl<any> = new FormControl<string>("", []);
-    @Input() user !: Author;
+    @Input() user !: User;
     isOpened: boolean = false;
 
     emojiSelected($event: any): void {

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Profile } from "@core/data/feed/Profile";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
+import { LocalStorageService } from "@services/utils/local-storage.service";
 
 @Component({
     selector: 'app-feed',
@@ -17,9 +18,8 @@ import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.comp
     templateUrl: './feed.component.html',
     styleUrl: './feed.component.scss'
 })
-export class FeedComponent {
+export class FeedComponent implements OnInit{
     protected profile: Profile = {
-        id: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
@@ -29,6 +29,18 @@ export class FeedComponent {
         postCount: 256,
         numberOfFriends: 1025,
         numberOfFollowers: 300,
-        profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+        profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
+
+    constructor(private localStorage: LocalStorageService) {
+    }
+
+    ngOnInit(): void {
+        this.localStorage.saveUserToStorage({
+            fullName: this.profile.fullName,
+            username: this.profile.username,
+            subtitle: this.profile.subtitle,
+            profileImagePath: this.profile.profileImagePath
+        });
+    }
 }

@@ -30,6 +30,6 @@ import { Post } from "@core/data/feed/Post";
 })
 export class PostHeaderComponent {
     @Input() post !: Post;
-    @Input() userId !: string;
+    @Input() username !: string;
 
 }

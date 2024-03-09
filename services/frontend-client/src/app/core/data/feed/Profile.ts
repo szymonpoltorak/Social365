@@ -1,7 +1,6 @@
-import { Author } from "@core/data/feed/Author";
+import { User } from "@core/data/feed/User";
 
-export interface Profile extends Author {
-    username: string;
+export interface Profile extends User {
     numberOfFollowers: number;
     description: string;
     postCount: number;

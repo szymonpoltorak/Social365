@@ -77,7 +77,7 @@
 
         <mat-menu #menu="matMenu">
             <button mat-menu-item
-                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, 'example@gmail.com'])"
+                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, user.username])"
                     aria-label="settings">
                 <mat-icon>account_circle</mat-icon>
 

@@ -2,10 +2,7 @@
     <form class="mb-8">
         <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
             <div class="flex items-center gap-5 mb-4">
-                <div class="rounded-3xl min-w-24 min-h-24">
-                    <img class="rounded-3xl h-24"
-                         ngSrc="{{ profile.profilePhotoLink }}" width="96" height="96" alt="Profile Picture">
-                </div>
+                <app-avatar-photo [imageLink]="profile.profileImagePath"></app-avatar-photo>
 
                 <mat-form-field class="w-full">
                     <mat-label>What's on your mind ?</mat-label>

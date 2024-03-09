@@ -22,9 +22,9 @@ export const routes: Routes = [
         redirectTo: RouterPaths.HOME_DIRECT,
         pathMatch: 'full'
     },
-    // {
-    //     path: RouterPaths.UNKNOWN_PATH,
-    //     redirectTo: RouterPaths.HOME_DIRECT,
-    //     pathMatch: 'full'
-    // }
+    {
+        path: RouterPaths.UNKNOWN_PATH,
+        redirectTo: RouterPaths.HOME_DIRECT,
+        pathMatch: 'full'
+    }
 ];

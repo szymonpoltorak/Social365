@@ -1,15 +1,20 @@
 <div class="flex justify-between items-center">
     <div class="flex items-center p-3 gap-3">
-        <app-avatar-photo [imageLink]="post.author.profilePhotoLink"></app-avatar-photo>
+        <app-avatar-photo [imageLink]="post.author.profileImagePath"></app-avatar-photo>
 
         <div>
             <mat-card-title>
-                {{ post.author.fullName }} &middot;
-                <span matTooltip="{{ post.creationDateTime | date: 'medium' }}"
-                      [matTooltipPosition]="'above'"
-                      class="text-sm font-extralight hover:cursor-pointer">
+                <div class="flex gap-2 items-center">
+                    <div>{{ post.author.fullName }}</div>
+
+                    <div class="bg-white rounded-full w-1 h-1"></div>
+
+                    <div matTooltip="{{ post.creationDateTime | date: 'medium' }}"
+                         [matTooltipPosition]="'above'"
+                         class="text-sm font-extralight hover:cursor-pointer">
                         {{ post.creationDateTime | postAge }}
-                    </span>
+                    </div>
+                </div>
             </mat-card-title>
 
             <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
@@ -21,7 +26,7 @@
     </button>
 
     <mat-menu #postOptions="matMenu" xPosition="before">
-        @if (post.author.id === userId) {
+        @if (post.author.username === username) {
             <button mat-menu-item aria-label="settings">
                 <mat-icon>delete</mat-icon>
 

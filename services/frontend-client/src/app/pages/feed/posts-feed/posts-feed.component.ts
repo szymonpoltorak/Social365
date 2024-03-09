@@ -32,7 +32,8 @@ import { NgOptimizedImage } from "@angular/common";
         MatHint,
         ReactiveFormsModule,
         PickerComponent,
-        NgOptimizedImage
+        NgOptimizedImage,
+        AvatarPhotoComponent
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
@@ -47,10 +48,10 @@ export class PostsFeedComponent {
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
-                id: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
-                profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                username: "shiba-inu@gmail.com",
+                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             likes: 445,
@@ -65,10 +66,10 @@ export class PostsFeedComponent {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
-                id: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
-                profilePhotoLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                username: "shiba-inu@gmail.com",
+                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             likes: 225,

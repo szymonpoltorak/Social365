@@ -1,4 +1,4 @@
-import { Author } from "@core/data/feed/Author";
+import { User } from "@core/data/feed/User";
 
 export interface Post {
     postId: number;
@@ -11,5 +11,5 @@ export interface Post {
     shares: number;
     imageLink: string;
     isPostLiked: boolean;
-    author: Author;
+    author: User;
 }

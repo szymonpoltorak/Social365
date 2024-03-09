@@ -12,6 +12,8 @@ import { map, Observable, startWith } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
 import { RouterPaths } from "@enums/RouterPaths";
+import { LocalStorageService } from "@services/utils/local-storage.service";
+import { User } from "@core/data/feed/User";
 
 @Component({
     selector: 'app-toolbar',
@@ -38,6 +40,7 @@ import { RouterPaths } from "@enums/RouterPaths";
 })
 export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
+    protected user !: User;
     options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
     filteredOptions !: Observable<string[]>;
     links: string[] = ["home", "groups"];
@@ -45,7 +48,8 @@ export class ToolbarComponent implements OnInit {
     newMessages: number = 5;
     newNotifications: number = 0;
 
-    constructor(protected router: Router) {
+    constructor(protected router: Router,
+                private localStorageService: LocalStorageService) {
     }
 
     ngOnInit(): void {
@@ -53,10 +57,11 @@ export class ToolbarComponent implements OnInit {
             startWith(''),
             map(value => this._filter(value || '')),
         );
+        this.user = this.localStorageService.getUserFromStorage();
     }
 
     private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
+        const filterValue: string = value.toLowerCase();
 
         return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
