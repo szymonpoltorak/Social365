@@ -37,7 +37,11 @@
         <div class="max-md:hidden">
             <nav mat-tab-nav-bar [tabPanel]="tabPanel">
                 @for (link of links; track link) {
-                    <a class="w-36" mat-tab-link [active]="activeLink == link" (click)="activeLink = link">
+                    <a class="w-36" mat-tab-link
+                       [active]="activeLink === link"
+                       (keydown.enter)="activeLink = link"
+                       tabindex="0"
+                       (click)="activeLink = link">
                         <mat-icon>{{ link }}</mat-icon>
                     </a>
                 }

@@ -48,6 +48,8 @@
                 @for (option of options; track option) {
                     <span class="w-36" mat-tab-link
                           [routerLink]="option.route"
+                          (keydown.enter)="activeRoute = option"
+                          tabindex="0"
                           [active]="activeRoute === option"
                           (click)="activeRoute = option">
 

@@ -18,6 +18,8 @@
         <div class="flex m-1 gap-3 items-center">
             <div matRipple
                  (click)="onLikeComment()"
+                 (keydown.enter)="onLikeComment()"
+                 tabindex="0"
                  [ngClass]="{
                     'text-primary': comment.isLiked,
                     'hover:bg-mat-primary-hover': comment.isLiked,

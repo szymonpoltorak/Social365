@@ -11,10 +11,10 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
-import { Profile } from "@core/data/feed/Profile";
 import { NgOptimizedImage } from "@angular/common";
 import { User } from "@core/data/feed/User";
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 
 @Component({
     selector: 'app-posts-feed',
@@ -42,7 +42,7 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 })
 export class PostsFeedComponent implements OnInit {
     protected currentUser !: User;
-    protected contentControl: FormControl<any> = new FormControl<string>("", []);
+    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
     @Input() posts !: Post[];
     isOpened: boolean = false;
 
@@ -53,7 +53,10 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserFromStorage();
     }
 
-    emojiSelected($event: any): void {
+    emojiSelected($event: EmojiEvent): void {
+        if ($event.emoji.native === undefined || $event.emoji.native === null) {
+            return;
+        }
         this.contentControl.setValue(this.contentControl.value + $event.emoji.native);
 
         this.isOpened = !this.isOpened;

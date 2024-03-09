@@ -8,6 +8,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 import { User } from "@core/data/feed/User";
+import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 
 @Component({
     selector: 'app-comment-create',
@@ -30,11 +31,14 @@ import { User } from "@core/data/feed/User";
     styleUrl: './comment-create.component.scss'
 })
 export class CommentCreateComponent {
-    protected contentControl: FormControl<any> = new FormControl<string>("", []);
+    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
     @Input() user !: User;
     isOpened: boolean = false;
 
-    emojiSelected($event: any): void {
+    emojiSelected($event: EmojiEvent): void {
+        if ($event.emoji.native === undefined || $event.emoji.native === null) {
+            return;
+        }
         this.contentControl.setValue(this.contentControl.value + $event.emoji.native);
         this.isOpened = !this.isOpened;
     }
