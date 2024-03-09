@@ -19,13 +19,13 @@
 
             <mat-divider class="divider"></mat-divider>
 
-            <mat-card-actions class="flex items-center justify-evenly relative">
-                <button mat-raised-button color="basic" aria-label="Attach Image" type="button">
+            <div class="flex items-center justify-evenly relative">
+                <button mat-button color="basic" aria-label="Attach Image" type="button">
                     <mat-icon>image</mat-icon>
                     Image
                 </button>
 
-                <button mat-raised-button color="basic"
+                <button mat-button color="basic"
                         (click)="isOpened = !isOpened"
                         aria-label="Add Feeling" type="button">
                     <mat-icon>mood</mat-icon>
@@ -48,7 +48,7 @@
                             [darkMode]="true">
                     </emoji-mart>
                 }
-            </mat-card-actions>
+            </div>
         </mat-card>
     </form>
 
