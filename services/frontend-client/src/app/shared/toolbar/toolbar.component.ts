@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AsyncPipe } from "@angular/common";
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from "@angular/material/autocomplete";
 import { MatIcon } from "@angular/material/icon";
@@ -41,6 +41,8 @@ import { User } from "@core/data/feed/User";
 export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: User;
+    protected readonly RouterPaths = RouterPaths;
+    @Input() isOnFeed!: boolean;
     options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
     filteredOptions !: Observable<string[]>;
     links: string[] = ["home", "groups"];
@@ -65,6 +67,4 @@ export class ToolbarComponent implements OnInit {
 
         return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
-
-    protected readonly RouterPaths = RouterPaths;
 }

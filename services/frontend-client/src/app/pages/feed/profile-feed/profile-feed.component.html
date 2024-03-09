@@ -46,15 +46,24 @@
         </div>
 
         <button class="option-button"
-                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username])"
+                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_POSTS])"
                 mat-button>
             <mat-icon class="transform scale-150">account_circle</mat-icon>
             Profile
         </button>
 
-        <button class="option-button" mat-button>
+        <button class="option-button"
+                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_FRIENDS])"
+                mat-button>
             <mat-icon class="transform scale-150">people</mat-icon>
             Friends
+        </button>
+
+        <button class="option-button"
+                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_PHOTOS])"
+                mat-button>
+            <mat-icon class="transform scale-150">image</mat-icon>
+            Photos
         </button>
 
         <button class="option-button" mat-button>
@@ -65,11 +74,6 @@
         <button class="option-button" mat-button>
             <mat-icon class="transform scale-150">bookmark</mat-icon>
             Bookmarks
-        </button>
-
-        <button class="option-button" mat-button>
-            <mat-icon class="transform scale-150">groups</mat-icon>
-            Groups
         </button>
     </mat-card>
 </div>

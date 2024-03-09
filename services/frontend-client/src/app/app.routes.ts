@@ -15,7 +15,29 @@ export const routes: Routes = [
     {
         path: RouterPaths.PROFILE,
         loadComponent: () => import("./pages/profile/profile.component")
-            .then(m => m.ProfileComponent)
+            .then(m => m.ProfileComponent),
+        children: [
+            {
+                path: RouterPaths.PROFILE_POSTS,
+                loadComponent: () => import("./pages/profile/profile-posts/profile-posts.component")
+                    .then(m => m.ProfilePostsComponent)
+            },
+            {
+                path: RouterPaths.PROFILE_ABOUT,
+                loadComponent: () => import("./pages/profile/profile-about/profile-about.component")
+                    .then(m => m.ProfileAboutComponent)
+            },
+            {
+                path: RouterPaths.PROFILE_FRIENDS,
+                loadComponent: () => import("./pages/profile/profile-friends/profile-friends.component")
+                    .then(m => m.ProfileFriendsComponent)
+            },
+            {
+                path: RouterPaths.PROFILE_PHOTOS,
+                loadComponent: () => import("./pages/profile/profile-photos/profile-photos.component")
+                    .then(m => m.ProfilePhotosComponent)
+            }
+        ]
     },
     {
         path: RouterPaths.CURRENT_PATH,
