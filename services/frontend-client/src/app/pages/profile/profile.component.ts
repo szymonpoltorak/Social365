@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
 import { Profile } from "@core/data/feed/Profile";
@@ -12,6 +12,7 @@ import { RouterPaths } from "@enums/RouterPaths";
 import { MatButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { User } from "@core/data/feed/User";
+import { filter, Subject, takeUntil } from "rxjs";
 
 @Component({
     selector: 'app-profile',
@@ -30,7 +31,7 @@ import { User } from "@core/data/feed/User";
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
     protected profile: Profile = {
         fullName: "John Doe",
@@ -52,6 +53,7 @@ export class ProfileComponent implements OnInit {
     ];
     protected activeRoute: TabOption = this.options[0];
     protected currentUser !: User;
+    private routerDestroy$: Subject<void> = new Subject<void>();
 
     constructor(private activatedRoute: ActivatedRoute,
                 private localStorage: LocalStorageService,
@@ -62,15 +64,29 @@ export class ProfileComponent implements OnInit {
         this.username = this.activatedRoute.snapshot.params['username'];
         this.currentUser = this.localStorage.getUserFromStorage();
 
-        const url: string[] = this.router.url.split("/");
-        const currentChildRoute: string = url[url.length - 1];
+        this.router
+            .events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                takeUntil(this.routerDestroy$)
+            )
+            .subscribe(event => {
+                const newEvent: NavigationEnd = event as NavigationEnd;
+                const url: string[] = newEvent.url.split("/");
+                const currentChildRoute: string = url[url.length - 1];
 
-        const foundRoute: TabOption | undefined = this.options
-            .find((option: TabOption) => option.route === currentChildRoute);
+                const foundRoute: TabOption | undefined = this.options
+                    .find((option: TabOption) => option.route === currentChildRoute);
 
-        if (!foundRoute) {
-            throw new Error('Invalid route!');
-        }
-        this.activeRoute = foundRoute;
+                if (!foundRoute) {
+                    throw new Error('Invalid route!');
+                }
+                this.activeRoute = foundRoute;
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.routerDestroy$.next();
+        this.routerDestroy$.complete();
     }
 }

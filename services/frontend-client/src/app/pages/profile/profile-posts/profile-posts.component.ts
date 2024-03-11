@@ -10,6 +10,8 @@ import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { User } from "@core/data/feed/User";
+import { Router } from "@angular/router";
+import { RouterPaths } from "@enums/RouterPaths";
 
 @Component({
     selector: 'app-profile-posts',
@@ -147,4 +149,9 @@ export class ProfilePostsComponent {
             areNotificationTurnedOn: true,
         },
     ];
+
+    constructor(public router: Router) {
+    }
+
+    protected readonly RouterPaths = RouterPaths;
 }
