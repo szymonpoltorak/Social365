@@ -9,7 +9,7 @@ export interface Post {
     likes: number;
     comments: number;
     shares: number;
-    imageLink: string;
+    imageLink ?: string;
     isPostLiked: boolean;
     author: User;
 }

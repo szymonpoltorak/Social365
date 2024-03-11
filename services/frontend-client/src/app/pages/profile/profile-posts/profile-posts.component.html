@@ -1,6 +1,88 @@
 <div class="grid grid-cols-2 h-full gap-5">
-    <div class="flex flex-col">
+    <div class="flex flex-col w-full">
+        <mat-card class="mb-4">
+            <mat-card-header class="flex items-center justify-between mb-2">
+                <mat-card-title>Bio</mat-card-title>
 
+                <button mat-icon-button
+                        (click)="isEditing = !isEditing"
+                        aria-label="edit bio">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </mat-card-header>
+
+            <mat-card-content>
+                @if (!isEditing) {
+                    <span class="text-justify">{{ profile.description }}</span>
+                } @else {
+                    <mat-form-field class="w-full">
+                        <textarea matInput
+                                  [formControl]="bioControl"
+                                  [cdkTextareaAutosize]="true"
+                                  placeholder="Enter your bio here">
+                        </textarea>
+                    </mat-form-field>
+
+                    <button class="w-full" mat-raised-button
+                            (click)="isEditing = !isEditing"
+                            aria-label="Update bio" color="primary">
+                        <mat-icon>done</mat-icon>
+
+                        <span class="font-bold">Submit</span>
+                    </button>
+                }
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-4">
+            <mat-card-header class="mb-2 flex items-center justify-between">
+                <mat-card-title>Photos</mat-card-title>
+
+                <button mat-button
+                        color="primary"
+                        aria-label="edit bio">
+                    See more photos
+                </button>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="grid grid-cols-3 grid-rows-1 w-full justify-center">
+                    @for (item of items; track item) {
+                        <div class="flex flex-col justify-center items-center hover:cursor-pointer transition duration-300 ease-in-out hover:brightness-110">
+                            <img class="rounded-xl w-56 h-56"
+                                 [src]="item.imageLink"
+                                 alt="Post photo">
+                        </div>
+                    }
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-header class="mb-2 flex items-center justify-between">
+                <mat-card-title>Friends</mat-card-title>
+
+                <button mat-button
+                        color="primary"
+                        aria-label="edit bio">
+                    See more friends
+                </button>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="grid grid-cols-3 grid-rows-1 w-full justify-center">
+                    @for (item of items; track item) {
+                        <div class="flex flex-col justify-center items-center hover:cursor-pointer transition duration-300 ease-in-out hover:brightness-110">
+                            <img class="rounded-xl w-56 h-56"
+                                 [src]="item.author.profileImagePath"
+                                 alt="Post photo">
+
+                            <span class="font-semibold">{{ item.author.fullName }}</span>
+                        </div>
+                    }
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
 
     <app-posts-feed [posts]="posts"></app-posts-feed>
