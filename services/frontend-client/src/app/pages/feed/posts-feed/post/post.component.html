@@ -7,7 +7,7 @@
         </p>
     </mat-card-content>
 
-    @if (post.imageLink !== "") {
+    @if (post.imageLink !== "" && post.imageLink !== undefined) {
         <img mat-card-image
              class="mb-4"
              src="{{ post.imageLink }}"
