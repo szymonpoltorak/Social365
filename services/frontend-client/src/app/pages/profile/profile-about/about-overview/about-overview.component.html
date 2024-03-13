@@ -1,38 +1,22 @@
-<div class="flex flex-col items-start gap-2">
+<div class="flex flex-col gap-2">
     <mat-card-title>Details</mat-card-title>
 
-    <button mat-button
-            color="primary"
-            aria-label="Add workplace">
-        <mat-icon>add</mat-icon>
-        Add a workplace
-    </button>
-
-    <button mat-button
-            color="primary"
-            aria-label="Add education">
-        <mat-icon>add</mat-icon>
-        Add education
-    </button>
-
-    <button mat-button
-            color="primary"
-            aria-label="Add current city">
-        <mat-icon>add</mat-icon>
-        Add current city
-    </button>
-
-    <button mat-button
-            color="primary"
-            aria-label="Add hometown">
-        <mat-icon>add</mat-icon>
-        Add hometown
-    </button>
-
-    <button mat-button
-            color="primary"
-            aria-label="Add a relationship statu">
-        <mat-icon>add</mat-icon>
-        Add a relationship status
-    </button>
+    @for (option of options; track option) {
+        @if (option.data !== null) {
+            <app-about-option [icon]="option.icon"
+                              [label]="option.label"
+                              [subLabel]="option.subLabel"
+                              [option]="option.data">
+            </app-about-option>
+        } @else {
+            <div>
+                <button aria-label="Add button"
+                        color="primary"
+                        mat-button>
+                    <mat-icon>add</mat-icon>
+                    {{ option.nullLabel }}
+                </button>
+            </div>
+        }
+    }
 </div>

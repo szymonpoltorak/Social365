@@ -54,7 +54,7 @@
             ],
             "@pipes/*": [
                 "./src/app/core/pipes/*"
-            ],
+            ]
         }
     },
     "angularCompilerOptions": {
