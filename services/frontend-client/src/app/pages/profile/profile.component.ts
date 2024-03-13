@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     };
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
-        { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT },
+        { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
         { label: 'Friends', icon: 'people', route: RouterPaths.PROFILE_FRIENDS },
         { label: 'Photos', icon: 'image', route: RouterPaths.PROFILE_PHOTOS }
     ];
@@ -83,8 +83,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private initActivatedRoute(url: string[]): void {
         const currentChildRoute: string = url[url.length - 1];
 
-        const foundRoute: TabOption | undefined = this.options
+        let foundRoute: TabOption | undefined = this.options
             .find((option: TabOption) => option.route === currentChildRoute);
+
+        if (foundRoute === undefined) {
+            foundRoute = this.options
+                .find((option: TabOption) => option.label.toLowerCase() === url[url.length - 2]);
+        }
 
         if (!foundRoute) {
             throw new Error('Invalid route!');

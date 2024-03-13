@@ -25,7 +25,34 @@ export const routes: Routes = [
             {
                 path: RouterPaths.PROFILE_ABOUT,
                 loadComponent: () => import("./pages/profile/profile-about/profile-about.component")
-                    .then(m => m.ProfileAboutComponent)
+                    .then(m => m.ProfileAboutComponent),
+                children: [
+                    {
+                        path: RouterPaths.PROFILE_ABOUT_OVERVIEW,
+                        loadComponent: () => import("./pages/profile/profile-about/about-overview/about-overview.component")
+                            .then(m => m.AboutOverviewComponent)
+                    },
+                    {
+                        path: RouterPaths.PROFILE_ABOUT_WORK_EDUCATION,
+                        loadComponent: () => import("./pages/profile/profile-about/about-work-education/about-work-education.component")
+                            .then(m => m.AboutWorkEducationComponent)
+                    },
+                    {
+                        path: RouterPaths.PROFILE_ABOUT_LOCATIONS,
+                        loadComponent: () => import("./pages/profile/profile-about/about-locations/about-locations.component")
+                            .then(m => m.AboutLocationsComponent)
+                    },
+                    {
+                        path: RouterPaths.PROFILE_ABOUT_CONTACT,
+                        loadComponent: () => import("./pages/profile/profile-about/about-contact/about-contact.component")
+                            .then(m => m.AboutContactComponent)
+                    },
+                    {
+                        path: RouterPaths.PROFILE_ABOUT_RELATIONSHIP,
+                        loadComponent: () => import("./pages/profile/profile-about/about-relationship/about-relationship.component")
+                            .then(m => m.AboutRelationshipComponent)
+                    }
+                ]
             },
             {
                 path: RouterPaths.PROFILE_FRIENDS,

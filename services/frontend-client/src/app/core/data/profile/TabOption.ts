@@ -1,7 +1,5 @@
-import { RouterPaths } from "@enums/RouterPaths";
+import { RouteOption } from "@core/data/profile/RouteOption";
 
-export interface TabOption {
-    route: RouterPaths;
+export interface TabOption extends RouteOption {
     icon: string;
-    label: string;
 }

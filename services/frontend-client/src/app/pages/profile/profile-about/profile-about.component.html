@@ -1,1 +1,23 @@
-<p>profile-about works!</p>
+<mat-card>
+    <mat-card-content>
+        <div class="grid grid-cols-2 gap-8">
+            <div>
+                <mat-card-title>About</mat-card-title>
+
+                <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Menu selected">
+                    @for (option of options; track option) {
+                        <mat-chip-option [selected]="selectedOption === option"
+                                         [routerLink]="option.route"
+                                         color="primary">
+                            {{ option.label }}
+                        </mat-chip-option>
+                    }
+                </mat-chip-listbox>
+            </div>
+
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
