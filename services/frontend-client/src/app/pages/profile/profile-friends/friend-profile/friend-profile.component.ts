@@ -21,12 +21,4 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 })
 export class FriendProfileComponent {
     @Input() friend!: FriendProfileOption;
-
-    getMutualFriends() {
-        return `Szymon,&#13
-        Andrzej,&#13
-        Kasia,&#13
-        Maciek&#13
-        Asia`;
-    }
 }

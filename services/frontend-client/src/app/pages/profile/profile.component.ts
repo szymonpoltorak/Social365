@@ -64,6 +64,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.username = this.activatedRoute.snapshot.params['username'];
         this.currentUser = this.localStorage.getUserFromStorage();
 
+        this.initActivatedRoute(this.router.url.split("/"));
+
         this.router
             .events
             .pipe(
@@ -73,16 +75,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .subscribe(event => {
                 const newEvent: NavigationEnd = event as NavigationEnd;
                 const url: string[] = newEvent.url.split("/");
-                const currentChildRoute: string = url[url.length - 1];
 
-                const foundRoute: TabOption | undefined = this.options
-                    .find((option: TabOption) => option.route === currentChildRoute);
-
-                if (!foundRoute) {
-                    throw new Error('Invalid route!');
-                }
-                this.activeRoute = foundRoute;
+                this.initActivatedRoute(url);
             });
+    }
+
+    private initActivatedRoute(url: string[]): void {
+        const currentChildRoute: string = url[url.length - 1];
+
+        const foundRoute: TabOption | undefined = this.options
+            .find((option: TabOption) => option.route === currentChildRoute);
+
+        if (!foundRoute) {
+            throw new Error('Invalid route!');
+        }
+        this.activeRoute = foundRoute;
     }
 
     ngOnDestroy(): void {
