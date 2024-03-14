@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
@@ -24,4 +24,6 @@ export class AboutOptionComponent {
     @Input() icon !: string;
     @Input() subLabel !: string;
     protected readonly PrivacyLevel = PrivacyLevel;
+    @Output() readonly edit: EventEmitter<AboutOptionData> = new EventEmitter<AboutOptionData>();
+    @Output() readonly delete: EventEmitter<AboutOptionData> = new EventEmitter<AboutOptionData>();
 }

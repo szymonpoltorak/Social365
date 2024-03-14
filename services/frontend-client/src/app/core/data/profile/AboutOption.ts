@@ -1,5 +1,6 @@
 import { AboutOptionData } from "@core/data/profile/AboutOptionData";
 import { Optional } from "@core/types/profile/Optional";
+import { FormControl } from "@angular/forms";
 
 export interface AboutOption {
     label: string;
@@ -7,4 +8,6 @@ export interface AboutOption {
     data: Optional<AboutOptionData>;
     icon: string;
     nullLabel: string;
+    isBeingEdited: boolean;
+    formControl: FormControl<string | null>;
 }

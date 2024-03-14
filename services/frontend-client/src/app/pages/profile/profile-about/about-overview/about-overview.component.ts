@@ -8,6 +8,13 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { AboutOptionComponent } from "@pages/profile/profile-about/about-overview/about-option/about-option.component";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
 import { AboutOption } from "@core/data/profile/AboutOption";
+import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
+import { MatDivider } from "@angular/material/divider";
+import { AboutOptionData } from "@core/data/profile/AboutOptionData";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { Optional } from "@core/types/profile/Optional";
+import { MatOption, MatSelect } from "@angular/material/select";
 
 @Component({
     selector: 'app-about-overview',
@@ -20,14 +27,22 @@ import { AboutOption } from "@core/data/profile/AboutOption";
         MatMenu,
         MatMenuItem,
         MatMenuTrigger,
-        AboutOptionComponent
+        AboutOptionComponent,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatDivider,
+        MatHint,
+        ReactiveFormsModule,
+        MatSelect,
+        MatOption
     ],
     templateUrl: './about-overview.component.html',
     styleUrl: './about-overview.component.scss'
 })
 export class AboutOverviewComponent {
     protected overview: OverviewData = {
-        workplace: { label: "Works at Google", privacyLevel: PrivacyLevel.PUBLIC },
+        workplace: { label: "Google", privacyLevel: PrivacyLevel.PUBLIC },
         school: { label: "University of California, Los Angeles", privacyLevel: PrivacyLevel.FRIENDS },
         currentCity: null,
         hometown: { label: "Los Angeles, California", privacyLevel: PrivacyLevel.ONLY_ME },
@@ -39,29 +54,66 @@ export class AboutOverviewComponent {
             subLabel: "Current occupation",
             data: this.overview.workplace,
             icon: "work",
-            nullLabel: "Add a workplace"
+            nullLabel: "Add a workplace",
+            isBeingEdited: false,
+            formControl: new FormControl<string>(this.getValueForForm(this.overview.workplace))
         },
         {
             label: "Studied at",
             subLabel: "Last education institution",
             data: this.overview.school,
             icon: "school",
-            nullLabel: "Add education"
+            nullLabel: "Add education",
+            isBeingEdited: false,
+            formControl: new FormControl<string>(this.getValueForForm(this.overview.school))
         },
         {
             label: "Lives in",
             subLabel: "Current city of residence",
             data: this.overview.currentCity,
             icon: "location_city",
-            nullLabel: "Add current city"
+            nullLabel: "Add current city",
+            isBeingEdited: false,
+            formControl: new FormControl<string>(this.getValueForForm(this.overview.currentCity))
         },
-        { label: "From", subLabel: "Hometown", data: this.overview.hometown, icon: "home", nullLabel: "Add hometown" },
+        {
+            label: "From",
+            subLabel: "Hometown",
+            data: this.overview.hometown,
+            icon: "home",
+            nullLabel: "Add hometown",
+            isBeingEdited: false,
+            formControl: new FormControl<string>(this.getValueForForm(this.overview.hometown))
+        },
         {
             label: "",
             subLabel: "Relationship status",
             data: this.overview.relationship,
             icon: "favorite",
-            nullLabel: "Add a relationship status"
+            nullLabel: "Add a relationship status",
+            isBeingEdited: false,
+            formControl: new FormControl<string>(this.getValueForForm(this.overview.relationship))
         }
     ];
+
+    deleteAboutDate(event: AboutOptionData): void {
+        const optionIndex: number = this.options.map(a => a.data).indexOf(event);
+
+        if (optionIndex !== -1) {
+            this.options[optionIndex].data = null;
+        }
+    }
+
+    editData(option: AboutOptionData): void {
+        const optionIndex: number = this.options.map(a => a.data).indexOf(option);
+
+        this.options[optionIndex].isBeingEdited = true;
+    }
+
+    private getValueForForm(option: Optional<AboutOptionData>): string {
+        return option === null ? "" : option.label;
+    }
+
+    protected readonly Relationship = Relationship;
+    protected readonly Object = Object;
 }
