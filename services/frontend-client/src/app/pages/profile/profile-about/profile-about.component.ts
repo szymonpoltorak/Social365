@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { MatChipListbox, MatChipOption } from "@angular/material/chips";
+import { MatChipListbox, MatChipOption, MatChipSelectionChange } from "@angular/material/chips";
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { AboutOverviewComponent } from "@pages/profile/profile-about/about-overview/about-overview.component";
@@ -68,4 +68,14 @@ export class ProfileAboutComponent implements OnInit {
                 this.selectedOption = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
             });
     }
+
+    handleSelectionChange(event: MatChipSelectionChange, option: RouteOption) : void{
+        if (this.selectedOption === option && !event.selected) {
+            event.source.selected = true;
+        } else {
+            this.selectedOption = option;
+        }
+    }
+
+    protected readonly console = console;
 }
