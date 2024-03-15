@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
 import { MatChipListbox, MatChipOption } from "@angular/material/chips";
 import { MatButton } from "@angular/material/button";
@@ -9,12 +9,11 @@ import {
 } from "@pages/profile/profile-about/about-work-education/about-work-education.component";
 import { AboutLocationsComponent } from "@pages/profile/profile-about/about-locations/about-locations.component";
 import { AboutContactComponent } from "@pages/profile/profile-about/about-contact/about-contact.component";
-import {
-    AboutRelationshipComponent
-} from "@pages/profile/profile-about/about-relationship/about-relationship.component";
-import { RouterLink, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { RouteOption } from "@core/data/profile/RouteOption";
 import { RouterPaths } from "@enums/RouterPaths";
+import { filter, Subject, takeUntil } from "rxjs";
+import { RouteDetectionService } from "@services/profile/route-detection.service";
 
 @Component({
     selector: 'app-profile-about',
@@ -32,20 +31,41 @@ import { RouterPaths } from "@enums/RouterPaths";
         AboutWorkEducationComponent,
         AboutLocationsComponent,
         AboutContactComponent,
-        AboutRelationshipComponent,
         RouterOutlet,
         RouterLink
     ],
     templateUrl: './profile-about.component.html',
     styleUrl: './profile-about.component.scss'
 })
-export class ProfileAboutComponent {
+export class ProfileAboutComponent implements OnInit {
     protected readonly options: RouteOption[] = [
         { label: "Overview", route: RouterPaths.PROFILE_ABOUT_OVERVIEW },
         { label: "Work and Education", route: RouterPaths.PROFILE_ABOUT_WORK_EDUCATION },
         { label: "Places You've Lived", route: RouterPaths.PROFILE_ABOUT_LOCATIONS },
-        { label: "Contact and Basic Info", route: RouterPaths.PROFILE_ABOUT_CONTACT },
-        { label: "Family and Relationships", route: RouterPaths.PROFILE_ABOUT_RELATIONSHIP }
+        { label: "Contact and Basic Info", route: RouterPaths.PROFILE_ABOUT_CONTACT }
     ];
-    protected selectedOption: RouteOption = this.options[0];
+    protected selectedOption !: RouteOption;
+    private routerDestroy$: Subject<void> = new Subject<void>();
+
+    constructor(private router: Router,
+                private routeDetectionService: RouteDetectionService) {
+    }
+
+    ngOnInit(): void {
+        this.selectedOption = this.routeDetectionService
+            .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
+
+        this.router
+            .events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                takeUntil(this.routerDestroy$)
+            )
+            .subscribe(event => {
+                const newEvent: NavigationEnd = event as NavigationEnd;
+                const url: string[] = newEvent.url.split("/");
+
+                this.selectedOption = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
+            });
+    }
 }

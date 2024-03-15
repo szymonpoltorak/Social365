@@ -37,7 +37,7 @@
                     </mat-form-field>
                 } @else {
                     <mat-form-field class="w-full">
-                        <mat-label>{{ option.nullLabel }}</mat-label>
+                        <mat-label>{{ option.nullLabel }}</mat-label>`
 
                         <mat-select [formControl]="option.formControl">
                             @for (select of Object.values(Relationship); track select) {

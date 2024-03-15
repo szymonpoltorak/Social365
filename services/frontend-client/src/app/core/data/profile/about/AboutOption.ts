@@ -1,4 +1,4 @@
-import { AboutOptionData } from "@core/data/profile/AboutOptionData";
+import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { Optional } from "@core/types/profile/Optional";
 import { FormControl } from "@angular/forms";
 

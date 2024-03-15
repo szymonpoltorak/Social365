@@ -13,6 +13,7 @@ import { MatButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { User } from "@core/data/feed/User";
 import { filter, Subject, takeUntil } from "rxjs";
+import { RouteDetectionService } from "@services/profile/route-detection.service";
 
 @Component({
     selector: 'app-profile',
@@ -57,6 +58,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private localStorage: LocalStorageService,
+                private routeDetectionService: RouteDetectionService,
                 private router: Router) {
     }
 
@@ -64,7 +66,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.username = this.activatedRoute.snapshot.params['username'];
         this.currentUser = this.localStorage.getUserFromStorage();
 
-        this.initActivatedRoute(this.router.url.split("/"));
+        this.activeRoute = this.routeDetectionService
+            .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
 
         this.router
             .events
@@ -76,25 +79,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 const newEvent: NavigationEnd = event as NavigationEnd;
                 const url: string[] = newEvent.url.split("/");
 
-                this.initActivatedRoute(url);
+                this.activeRoute = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
             });
-    }
-
-    private initActivatedRoute(url: string[]): void {
-        const currentChildRoute: string = url[url.length - 1];
-
-        let foundRoute: TabOption | undefined = this.options
-            .find((option: TabOption) => option.route === currentChildRoute);
-
-        if (foundRoute === undefined) {
-            foundRoute = this.options
-                .find((option: TabOption) => option.label.toLowerCase() === url[url.length - 2]);
-        }
-
-        if (!foundRoute) {
-            throw new Error('Invalid route!');
-        }
-        this.activeRoute = foundRoute;
     }
 
     ngOnDestroy(): void {

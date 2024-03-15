@@ -46,11 +46,6 @@ export const routes: Routes = [
                         path: RouterPaths.PROFILE_ABOUT_CONTACT,
                         loadComponent: () => import("./pages/profile/profile-about/about-contact/about-contact.component")
                             .then(m => m.AboutContactComponent)
-                    },
-                    {
-                        path: RouterPaths.PROFILE_ABOUT_RELATIONSHIP,
-                        loadComponent: () => import("./pages/profile/profile-about/about-relationship/about-relationship.component")
-                            .then(m => m.AboutRelationshipComponent)
                     }
                 ]
             },

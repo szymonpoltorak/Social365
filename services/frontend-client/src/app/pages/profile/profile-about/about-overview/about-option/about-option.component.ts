@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { AboutOptionData } from "@core/data/profile/AboutOptionData";
+import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
 
 @Component({

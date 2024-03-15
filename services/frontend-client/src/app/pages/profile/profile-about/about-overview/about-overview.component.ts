@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatCardTitle } from "@angular/material/card";
 import { MatIcon } from "@angular/material/icon";
-import { OverviewData } from "@core/data/profile/OverviewData";
+import { OverviewData } from "@core/data/profile/about/OverviewData";
 import { Relationship } from "@enums/profile/Relationship";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { AboutOptionComponent } from "@pages/profile/profile-about/about-overview/about-option/about-option.component";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
-import { AboutOption } from "@core/data/profile/AboutOption";
+import { AboutOption } from "@core/data/profile/about/AboutOption";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
-import { AboutOptionData } from "@core/data/profile/AboutOptionData";
+import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Optional } from "@core/types/profile/Optional";
 import { MatOption, MatSelect } from "@angular/material/select";
@@ -41,6 +41,8 @@ import { MatOption, MatSelect } from "@angular/material/select";
     styleUrl: './about-overview.component.scss'
 })
 export class AboutOverviewComponent {
+    protected readonly Relationship = Relationship;
+    protected readonly Object = Object;
     protected overview: OverviewData = {
         workplace: { label: "Google", privacyLevel: PrivacyLevel.PUBLIC },
         school: { label: "University of California, Los Angeles", privacyLevel: PrivacyLevel.FRIENDS },
@@ -113,7 +115,4 @@ export class AboutOverviewComponent {
     private getValueForForm(option: Optional<AboutOptionData>): string {
         return option === null ? "" : option.label;
     }
-
-    protected readonly Relationship = Relationship;
-    protected readonly Object = Object;
 }
