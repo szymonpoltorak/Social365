@@ -11,7 +11,7 @@ server:
 
 eureka:
     client:
-        register-with-eureka: false
+        register-with-eureka: true
 
 spring:
     application:

@@ -1,3 +1,5 @@
 spring:
     application:
-      name: images-service
+        name: images-service
+    config:
+        import: optional:configserver:http://${CONFIG_HOSTNAME}:${CONFIG_SERVER_PORT}
