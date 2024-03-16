@@ -7,7 +7,7 @@ import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
-import { User } from "@core/data/feed/User";
+import { User } from "@interfaces/feed/user.interface";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 
 @Component({

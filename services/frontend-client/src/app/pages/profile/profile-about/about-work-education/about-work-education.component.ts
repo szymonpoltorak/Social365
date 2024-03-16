@@ -9,12 +9,9 @@ import { MatInput } from "@angular/material/input";
 import { MatOption } from "@angular/material/autocomplete";
 import { MatSelect } from "@angular/material/select";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
-import { AboutOption } from "@core/data/profile/about/AboutOption";
-import {
-    AboutTypicalOptionComponent
-} from "@shared/profile/about-typical-option/about-typical-option.component";
-import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
+import { AboutOption } from "@interfaces/profile/about/about-option.interface";
+import { AboutTypicalOptionComponent } from "@shared/profile/about-typical-option/about-typical-option.component";
+import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 
 @Component({
     selector: 'app-about-work-education',

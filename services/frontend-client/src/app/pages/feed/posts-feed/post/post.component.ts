@@ -3,8 +3,8 @@ import { MatCard, MatCardActions, MatCardContent, MatCardImage } from "@angular/
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
-import { Post } from "@core/data/feed/Post";
-import { PostComment } from "@core/data/feed/PostComment";
+import { Post } from "@interfaces/feed/post.interface";
+import { PostComment } from "@interfaces/feed/post-comment.interface";
 import { CommentComponent } from "@pages/feed/posts-feed/post/comment/comment.component";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
@@ -14,7 +14,7 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/post-header.component";
 import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
-import { User } from "@core/data/feed/User";
+import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 
 @Component({

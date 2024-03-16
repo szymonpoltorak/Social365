@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AboutOption } from "@core/data/profile/about/AboutOption";
+import { AboutOption } from "@interfaces/profile/about/about-option.interface";
 import { AboutOptionComponent } from "@shared/profile/about-option/about-option.component";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";

@@ -1,5 +1,5 @@
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
-import { Optional } from "@core/types/profile/Optional";
+import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
+import { Optional } from "@core/types/profile/optional.type";
 import { FormControl } from "@angular/forms";
 
 export interface AboutOption {

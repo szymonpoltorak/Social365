@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RouteOption } from "@core/data/profile/RouteOption";
+import { RouteOption } from "@interfaces/profile/route-option.interface";
 
 @Injectable({
     providedIn: 'root'

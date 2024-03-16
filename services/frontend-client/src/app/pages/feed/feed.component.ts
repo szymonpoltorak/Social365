@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { Profile } from "@core/data/feed/Profile";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { Post } from "@core/data/feed/Post";
+import { Post } from "@interfaces/feed/post.interface";
 
 @Component({
     selector: 'app-feed',

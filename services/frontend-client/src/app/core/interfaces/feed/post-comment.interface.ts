@@ -1,4 +1,4 @@
-import { User } from "@core/data/feed/User";
+import { User } from "@interfaces/feed/user.interface";
 
 export interface PostComment {
     commentId: number;

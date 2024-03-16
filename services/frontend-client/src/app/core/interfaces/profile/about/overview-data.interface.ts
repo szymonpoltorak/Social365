@@ -1,5 +1,5 @@
-import { Optional } from "@core/types/profile/Optional";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
+import { Optional } from "@core/types/profile/optional.type";
+import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
 
 export interface OverviewData {
     workplace : Optional<AboutOptionData>;

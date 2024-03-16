@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { Post } from "@core/data/feed/Post";
+import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { Profile } from "@core/data/feed/Profile";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { User } from "@core/data/feed/User";
 import { Router } from "@angular/router";
-import { RouterPaths } from "@enums/RouterPaths";
+import { RouterPaths } from "@enums/router-paths.enum";
 
 @Component({
     selector: 'app-profile-posts',

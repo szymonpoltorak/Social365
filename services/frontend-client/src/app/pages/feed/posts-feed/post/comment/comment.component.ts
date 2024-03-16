@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PostComment } from "@core/data/feed/PostComment";
+import { PostComment } from "@interfaces/feed/post-comment.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { PostAgePipe } from "@core/pipes/post-age.pipe";
 import { MatRipple } from "@angular/material/core";

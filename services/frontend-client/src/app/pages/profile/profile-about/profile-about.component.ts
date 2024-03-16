@@ -10,8 +10,8 @@ import {
 import { AboutLocationsComponent } from "@pages/profile/profile-about/about-locations/about-locations.component";
 import { AboutContactComponent } from "@pages/profile/profile-about/about-contact/about-contact.component";
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
-import { RouteOption } from "@core/data/profile/RouteOption";
-import { RouterPaths } from "@enums/RouterPaths";
+import { RouteOption } from "@interfaces/profile/route-option.interface";
+import { RouterPaths } from "@enums/router-paths.enum";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RouteDetectionService } from "@services/profile/route-detection.service";
 

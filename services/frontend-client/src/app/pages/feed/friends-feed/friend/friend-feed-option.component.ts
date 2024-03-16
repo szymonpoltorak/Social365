@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FriendFeedOption } from "@core/data/feed/FriendFeedOption";
+import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { MatCard, MatCardAvatar, MatCardHeader, MatCardImage } from "@angular/material/card";
 import { MatButton } from "@angular/material/button";
 import { NgOptimizedImage } from "@angular/common";

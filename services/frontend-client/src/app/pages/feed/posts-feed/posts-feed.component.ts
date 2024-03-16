@@ -6,13 +6,13 @@ import { MatDivider } from "@angular/material/divider";
 import { MatButton, MatFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { PostComponent } from "@pages/feed/posts-feed/post/post.component";
-import { Post } from "@core/data/feed/Post";
+import { Post } from "@interfaces/feed/post.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 import { NgOptimizedImage } from "@angular/common";
-import { User } from "@core/data/feed/User";
+import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 

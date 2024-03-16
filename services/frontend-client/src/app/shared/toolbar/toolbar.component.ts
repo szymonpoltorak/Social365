@@ -11,9 +11,9 @@ import { Router, RouterLink } from "@angular/router";
 import { map, Observable, startWith } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
-import { RouterPaths } from "@enums/RouterPaths";
+import { RouterPaths } from "@enums/router-paths.enum";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { User } from "@core/data/feed/User";
+import { User } from "@interfaces/feed/user.interface";
 
 @Component({
     selector: 'app-toolbar',

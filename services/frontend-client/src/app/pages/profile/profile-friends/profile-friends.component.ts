@@ -6,7 +6,7 @@ import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
-import { FriendProfileOption } from "@core/data/profile/FriendProfileOption";
+import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
 
 @Component({

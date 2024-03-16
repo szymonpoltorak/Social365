@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
-import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
+import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
+import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 
 @Component({
     selector: 'app-about-option',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FriendProfileOption } from "@core/data/profile/FriendProfileOption";
+import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";

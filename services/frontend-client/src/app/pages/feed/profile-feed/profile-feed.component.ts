@@ -3,10 +3,10 @@ import { MatButton } from "@angular/material/button";
 import { MatCard, MatCardContent, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
-import { Profile } from "@core/data/feed/Profile";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { NgOptimizedImage } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
-import { RouterPaths } from "@enums/RouterPaths";
+import { RouterPaths } from "@enums/router-paths.enum";
 
 @Component({
     selector: 'app-profile-feed',

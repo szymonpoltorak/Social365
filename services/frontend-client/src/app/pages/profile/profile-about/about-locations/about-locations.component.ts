@@ -3,9 +3,9 @@ import { MatCardTitle } from "@angular/material/card";
 import {
     AboutTypicalOptionComponent
 } from "@shared/profile/about-typical-option/about-typical-option.component";
-import { AboutOption } from "@core/data/profile/about/AboutOption";
+import { AboutOption } from "@interfaces/profile/about/about-option.interface";
 import { FormControl } from "@angular/forms";
-import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
+import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 
 @Component({
     selector: 'app-about-locations',
