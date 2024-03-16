@@ -1,0 +1,52 @@
+@if (option.data !== null && !option.isBeingEdited) {
+    <app-about-option [icon]="option.icon"
+                      [label]="option.label"
+                      (edit)="editData()"
+                      (delete)="deleteAboutDate()"
+                      [subLabel]="option.subLabel"
+                      [option]="option.data">
+    </app-about-option>
+} @else if (option.data === null && !option.isBeingEdited) {
+    <div>
+        <button aria-label="Add button"
+                color="primary"
+                (click)="option.isBeingEdited = !option.isBeingEdited"
+                mat-button>
+            <mat-icon>add</mat-icon>
+            {{ option.nullLabel }}
+        </button>
+    </div>
+} @else {
+    <div class="mt-3 mb-3">
+        <mat-form-field class="w-full">
+            <mat-label>{{ option.nullLabel }}</mat-label>
+
+            <input matInput
+                   #input
+                   [formControl]="option.formControl"
+                   maxlength="100"
+                   placeholder="Enter {{ option.label.toLowerCase() }}"
+                   type="text">
+
+            <mat-hint class="mt-1" align="end">{{ input.value.length }} / 100</mat-hint>
+        </mat-form-field>
+
+        <div class="mb-3 mt-2">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="flex justify-between">
+            <button mat-raised-button (click)="option.isBeingEdited = !option.isBeingEdited">
+                <mat-icon>cancel</mat-icon>
+
+                Cancel
+            </button>
+
+            <button mat-raised-button color="primary">
+                <mat-icon>done</mat-icon>
+
+                Submit
+            </button>
+        </div>
+    </div>
+}

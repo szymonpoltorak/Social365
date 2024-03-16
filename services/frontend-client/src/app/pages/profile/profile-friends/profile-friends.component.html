@@ -1,0 +1,40 @@
+<mat-card>
+    <mat-card-header class="flex justify-between items-center mb-5">
+        <mat-card-title>Friends</mat-card-title>
+
+        <div class="flex gap-3 items-center">
+            <div class="flex items-center bg-tertiary mm:p-1.5 rounded-xl">
+                <input matInput
+                       type="text"
+                       class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
+                       aria-label="Search Social365"
+                       [formControl]="searchSocialControl"
+                       placeholder="Your friend name">
+
+                <button mat-mini-fab
+                        aria-label="Search"
+                        matTooltip="Search"
+                        color="primary"
+                        type="submit">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+
+            <button mat-button color="primary" aria-label="Friend Requests">
+                Friend Requests
+            </button>
+
+            <button mat-button color="primary" aria-label="Find Friends">
+                Find friends
+            </button>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="grid grid-cols-3">
+            @for (friend of friends; track friend) {
+                <app-friend-profile [friend]="friend"></app-friend-profile>
+            }
+        </div>
+    </mat-card-content>
+</mat-card>

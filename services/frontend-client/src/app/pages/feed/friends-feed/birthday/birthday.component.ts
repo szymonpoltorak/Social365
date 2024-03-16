@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
-import { BirthdayInfo } from "@core/data/feed/BirthdayInfo";
+import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 
 @Component({

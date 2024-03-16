@@ -1,5 +1,5 @@
 <mat-card class="mb-4">
-    <app-post-header [post]="post" [userId]="user.id"></app-post-header>
+    <app-post-header [post]="post" [username]="user.username"></app-post-header>
 
     <mat-card-content class="mb-3">
         <p class="text-justify font-light">
@@ -7,7 +7,7 @@
         </p>
     </mat-card-content>
 
-    @if (post.imageLink !== "") {
+    @if (post.imageLink !== "" && post.imageLink !== undefined) {
         <img mat-card-image
              class="mb-4"
              src="{{ post.imageLink }}"

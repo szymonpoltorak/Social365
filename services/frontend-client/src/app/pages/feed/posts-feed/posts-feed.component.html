@@ -1,11 +1,8 @@
-<div class="flex flex-col h-fit feed-sm:m-4 max-feed-sm:mt-2 overflow-y-auto">
+<div class="flex flex-col h-fit w-full overflow-y-auto">
     <form class="mb-8">
         <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
             <div class="flex items-center gap-5 mb-4">
-                <div class="rounded-3xl min-w-24 min-h-24">
-                    <img class="rounded-3xl h-24"
-                         ngSrc="{{ profile.profilePhotoLink }}" width="96" height="96" alt="Profile Picture">
-                </div>
+                <app-avatar-photo [imageLink]="currentUser.profileImagePath"></app-avatar-photo>
 
                 <mat-form-field class="w-full">
                     <mat-label>What's on your mind ?</mat-label>
@@ -22,20 +19,22 @@
 
             <mat-divider class="divider"></mat-divider>
 
-            <mat-card-actions class="flex items-center justify-evenly relative">
-                <button mat-raised-button color="basic" aria-label="Attach Image" type="button">
+            <div class="flex items-center justify-evenly relative">
+                <button mat-button color="basic" aria-label="Attach Image" type="button">
                     <mat-icon>image</mat-icon>
                     Image
                 </button>
 
-                <button mat-raised-button color="basic"
+                <button mat-button color="basic"
                         (click)="isOpened = !isOpened"
                         aria-label="Add Feeling" type="button">
                     <mat-icon>mood</mat-icon>
                     Feeling
                 </button>
 
-                <button mat-raised-button color="primary" aria-label="New Post" type="submit">
+                <button mat-raised-button color="primary"
+                        [disabled]="postContent.value.length === 0"
+                        aria-label="New Post" type="submit">
                     <mat-icon>send</mat-icon>
                     Post
                 </button>
@@ -51,7 +50,7 @@
                             [darkMode]="true">
                     </emoji-mart>
                 }
-            </mat-card-actions>
+            </div>
         </mat-card>
     </form>
 

@@ -4,11 +4,11 @@ import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { FriendFeedOptionComponent } from "@pages/feed/friends-feed/friend/friend-feed-option.component";
-import { FriendFeedOption } from "@core/data/feed/FriendFeedOption";
+import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { Observable, of } from "rxjs";
 import { AsyncPipe } from "@angular/common";
 import { BirthdayComponent } from "@pages/feed/friends-feed/birthday/birthday.component";
-import { BirthdayInfo } from "@core/data/feed/BirthdayInfo";
+import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 
 @Component({
     selector: 'app-friends-feed',

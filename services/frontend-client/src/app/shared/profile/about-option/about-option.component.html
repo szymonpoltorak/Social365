@@ -1,0 +1,56 @@
+<div class="flex justify-between items-center">
+    <div class="flex gap-2 items-center">
+        <mat-icon>{{ icon }}</mat-icon>
+
+        <div class="flex flex-col">
+            <div>{{ label }} {{ option.label }}</div>
+
+            <div class="text-xs font-extralight">{{ subLabel }}</div>
+        </div>
+    </div>
+
+    <div class="flex">
+        <button class="center" mat-icon-button aria-label="Privacy" [matMenuTriggerFor]="privacy">
+            @if (option.privacyLevel === PrivacyLevel.PUBLIC) {
+                <mat-icon>public</mat-icon>
+            } @else if (option.privacyLevel === PrivacyLevel.FRIENDS) {
+                <mat-icon>people</mat-icon>
+            } @else {
+                <mat-icon>lock</mat-icon>
+            }
+        </button>
+
+        <button class="center" mat-icon-button aria-label="Settings" [matMenuTriggerFor]="settings">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+    <mat-menu #privacy xPosition="before">
+        <button aria-label="Public" mat-menu-item (click)="option.privacyLevel = PrivacyLevel.PUBLIC">
+            <mat-icon>public</mat-icon>
+            Public
+        </button>
+
+        <button aria-label="Friends" mat-menu-item (click)="option.privacyLevel = PrivacyLevel.FRIENDS">
+            <mat-icon>people</mat-icon>
+            Friends
+        </button>
+
+        <button aria-label="Only me" mat-menu-item (click)="option.privacyLevel = PrivacyLevel.ONLY_ME">
+            <mat-icon>lock</mat-icon>
+            Only me
+        </button>
+    </mat-menu>
+
+    <mat-menu #settings xPosition="before">
+        <button aria-label="Edit" (click)="edit.emit()" mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            Edit
+        </button>
+
+        <button aria-label="Delete" (click)="delete.emit()" mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            Delete
+        </button>
+    </mat-menu>
+</div>

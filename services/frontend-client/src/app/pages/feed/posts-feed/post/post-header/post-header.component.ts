@@ -7,7 +7,7 @@ import { MatIconButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatTooltip } from "@angular/material/tooltip";
 import { PostAgePipe } from "@core/pipes/post-age.pipe";
-import { Post } from "@core/data/feed/Post";
+import { Post } from "@interfaces/feed/post.interface";
 
 @Component({
     selector: 'app-post-header',
@@ -30,6 +30,6 @@ import { Post } from "@core/data/feed/Post";
 })
 export class PostHeaderComponent {
     @Input() post !: Post;
-    @Input() userId !: string;
+    @Input() username !: string;
 
 }

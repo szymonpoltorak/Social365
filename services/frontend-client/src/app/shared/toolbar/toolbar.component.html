@@ -33,17 +33,23 @@
 
     <span class="flex flex-grow-0.6 flex-auto"></span>
 
-    <div class="max-md:hidden">
-        <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-            @for (link of links; track link) {
-                <a class="w-36" mat-tab-link [active]="activeLink == link" (click)="activeLink = link">
-                    <mat-icon>{{ link }}</mat-icon>
-                </a>
-            }
-        </nav>
+    @if (isOnFeed) {
+        <div class="max-md:hidden">
+            <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+                @for (link of links; track link) {
+                    <a class="w-36" mat-tab-link
+                       [active]="activeLink === link"
+                       (keydown.enter)="activeLink = link"
+                       tabindex="0"
+                       (click)="activeLink = link">
+                        <mat-icon>{{ link }}</mat-icon>
+                    </a>
+                }
+            </nav>
 
-        <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
-    </div>
+            <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+        </div>
+    }
 
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
@@ -76,7 +82,9 @@
         </button>
 
         <mat-menu #menu="matMenu">
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, user.username, RouterPaths.PROFILE_POSTS])"
+                    aria-label="settings">
                 <mat-icon>account_circle</mat-icon>
 
                 <span>Profile</span>
