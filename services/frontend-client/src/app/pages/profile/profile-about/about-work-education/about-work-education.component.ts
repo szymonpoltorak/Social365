@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatCardTitle } from "@angular/material/card";
-import { AboutOptionComponent } from "@pages/profile/profile-about/about-overview/about-option/about-option.component";
+import { AboutOptionComponent } from "@shared/profile/about-option/about-option.component";
 import { MatButton } from "@angular/material/button";
 import { MatDivider } from "@angular/material/divider";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
@@ -13,7 +13,7 @@ import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { AboutOption } from "@core/data/profile/about/AboutOption";
 import {
     AboutTypicalOptionComponent
-} from "@pages/profile/profile-about/about-work-education/about-typical-option/about-typical-option.component";
+} from "@shared/profile/about-typical-option/about-typical-option.component";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
 
 @Component({

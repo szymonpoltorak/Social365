@@ -9,5 +9,5 @@ export interface AboutOption {
     icon: string;
     nullLabel: string;
     isBeingEdited: boolean;
-    formControl: FormControl<string | null>;
+    formControl: FormControl<string | null | Date>;
 }

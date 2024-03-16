@@ -5,7 +5,7 @@ import { MatIcon } from "@angular/material/icon";
 import { OverviewData } from "@core/data/profile/about/OverviewData";
 import { Relationship } from "@enums/profile/Relationship";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { AboutOptionComponent } from "@pages/profile/profile-about/about-overview/about-option/about-option.component";
+import { AboutOptionComponent } from "@shared/profile/about-option/about-option.component";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
 import { AboutOption } from "@core/data/profile/about/AboutOption";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
@@ -15,6 +15,8 @@ import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Optional } from "@core/types/profile/Optional";
 import { MatOption, MatSelect } from "@angular/material/select";
+import { AboutSelectOptionComponent } from "@shared/profile/about-select-option/about-select-option.component";
+import { AboutTypicalOptionComponent } from "@shared/profile/about-typical-option/about-typical-option.component";
 
 @Component({
     selector: 'app-about-overview',
@@ -35,7 +37,9 @@ import { MatOption, MatSelect } from "@angular/material/select";
         MatHint,
         ReactiveFormsModule,
         MatSelect,
-        MatOption
+        MatOption,
+        AboutSelectOptionComponent,
+        AboutTypicalOptionComponent
     ],
     templateUrl: './about-overview.component.html',
     styleUrl: './about-overview.component.scss'

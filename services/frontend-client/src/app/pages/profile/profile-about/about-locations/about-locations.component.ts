@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatCardTitle } from "@angular/material/card";
 import {
     AboutTypicalOptionComponent
-} from "@pages/profile/profile-about/about-work-education/about-typical-option/about-typical-option.component";
+} from "@shared/profile/about-typical-option/about-typical-option.component";
 import { AboutOption } from "@core/data/profile/about/AboutOption";
 import { FormControl } from "@angular/forms";
 import { PrivacyLevel } from "@enums/profile/PrivacyLevel";
