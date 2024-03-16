@@ -7,7 +7,6 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatDivider } from "@angular/material/divider";
 import { ReactiveFormsModule } from "@angular/forms";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 
 @Component({
     selector: 'app-about-select-option',
@@ -31,11 +30,11 @@ export class AboutSelectOptionComponent {
     @Input() option !: AboutOption;
     protected readonly Object = Object;
 
-    editData($event: AboutOptionData) {
-
+    editData(): void {
+        this.option.isBeingEdited = true;
     }
 
-    deleteAboutDate($event: AboutOptionData) {
+    deleteAboutDate(): void {
 
     }
 }

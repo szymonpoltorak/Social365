@@ -7,7 +7,6 @@ import { MatInput } from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDivider } from "@angular/material/divider";
 import { MatButton } from "@angular/material/button";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 
 @Component({
     selector: 'app-about-typical-option',
@@ -29,11 +28,11 @@ import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 export class AboutTypicalOptionComponent {
     @Input() option !: AboutOption;
 
-    editData(event: AboutOptionData): void {
-
+    editData(): void {
+        this.option.isBeingEdited = true;
     }
 
-    deleteAboutDate(event: AboutOptionData): void {
+    deleteAboutDate(): void {
 
     }
 }

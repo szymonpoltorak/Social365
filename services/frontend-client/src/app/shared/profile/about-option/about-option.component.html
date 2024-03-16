@@ -43,12 +43,12 @@
     </mat-menu>
 
     <mat-menu #settings xPosition="before">
-        <button aria-label="Edit" (click)="edit.emit(option)" mat-menu-item>
+        <button aria-label="Edit" (click)="edit.emit()" mat-menu-item>
             <mat-icon>edit</mat-icon>
             Edit
         </button>
 
-        <button aria-label="Delete" (click)="delete.emit(option)" mat-menu-item>
+        <button aria-label="Delete" (click)="delete.emit()" mat-menu-item>
             <mat-icon>delete</mat-icon>
             Delete
         </button>

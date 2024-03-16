@@ -1,8 +1,8 @@
 @if (option.data !== null && !option.isBeingEdited) {
     <app-about-option [icon]="option.icon"
                       [label]="option.label"
-                      (edit)="editData($event)"
-                      (delete)="deleteAboutDate($event)"
+                      (edit)="editData()"
+                      (delete)="deleteAboutDate()"
                       [subLabel]="option.subLabel"
                       [option]="option.data">
     </app-about-option>

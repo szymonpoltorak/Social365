@@ -24,6 +24,6 @@ export class AboutOptionComponent {
     @Input() icon !: string;
     @Input() subLabel !: string;
     protected readonly PrivacyLevel = PrivacyLevel;
-    @Output() readonly edit: EventEmitter<AboutOptionData> = new EventEmitter<AboutOptionData>();
-    @Output() readonly delete: EventEmitter<AboutOptionData> = new EventEmitter<AboutOptionData>();
+    @Output() readonly edit: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly delete: EventEmitter<void> = new EventEmitter<void>();
 }

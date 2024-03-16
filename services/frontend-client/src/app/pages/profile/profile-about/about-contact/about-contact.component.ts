@@ -13,7 +13,6 @@ import { MatInput } from "@angular/material/input";
 import { MatOption } from "@angular/material/autocomplete";
 import { MatSelect } from "@angular/material/select";
 import { Gender } from "@enums/profile/Gender";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { AboutSelectOptionComponent } from "@shared/profile/about-select-option/about-select-option.component";
 import { AboutDateOptionComponent } from "@shared/profile/about-date-option/about-date-option.component";
 import { DatePipe } from "@angular/common";
@@ -79,12 +78,4 @@ export class AboutContactComponent {
         formControl: new FormControl<string>(new Date().toISOString())
     };
     protected readonly Gender = Gender;
-
-    editData($event: AboutOptionData) {
-
-    }
-
-    deleteAboutDate($event: AboutOptionData) {
-
-    }
 }

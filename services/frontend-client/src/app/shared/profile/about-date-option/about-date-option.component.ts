@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { AboutOption } from "@core/data/profile/about/AboutOption";
-import { AboutOptionData } from "@core/data/profile/about/AboutOptionData";
 import { AboutOptionComponent } from "@shared/profile/about-option/about-option.component";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatInputModule } from "@angular/material/input";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import { MatDivider } from "@angular/material/divider";
 
@@ -29,13 +28,12 @@ import { MatDivider } from "@angular/material/divider";
 })
 export class AboutDateOptionComponent {
     @Input() option!: AboutOption;
-    date = new FormControl(new Date());
 
-    editData($event: AboutOptionData) {
-
+    editData(): void {
+        this.option.isBeingEdited = true;
     }
 
-    deleteAboutDate($event: AboutOptionData) {
+    deleteAboutDate(): void {
 
     }
 }
