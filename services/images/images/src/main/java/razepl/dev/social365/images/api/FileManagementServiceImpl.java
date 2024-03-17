@@ -12,4 +12,9 @@ public class FileManagementServiceImpl implements FileManagementService {
     public final void saveFile(String filePath, MultipartFile file) {
 
     }
+
+    @Override
+    public void deleteFile(String imagePath) {
+
+    }
 }

@@ -11,15 +11,20 @@ import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
+import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {ImagesMapper.class, FileManagementService.class})
 class ImageServiceImplTest {
+    private static final String SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH = "Should return ImageResponse with imageId, username and imagePath";
     @InjectMocks
     private ImagesServiceImpl imagesService;
 
@@ -55,7 +60,55 @@ class ImageServiceImplTest {
         ImageResponse actual = imagesService.uploadImage(username, image);
 
         // then
-        assertEquals(expected, actual, "Should return ImageResponse with imageId, username and imagePath");
+        assertEquals(expected, actual, SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH);
         verify(fileManagementService).saveFile(filePath, image);
+    }
+
+    @Test
+    final void test_getImagePath_Success() {
+        long imageId = 1L;
+        Image image = Image.builder().imageId(imageId).username("testUser").imagePath("testUser/image.jpg").build();
+        ImageResponse imageResponse = new ImageResponse(image.getImageId(), image.getUsername(), image.getImagePath());
+
+        when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.of(image));
+        when(imagesMapper.toImageResponse(image)).thenReturn(imageResponse);
+
+        ImageResponse result = imagesService.getImagePath(imageId);
+
+        assertEquals(imageResponse, result);
+    }
+
+    @Test
+    final void test_getImagePath_ImageNotFound() {
+        long imageId = 1L;
+
+        when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.empty());
+
+        assertThrows(ImageNotFoundException.class, () -> imagesService.getImagePath(imageId));
+    }
+
+    @Test
+    final void test_deleteImage_Success() {
+        long imageId = 1L;
+        Image image = Image.builder().imageId(imageId).username("testUser").imagePath("testUser/image.jpg").build();
+        ImageResponse imageResponse = new ImageResponse(image.getImageId(), image.getUsername(), image.getImagePath());
+
+        when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.of(image));
+        when(imagesMapper.toImageResponse(image)).thenReturn(imageResponse);
+
+        ImageResponse result = imagesService.deleteImage(imageId);
+
+        verify(imagesRepository, times(1)).delete(image);
+        verify(fileManagementService, times(1)).deleteFile(image.getImagePath());
+        assertEquals(imageResponse, result, SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH);
+    }
+
+    @Test
+    final void test_deleteImage_ImageNotFound() {
+        long imageId = 1L;
+
+        when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.empty());
+
+        assertThrows(ImageNotFoundException.class, () -> imagesService.deleteImage(imageId));
     }
 }

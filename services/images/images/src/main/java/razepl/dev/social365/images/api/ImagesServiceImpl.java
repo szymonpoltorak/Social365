@@ -10,11 +10,14 @@ import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
+import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImagesServiceImpl implements ImagesService {
+    private static final String IMAGE_NOT_FOUND = "Image not found";
+    private static final String IMAGE_FOUND = "Image found: {}";
     private final ImagesRepository imagesRepository;
     private final FileManagementService fileManagementService;
     private final ImagesMapper imagesMapper;
@@ -41,11 +44,29 @@ public class ImagesServiceImpl implements ImagesService {
 
     @Override
     public final ImageResponse getImagePath(long imageId) {
-        return null;
+        log.info("Getting image path for imageId: {}", imageId);
+
+        Image image = imagesRepository.findImageByImageId(imageId)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info(IMAGE_FOUND, image);
+
+        return imagesMapper.toImageResponse(image);
     }
 
     @Override
     public final ImageResponse deleteImage(long imageId) {
-        return null;
+        log.info("Deleting image with imageId: {}", imageId);
+
+        Image image = imagesRepository.findImageByImageId(imageId)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info(IMAGE_FOUND, image);
+
+        imagesRepository.delete(image);
+
+        fileManagementService.deleteFile(image.getImagePath());
+
+        return imagesMapper.toImageResponse(image);
     }
 }
