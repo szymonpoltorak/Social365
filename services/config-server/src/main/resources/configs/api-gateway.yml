@@ -22,8 +22,14 @@ spring:
             discovery:
                 locator:
                     enabled: true
+            routes:
+                -   id: images-service
+                    uri: http://images-service:8081
+                    predicates:
+                        - Path=/api/v1/images/**
 
 management:
-    tracing:
-        sampling:
-            probability: 1.0
+    endpoints:
+        web:
+            exposure:
+                include: "health"

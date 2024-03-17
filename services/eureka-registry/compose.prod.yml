@@ -12,6 +12,12 @@ services:
             context: .
             dockerfile: Dockerfile.prod
         env_file: .env
+        healthcheck:
+            test: wget --no-verbose --tries=1 --spider localhost:8761/api/actuator/health || exit 1
+            interval: 60s
+            retries: 5
+            start_period: 5s
+            timeout: 10s
         ports:
             - "${EUREKA_REGISTRY_PORT}:${EUREKA_REGISTRY_PORT}"
         networks:

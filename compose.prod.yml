@@ -2,15 +2,17 @@ include:
     -   path:
             - ./services/config-server/compose.prod.yml
     -   path:
-            - ./services/api-gateway/compose.prod.yml
-    -   path:
             - ./services/frontend-client/compose.prod.yml
-    -   path:
-            - ./services/authorization/compose.prod.yml
+#    -   path:
+#            - ./services/authorization/compose.prod.yml
     -   path:
             - ./services/eureka-registry/compose.prod.yml
     -   path:
             - ./services/reverse-proxy/compose.prod.yml
+    -   path:
+            - ./services/images/compose.prod.yml
+    -   path:
+            - ./services/api-gateway/compose.prod.yml
 
 services: {}
 
