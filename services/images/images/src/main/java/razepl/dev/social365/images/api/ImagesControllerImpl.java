@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,13 @@ public class ImagesControllerImpl implements ImagesController {
     @GetMapping(value = ImagesMappings.GET_IMAGE_MAPPING)
     public final ImageResponse getImagePath(@RequestParam(ImagesParams.IMAGE_ID) long imageId) {
         return imagesService.getImagePath(imageId);
+    }
+
+    @Override
+    @PutMapping(value = ImagesMappings.UPDATE_IMAGE_MAPPING)
+    public final ImageResponse updateImage(@RequestParam(ImagesParams.IMAGE_ID) long imageId,
+                                           @RequestBody MultipartFile image) {
+        return imagesService.updateImage(imageId, image);
     }
 
     @Override

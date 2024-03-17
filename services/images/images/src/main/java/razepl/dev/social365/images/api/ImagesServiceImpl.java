@@ -59,6 +59,26 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
+    public final ImageResponse updateImage(long imageId, MultipartFile image) {
+        log.info("Updating image with imageId: {}", imageId);
+
+        Image imageEntity = imagesRepository.findImageByImageId(imageId)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info(IMAGE_FOUND, imageEntity);
+
+        log.info("Deleting old image: {}", imageEntity.getImagePath());
+
+        fileManagementService.deleteFile(imageEntity.getImagePath());
+
+        log.info("Saving new image: {}", imageEntity.getImagePath());
+
+        fileManagementService.saveFile(imageEntity.getImagePath(), image);
+
+        return imagesMapper.toImageResponse(imageEntity);
+    }
+
+    @Override
     public final ImageResponse deleteImage(long imageId) {
         log.info("Deleting image with imageId: {}", imageId);
 
