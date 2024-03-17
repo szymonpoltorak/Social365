@@ -47,7 +47,7 @@ class ImageServiceImplTest {
                 "image".getBytes(StandardCharsets.UTF_8)
         );
         String username = "user@gmail.com";
-        String filePath = String.format("%s/%s", username, image.getOriginalFilename());
+        String filePath = String.format("tmp/%s/%s", username, image.getOriginalFilename());
         Image imageToSave = Image.builder().imageId(0L).imagePath(filePath).username(username).build();
         ImageResponse expected = new ImageResponse(0L, username, filePath);
 

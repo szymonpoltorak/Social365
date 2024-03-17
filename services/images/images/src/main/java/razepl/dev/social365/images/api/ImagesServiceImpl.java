@@ -12,10 +12,14 @@ import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
+import java.nio.file.Path;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImagesServiceImpl implements ImagesService {
+
+    private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
     private static final String IMAGE_NOT_FOUND = "Image not found";
     private static final String IMAGE_FOUND = "Image found: {}";
     private final ImagesRepository imagesRepository;
@@ -26,7 +30,7 @@ public class ImagesServiceImpl implements ImagesService {
     public final ImageResponse uploadImage(String username, MultipartFile image) {
         log.info("Uploading image for user: {}", username);
 
-        String imagePath = String.format("%s/%s", username, image.getOriginalFilename());
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, image.getOriginalFilename()).toString();
 
         Image imageEntity = Image
                 .builder()
