@@ -3,6 +3,7 @@ services:
         env_file:
             - .env
         image: postgres:alpine
+        container_name: images-postgres
         environment:
             POSTGRES_DB: ${IMAGES_POSTGRES_DB}
             POSTGRES_USER: ${IMAGES_POSTGRES_USER}
@@ -11,3 +12,59 @@ services:
             - "5000:5432"
         networks:
             - social365-network
+        healthcheck:
+            test: pg_isready -U postgres
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    images-service:
+        env_file:
+            - .env
+        depends_on:
+            images-postgres:
+                condition: service_healthy
+        container_name: images-service
+        image: images-service
+        build:
+            context: images-service
+            dockerfile: Dockerfile.prod
+        ports:
+            - "8081:8081"
+        volumes:
+            - images:/etc/nginx/html/images
+        healthcheck:
+            test: wget --no-verbose --tries=5 --spider localhost:8081/api/actuator/health || exit 1
+            interval: 60s
+            retries: 5
+            start_period: 5s
+            timeout: 10s
+        networks:
+            - social365-network
+
+    images-nginx:
+        env_file:
+            - .env
+        container_name: images-nginx
+        image: images-nginx
+        build:
+            context: images-nginx
+            dockerfile: Dockerfile.prod
+        ports:
+            - "${NGINX_PORT}:80"
+        networks:
+            - social365-network
+        depends_on:
+            images-service:
+                condition: service_started
+        healthcheck:
+            test: "curl -f http://localhost:4000 || exit 1"
+            interval: 1s
+            retries: 120
+            start_period: 15s
+            timeout: 5s
+        volumes:
+            - images:/etc/nginx/html/images
+
+volumes:
+    images:

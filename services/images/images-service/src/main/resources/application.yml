@@ -1,0 +1,25 @@
+spring:
+    application:
+        name: images-service
+
+    config:
+        import: optional:configserver:http://${CONFIG_HOSTNAME}:${CONFIG_SERVER_PORT}
+
+    datasource:
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${IMAGES_POSTGRES_USER}
+        password: ${IMAGES_POSTGRES_PASSWORD}
+
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true
+
+        properties:
+            hibernate:
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+
+                format_sql: true
