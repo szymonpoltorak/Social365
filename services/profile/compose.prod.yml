@@ -1,0 +1,21 @@
+services:
+    profile-neo4j:
+        container_name: profile-neo4j
+        image: neo4j:5.18-community-bullseye
+        env_file:
+            -   .env
+        ports:
+            - "7600:7687"
+            - "7474:7474"
+
+    profile-service:
+        container_name: profile-service
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        env_file:
+            -   .env
+        ports:
+            - "8083:8083"
+        depends_on:
+            - profile-neo4j
