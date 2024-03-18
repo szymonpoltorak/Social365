@@ -23,7 +23,7 @@ export class AboutLocationsComponent {
         subLabel: "Current city",
         data: null,
         icon: "location_city",
-        nullLabel: "Add a workplace",
+        nullLabel: "Add a current city",
         isBeingEdited: false,
         formControl: new FormControl<string>("")
     };
