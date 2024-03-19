@@ -5,7 +5,17 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.prod
+        depends_on:
+            frontend-client:
+                condition: service_healthy
+            api-gateway:
+                condition: service_healthy
         ports:
             - "80:80"
         networks:
             - social365-network
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:80" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3

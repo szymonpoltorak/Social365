@@ -12,3 +12,8 @@ services:
             - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
         networks:
             - social365-network
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:8888/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3

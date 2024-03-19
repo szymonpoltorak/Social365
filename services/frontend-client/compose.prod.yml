@@ -13,6 +13,9 @@ services:
         ports:
             - "${FRONTEND_PORT}:${NGINX_PORT}"
         healthcheck:
-            test: "curl -f http://localhost:${FRONTEND_PORT} || exit 1"
+            test: [ "CMD", "curl", "--fail", "http://localhost:${NGINX_PORT}" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
         networks:
             - social365-network

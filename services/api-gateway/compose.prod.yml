@@ -6,19 +6,18 @@ services:
         image: api-gateway
         depends_on:
             eureka-registry:
-                condition: service_started
+                condition: service_healthy
             config-server:
-                condition: service_started
+                condition: service_healthy
         build:
             context: .
             dockerfile: Dockerfile.prod
         env_file: .env
-        healthcheck: #Fix the healthcheck
-            test: "echo none"
-            interval: 1s
-            retries: 120
-            start_period: 20s
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${API_GATEWAY_PORT}/actuator/health" ]
+            interval: 10s
             timeout: 5s
+            retries: 3
         ports:
             - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
         networks:
