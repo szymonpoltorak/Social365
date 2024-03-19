@@ -14,15 +14,10 @@ spring:
         active: native
 
     application:
-        name: config-server
+        name: ${CONFIG_SERVER_HOSTNAME}
 
     cloud:
         config:
             server:
                 native:
                     search-locations: classpath:/configs
-management:
-    endpoints:
-        web:
-            exposure:
-                include: health

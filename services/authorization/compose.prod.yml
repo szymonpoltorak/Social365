@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
     social365-keycloak-initializer:
         container_name: social365-keycloak-initializer

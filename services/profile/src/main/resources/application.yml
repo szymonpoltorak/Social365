@@ -1,33 +1,6 @@
-server:
-    port: 8083
-
-    http2:
-        enabled: true
-
-    compression:
-        enabled: true
-        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
-        min-response-size: 512
-
 spring:
     application:
-        name: profile-service
+        name: ${PROFILE_SERVICE_HOSTNAME}
 
     config:
-        import: optional:configserver:http://${CONFIG_HOSTNAME}:${CONFIG_SERVER_PORT}
-
-    neo4j:
-        uri: ${NEO4J_URI}
-        authentication:
-            username: ${NEO4J_USERNAME}
-            password: ${NEO4J_PASSWORD}
-
-eureka:
-    client:
-        register-with-eureka: true
-
-        service-url:
-            defaultZone: ${EUREKA_SERVER_URI}
-
-    instance:
-        hostname: ${EUREKA_HOSTNAME}
+        import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME}:${CONFIG_SERVER_PORT}
