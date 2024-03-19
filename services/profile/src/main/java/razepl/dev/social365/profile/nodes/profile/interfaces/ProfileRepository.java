@@ -4,8 +4,6 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Repository;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
-import java.util.UUID;
-
 @Repository
-public interface ProfileRepository extends Neo4jRepository<Profile, UUID> {
+public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 }

@@ -1,6 +1,6 @@
 package razepl.dev.social365.profile.nodes.profile.enums;
 
-public enum RelationshipStatus {
+public enum RelationshipStatusType {
     SINGLE,
     IN_A_RELATIONSHIP,
     MARRIED,
