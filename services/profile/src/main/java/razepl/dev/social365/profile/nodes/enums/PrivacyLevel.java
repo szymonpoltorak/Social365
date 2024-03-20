@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.nodes.about.details.enums;
+package razepl.dev.social365.profile.nodes.enums;
 
 public enum PrivacyLevel {
     PUBLIC,

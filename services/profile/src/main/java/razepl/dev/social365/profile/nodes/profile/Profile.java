@@ -14,7 +14,8 @@ import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
-import razepl.dev.social365.profile.nodes.profile.enums.RelationshipStatusType;
+import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
+import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
 
 import java.util.Set;
 
@@ -24,25 +25,25 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Profile {
-    private static final String NAME_PATTERN = "^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$";
 
     @Id
     @Email(message = "Invalid email")
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$", message = "Description can only contain letters and numbers")
+    @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Description can only contain letters and numbers")
     @Size(max = 100, message = "Description must be less than 100 characters")
     private String description;
 
-    @Pattern(regexp = NAME_PATTERN, message = "Name can only contain letters")
+    @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Name can only contain letters")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
     private String name;
 
-    @Pattern(regexp = NAME_PATTERN, message = "Last name can only contain letters")
+    @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Last name can only contain letters")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters")
     private String lastName;
 
-    private String job;
+    @Relationship(type = "WORKS_AS", direction = Relationship.Direction.OUTGOING)
+    private Workplace workplace;
 
     @Relationship(type = "IS_A", direction = Relationship.Direction.OUTGOING)
     private RelationshipStatus relationshipStatus;

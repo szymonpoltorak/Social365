@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.enums.RelationshipStatusType;
 
 @Data
@@ -19,5 +20,7 @@ public class RelationshipStatus {
     private String relationshipStatusId;
 
     private RelationshipStatusType relationshipStatus;
+
+    private PrivacyLevel privacyLevel;
 
 }
