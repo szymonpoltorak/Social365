@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.nodes.profile.enums;
+package razepl.dev.social365.profile.nodes.about.relationship.enums;
 
 public enum RelationshipStatusType {
     SINGLE,

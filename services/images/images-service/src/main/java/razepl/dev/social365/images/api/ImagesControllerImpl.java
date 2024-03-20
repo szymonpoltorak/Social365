@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.constants.ImagesMappings;
 import razepl.dev.social365.images.api.constants.ImagesParams;
@@ -15,6 +16,7 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value = ImagesMappings.IMAGES_MAPPING)
 public class ImagesControllerImpl implements ImagesController {

@@ -2,6 +2,7 @@ package razepl.dev.social365.profile.nodes.profile;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
@@ -41,6 +43,12 @@ public class Profile {
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Last name can only contain letters")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters")
     private String lastName;
+
+    @PositiveOrZero(message = "Profile picture id must be positive or zero")
+    private long profilePictureId;
+
+    @Relationship(type = "BORN_ON", direction = Relationship.Direction.OUTGOING)
+    private BirthDate birthDate;
 
     @Relationship(type = "WORKS_AS", direction = Relationship.Direction.OUTGOING)
     private Workplace workplace;

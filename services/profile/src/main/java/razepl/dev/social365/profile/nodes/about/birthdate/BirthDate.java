@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.nodes.about.relationship;
+package razepl.dev.social365.profile.nodes.about.birthdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,20 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.support.DateString;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
-import razepl.dev.social365.profile.nodes.about.relationship.enums.RelationshipStatusType;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
-@Node("RelationshipStatus")
-@AllArgsConstructor
+@Node("DateOfBirth")
 @NoArgsConstructor
-public class RelationshipStatus {
+@AllArgsConstructor
+public class BirthDate {
 
     @Id
-    private String relationshipStatusId;
+    private String birthDateId;
 
-    private RelationshipStatusType relationshipStatus;
+    @DateString
+    private LocalDate dateOfBirth;
 
     private PrivacyLevel privacyLevel;
 
