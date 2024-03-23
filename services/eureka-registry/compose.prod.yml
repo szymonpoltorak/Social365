@@ -13,7 +13,7 @@ services:
             - path: "../.env"
               required: true
         healthcheck:
-            test: [ "CMD", "curl", "--fail", "http://localhost:8761/actuator/health" ]
+            test: [ "CMD", "curl", "--fail", "http://${EUREKA_REGISTRY_HOSTNAME}:${EUREKA_REGISTRY_PORT}/actuator/health" ]
             interval: 10s
             timeout: 5s
             retries: 3

@@ -21,7 +21,7 @@ public class AboutDetails {
 
     @Id
     @GeneratedValue
-    private UUID aboutDetailsId;
+    private String aboutDetailsId;
 
     @Pattern(regexp = "^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$", message = "Property name can only contain letters and numbers")
     private String propertyValue;
