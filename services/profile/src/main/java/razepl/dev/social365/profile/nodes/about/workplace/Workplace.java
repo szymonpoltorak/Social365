@@ -31,4 +31,8 @@ public class Workplace {
 
     private PrivacyLevel privacyLevel;
 
+    public final String getSubtitle() {
+        return String.format("%s at %s", position, workplaceName);
+    }
+
 }

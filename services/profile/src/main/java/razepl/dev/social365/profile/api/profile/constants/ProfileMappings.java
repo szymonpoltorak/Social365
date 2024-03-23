@@ -11,6 +11,8 @@ public final class ProfileMappings {
 
     public static final String GET_BASIC_PROFILE_INFO_MAPPING = "/basic-info";
 
+    public static final String USER_ID = "userId";
+
 
     private ProfileMappings() {
     }

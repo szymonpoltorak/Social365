@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public record ProfileSummaryResponse(String fullName, String username, String subtitle,
                                      String bio, String profilePictureUrl, int followersCount,
-                                     int friendsCount, int postsCount) {
+                                     int friendsCount, int postsCount, String userId) {
 }

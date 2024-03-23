@@ -29,12 +29,14 @@ import java.util.Set;
 public class Profile {
 
     @Id
+    private String userId;
+
     @Email(message = "Invalid email")
     private String username;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Description can only contain letters and numbers")
     @Size(max = 100, message = "Description must be less than 100 characters")
-    private String description;
+    private String bio;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Name can only contain letters")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
@@ -76,5 +78,12 @@ public class Profile {
 
     @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> friends;
+
+    @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.OUTGOING)
+    private Set<Profile> followers;
+
+    final String getFullName() {
+        return String.format("%s %s", name, lastName);
+    }
 
 }
