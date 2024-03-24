@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import razepl.dev.social365.profile.api.profile.about.old.constants.ProfileAboutMappings;
 import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -26,6 +27,12 @@ public class ProfileControllerImpl implements ProfileController {
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
     public final ProfileSummaryResponse getProfileSummary(@RequestParam(ProfileMappings.PROFILE_ID) String profileId) {
         return profileService.getProfileSummary(profileId);
+    }
+
+    @Override
+    @PostMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
+    public final ProfileRequest updateProfileBio(@RequestParam String profileId, @RequestParam String bio) {
+        return profileService.updateProfileBio(profileId, bio);
     }
 
     @Override

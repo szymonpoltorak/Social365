@@ -1,12 +1,8 @@
-package razepl.dev.social365.profile.api.profile.about.constants;
+package razepl.dev.social365.profile.api.profile.about.old.constants;
 
 public final class ProfileAboutMappings {
 
     public static final String PROFILE_ABOUT_API_MAPPING = "/api/v1/profile/about";
-
-    public static final String UPDATE_PROFILE_BIO_MAPPING = "/update-bio";
-
-    public static final String UPDATE_PROFILE_GENDER_MAPPING = "/update-gender";
 
     public static final String UPDATE_PROFILE_CURRENT_CITY_MAPPING = "/update-current-city";
 
@@ -23,8 +19,6 @@ public final class ProfileAboutMappings {
     public static final String UPDATE_PROFILE_PHONE_NUMBER_MAPPING = "/update-phone-number";
 
     public static final String UPDATE_PROFILE_EMAIL_PRIVACY_LEVEL_MAPPING = "/update-email-privacy-level";
-
-    public static final String DELETE_PROFILE_GENDER_MAPPING = "/delete-gender";
 
     public static final String DELETE_PROFILE_CURRENT_CITY_MAPPING = "/delete-current-city";
 

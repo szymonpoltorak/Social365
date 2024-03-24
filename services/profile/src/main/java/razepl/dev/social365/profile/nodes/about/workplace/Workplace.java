@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
@@ -19,6 +20,7 @@ import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
 public class Workplace {
 
     @Id
+    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
     private String workplaceId;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Position can only contain letters and numbers")

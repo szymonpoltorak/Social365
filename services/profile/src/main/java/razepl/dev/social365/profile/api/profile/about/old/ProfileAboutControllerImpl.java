@@ -1,21 +1,20 @@
-package razepl.dev.social365.profile.api.profile.about;
+package razepl.dev.social365.profile.api.profile.about.old;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import razepl.dev.social365.profile.api.profile.about.constants.ProfileAboutMappings;
-import razepl.dev.social365.profile.api.profile.about.data.AboutDetailsRequest;
-import razepl.dev.social365.profile.api.profile.about.data.DateOfBirthRequest;
-import razepl.dev.social365.profile.api.profile.about.data.GenderRequest;
-import razepl.dev.social365.profile.api.profile.about.data.RelationshipStatusRequest;
-import razepl.dev.social365.profile.api.profile.about.data.WorkPlaceRequest;
-import razepl.dev.social365.profile.api.profile.about.interfaces.ProfileAboutController;
-import razepl.dev.social365.profile.api.profile.about.interfaces.ProfileAboutService;
+import razepl.dev.social365.profile.api.profile.about.old.constants.ProfileAboutMappings;
+import razepl.dev.social365.profile.api.profile.about.old.data.AboutDetailsRequest;
+import razepl.dev.social365.profile.api.profile.about.old.data.DateOfBirthRequest;
+import razepl.dev.social365.profile.api.profile.about.old.data.GenderRequest;
+import razepl.dev.social365.profile.api.profile.about.old.data.RelationshipStatusRequest;
+import razepl.dev.social365.profile.api.profile.about.old.data.WorkPlaceRequest;
+import razepl.dev.social365.profile.api.profile.about.old.interfaces.ProfileAboutController;
+import razepl.dev.social365.profile.api.profile.about.old.interfaces.ProfileAboutService;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
@@ -25,18 +24,6 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class ProfileAboutControllerImpl implements ProfileAboutController {
 
     private final ProfileAboutService profileAboutService;
-
-    @Override
-    @PostMapping(value = ProfileAboutMappings.UPDATE_PROFILE_BIO_MAPPING)
-    public final ProfileRequest updateProfileBio(@RequestParam String username, @RequestParam String bio) {
-        return profileAboutService.updateProfileBio(username, bio);
-    }
-
-    @Override
-    @PutMapping(value = ProfileAboutMappings.UPDATE_PROFILE_GENDER_MAPPING)
-    public final ProfileRequest updateProfileGender(@RequestBody GenderRequest genderRequest) {
-        return profileAboutService.updateProfileGender(genderRequest);
-    }
 
     @Override
     @PutMapping(value = ProfileAboutMappings.UPDATE_PROFILE_CURRENT_CITY_MAPPING)
@@ -82,51 +69,45 @@ public class ProfileAboutControllerImpl implements ProfileAboutController {
 
     @Override
     @PutMapping(value = ProfileAboutMappings.UPDATE_PROFILE_EMAIL_PRIVACY_LEVEL_MAPPING)
-    public final ProfileRequest updateProfileEmailPrivacyLevel(@RequestParam String username,
+    public final ProfileRequest updateProfileEmailPrivacyLevel(@RequestParam String profileId,
                                                                @RequestParam PrivacyLevel privacyLevel) {
-        return profileAboutService.updateProfileEmailPrivacyLevel(username, privacyLevel);
-    }
-
-    @Override
-    @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_GENDER_MAPPING)
-    public final ProfileRequest deleteProfileGender(@RequestParam String username) {
-        return profileAboutService.deleteProfileGender(username);
+        return profileAboutService.updateProfileEmailPrivacyLevel(profileId, privacyLevel);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_CURRENT_CITY_MAPPING)
-    public final ProfileRequest deleteProfileCurrentCity(@RequestParam String username) {
-        return profileAboutService.deleteProfileCurrentCity(username);
+    public final ProfileRequest deleteProfileCurrentCity(@RequestParam String profileId) {
+        return profileAboutService.deleteProfileCurrentCity(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_HOME_TOWN_MAPPING)
-    public final ProfileRequest deleteProfileHomeTown(@RequestParam String username) {
-        return profileAboutService.deleteProfileHomeTown(username);
+    public final ProfileRequest deleteProfileHomeTown(@RequestParam String profileId) {
+        return profileAboutService.deleteProfileHomeTown(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_WORK_PLACE_MAPPING)
-    public final ProfileRequest deleteProfileWorkPlace(@RequestParam String username) {
-        return profileAboutService.deleteProfileWorkPlace(username);
+    public final ProfileRequest deleteProfileWorkPlace(@RequestParam String profileId) {
+        return profileAboutService.deleteProfileWorkPlace(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_EDUCATION_MAPPING)
-    public final ProfileRequest deleteProfileEducation(@RequestParam String username) {
-        return profileAboutService.deleteProfileEducation(username);
+    public final ProfileRequest deleteProfileEducation(@RequestParam String profileId) {
+        return profileAboutService.deleteProfileEducation(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING)
-    public final ProfileRequest deleteProfileRelationshipStatus(@RequestParam String username) {
-        return profileAboutService.deleteProfileRelationshipStatus(username);
+    public final ProfileRequest deleteProfileRelationshipStatus(@RequestParam String profileId) {
+        return profileAboutService.deleteProfileRelationshipStatus(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileAboutMappings.DELETE_PROFILE_PHONE_NUMBER_MAPPING)
-    public final ProfileRequest deleteProfilePhoneNumber(@RequestParam String username) {
-        return profileAboutService.deleteProfilePhoneNumber(username);
+    public final ProfileRequest deleteProfilePhoneNumber(@RequestParam String profileId) {
+        return profileAboutService.deleteProfilePhoneNumber(profileId);
     }
 
 }

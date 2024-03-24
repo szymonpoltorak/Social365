@@ -15,4 +15,6 @@ public interface ProfileService {
 
     ProfileResponse getBasicProfileInfo(String userId);
 
+    ProfileRequest updateProfileBio(String profileId, String bio);
+
 }

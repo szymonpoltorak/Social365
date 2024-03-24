@@ -12,6 +12,8 @@ import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
+import razepl.dev.social365.profile.nodes.about.mail.Mail;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
@@ -31,7 +33,24 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
+    private final MailRepository mailRepository;
     private final ProfileMapper profileMapper;
+
+    @Override
+    public final ProfileRequest updateProfileBio(String profileId, String bio) {
+        log.info("Updating profile bio for profileId: {}", profileId);
+
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
+
+        profile.setBio(bio);
+
+        profile = profileRepository.save(profile);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
 
     @Override
     public final ProfileSummaryResponse getProfileSummary(String profileId) {
@@ -65,6 +84,40 @@ public class ProfileServiceImpl implements ProfileService {
         if (Period.between(profileRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
             throw new TooYoungForAccountException();
         }
+        BirthDate birthDate = getBirthDate(profileRequest);
+
+        Mail mail = getMail(profileRequest);
+
+        Profile profile = Profile
+                .builder()
+                .userId(profileRequest.userId())
+                .mail(mail)
+                .firstName(profileRequest.name())
+                .lastName(profileRequest.lastName())
+                .birthDate(birthDate)
+                .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
+                .build();
+        Profile savedProfile = profileRepository.save(profile);
+
+        log.info("Saved profile: {}", savedProfile);
+
+        return profileMapper.mapProfileToProfileResponse(savedProfile);
+    }
+
+    private Mail getMail(ProfileRequest profileRequest) {
+        Mail mail = Mail
+                .builder()
+                .email(profileRequest.username())
+                .privacyLevel(PrivacyLevel.ONLY_ME)
+                .build();
+        Mail savedMail = mailRepository.save(mail);
+
+        log.info("Saved mail: {}", savedMail);
+
+        return savedMail;
+    }
+
+    private BirthDate getBirthDate(ProfileRequest profileRequest) {
         BirthDate birthDate = BirthDate
                 .builder()
                 .dateOfBirth(profileRequest.dateOfBirth())
@@ -74,20 +127,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Saved birth date: {}", savedBirthDate);
 
-        Profile profile = Profile
-                .builder()
-                .userId(profileRequest.userId())
-                .username(profileRequest.username())
-                .name(profileRequest.name())
-                .lastName(profileRequest.lastName())
-                .birthDate(savedBirthDate)
-                .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
-                .build();
-        Profile savedProfile = profileRepository.save(profile);
-
-        log.info("Saved profile: {}", savedProfile);
-
-        return profileMapper.mapProfileToProfileResponse(savedProfile);
+        return savedBirthDate;
     }
 
     @Override

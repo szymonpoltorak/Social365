@@ -11,6 +11,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
@@ -33,6 +34,9 @@ class ProfileServiceImplTest {
 
     @Mock
     private BirthDateRepository birthDateRepository;
+
+    @Mock
+    private MailRepository mailRepository;
 
     @Mock
     private ProfileMapper profileMapper;
@@ -154,6 +158,8 @@ class ProfileServiceImplTest {
         // when
         when(birthDateRepository.save(profile.getBirthDate()))
                 .thenReturn(profile.getBirthDate());
+        when(mailRepository.save(profile.getMail()))
+                .thenReturn(profile.getMail());
         when(profileRepository.save(profile))
                 .thenReturn(profile);
         when(profileMapper.mapProfileToProfileResponse(profile))

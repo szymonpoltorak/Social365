@@ -11,6 +11,8 @@ public final class ProfileMappings {
 
     public static final String GET_BASIC_PROFILE_INFO_MAPPING = "/basic-info";
 
+    public static final String UPDATE_PROFILE_BIO_MAPPING = "/update-bio";
+
     public static final String PROFILE_ID = "profileId";
 
 

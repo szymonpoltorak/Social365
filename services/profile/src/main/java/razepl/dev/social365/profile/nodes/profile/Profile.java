@@ -1,6 +1,5 @@
 package razepl.dev.social365.profile.nodes.profile;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -8,12 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
+import razepl.dev.social365.profile.nodes.about.mail.Mail;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
@@ -29,13 +30,11 @@ import java.util.Set;
 public class Profile {
 
     @Id
+    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
     private String profileId;
 
     @PositiveOrZero(message = "User id must be positive or zero")
     private long userId;
-
-    @Email(message = "Invalid email")
-    private String username;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Description can only contain letters and numbers")
     @Size(max = 100, message = "Description must be less than 100 characters")
@@ -43,7 +42,7 @@ public class Profile {
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Name can only contain letters")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
-    private String name;
+    private String firstName;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Last name can only contain letters")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters")
@@ -51,6 +50,9 @@ public class Profile {
 
     @PositiveOrZero(message = "Profile picture id must be positive or zero")
     private long profilePictureId;
+
+    @Relationship(type = "HAS", direction = Relationship.Direction.OUTGOING)
+    private Mail mail;
 
     @Relationship(type = "BORN_ON", direction = Relationship.Direction.OUTGOING)
     private BirthDate birthDate;
@@ -86,7 +88,7 @@ public class Profile {
     private Set<Profile> followers;
 
     final String getFullName() {
-        return String.format("%s %s", name, lastName);
+        return String.format("%s %s", firstName, lastName);
     }
 
 }
