@@ -24,14 +24,14 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
-    public final ProfileSummaryResponse getProfileSummary(@RequestParam(ProfileMappings.USER_ID) String userId) {
-        return profileService.getProfileSummary(userId);
+    public final ProfileSummaryResponse getProfileSummary(@RequestParam(ProfileMappings.PROFILE_ID) String profileId) {
+        return profileService.getProfileSummary(profileId);
     }
 
     @Override
     @GetMapping(value = ProfileMappings.GET_POST_PROFILE_INFO_MAPPING)
-    public final ProfilePostResponse getPostProfileInfo(@RequestParam(ProfileMappings.USER_ID) String userId) {
-        return profileService.getPostProfileInfo(userId);
+    public final ProfilePostResponse getPostProfileInfo(@RequestParam(ProfileMappings.PROFILE_ID) String profileId) {
+        return profileService.getPostProfileInfo(profileId);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING)
-    public final ProfileResponse getBasicProfileInfo(@RequestParam(ProfileMappings.USER_ID) String userId) {
-        return profileService.getBasicProfileInfo(userId);
+    public final ProfileResponse getBasicProfileInfo(@RequestParam(ProfileMappings.PROFILE_ID) String profileId) {
+        return profileService.getBasicProfileInfo(profileId);
     }
 
 }

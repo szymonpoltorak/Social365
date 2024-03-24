@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
@@ -29,7 +29,10 @@ import java.util.Set;
 public class Profile {
 
     @Id
-    private String userId;
+    private String profileId;
+
+    @PositiveOrZero(message = "User id must be positive or zero")
+    private long userId;
 
     @Email(message = "Invalid email")
     private String username;

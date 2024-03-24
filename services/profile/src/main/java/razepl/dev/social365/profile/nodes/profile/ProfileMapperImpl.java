@@ -26,7 +26,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .subtitle(getSubtitle(profile))
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
-                .userId(profile.getUserId())
+                .profileId(profile.getProfileId())
                 .build();
     }
 

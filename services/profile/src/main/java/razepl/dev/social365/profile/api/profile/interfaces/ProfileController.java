@@ -7,12 +7,12 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 
 public interface ProfileController {
 
-    ProfileSummaryResponse getProfileSummary(String username);
+    ProfileSummaryResponse getProfileSummary(String profileId);
 
-    ProfilePostResponse getPostProfileInfo(String username);
+    ProfilePostResponse getPostProfileInfo(String profileId);
 
     ProfileResponse createUsersProfile(ProfileRequest profileRequest);
 
-    ProfileResponse getBasicProfileInfo(String username);
+    ProfileResponse getBasicProfileInfo(String profileId);
 
 }
