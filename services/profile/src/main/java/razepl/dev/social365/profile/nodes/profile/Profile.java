@@ -1,5 +1,6 @@
 package razepl.dev.social365.profile.nodes.profile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -81,9 +83,13 @@ public class Profile {
     @Relationship(type = "FROM", direction = Relationship.Direction.OUTGOING)
     private AboutDetails homeTown;
 
+    @JsonIgnore
+    @ToString.Exclude
     @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> friends;
 
+    @JsonIgnore
+    @ToString.Exclude
     @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> followers;
 

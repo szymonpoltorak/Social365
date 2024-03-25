@@ -15,7 +15,7 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetai
 import razepl.dev.social365.profile.api.profile.about.experience.data.DateOfBirthRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
-import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
+import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 
 @RestController
@@ -39,7 +39,7 @@ public class AboutDetailsControllerImpl implements AboutDetailsController {
 
     @Override
     @DeleteMapping(value = AboutDetailsMappings.DELETE_PROFILE_GENDER_MAPPING)
-    public final ProfileRequest deleteProfileGender(@RequestParam(ProfileMappings.PROFILE_ID) String profileId) {
+    public final ProfileRequest deleteProfileGender(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
         return aboutDetailsService.deleteProfileGender(profileId);
     }
 

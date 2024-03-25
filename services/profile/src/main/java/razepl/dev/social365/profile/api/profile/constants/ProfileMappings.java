@@ -13,9 +13,6 @@ public final class ProfileMappings {
 
     public static final String UPDATE_PROFILE_BIO_MAPPING = "/update-bio";
 
-    public static final String PROFILE_ID = "profileId";
-
-
     private ProfileMappings() {
     }
 }

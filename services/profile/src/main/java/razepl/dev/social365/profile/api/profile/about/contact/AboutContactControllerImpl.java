@@ -11,6 +11,7 @@ import razepl.dev.social365.profile.api.profile.about.contact.constants.AboutCon
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactController;
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactService;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
+import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
@@ -29,14 +30,14 @@ public class AboutContactControllerImpl implements AboutContactController {
 
     @Override
     @PutMapping(value = AboutContactMappings.UPDATE_PROFILE_EMAIL_PRIVACY_LEVEL_MAPPING)
-    public final ProfileRequest updateProfileEmailPrivacyLevel(@RequestParam String profileId,
-                                                               @RequestParam PrivacyLevel privacyLevel) {
+    public final ProfileRequest updateProfileEmailPrivacyLevel(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                               @RequestParam(ProfileParams.PRIVACY_LEVEL) PrivacyLevel privacyLevel) {
         return aboutContactService.updateProfileEmailPrivacyLevel(profileId, privacyLevel);
     }
 
     @Override
     @DeleteMapping(value = AboutContactMappings.DELETE_PROFILE_PHONE_NUMBER_MAPPING)
-    public final ProfileRequest deleteProfilePhoneNumber(@RequestParam String profileId) {
+    public final ProfileRequest deleteProfilePhoneNumber(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
         return aboutContactService.deleteProfilePhoneNumber(profileId);
     }
 
