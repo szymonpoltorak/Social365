@@ -6,20 +6,16 @@ import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 
 public interface AboutExperienceService {
 
-    ProfileRequest updateProfileCurrentCity(AboutDetailsRequest cityRequest);
-
-    ProfileRequest updateProfileHomeTown(AboutDetailsRequest cityRequest);
-
     ProfileRequest updateProfileWorkPlace(WorkPlaceRequest workPlaceRequest);
 
-    ProfileRequest updateProfileEducation(AboutDetailsRequest educationRequest);
+    ProfileRequest updateProfileCollege(AboutDetailsRequest educationRequest);
 
-    ProfileRequest deleteProfileCurrentCity(String profileId);
+    ProfileRequest updateProfileHighSchool(AboutDetailsRequest highSchoolRequest);
 
-    ProfileRequest deleteProfileHomeTown(String profileId);
+    ProfileRequest deleteProfileHighSchool(String profileId);
 
     ProfileRequest deleteProfileWorkPlace(String profileId);
 
-    ProfileRequest deleteProfileEducation(String profileId);
+    ProfileRequest deleteProfileCollege(String profileId);
 
 }

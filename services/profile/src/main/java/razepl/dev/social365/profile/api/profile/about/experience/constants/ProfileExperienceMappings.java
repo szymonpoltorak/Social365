@@ -24,6 +24,10 @@ public final class ProfileExperienceMappings {
 
     public static final String DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING = "/deleteRelationshipStatus";
 
+    public static final String UPDATE_PROFILE_HIGH_SCHOOL_MAPPING = "/updateHighSchool";
+
+    public static final String DELETE_PROFILE_HIGH_SCHOOL_MAPPING = "/deleteHighSchool";
+
     private ProfileExperienceMappings() {
     }
 

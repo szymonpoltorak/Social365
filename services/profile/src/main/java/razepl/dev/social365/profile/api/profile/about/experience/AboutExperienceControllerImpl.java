@@ -12,6 +12,7 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetai
 import razepl.dev.social365.profile.api.profile.about.experience.data.WorkPlaceRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.interfaces.AboutExperienceController;
 import razepl.dev.social365.profile.api.profile.about.experience.interfaces.AboutExperienceService;
+import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 
 @RestController
@@ -29,20 +30,32 @@ public class AboutExperienceControllerImpl implements AboutExperienceController 
 
     @Override
     @PutMapping(value = ProfileExperienceMappings.UPDATE_PROFILE_EDUCATION_MAPPING)
-    public final ProfileRequest updateProfileEducation(@RequestBody AboutDetailsRequest educationRequest) {
-        return aboutExperienceService.updateProfileEducation(educationRequest);
+    public final ProfileRequest updateProfileCollege(@RequestBody AboutDetailsRequest educationRequest) {
+        return aboutExperienceService.updateProfileCollege(educationRequest);
+    }
+
+    @Override
+    @PutMapping(value = ProfileExperienceMappings.UPDATE_PROFILE_HIGH_SCHOOL_MAPPING)
+    public final ProfileRequest updateProfileHighSchool(@RequestBody AboutDetailsRequest highSchoolRequest) {
+        return aboutExperienceService.updateProfileHighSchool(highSchoolRequest);
+    }
+
+    @Override
+    @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_HIGH_SCHOOL_MAPPING)
+    public final ProfileRequest deleteProfileHighSchool(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+        return aboutExperienceService.deleteProfileHighSchool(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_WORK_PLACE_MAPPING)
-    public final ProfileRequest deleteProfileWorkPlace(@RequestParam String profileId) {
+    public final ProfileRequest deleteProfileWorkPlace(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
         return aboutExperienceService.deleteProfileWorkPlace(profileId);
     }
 
     @Override
     @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_EDUCATION_MAPPING)
-    public final ProfileRequest deleteProfileEducation(@RequestParam String profileId) {
-        return aboutExperienceService.deleteProfileEducation(profileId);
+    public final ProfileRequest deleteProfileCollege(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+        return aboutExperienceService.deleteProfileCollege(profileId);
     }
 
 }

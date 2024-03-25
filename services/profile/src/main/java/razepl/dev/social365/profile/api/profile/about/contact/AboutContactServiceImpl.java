@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactService;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Mail;
 import razepl.dev.social365.profile.nodes.about.mail.MailRepository;
@@ -37,6 +38,9 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         Mobile mobile = profile.getPhoneNumber();
 
+        if (mobile == null) {
+            mobile = new Mobile();
+        }
         mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
         mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
 
@@ -78,6 +82,9 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         Mobile mobile = profile.getPhoneNumber();
 
+        if (mobile == null) {
+            throw new ProfileDetailsNotFoundException();
+        }
         mobileRepository.delete(mobile);
 
         return profileMapper.mapProfileToProfileRequest(profile);

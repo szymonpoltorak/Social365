@@ -8,10 +8,14 @@ public interface AboutExperienceController {
 
     ProfileRequest updateProfileWorkPlace(WorkPlaceRequest workPlaceRequest);
 
-    ProfileRequest updateProfileEducation(AboutDetailsRequest educationRequest);
+    ProfileRequest updateProfileCollege(AboutDetailsRequest educationRequest);
+
+    ProfileRequest updateProfileHighSchool(AboutDetailsRequest highSchoolRequest);
+
+    ProfileRequest deleteProfileHighSchool(String profileId);
 
     ProfileRequest deleteProfileWorkPlace(String profileId);
 
-    ProfileRequest deleteProfileEducation(String profileId);
+    ProfileRequest deleteProfileCollege(String profileId);
 
 }
