@@ -12,7 +12,7 @@ import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
-import razepl.dev.social365.profile.nodes.about.mail.Mail;
+import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
@@ -86,12 +86,12 @@ public class ProfileServiceImpl implements ProfileService {
         }
         BirthDate birthDate = getBirthDate(profileRequest);
 
-        Mail mail = getMail(profileRequest);
+        Email email = getMail(profileRequest);
 
         Profile profile = Profile
                 .builder()
                 .userId(profileRequest.userId())
-                .mail(mail)
+                .email(email)
                 .firstName(profileRequest.name())
                 .lastName(profileRequest.lastName())
                 .birthDate(birthDate)
@@ -104,17 +104,17 @@ public class ProfileServiceImpl implements ProfileService {
         return profileMapper.mapProfileToProfileResponse(savedProfile);
     }
 
-    private Mail getMail(ProfileRequest profileRequest) {
-        Mail mail = Mail
+    private Email getMail(ProfileRequest profileRequest) {
+        Email email = Email
                 .builder()
                 .email(profileRequest.username())
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .build();
-        Mail savedMail = mailRepository.save(mail);
+        Email savedEmail = mailRepository.save(email);
 
-        log.info("Saved mail: {}", savedMail);
+        log.info("Saved mail: {}", savedEmail);
 
-        return savedMail;
+        return savedEmail;
     }
 
     private BirthDate getBirthDate(ProfileRequest profileRequest) {

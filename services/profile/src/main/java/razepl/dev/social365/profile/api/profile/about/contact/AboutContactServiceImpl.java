@@ -8,8 +8,8 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetai
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
-import razepl.dev.social365.profile.nodes.about.mail.Mail;
-import razepl.dev.social365.profile.nodes.about.mail.MailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.Email;
+import razepl.dev.social365.profile.nodes.about.mail.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.mobile.interfaces.MobileRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
@@ -22,7 +22,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 @RequiredArgsConstructor
 public class AboutContactServiceImpl implements AboutContactService {
 
-    private final MailRepository mailRepository;
+    private final EmailRepository emailRepository;
     private final ProfileRepository profileRepository;
     private final MobileRepository mobileRepository;
     private final ProfileMapper profileMapper;
@@ -60,13 +60,13 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating email privacy level: {}", profile);
 
-        Mail mail = profile.getMail();
+        Email email = profile.getEmail();
 
-        mail.setPrivacyLevel(privacyLevel);
+        email.setPrivacyLevel(privacyLevel);
 
-        mail = mailRepository.save(mail);
+        email = emailRepository.save(email);
 
-        log.info("Updated mail: {}", mail);
+        log.info("Updated mail: {}", email);
 
         return profileMapper.mapProfileToProfileRequest(profile);
     }

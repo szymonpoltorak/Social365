@@ -158,8 +158,8 @@ class ProfileServiceImplTest {
         // when
         when(birthDateRepository.save(profile.getBirthDate()))
                 .thenReturn(profile.getBirthDate());
-        when(mailRepository.save(profile.getMail()))
-                .thenReturn(profile.getMail());
+        when(mailRepository.save(profile.getEmail()))
+                .thenReturn(profile.getEmail());
         when(profileRepository.save(profile))
                 .thenReturn(profile);
         when(profileMapper.mapProfileToProfileResponse(profile))

@@ -16,7 +16,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
-import razepl.dev.social365.profile.nodes.about.mail.Mail;
+import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
@@ -54,7 +54,7 @@ public class Profile {
     private long profilePictureId;
 
     @Relationship(type = "HAS", direction = Relationship.Direction.OUTGOING)
-    private Mail mail;
+    private Email email;
 
     @Relationship(type = "BORN_ON", direction = Relationship.Direction.OUTGOING)
     private BirthDate birthDate;

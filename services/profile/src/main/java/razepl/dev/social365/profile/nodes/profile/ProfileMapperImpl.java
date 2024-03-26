@@ -27,7 +27,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfileSummaryResponse
                 .builder()
-                .username(profile.getMail().getEmail())
+                .username(profile.getEmail().getEmail())
                 .followersCount(profile.getFollowers().size())
                 .friendsCount(profile.getFriends().size())
                 .postsCount(0) //TODO: Implement posts count
@@ -46,7 +46,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfilePostResponse
                 .builder()
-                .username(profile.getMail().getEmail())
+                .username(profile.getEmail().getEmail())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
@@ -63,7 +63,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
                 .profilePictureLink(getProfilePicturePath(profile))
-                .username(profile.getMail().getEmail())
+                .username(profile.getEmail().getEmail())
                 .build();
     }
 
@@ -74,7 +74,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfileRequest
                 .builder()
-                .username(profile.getMail().getEmail())
+                .username(profile.getEmail().getEmail())
                 .dateOfBirth(profile.getBirthDate().getDateOfBirth())
                 .lastName(profile.getLastName())
                 .name(profile.getFirstName())

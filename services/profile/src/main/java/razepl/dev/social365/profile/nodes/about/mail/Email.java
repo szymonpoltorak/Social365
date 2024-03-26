@@ -1,6 +1,5 @@
 package razepl.dev.social365.profile.nodes.about.mail;
 
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,13 +14,13 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 @Node("Email")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Mail {
+public class Email {
 
     @Id
     @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
     private String mailId;
 
-    @Email(message = "Invalid email")
+    @jakarta.validation.constraints.Email(message = "Invalid email")
     private String email;
 
     private PrivacyLevel privacyLevel;
