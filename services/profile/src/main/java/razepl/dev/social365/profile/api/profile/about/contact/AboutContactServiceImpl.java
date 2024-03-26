@@ -31,7 +31,7 @@ public class AboutContactServiceImpl implements AboutContactService {
     public final ProfileRequest updateProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest) {
         log.info("Updating profile phone number with request: {}", phoneNumberRequest);
 
-        Profile profile = profileRepository.findById(phoneNumberRequest.profileId())
+        Profile profile = profileRepository.findByProfileId(phoneNumberRequest.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for updating phone number: {}", profile);
@@ -55,7 +55,7 @@ public class AboutContactServiceImpl implements AboutContactService {
     public final ProfileRequest updateProfileEmailPrivacyLevel(String profileId, PrivacyLevel privacyLevel) {
         log.info("Updating profile email privacy level with profileId: {} and privacyLevel: {}", profileId, privacyLevel);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for updating email privacy level: {}", profile);
@@ -75,7 +75,7 @@ public class AboutContactServiceImpl implements AboutContactService {
     public final ProfileRequest deleteProfilePhoneNumber(String profileId) {
         log.info("Deleting profile phone number with profileId: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for deleting phone number: {}", profile);

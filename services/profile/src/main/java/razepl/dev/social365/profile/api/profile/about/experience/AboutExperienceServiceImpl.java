@@ -33,7 +33,7 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     public final ProfileRequest updateProfileWorkPlace(WorkPlaceRequest workPlaceRequest) {
         log.info("Updating profile work place with request: {}", workPlaceRequest);
 
-        Profile profile = profileRepository.findById(workPlaceRequest.profileId())
+        Profile profile = profileRepository.findByProfileId(workPlaceRequest.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for work place update: {}", profile);
@@ -94,7 +94,7 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     public final ProfileRequest deleteProfileHighSchool(String profileId) {
         log.info("Deleting profile high school with profile id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         AboutDetails highSchool = profile.getHighSchool();
@@ -113,7 +113,7 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     public final ProfileRequest deleteProfileWorkPlace(String profileId) {
         log.info("Deleting profile work place with profile id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         Workplace workplace = profile.getWorkplace();
@@ -132,7 +132,7 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     public final ProfileRequest deleteProfileCollege(String profileId) {
         log.info("Deleting profile college with profile id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         AboutDetails college = profile.getCollege();
@@ -164,7 +164,7 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         if (request.detailsType() != detailsType) {
             throw new IllegalDetailsTypeException();
         }
-        Profile profile = profileRepository.findById(request.profileId())
+        Profile profile = profileRepository.findByProfileId(request.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for update: {}", profile);

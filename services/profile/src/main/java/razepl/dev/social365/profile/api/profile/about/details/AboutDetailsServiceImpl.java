@@ -204,7 +204,7 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     }
 
     private Profile getProfileData(String profileId) {
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info(PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST, profile);

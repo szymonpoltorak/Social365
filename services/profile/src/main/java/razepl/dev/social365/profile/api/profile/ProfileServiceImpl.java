@@ -40,7 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileRequest updateProfileBio(String profileId, String bio) {
         log.info("Updating profile bio for profileId: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
@@ -56,7 +56,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileSummaryResponse getProfileSummary(String profileId) {
         log.info("Getting profile summary for user with id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
@@ -69,7 +69,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfilePostResponse getPostProfileInfo(String profileId) {
         log.info("Getting post profile info for profile with id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
@@ -134,7 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileResponse getBasicProfileInfo(String profileId) {
         log.info("Getting basic profile info for profile with id: {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info(PROFILE_FOUND_IN_REPOSITORY, profile);

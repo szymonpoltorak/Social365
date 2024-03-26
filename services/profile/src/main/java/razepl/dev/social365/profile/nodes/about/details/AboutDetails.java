@@ -11,8 +11,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @Node("AboutDetails")

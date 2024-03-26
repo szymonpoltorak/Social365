@@ -47,7 +47,7 @@ class ProfileServiceImplTest {
         String profileId = "1234";
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.empty());
 
         // then
@@ -60,7 +60,7 @@ class ProfileServiceImplTest {
         String profileId = "1234";
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.empty());
 
         // then
@@ -75,7 +75,7 @@ class ProfileServiceImplTest {
         ProfileSummaryResponse expected = ProfileSummaryResponse.builder().build();
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToProfileSummaryResponse(profile))
                 .thenReturn(expected);
@@ -94,7 +94,7 @@ class ProfileServiceImplTest {
         ProfilePostResponse expected = ProfilePostResponse.builder().build();
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToProfilePostResponse(profile))
                 .thenReturn(expected);
@@ -111,7 +111,7 @@ class ProfileServiceImplTest {
         String profileId = "1234";
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.empty());
 
         // then
@@ -126,7 +126,7 @@ class ProfileServiceImplTest {
         ProfileResponse expected = ProfileResponse.builder().build();
 
         // when
-        when(profileRepository.findById(profileId))
+        when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToProfileResponse(profile))
                 .thenReturn(expected);
