@@ -107,7 +107,7 @@ public class ProfileServiceImpl implements ProfileService {
     private Email getMail(ProfileRequest profileRequest) {
         Email email = Email
                 .builder()
-                .email(profileRequest.username())
+                .emailValue(profileRequest.username())
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .build();
         Email savedEmail = mailRepository.save(email);

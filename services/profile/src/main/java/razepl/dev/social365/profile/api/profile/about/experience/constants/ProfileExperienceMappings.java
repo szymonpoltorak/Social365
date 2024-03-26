@@ -2,7 +2,7 @@ package razepl.dev.social365.profile.api.profile.about.experience.constants;
 
 public final class ProfileExperienceMappings {
 
-    public static final String PROFILE_EXPERIENCE_API_MAPPING = "/api/v1/profile/about";
+    public static final String PROFILE_EXPERIENCE_API_MAPPING = "/api/v1/profile/about/experience";
 
     public static final String UPDATE_PROFILE_CURRENT_CITY_MAPPING = "/updateCurrentCity";
 

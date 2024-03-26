@@ -62,7 +62,7 @@ public class Profile {
     @Relationship(type = "WORKS_AS", direction = Relationship.Direction.OUTGOING)
     private Workplace workplace;
 
-    @Relationship(type = "IS_A", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "IS", direction = Relationship.Direction.OUTGOING)
     private RelationshipStatus relationshipStatus;
 
     @Relationship(type = "IS", direction = Relationship.Direction.OUTGOING)

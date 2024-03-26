@@ -21,7 +21,7 @@ public class Email {
     private String mailId;
 
     @jakarta.validation.constraints.Email(message = "Invalid email")
-    private String email;
+    private String emailValue;
 
     private PrivacyLevel privacyLevel;
 
