@@ -10,12 +10,19 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequ
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.exceptions.IllegalDateException;
+import razepl.dev.social365.profile.exceptions.IllegalDetailsTypeException;
+import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
+import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
+import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
+import razepl.dev.social365.profile.nodes.about.details.interfaces.AboutDetailsRepository;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
 import razepl.dev.social365.profile.nodes.about.gender.GenderRepository;
+import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
+import razepl.dev.social365.profile.nodes.about.relationship.interfaces.RelationshipStatusRepository;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
@@ -30,7 +37,9 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
     private static final String PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST = "Profile found in repository from request : {}";
 
+    private final RelationshipStatusRepository relationshipStatusRepository;
     private final ProfileRepository profileRepository;
+    private final AboutDetailsRepository aboutDetailsRepository;
     private final GenderRepository genderRepository;
     private final ProfileMapper profileMapper;
     private final BirthDateRepository dateOfBirthRepository;
@@ -39,13 +48,14 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     public final ProfileRequest updateProfileGender(GenderRequest genderRequest) {
         log.info("New gender data : {}", genderRequest);
 
-        Profile profile = profileRepository.findById(genderRequest.profileId())
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info(PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST, profile);
-
+        Profile profile = getProfileData(genderRequest.profileId());
         Gender gender = profile.getGender();
 
+        log.info("Gender : {}", gender);
+
+        if (gender == null) {
+            gender = new Gender();
+        }
         gender.setGenderType(genderRequest.gender());
         gender.setPrivacyLevel(genderRequest.privacyLevel());
 
@@ -58,10 +68,7 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     public final ProfileRequest deleteProfileGender(String profileId) {
         log.info("Deleting gender for profile id : {}", profileId);
 
-        Profile profile = profileRepository.findById(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info(PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST, profile);
+        Profile profile = getProfileData(profileId);
 
         genderRepository.deleteById(profile.getGender().getGenderId());
 
@@ -93,32 +100,129 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
     @Override
     public final ProfileRequest updateProfileRelationshipStatus(RelationshipStatusRequest relationshipStatusRequest) {
-        return null;
-    }
+        log.info("New relationship status data : {}", relationshipStatusRequest);
 
-    @Override
-    public final ProfileRequest deleteProfileRelationshipStatus(String profileId) {
-        return null;
-    }
+        Profile profile = getProfileData(relationshipStatusRequest.profileId());
 
-    @Override
-    public final ProfileRequest deleteProfileCurrentCity(String profileId) {
-        return null;
-    }
+        RelationshipStatus status = profile.getRelationshipStatus();
 
-    @Override
-    public final ProfileRequest deleteProfileHomeTown(String profileId) {
-        return null;
+        status.setRelationshipStatus(relationshipStatusRequest.relationshipStatus());
+        status.setPrivacyLevel(relationshipStatusRequest.privacyLevel());
+
+        status = relationshipStatusRepository.save(status);
+
+        log.info("Updated relationship status : {}", status);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
     }
 
     @Override
     public final ProfileRequest updateProfileCurrentCity(AboutDetailsRequest cityRequest) {
-        return null;
+        log.info("New current city data : {}", cityRequest);
+
+        if (cityRequest.detailsType() != DetailsType.CURRENT_CITY) {
+            throw new IllegalDetailsTypeException();
+        }
+        Profile profile = getProfileData(cityRequest.profileId());
+        AboutDetails currentCity = profile.getCurrentCity();
+
+        currentCity = updateDetailsObject(cityRequest, currentCity, DetailsType.CURRENT_CITY);
+
+        log.info("Updated current city : {}", currentCity);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
     }
 
     @Override
-    public final ProfileRequest updateProfileHomeTown(AboutDetailsRequest cityRequest) {
-        return null;
+    public final ProfileRequest updateProfileHomeTown(AboutDetailsRequest homeRequest) {
+        log.info("New home town data : {}", homeRequest);
+
+        if (homeRequest.detailsType() != DetailsType.HOMETOWN) {
+            throw new IllegalDetailsTypeException();
+        }
+        Profile profile = getProfileData(homeRequest.profileId());
+        AboutDetails homeTown = profile.getHomeTown();
+
+        homeTown = updateDetailsObject(homeRequest, homeTown, DetailsType.HOMETOWN);
+
+        log.info("Updated current city : {}", homeTown);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final ProfileRequest deleteProfileRelationshipStatus(String profileId) {
+        log.info("Deleting relationship status for profile id : {}", profileId);
+
+        Profile profile = getProfileData(profileId);
+        RelationshipStatus status = profile.getRelationshipStatus();
+
+        if (status == null) {
+            throw new ProfileDetailsNotFoundException();
+        }
+        relationshipStatusRepository.delete(status);
+
+        log.info("Deleted relationship status : {}", status);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final ProfileRequest deleteProfileCurrentCity(String profileId) {
+        log.info("Deleting current city for profile id : {}", profileId);
+
+        Profile profile = getProfileData(profileId);
+
+        AboutDetails currentCity = profile.getCurrentCity();
+
+        if (currentCity == null) {
+            throw new ProfileDetailsNotFoundException();
+        }
+        aboutDetailsRepository.delete(currentCity);
+
+        log.info("Deleted current city : {}", currentCity);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final ProfileRequest deleteProfileHomeTown(String profileId) {
+        log.info("Deleting home town for profile id : {}", profileId);
+
+        Profile profile = getProfileData(profileId);
+
+        AboutDetails homeTown = profile.getHomeTown();
+
+        if (homeTown == null) {
+            throw new ProfileDetailsNotFoundException();
+        }
+        aboutDetailsRepository.delete(homeTown);
+
+        log.info("Deleted home town : {}", homeTown);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    private Profile getProfileData(String profileId) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info(PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST, profile);
+
+        return profile;
+    }
+
+    private AboutDetails updateDetailsObject(AboutDetailsRequest request, AboutDetails details,
+                                             DetailsType detailsType) {
+        if (details == null) {
+            details = AboutDetails.builder()
+                    .detailsType(detailsType)
+                    .build();
+        }
+        details.setPrivacyLevel(request.privacyLevel());
+        details.setPropertyValue(request.detailsValue());
+
+        return aboutDetailsRepository.save(details);
     }
 
 }
