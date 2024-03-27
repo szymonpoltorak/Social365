@@ -58,7 +58,7 @@ public class AboutDataServiceImpl implements AboutDataService {
     }
 
     private Profile getProfile(String profileId) {
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile found: {}", profile);
