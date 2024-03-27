@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
     frontend-client:
         container_name: frontend-client
@@ -9,10 +7,13 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.prod
-        env_file: .env
+        env_file: ../.env
         ports:
-            - "${FRONTEND_PORT}:${NGINX_PORT}"
+            - "${FRONTEND_PORT}:${FRONTEND_NGINX_PORT}"
         healthcheck:
-            test: "curl -f http://localhost:${FRONTEND_PORT} || exit 1"
+            test: [ "CMD", "curl", "--fail", "http://localhost:${FRONTEND_NGINX_PORT}" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
         networks:
             - social365-network

@@ -13,6 +13,8 @@ include:
             - ./services/images/compose.prod.yml
     -   path:
             - ./services/api-gateway/compose.prod.yml
+    -   path:
+            - ./services/profile/compose.prod.yml
 
 services: {}
 

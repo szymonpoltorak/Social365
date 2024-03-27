@@ -2,10 +2,23 @@ services:
     reverse-proxy:
         container_name: reverse-proxy
         image: reverse-proxy
+        env_file:
+            -   path: ../.env
+                required: true
         build:
             context: .
             dockerfile: Dockerfile.prod
+        depends_on:
+            frontend-client:
+                condition: service_healthy
+            api-gateway:
+                condition: service_healthy
         ports:
-            - "80:80"
+            - "${REVERSE_PROXY_PORT}:${REVERSE_PROXY_PORT}"
         networks:
             - social365-network
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${REVERSE_PROXY_PORT}" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3

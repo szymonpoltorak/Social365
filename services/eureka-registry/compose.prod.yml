@@ -1,23 +1,22 @@
-version: "3.8"
-
 services:
     eureka-registry:
-        container_name: eureka-registry
-        image: eureka-registry
-        hostname: eureka-registry
+        container_name: ${EUREKA_REGISTRY_HOSTNAME}
+        image: ${EUREKA_REGISTRY_HOSTNAME}
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}
         depends_on:
             config-server:
                 condition: service_started
         build:
             context: .
             dockerfile: Dockerfile.prod
-        env_file: .env
+        env_file:
+            - path: "../.env"
+              required: true
         healthcheck:
-            test: wget --no-verbose --tries=1 --spider localhost:8761/api/actuator/health || exit 1
-            interval: 60s
-            retries: 5
-            start_period: 5s
-            timeout: 10s
+            test: [ "CMD", "curl", "--fail", "http://${EUREKA_REGISTRY_HOSTNAME}:${EUREKA_REGISTRY_PORT}/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
         ports:
             - "${EUREKA_REGISTRY_PORT}:${EUREKA_REGISTRY_PORT}"
         networks:

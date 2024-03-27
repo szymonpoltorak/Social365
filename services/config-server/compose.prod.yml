@@ -1,14 +1,20 @@
-version: "3.8"
-
 services:
     config-server:
-        container_name: config-server
-        image: config-server
+        container_name: ${CONFIG_SERVER_HOSTNAME}
+        hostname: ${CONFIG_SERVER_HOSTNAME}
+        image: ${CONFIG_SERVER_HOSTNAME}
         build:
             context: .
             dockerfile: Dockerfile.prod
-        env_file: .env
+        env_file:
+            - path: "../.env"
+              required: true
         ports:
             - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
         networks:
             - social365-network
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${CONFIG_SERVER_PORT}/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3

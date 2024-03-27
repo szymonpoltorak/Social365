@@ -15,10 +15,10 @@ server:
 
 eureka:
     instance:
-        hostname: ${EUREKA_HOSTNAME}
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}
 
     client:
         register-with-eureka: false
         fetch-registry: false
         service-url:
-            defaultZone: http://${EUREKA_HOSTNAME}:${EUREKA_REGISTRY_PORT}/eureka/
+            defaultZone: http://${EUREKA_REGISTRY_HOSTNAME}:${EUREKA_REGISTRY_PORT}/eureka/
