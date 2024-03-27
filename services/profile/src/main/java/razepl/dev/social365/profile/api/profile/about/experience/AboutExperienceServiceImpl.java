@@ -161,11 +161,12 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     }
 
     private Profile getProfileAndValidateRequest(AboutDetailsRequest request, DetailsType detailsType) {
+        Profile profile = profileRepository.findByProfileId(request.profileId())
+                .orElseThrow(ProfileNotFoundException::new);
+
         if (request.detailsType() != detailsType) {
             throw new IllegalDetailsTypeException();
         }
-        Profile profile = profileRepository.findByProfileId(request.profileId())
-                .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for update: {}", profile);
 
