@@ -90,6 +90,11 @@ public class Profile {
 
     @JsonIgnore
     @ToString.Exclude
+    @Relationship(type = "WANTS_TO_BE_FRIEND_WITH", direction = Relationship.Direction.OUTGOING)
+    private Set<Profile> friendRequests;
+
+    @JsonIgnore
+    @ToString.Exclude
     @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> followers;
 

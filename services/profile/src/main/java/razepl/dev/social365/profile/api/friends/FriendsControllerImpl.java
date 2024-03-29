@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.profile.api.friends.data.FriendMappings;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
+import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendsParams;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsController;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class FriendsControllerImpl implements FriendsController {
 
     @Override
     @GetMapping(value = FriendMappings.GET_FRIENDS_ON_PAGE)
-    public final List<FriendResponse> getFriends(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+    public final Set<FriendResponse> getFriends(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
                                                  @RequestParam(FriendsParams.PAGE_NUMBER) int page,
                                                  @RequestParam(FriendsParams.PAGE_SIZE) int size) {
         return friendsService.getFriends(profileId, page, size);
@@ -33,15 +34,15 @@ public class FriendsControllerImpl implements FriendsController {
 
     @Override
     @GetMapping(value = FriendMappings.FRIEND_REQUESTS)
-    public final List<FriendResponse> getFriendRequests(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
-                                                        @RequestParam(FriendsParams.PAGE_NUMBER) int page,
-                                                        @RequestParam(FriendsParams.PAGE_SIZE) int size) {
+    public final Set<FriendSuggestionResponse> getFriendRequests(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                                 @RequestParam(FriendsParams.PAGE_NUMBER) int page,
+                                                                 @RequestParam(FriendsParams.PAGE_SIZE) int size) {
         return friendsService.getFriendRequests(profileId, page, size);
     }
 
     @Override
     @GetMapping(value = FriendMappings.FRIEND_SUGGESTIONS)
-    public final List<FriendResponse> getFriendSuggestions(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+    public final Set<FriendSuggestionResponse> getFriendSuggestions(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
                                                            @RequestParam(FriendsParams.PAGE_NUMBER) int page,
                                                            @RequestParam(FriendsParams.PAGE_SIZE) int size) {
         return friendsService.getFriendSuggestions(profileId, page, size);
