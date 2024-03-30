@@ -3,6 +3,10 @@ package razepl.dev.social365.profile.nodes.profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import razepl.dev.social365.profile.api.friends.data.FriendData;
+import razepl.dev.social365.profile.api.friends.data.FriendResponse;
+import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
+import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.ContactInfoResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.LocationsResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResponse;
@@ -156,6 +160,55 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .gender(aboutMapper.mapGenderToAboutOptionResponse(profile.getGender()))
                 .birthDate(aboutMapper.mapBirthdayToAboutOptionResponse(profile.getBirthDate()))
                 .build();
+    }
+
+    @Override
+    public final FriendResponse mapProfileToFriendResponse(Profile profile, int numOfMutualFriends,
+                                                           boolean isFollowed) {
+        if (profile == null) {
+            log.info(PROFILE_IS_NULL);
+
+            return null;
+        }
+        return FriendResponse
+                .builder()
+                .fullName(profile.getFullName())
+                .profilePictureUrl(getProfilePicturePath(profile))
+                .profileId(profile.getProfileId())
+                .numOfMutualFriends(numOfMutualFriends)
+                .isFollowed(isFollowed)
+                .build();
+    }
+
+    @Override
+    public final FriendSuggestionResponse mapProfileToFriendSuggestionResponse(Profile profile,
+                                                                               int numOfMutualFriends) {
+        if (profile == null) {
+            log.info(PROFILE_IS_NULL);
+
+            return null;
+        }
+        return FriendSuggestionResponse
+                .builder()
+                .fullName(profile.getFullName())
+                .profileId(profile.getProfileId())
+                .numOfMutualFriends(numOfMutualFriends)
+                .profilePictureUrl(getProfilePicturePath(profile))
+                .build();
+    }
+
+    @Override
+    public FriendSuggestionResponse mapFriendSuggestionToFriendSuggestionResponse(FriendSuggestion friendSuggestion) {
+        return mapProfileToFriendSuggestionResponse(friendSuggestion.profile(), friendSuggestion.mutualFriendsCount());
+    }
+
+    @Override
+    public FriendResponse mapFriendDataToFriendResponse(FriendData friendData) {
+        return mapProfileToFriendResponse(
+                friendData.profile(),
+                friendData.mutualFriendsCount(),
+                friendData.isFollowed()
+        );
     }
 
     private String getProfilePicturePath(Profile profile) {
