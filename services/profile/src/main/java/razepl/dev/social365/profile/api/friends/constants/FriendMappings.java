@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.api.friends.data;
+package razepl.dev.social365.profile.api.friends.constants;
 
 public final class FriendMappings {
 
