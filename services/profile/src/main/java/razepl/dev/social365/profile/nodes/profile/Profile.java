@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -85,16 +86,19 @@ public class Profile {
 
     @JsonIgnore
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> friends;
 
     @JsonIgnore
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Relationship(type = "WANTS_TO_BE_FRIEND_WITH", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> friendRequests;
 
     @JsonIgnore
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.OUTGOING)
     private Set<Profile> followers;
 

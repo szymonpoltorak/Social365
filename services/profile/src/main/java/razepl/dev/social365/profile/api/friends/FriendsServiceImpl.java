@@ -141,7 +141,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         log.info("Found profile and friend.");
 
-        if (profile.getFriends().contains(friend)) {
+        if (profile.getFollowers().contains(friend)) {
             profile.getFollowers().remove(friend);
         } else {
             profile.getFollowers().add(friend);
