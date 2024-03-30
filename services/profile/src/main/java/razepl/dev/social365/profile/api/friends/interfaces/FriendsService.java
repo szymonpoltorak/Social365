@@ -17,4 +17,6 @@ public interface FriendsService {
 
     FriendResponse addUserToFriends(String profileId, String friendId);
 
+    FriendResponse changeFollowStatus(String profileId, String friendId);
+
 }

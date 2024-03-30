@@ -129,6 +129,28 @@ public class FriendsServiceImpl implements FriendsService {
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
+    @Override
+    public final FriendResponse changeFollowStatus(String profileId, String friendId) {
+        log.info("Changing follow status for profile with id: {} and friend with id: {}", profileId, friendId);
+
+        Profile profile = profileRepository.findByProfileId(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Found profile and friend.");
+
+        if (profile.getFriends().contains(friend)) {
+            profile.getFollowers().remove(friend);
+        } else {
+            profile.getFollowers().add(friend);
+        }
+        profile = profileRepository.save(profile);
+
+        return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
     private Profile addFriend(Profile profile, Profile friend) {
         profile.getFriends().add(friend);
         profile.getFollowers().add(friend);

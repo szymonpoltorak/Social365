@@ -8,6 +8,7 @@ public final class FriendMappings {
     public static final String REMOVE_FRIEND = "/removeFriend";
     public static final String ADD_FRIEND = "/addFriend";
     public static final String GET_FRIENDS_ON_PAGE = "/getFriends";
+    public static final String CHANGE_FOLLOW_STATUS = "/changeFollowStatus";
 
     private FriendMappings() {
     }
