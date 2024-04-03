@@ -89,7 +89,7 @@ jobs:
                     distribution: 'temurin'
 
             -   name: Run Postgres, ConfigServer and EurekaRegistry
-                run: docker-compose -f docker-compose.test.yml up -d images-postgres config-server eureka-registry
+                run: docker compose -f compose.prod.yml up -d images-postgres config-server eureka-registry --env-file services/.env
 
             -   name: Wait for Postgres, ConfigServer and EurekaRegistry to start
                 run: sleep 30s
