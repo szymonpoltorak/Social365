@@ -92,4 +92,4 @@ jobs:
                 with:
                     gradle-version: '8.2'
                     arguments: build
-                    build-root-directory: services/images-service
+                    build-root-directory: services/images/images-service
