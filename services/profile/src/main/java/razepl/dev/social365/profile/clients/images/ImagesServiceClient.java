@@ -8,7 +8,7 @@ import razepl.dev.social365.profile.clients.images.constants.ImagesParams;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
 
 @FunctionalInterface
-@FeignClient(name = "IMAGES-SERVICE")
+@FeignClient(name = "IMAGES-SERVICE", configuration = {ImagesErrorDecoder.class})
 public interface ImagesServiceClient {
 
     @GetMapping(value = ImagesMappings.GET_IMAGE_MAPPING)
