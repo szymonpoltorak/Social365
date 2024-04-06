@@ -33,7 +33,7 @@ services:
         ports:
             - "${IMAGES_SERVICE_PORT}:${IMAGES_SERVICE_PORT}"
         volumes:
-            - images:/etc/nginx/html/images
+            - "images:${IMAGE_VOLUME_PATH}"
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${IMAGES_SERVICE_PORT}/actuator/health" ]
             interval: 10s

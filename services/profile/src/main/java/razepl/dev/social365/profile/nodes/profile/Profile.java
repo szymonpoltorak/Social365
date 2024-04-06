@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -33,7 +32,6 @@ import java.util.Set;
 public class Profile {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
     private String profileId;
 
     @PositiveOrZero(message = "User id must be positive or zero")

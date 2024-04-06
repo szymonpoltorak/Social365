@@ -21,6 +21,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -29,7 +30,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private static final String PROFILE_FOUND_IN_REPOSITORY = "Profile found in repository: {}";
     private static final int MINIMAL_AGE = 13;
-    private static final long DEFAULT_PROFILE_PICTURE_ID = 0L;
+    private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
@@ -80,6 +81,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public final ProfileResponse createUsersProfile(ProfileRequest profileRequest) {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
+        log.info("Profile request: {}", profileRequest);
 
         if (Period.between(profileRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
             throw new TooYoungForAccountException();
@@ -120,7 +122,7 @@ public class ProfileServiceImpl implements ProfileService {
     private BirthDate getBirthDate(ProfileRequest profileRequest) {
         BirthDate birthDate = BirthDate
                 .builder()
-                .dateOfBirth(profileRequest.dateOfBirth())
+                .dateOfBirth(profileRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .build();
         BirthDate savedBirthDate = birthDateRepository.save(birthDate);

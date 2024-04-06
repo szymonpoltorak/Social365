@@ -19,7 +19,7 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class AboutDetails {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    
     private String aboutDetailsId;
 
     @Pattern(regexp = "^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$", message = "Property name can only contain letters and numbers")

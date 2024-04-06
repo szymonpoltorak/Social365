@@ -31,6 +31,8 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
@@ -182,7 +184,7 @@ class AboutDetailsServiceTest {
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(LocalDate.now())
+                .dateOfBirth(new Date())
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -208,10 +210,12 @@ class AboutDetailsServiceTest {
     @Test
     final void test_updateProfileDateOfBirth_illegalDate() {
         // given
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(LocalDate.now().plusDays(1))
+                .dateOfBirth(calendar.getTime())
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -237,10 +241,12 @@ class AboutDetailsServiceTest {
     @Test
     final void test_updateProfileDateOfBirth_success() {
         // given
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -20);
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(calendar.getTime())
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile

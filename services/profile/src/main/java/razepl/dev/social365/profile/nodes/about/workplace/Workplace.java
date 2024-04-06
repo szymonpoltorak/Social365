@@ -20,7 +20,7 @@ import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
 public class Workplace {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    
     private String workplaceId;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Position can only contain letters and numbers")

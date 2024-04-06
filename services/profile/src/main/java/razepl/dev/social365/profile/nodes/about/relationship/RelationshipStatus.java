@@ -18,7 +18,7 @@ import razepl.dev.social365.profile.nodes.about.relationship.enums.RelationshipS
 public class RelationshipStatus {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    
     private String relationshipStatusId;
 
     private RelationshipStatusType relationshipStatus;

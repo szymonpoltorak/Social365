@@ -22,6 +22,8 @@ import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -94,7 +96,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfileRequest
                 .builder()
                 .username(profile.getEmail().getEmailValue())
-                .dateOfBirth(profile.getBirthDate().getDateOfBirth())
+                .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
                 .lastName(profile.getLastName())
                 .name(profile.getFirstName())
                 .build();

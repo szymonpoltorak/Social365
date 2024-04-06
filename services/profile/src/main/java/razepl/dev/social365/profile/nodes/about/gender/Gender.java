@@ -20,7 +20,7 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 public class Gender {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    
     private String genderId;
 
     private GenderType genderType;

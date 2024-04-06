@@ -19,7 +19,7 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class Mobile {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    
     private String mobileId;
 
     @Pattern(regexp = "^[\\d+]*$", message = "Phone number can only contain numbers")
