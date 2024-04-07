@@ -1,0 +1,9 @@
+FROM alpine:3.19.1
+
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache nodejs npm curl
+
+WORKDIR /home/frontend-client
+
+ENTRYPOINT ["/bin/sh", "-c", "npm install;npm run start-dev"]
+
+EXPOSE 80

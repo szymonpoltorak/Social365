@@ -1,0 +1,21 @@
+services:
+    frontend-client:
+        container_name: frontend-client
+        image: frontend-client
+        depends_on:
+            - api-gateway
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        env_file: ../.env
+        ports:
+            - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${FRONTEND_PORT}" ]
+            interval: 15s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - "./:/home/frontend-client"
+        networks:
+            - social365-network
