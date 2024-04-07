@@ -79,6 +79,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfileResponse
                 .builder()
+                .profileId(profile.getProfileId())
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
                 .profilePictureLink(getProfilePicturePath(profile))
@@ -98,7 +99,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .username(profile.getEmail().getEmailValue())
                 .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
                 .lastName(profile.getLastName())
-                .name(profile.getFirstName())
+                .firstName(profile.getFirstName())
                 .build();
     }
 

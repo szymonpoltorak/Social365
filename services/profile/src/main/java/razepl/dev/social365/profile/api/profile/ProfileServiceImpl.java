@@ -94,7 +94,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .builder()
                 .userId(profileRequest.userId())
                 .email(email)
-                .firstName(profileRequest.name())
+                .firstName(profileRequest.firstName())
                 .lastName(profileRequest.lastName())
                 .birthDate(birthDate)
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)

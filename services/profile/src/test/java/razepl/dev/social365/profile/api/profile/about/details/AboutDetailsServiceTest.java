@@ -31,6 +31,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -184,7 +185,7 @@ class AboutDetailsServiceTest {
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(new Date())
+                .dateOfBirth(LocalDate.now())
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -193,7 +194,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
 
@@ -210,12 +211,10 @@ class AboutDetailsServiceTest {
     @Test
     final void test_updateProfileDateOfBirth_illegalDate() {
         // given
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(calendar.getTime())
+                .dateOfBirth(LocalDate.now().plusYears(1))
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -224,7 +223,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
 
@@ -241,12 +240,10 @@ class AboutDetailsServiceTest {
     @Test
     final void test_updateProfileDateOfBirth_success() {
         // given
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -20);
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(calendar.getTime())
+                .dateOfBirth(LocalDate.now().minusYears(20))
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -255,7 +252,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();

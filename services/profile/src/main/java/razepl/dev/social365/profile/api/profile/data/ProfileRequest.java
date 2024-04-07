@@ -5,5 +5,5 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record ProfileRequest(long userId, String username, String name, String lastName, LocalDate dateOfBirth) {
+public record ProfileRequest(long userId, String username, String firstName, String lastName, LocalDate dateOfBirth) {
 }

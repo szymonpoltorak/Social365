@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @Data
@@ -16,6 +18,7 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class Email {
 
     @Id
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String mailId;
 
     @jakarta.validation.constraints.Email(message = "Invalid email")
