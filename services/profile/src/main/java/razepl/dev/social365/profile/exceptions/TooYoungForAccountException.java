@@ -1,11 +1,10 @@
 package razepl.dev.social365.profile.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serial;
 
-public class TooYoungForAccountException extends ResponseStatusException {
+public class TooYoungForAccountException extends AbstractException {
     @Serial
     private static final long serialVersionUID = 3081415888675929730L;
 

@@ -5,7 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serial;
 
-public class IllegalDateException extends ResponseStatusException {
+public class IllegalDateException extends AbstractException {
 
     @Serial
     private static final long serialVersionUID = 5488509105990490600L;

@@ -1,0 +1,42 @@
+services:
+    profile-neo4j:
+        container_name: ${PROFILE_NEO4J_HOSTNAME}
+        hostname: ${PROFILE_NEO4J_HOSTNAME}
+        image: neo4j:5.18-community-bullseye
+        env_file:
+            -   path: "../.env"
+                required: true
+        ports:
+            - "${NEO4J_PORT}:${NEO4J_PORT}"
+            - "${NEO4J_HTTP_PORT}:${NEO4J_HTTP_PORT}"
+        networks:
+            - profiles-network
+
+    profile-service:
+        container_name: ${PROFILE_SERVICE_HOSTNAME}
+        image: ${PROFILE_SERVICE_HOSTNAME}
+        hostname: ${PROFILE_SERVICE_HOSTNAME}
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        env_file:
+            -   path: "../.env"
+                required: true
+        networks:
+            - social365-network
+            - profiles-network
+        volumes:
+            -   "./:/home/profile-service"
+        ports:
+            - "${PROFILE_SERVICE_PORT}:${PROFILE_SERVICE_PORT}"
+        depends_on:
+            config-server:
+                condition: service_healthy
+            eureka-registry:
+                condition: service_healthy
+            profile-neo4j:
+                condition: service_started
+
+networks:
+    profiles-network:
+        driver: bridge

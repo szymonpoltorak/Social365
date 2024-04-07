@@ -1,0 +1,23 @@
+include:
+    -   path:
+            - ./services/config-server/compose.dev.yml
+    -   path:
+            - ./services/frontend-client/compose.dev.yml
+    #    -   path:
+    #            - ./services/authorization/compose.dev.yml
+    -   path:
+            - ./services/eureka-registry/compose.dev.yml
+    -   path:
+            - ./services/reverse-proxy/compose.prod.yml
+    -   path:
+            - ./services/images/compose.dev.yml
+    -   path:
+            - ./services/api-gateway/compose.dev.yml
+    -   path:
+            - ./services/profile/compose.dev.yml
+
+services: {}
+
+networks:
+    social365-network:
+        driver: bridge

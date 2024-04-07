@@ -18,10 +18,11 @@ spring:
 
 eureka:
     client:
-        register-with-eureka: true
-
         service-url:
             defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true
 
     instance:
         hostname: ${EUREKA_REGISTRY_HOSTNAME}

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
 
@@ -20,7 +21,7 @@ import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
 public class Workplace {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String workplaceId;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Position can only contain letters and numbers")
@@ -28,7 +29,7 @@ public class Workplace {
     private String position;
 
     @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Workplace can only contain letters and numbers")
-    @Size(max = 100, message = "Workplace name must be less than 100 characters")
+    @Size(max = 100, message = "Workplace firstName must be less than 100 characters")
     private String workplaceName;
 
     private PrivacyLevel privacyLevel;

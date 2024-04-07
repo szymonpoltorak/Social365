@@ -7,8 +7,8 @@ services:
             -   path: "../.env"
                 required: true
         ports:
-            - "7600:7687"
-            - "7474:7474"
+            - "${NEO4J_PORT}:${NEO4J_PORT}"
+            - "${NEO4J_HTTP_PORT}:${NEO4J_HTTP_PORT}"
         networks:
             - profiles-network
 
@@ -26,7 +26,7 @@ services:
             - social365-network
             - profiles-network
         ports:
-            - "8083:8083"
+            - "${PROFILE_SERVICE_PORT}:${PROFILE_SERVICE_PORT}"
         depends_on:
             config-server:
                 condition: service_healthy

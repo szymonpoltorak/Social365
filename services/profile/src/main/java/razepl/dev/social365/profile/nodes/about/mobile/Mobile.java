@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @Data
@@ -19,7 +20,7 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class Mobile {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String mobileId;
 
     @Pattern(regexp = "^[\\d+]*$", message = "Phone number can only contain numbers")

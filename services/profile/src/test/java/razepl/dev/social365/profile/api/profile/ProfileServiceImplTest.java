@@ -151,7 +151,10 @@ class ProfileServiceImplTest {
     @Test
     final void test_createUsersProfile_shouldReturnData() {
         // given
-        ProfileRequest profileRequest = ProfileRequest.builder().dateOfBirth(LocalDate.now().minusYears(20)).build();
+        ProfileRequest profileRequest = ProfileRequest
+                .builder()
+                .dateOfBirth(LocalDate.now().minusYears(20))
+                .build();
         Profile profile = new Profile();
         ProfileResponse expected = ProfileResponse.builder().build();
 

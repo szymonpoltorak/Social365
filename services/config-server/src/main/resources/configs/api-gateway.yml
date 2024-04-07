@@ -12,18 +12,18 @@ server:
 eureka:
     client:
         serviceUrl:
-            defaultZone: http://eureka-registry:8761/eureka/
+            defaultZone: ${EUREKA_SERVER_URI}
 
-        register-with-eureka: false
+        register-with-eureka: true
 
         fetch-registry: true
 
     instance:
-        hostname: eureka-registry
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}
 
 spring:
     application:
-        name: api-gateway
+        name: ${API_GATEWAY_HOSTNAME}
 
     cloud:
         gateway:
@@ -32,7 +32,12 @@ spring:
                     enabled: true
 
             routes:
-                -   id: images-service
-                    uri: http://images-service:8081
+                -   id: ${IMAGES_SERVICE_HOSTNAME}
+                    uri: http://${IMAGES_SERVICE_HOSTNAME}:${IMAGES_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/images/**
+
+                -   id: ${PROFILE_SERVICE_HOSTNAME}
+                    uri: http://${PROFILE_SERVICE_HOSTNAME}:${PROFILE_SERVICE_PORT}
+                    predicates:
+                        - Path=/api/v1/profile/**

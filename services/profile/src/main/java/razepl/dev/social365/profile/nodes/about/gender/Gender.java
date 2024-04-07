@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.about.gender.enums.GenderType;
 import razepl.dev.social365.profile.nodes.profile.Profile;
@@ -20,7 +21,7 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 public class Gender {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String genderId;
 
     private GenderType genderType;

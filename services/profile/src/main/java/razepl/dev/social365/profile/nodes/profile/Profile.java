@@ -14,6 +14,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
@@ -33,7 +34,7 @@ import java.util.Set;
 public class Profile {
 
     @Id
-    @GeneratedValue(generatorRef = "uuid", generatorClass = GeneratedValue.UUIDGenerator.class)
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String profileId;
 
     @PositiveOrZero(message = "User id must be positive or zero")
@@ -47,8 +48,8 @@ public class Profile {
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
     private String firstName;
 
-    @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Last name can only contain letters")
-    @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters")
+    @Pattern(regexp = ValidationPatterns.NAME_PATTERN, message = "Last firstName can only contain letters")
+    @Size(min = 2, max = 30, message = "Last firstName must be between 2 and 30 characters")
     private String lastName;
 
     @PositiveOrZero(message = "Profile picture id must be positive or zero")

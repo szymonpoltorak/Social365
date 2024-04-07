@@ -31,6 +31,9 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
@@ -191,7 +194,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
 
@@ -211,7 +214,7 @@ class AboutDetailsServiceTest {
         DateOfBirthRequest dateOfBirthRequest = DateOfBirthRequest
                 .builder()
                 .profileId("profileId")
-                .dateOfBirth(LocalDate.now().plusDays(1))
+                .dateOfBirth(LocalDate.now().plusYears(1))
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
@@ -220,7 +223,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
 
@@ -249,7 +252,7 @@ class AboutDetailsServiceTest {
         BirthDate birthDate = BirthDate
                 .builder()
                 .profile(profile)
-                .dateOfBirth(dateOfBirthRequest.dateOfBirth())
+                .dateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(dateOfBirthRequest.privacyLevel())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();

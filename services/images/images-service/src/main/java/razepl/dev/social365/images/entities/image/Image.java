@@ -45,9 +45,9 @@ public class Image {
         if (o == null) {
             return false;
         }
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer()
+        Class<?> oEffectiveClass = o instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer()
                 .getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy thisProxy ? thisProxy.getHibernateLazyInitializer()
                 .getPersistentClass() : this.getClass();
 
         if (thisEffectiveClass != oEffectiveClass) {
@@ -62,7 +62,7 @@ public class Image {
 
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        return this instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer()
                 .getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

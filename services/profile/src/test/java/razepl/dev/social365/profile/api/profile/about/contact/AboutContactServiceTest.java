@@ -21,6 +21,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

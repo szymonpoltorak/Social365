@@ -29,6 +29,8 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -90,7 +92,7 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
         if (dateOfBirthRequest.dateOfBirth().isAfter(LocalDate.now())) {
             throw new IllegalDateException();
         }
-        birthDate.setDateOfBirth(dateOfBirthRequest.dateOfBirth());
+        birthDate.setDateOfBirth(dateOfBirthRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE));
         birthDate.setPrivacyLevel(dateOfBirthRequest.privacyLevel());
 
         birthDate = dateOfBirthRepository.save(birthDate);

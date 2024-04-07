@@ -1,0 +1,27 @@
+services:
+    api-gateway:
+        container_name: ${API_GATEWAY_HOSTNAME}
+        image: ${API_GATEWAY_HOSTNAME}
+        hostname: ${API_GATEWAY_HOSTNAME}
+        depends_on:
+            eureka-registry:
+                condition: service_healthy
+            config-server:
+                condition: service_healthy
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        env_file:
+            - path: "../.env"
+              required: true
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${API_GATEWAY_PORT}/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+        ports:
+            - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
+        volumes:
+            -   "./:/home/api-gateway"
+        networks:
+            - social365-network
