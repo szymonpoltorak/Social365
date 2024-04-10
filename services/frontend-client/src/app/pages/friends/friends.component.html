@@ -1,18 +1,17 @@
 <div class="w-full overflow-y-hidden h-full mb-96">
     <app-toolbar></app-toolbar>
 
-    <div class="grid grid-cols-3 gap-3 border-t-2 border-tertiary h-full">
+    <div class="grid grid-cols-4 gap-3 border-t-2 border-tertiary h-full">
         <div class="col-span-1 flex flex-col gap-3 border-tertiary border-r-2 bg-secondary p-3 h-full">
-            <div matRipple class="mat-button-ripple">
-                Friend Requests
-            </div>
-
-            <div matRipple class="mat-button-ripple">
-                FriendSuggestions
-            </div>
+            @for (option of options; track option) {
+                <app-list-select-option [title]="option"
+                                        [isSelected]="selectedOption === option"
+                                        (clickEvent)="deselectOtherOptions($event)">
+                </app-list-select-option>
+            }
         </div>
 
-        <div class="col-span-2 p-3 h-full overflow-auto">
+        <div class="col-span-3 p-3 h-full overflow-auto">
             <router-outlet></router-outlet>
         </div>
     </div>
