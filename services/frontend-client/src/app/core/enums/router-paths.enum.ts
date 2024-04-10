@@ -21,5 +21,7 @@ export enum RouterPaths {
     PROFILE_ABOUT_WORK_EDUCATION = "work-education",
     PROFILE_ABOUT_LOCATIONS = "locations",
     PROFILE_ABOUT_CONTACT = "contact",
-    PROFILE_ABOUT_RELATIONSHIP = "relationship"
+    PROFILE_ABOUT_RELATIONSHIP = "relationship",
+
+    FRIENDS_PATH = "friends",
 }

@@ -62,6 +62,11 @@ export const routes: Routes = [
         ]
     },
     {
+        path: RouterPaths.FRIENDS_PATH,
+        loadComponent: () => import("./pages/friends/friends.component")
+            .then(m => m.FriendsComponent)
+    },
+    {
         path: RouterPaths.CURRENT_PATH,
         redirectTo: RouterPaths.HOME_DIRECT,
         pathMatch: 'full'
