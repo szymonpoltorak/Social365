@@ -4,7 +4,7 @@
     <div class="grid grid-cols-4 gap-3 border-t-2 border-tertiary h-full">
         <div class="col-span-1 flex flex-col gap-3 border-tertiary border-r-2 bg-secondary p-3 h-full">
             @for (option of options; track option) {
-                <app-list-select-option [title]="option"
+                <app-list-select-option [option]="option"
                                         [isSelected]="selectedOption === option"
                                         (clickEvent)="deselectOtherOptions($event)">
                 </app-list-select-option>

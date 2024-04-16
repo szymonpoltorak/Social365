@@ -1,5 +1,6 @@
 <div matRipple class="mat-button-ripple"
      (click)="changeSelectionStatus()"
+     routerLink="{{ option.route }}"
      [ngClass]="{'option-selected': isSelected}">
-    {{ title }}
+    {{ option.label }}
 </div>

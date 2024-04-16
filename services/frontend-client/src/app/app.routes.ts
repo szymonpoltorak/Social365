@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes }      from '@angular/router';
 import { RouterPaths } from "@enums/router-paths.enum";
 
 export const routes: Routes = [
@@ -50,7 +50,7 @@ export const routes: Routes = [
                 ]
             },
             {
-                path: RouterPaths.PROFILE_FRIENDS,
+                path: RouterPaths.FRIENDS_PATH,
                 loadComponent: () => import("./pages/profile/profile-friends/profile-friends.component")
                     .then(m => m.ProfileFriendsComponent)
             },
@@ -64,7 +64,19 @@ export const routes: Routes = [
     {
         path: RouterPaths.FRIENDS_PATH,
         loadComponent: () => import("./pages/friends/friends.component")
-            .then(m => m.FriendsComponent)
+            .then(m => m.FriendsComponent),
+        children: [
+            {
+                path: RouterPaths.FRIEND_REQUESTS,
+                loadComponent: () => import("./pages/friends/friend-requests/friend-requests.component")
+                    .then(m => m.FriendRequestsComponent)
+            },
+            {
+                path: RouterPaths.FRIEND_SUGGESTIONS,
+                loadComponent: () => import("./pages/friends/friend-suggestions/friend-suggestions.component")
+                    .then(m => m.FriendSuggestionsComponent)
+            }
+        ]
     },
     {
         path: RouterPaths.CURRENT_PATH,
