@@ -13,6 +13,7 @@ export enum RouterPaths {
 
     PROFILE_POSTS = "posts",
     FRIENDS_PATH = "friends",
+    FRIENDS_DIRECT = "/friends",
     PROFILE_PHOTOS = "photos",
 
     PROFILE_ABOUT = "about",

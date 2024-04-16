@@ -96,16 +96,26 @@
                 <span>Messages</span>
             </button>
 
+            <button mat-menu-item
+                    (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_SUGGESTIONS])"
+                    aria-label="settings">
+                <mat-icon>people</mat-icon>
+
+                <span>Friend Suggestions</span>
+            </button>
+
             <button mat-menu-item aria-label="settings">
                 <mat-icon>notifications</mat-icon>
 
                 <span>Notifications</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_REQUESTS])"
+                    aria-label="settings">
                 <mat-icon>people</mat-icon>
 
-                <span>Groups</span>
+                <span>Friend Requests</span>
             </button>
 
             <button mat-menu-item aria-label="settings">

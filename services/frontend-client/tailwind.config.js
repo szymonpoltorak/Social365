@@ -35,7 +35,15 @@ export const theme = {
             "lm": "1024px",
             "ll": "1440px",
             "feed-md": "1142px",
-            "feed-sm": "838px"
+            "feed-sm": "838px",
+
+            "r-s": "576px",
+            "r-sm": "732px",
+            "r-sl": "1000px",
+            "r-md": "1400px",
+            "r-l": "1740px",
+            "r-xl": "1970px",
+            "r-xxl": "2560px",
         }
     }
 };
