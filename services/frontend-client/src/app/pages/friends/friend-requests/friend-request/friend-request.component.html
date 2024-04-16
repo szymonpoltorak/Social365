@@ -16,11 +16,19 @@
 
     <div class="flex flex-col m-4">
         <button mat-raised-button class="mb-3" color="primary">
-            Accept
+            @if (isFriendRequest) {
+                Accept
+            } @else {
+                Add friend
+            }
         </button>
 
         <button mat-raised-button color="accent">
-            Decline
+            @if (isFriendRequest) {
+                Decline
+            } @else {
+                Remove
+            }
         </button>
     </div>
 </mat-card>

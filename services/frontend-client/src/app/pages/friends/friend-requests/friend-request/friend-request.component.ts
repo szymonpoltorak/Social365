@@ -19,4 +19,5 @@ import { FriendElement } from "@interfaces/friends/friend-element.interface";
 })
 export class FriendRequestComponent {
     @Input() friendElement !: FriendElement;
+    @Input() isFriendRequest: boolean = true;
 }

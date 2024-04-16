@@ -1,1 +1,13 @@
-<p>friend-suggestions works!</p>
+<div class="m-4">
+    <div class="text-xl font-bold mb-3">
+        Friend Requests
+    </div>
+
+    <div class="flex justify-center">
+        <div class="grid r-l:grid-cols-6 r-md:grid-cols-5 r-xl:grid-cols-7 r-xxl:grid-cols-8 r-sl:grid-cols-3 r-sm:grid-cols-2 r-s:grid-cols-1 gap-6 mb-24">
+            @for (friend of friendSuggestions; track friend) {
+                <app-friend-request [friendElement]="friend" [isFriendRequest]="false"></app-friend-request>
+            }
+        </div>
+    </div>
+</div>
