@@ -1,0 +1,17 @@
+.mat-button-ripple {
+    @apply w-full mb-2 p-4 rounded-xl;
+}
+
+.mat-button-ripple:hover {
+    @apply cursor-pointer bg-mat-hover;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.option-selected {
+    @apply bg-tertiary rounded-xl;
+}

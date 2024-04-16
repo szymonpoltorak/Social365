@@ -1,5 +1,5 @@
 export interface FriendFeedOption {
-    id: string;
+    profileId: string;
     fullName: string;
     isOnline: boolean;
     imageLink: string;

@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
         { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
-        { label: 'Friends', icon: 'people', route: RouterPaths.PROFILE_FRIENDS },
+        { label: 'Friends', icon: 'people', route: RouterPaths.FRIENDS_PATH },
         { label: 'Photos', icon: 'image', route: RouterPaths.PROFILE_PHOTOS }
     ];
     protected activeRoute: TabOption = this.options[0];

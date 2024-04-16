@@ -12,7 +12,8 @@ export enum RouterPaths {
     PROFILE_DIRECT = "/profile",
 
     PROFILE_POSTS = "posts",
-    PROFILE_FRIENDS = "friends",
+    FRIENDS_PATH = "friends",
+    FRIENDS_DIRECT = "/friends",
     PROFILE_PHOTOS = "photos",
 
     PROFILE_ABOUT = "about",
@@ -21,5 +22,8 @@ export enum RouterPaths {
     PROFILE_ABOUT_WORK_EDUCATION = "work-education",
     PROFILE_ABOUT_LOCATIONS = "locations",
     PROFILE_ABOUT_CONTACT = "contact",
-    PROFILE_ABOUT_RELATIONSHIP = "relationship"
+
+    FRIEND_REQUESTS = "requests",
+    FRIEND_SUGGESTIONS = "suggestions",
+
 }
