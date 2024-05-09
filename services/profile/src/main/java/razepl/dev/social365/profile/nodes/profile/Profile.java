@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -54,6 +55,9 @@ public class Profile {
 
     @PositiveOrZero(message = "Profile picture id must be positive or zero")
     private long profilePictureId;
+
+    @Version
+    private long version;
 
     @Relationship(type = "HAS", direction = Relationship.Direction.OUTGOING)
     private Email email;

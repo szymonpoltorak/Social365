@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.Version;
 import razepl.dev.social365.images.api.constants.ImagesParams;
 
 import java.util.Objects;
@@ -36,6 +37,9 @@ public class Image {
 
     @Column(unique = true, nullable = false)
     private String imagePath;
+
+    @Version
+    private long version;
 
     @Override
     public final boolean equals(Object o) {

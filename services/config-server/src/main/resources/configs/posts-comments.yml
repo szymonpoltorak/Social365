@@ -25,7 +25,7 @@ spring:
         port: ${POSTS_CASSANDRA_PORT}
         keyspace-name: ${POSTS_CASSANDRA_KEYSPACE_NAME}
         contact-points: ${POSTS_CASSANDRA_HOSTNAME}
-        local-datacenter: ${POSTS_CASSANDRA_LOCAL_DATACENTER}
+        local-datacenter: ${POSTS_CASSANDRA_DATACENTER}
 
 eureka:
     client:
