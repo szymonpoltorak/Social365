@@ -1,0 +1,39 @@
+server:
+    port: ${POSTS_SERVICE_PORT}
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+spring:
+    cassandra:
+        schema-action: create_if_not_exists
+
+        request:
+            timeout: 10s
+
+        connection:
+            connect-timeout: 10s
+            init-query-timeout: 10s
+
+        username: ${POSTS_CASSANDRA_USERNAME}
+        password: ${POSTS_CASSANDRA_PASSWORD}
+        port: ${POSTS_CASSANDRA_PORT}
+        keyspace-name: ${POSTS_CASSANDRA_KEYSPACE_NAME}
+        contact-points: ${POSTS_CASSANDRA_HOSTNAME}
+        local-datacenter: ${POSTS_CASSANDRA_LOCAL_DATACENTER}
+
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true
+
+    instance:
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}

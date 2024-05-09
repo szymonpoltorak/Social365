@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: ${POSTS_SERVICE_HOSTNAME}
+
+    config:
+        import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME}:${CONFIG_SERVER_PORT}
+
