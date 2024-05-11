@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -63,10 +64,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendDataToFriendResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Set<FriendResponse> actual = friendsService.getFriends("profileId", page, size);
+        Page<FriendResponse> actual = friendsService.getFriends("profileId", pageable);
 
         // then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual.toSet());
     }
 
     @Test
@@ -91,10 +92,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendSuggestionToFriendSuggestionResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Set<FriendSuggestionResponse> actual = friendsService.getFriendRequests("profileId", page, size);
+        Page<FriendSuggestionResponse> actual = friendsService.getFriendRequests("profileId", pageable);
 
         // then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual.toSet());
     }
 
     @Test
@@ -119,10 +120,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendSuggestionToFriendSuggestionResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Set<FriendSuggestionResponse> actual = friendsService.getFriendSuggestions("profileId", page, size);
+        Page<FriendSuggestionResponse> actual = friendsService.getFriendSuggestions("profileId", pageable);
 
         // then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual.toSet());
     }
 
     @Test

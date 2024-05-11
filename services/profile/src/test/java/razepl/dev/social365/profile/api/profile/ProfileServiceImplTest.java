@@ -10,13 +10,17 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
+import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
+import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
+import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -155,7 +159,17 @@ class ProfileServiceImplTest {
                 .builder()
                 .dateOfBirth(LocalDate.now().minusYears(20))
                 .build();
-        Profile profile = new Profile();
+        Profile profile = Profile
+                .builder()
+                .profilePictureId(1L)
+                .email(Email.builder().privacyLevel(PrivacyLevel.ONLY_ME).build())
+                .birthDate(BirthDate
+                        .builder()
+                        .dateOfBirth(profileRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .privacyLevel(PrivacyLevel.ONLY_ME)
+                        .build()
+                )
+                .build();
         ProfileResponse expected = ProfileResponse.builder().build();
 
         // when

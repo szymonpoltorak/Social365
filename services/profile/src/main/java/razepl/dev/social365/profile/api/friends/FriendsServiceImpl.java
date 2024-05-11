@@ -30,55 +30,37 @@ public class FriendsServiceImpl implements FriendsService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final Set<FriendResponse> getFriends(String profileId, int page, int size) {
+    public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
         log.info("Getting friends for profile with id: {}", profileId);
-
-        Pageable pageable = PageRequest.of(page, size);
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileId(profileId, pageable);
 
         log.info("Found {} friends for profile with id: {}", friends.getTotalElements(), profileId);
 
-        return friends
-                .stream()
-                .parallel()
-                .map(profileMapper::mapFriendDataToFriendResponse)
-                .collect(Collectors.toSet());
+        return friends.map(profileMapper::mapFriendDataToFriendResponse);
     }
 
     @Override
-    public final Set<FriendSuggestionResponse> getFriendRequests(String profileId, int page, int size) {
+    public final Page<FriendSuggestionResponse> getFriendRequests(String profileId, Pageable pageable) {
         log.info("Getting friend requests for profile with id: {}", profileId);
-
-        Pageable pageable = PageRequest.of(page, size);
 
         Page<FriendSuggestion> friendRequests = profileRepository
                 .findFriendRequestsByProfileId(profileId, pageable);
 
         log.info("Found {} friend requests for profile with id: {}", friendRequests.getTotalElements(), profileId);
 
-        return friendRequests
-                .stream()
-                .parallel()
-                .map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse)
-                .collect(Collectors.toSet());
+        return friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
 
     @Override
-    public final Set<FriendSuggestionResponse> getFriendSuggestions(String profileId, int page, int size) {
+    public final Page<FriendSuggestionResponse> getFriendSuggestions(String profileId, Pageable pageable) {
         log.info("Getting friend suggestions for profile with id: {}", profileId);
-
-        Pageable pageable = PageRequest.of(page, size);
 
         Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(profileId, pageable);
 
         log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getTotalElements(), profileId);
 
-        return friendSuggestions
-                .stream()
-                .parallel()
-                .map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse)
-                .collect(Collectors.toSet());
+        return friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
 
     @Override
