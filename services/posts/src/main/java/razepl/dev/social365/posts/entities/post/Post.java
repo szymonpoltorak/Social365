@@ -28,8 +28,6 @@ public class Post {
 
     private LocalDateTime creationDateTime;
 
-    private String imageId;
-
     private Set<String> userNotificationIds;
 
     private Set<String> userLikedIds;
