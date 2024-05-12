@@ -8,6 +8,8 @@ public final class Params {
 
     public static final String CONTENT = "content";
 
+    public static final String COMMENT_ID = "commentId";
+
     private Params() {
     }
 }

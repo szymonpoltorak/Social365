@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
+import razepl.dev.social365.posts.api.constants.Params;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,25 +27,26 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
-    public final Page<CommentResponse> getCommentsForPost(String postId, Pageable pageable) {
+    public final Page<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
+                                                          Pageable pageable) {
         return commentService.getCommentsForPost(postId, pageable);
     }
 
     @Override
     @PostMapping(value = CommentMappings.ADD_COMMENT_TO_POST)
-    public final CommentResponse addCommentToPost(CommentRequest commentRequest) {
+    public final CommentResponse addCommentToPost(@RequestBody CommentRequest commentRequest) {
         return commentService.addCommentToPost(commentRequest);
     }
 
     @Override
     @PutMapping(value = CommentMappings.EDIT_COMMENT)
-    public final CommentResponse editComment(CommentRequest commentRequest) {
+    public final CommentResponse editComment(@RequestBody CommentRequest commentRequest) {
         return commentService.editComment(commentRequest);
     }
 
     @Override
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
-    public final CommentResponse deleteComment(String commentId) {
+    public final CommentResponse deleteComment(@RequestParam(Params.COMMENT_ID) String commentId) {
         return commentService.deleteComment(commentId);
     }
 }
