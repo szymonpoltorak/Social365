@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.exceptions;
+package razepl.dev.social365.posts.utils.exceptions;
 
 import org.springframework.http.HttpStatus;
 

@@ -44,16 +44,19 @@ public class Post {
     @Version
     private long version;
 
-    final boolean areNotificationsTurnedOnBy(String profileId) {
+    public final boolean areNotificationsTurnedOnBy(String profileId) {
         return userNotificationIds.contains(profileId);
     }
 
-    final boolean isBookmarkedBy(String profileId) {
+    public final boolean isBookmarkedBy(String profileId) {
         return bookmarkedUserIds.contains(profileId);
     }
 
-    final boolean isPostLikedBy(String profileId) {
+    public final boolean isPostLikedBy(String profileId) {
         return userLikedIds.contains(profileId);
     }
 
+    public final void sharePostByProfile(String profileId) {
+        userSharedIds.add(profileId);
+    }
 }

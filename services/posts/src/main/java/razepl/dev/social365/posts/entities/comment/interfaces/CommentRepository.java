@@ -15,4 +15,7 @@ public interface CommentRepository extends CassandraRepository<Comment, UUID> {
     @Query("select count(*) from comments where post_id = :postId")
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
 
+    @Query("delete from comments where post_id = :postId")
+    void deleteAllByPostId(UUID postId);
+
 }

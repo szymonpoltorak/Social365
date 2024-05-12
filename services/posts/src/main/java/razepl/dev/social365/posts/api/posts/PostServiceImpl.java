@@ -5,14 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
+import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
-import razepl.dev.social365.posts.exceptions.PostDoesNotExistException;
-import razepl.dev.social365.posts.exceptions.UserIsNotAuthorException;
+import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
+import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +28,10 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final ProfileService profileService;
+    private final CommentRepository commentRepository;
 
     @Override
-    public final Page<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
+    public Page<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
 
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
@@ -45,7 +48,7 @@ public class PostServiceImpl implements PostService {
 
     //TODO: Implement handling images
     @Override
-    public final PostResponse createPost(String profileId, String content) {
+    public PostResponse createPost(String profileId, String content) {
         log.info("Creating post for profileId: {}, with content: {}", profileId, content);
 
         Post post = Post
@@ -63,13 +66,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public final PostResponse editPost(String profileId, String postId, String content) {
+    public PostResponse editPost(String profileId, String postId, String content) {
         log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
 
-        Post post = postRepository.findById(UUID.fromString(postId))
-                .orElseThrow(() -> new PostDoesNotExistException(postId));
-
-        log.info("Found post with id: {}", post);
+        Post post = getPostFromRepository(postId);
 
         if (!post.getAuthorId().equals(profileId)) {
             throw new UserIsNotAuthorException(profileId);
@@ -84,28 +84,102 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public final PostResponse updateLikePostCount(String profileId, String postId) {
-        return null;
+    public PostResponse updateLikePostCount(String profileId, String postId) {
+        log.info("Updating like count for post with id: {} for profileId: {}", postId, profileId);
+
+        Post post = getPostFromRepository(postId);
+
+        if (post.isPostLikedBy(profileId)) {
+            post.getUserLikedIds().remove(profileId);
+        } else {
+            post.getUserLikedIds().add(profileId);
+        }
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} like count updated for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
     }
 
     @Override
-    public final PostResponse updateNotificationStatus(String profileId, String postId) {
-        return null;
+    public PostResponse updateNotificationStatus(String profileId, String postId) {
+        log.info("Updating notification status for post with id: {} for profileId: {}", postId, profileId);
+
+        Post post = getPostFromRepository(postId);
+
+        if (post.areNotificationsTurnedOnBy(profileId)) {
+            post.getUserNotificationIds().remove(profileId);
+        } else {
+            post.getUserNotificationIds().add(profileId);
+        }
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} notification status updated for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
     }
 
     @Override
-    public final PostResponse updateBookmarkStatus(String profileId, String postId) {
-        return null;
+    public PostResponse updateBookmarkStatus(String profileId, String postId) {
+        log.info("Updating bookmark status for post with id: {} for profileId: {}", postId, profileId);
+
+        Post post = getPostFromRepository(postId);
+
+        if (post.isBookmarkedBy(profileId)) {
+            post.getBookmarkedUserIds().remove(profileId);
+        } else {
+            post.getBookmarkedUserIds().add(profileId);
+        }
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} bookmark status updated for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
     }
 
     @Override
-    public final PostResponse updateSharesCount(String profileId, String postId) {
-        return null;
+    public PostResponse updateSharesCount(String profileId, String postId) {
+        log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
+
+        Post post = getPostFromRepository(postId);
+
+        post.sharePostByProfile(profileId);
+
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} shares count updated for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
     }
 
     @Override
-    public final PostResponse deletePost(String profileId, String postId) {
-        return null;
+    @Transactional
+    public PostResponse deletePost(String profileId, String postId) {
+        log.info("Deleting post with id: {} for profileId: {}", postId, profileId);
+
+        Post post = getPostFromRepository(postId);
+
+        if (!post.getAuthorId().equals(profileId)) {
+            throw new UserIsNotAuthorException(profileId);
+        }
+        log.info("Deleting post with id: {}", post.getPostId());
+
+        postRepository.deleteById(post.getPostId());
+
+        log.info("Deleting all comments connected with post with id: {}", post.getPostId());
+
+        commentRepository.deleteAllByPostId(post.getPostId());
+
+        return PostResponse.builder().build();
+    }
+
+    private Post getPostFromRepository(String postId) {
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new PostDoesNotExistException(postId));
+
+        log.info("Found post with id: {}", post);
+
+        return post;
     }
 
 }
