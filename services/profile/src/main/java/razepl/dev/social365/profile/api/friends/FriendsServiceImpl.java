@@ -3,7 +3,6 @@ package razepl.dev.social365.profile.api.friends;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
@@ -17,9 +16,6 @@ import razepl.dev.social365.profile.exceptions.UsersAreNotFriendsException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

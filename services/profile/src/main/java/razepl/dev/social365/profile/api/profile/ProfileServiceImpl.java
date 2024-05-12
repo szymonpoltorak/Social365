@@ -22,6 +22,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -51,6 +52,17 @@ public class ProfileServiceImpl implements ProfileService {
         profile = profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final List<String> getFollowedProfileIds(String profileId) {
+        log.info("Getting friends ids for profile with id: {}", profileId);
+
+        List<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId);
+
+        log.info("Found {} friends ids for profile with id: {}", friendsIds.size(), profileId);
+
+        return friendsIds;
     }
 
     @Override

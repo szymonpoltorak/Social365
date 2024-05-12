@@ -5,9 +5,13 @@ import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 
+import java.util.List;
+
 public interface ProfileService {
 
     ProfileSummaryResponse getProfileSummary(String userId);
+
+    List<String> getFollowedProfileIds(String profileId);
 
     ProfilePostResponse getPostProfileInfo(String userId);
 

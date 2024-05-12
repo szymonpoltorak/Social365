@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
-@Table
+@Table(value = "comments")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class Comment {
     @PrimaryKey
     private UUID commentId;
 
+    @PrimaryKey
     private UUID postId;
 
     private String authorId;
@@ -30,6 +32,7 @@ public class Comment {
 
     private LocalDateTime creationDateTime;
 
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> userLikedIds;
 
     @Version

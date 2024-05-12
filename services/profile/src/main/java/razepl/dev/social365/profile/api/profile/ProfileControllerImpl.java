@@ -16,6 +16,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = ProfileMappings.PROFILE_API_MAPPING)
@@ -27,6 +29,12 @@ public class ProfileControllerImpl implements ProfileController {
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
     public final ProfileSummaryResponse getProfileSummary(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
         return profileService.getProfileSummary(profileId);
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
+    public final List<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+        return profileService.getFollowedProfileIds(profileId);
     }
 
     @Override

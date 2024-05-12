@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
-@Table
+@Table(value = "posts")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,15 +29,31 @@ public class Post {
 
     private LocalDateTime creationDateTime;
 
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> userNotificationIds;
 
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> userLikedIds;
 
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> userSharedIds;
 
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> bookmarkedUserIds;
 
     @Version
     private long version;
+
+    final boolean areNotificationsTurnedOnBy(String profileId) {
+        return userNotificationIds.contains(profileId);
+    }
+
+    final boolean isBookmarkedBy(String profileId) {
+        return bookmarkedUserIds.contains(profileId);
+    }
+
+    final boolean isPostLikedBy(String profileId) {
+        return userLikedIds.contains(profileId);
+    }
 
 }

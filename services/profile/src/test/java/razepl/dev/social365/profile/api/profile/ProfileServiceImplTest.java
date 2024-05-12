@@ -21,7 +21,9 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -186,5 +188,25 @@ class ProfileServiceImplTest {
 
         // then
         assertEquals(expected, actual, "Should return profile response");
+    }
+
+    @Test
+    final void test_getFollowedProfileIds_shouldReturnData() {
+        // given
+        String profileId = "1234";
+        Profile profile = new Profile();
+        profile.setFollowers(Set.of(new Profile()));
+        List<String> expected = List.of("1234");
+
+        // when
+        when(profileRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(profile));
+        when(profileRepository.findFollowedIdsByProfileId(profileId))
+                .thenReturn(expected);
+
+        List<String> actual = profileService.getFollowedProfileIds(profileId);
+
+        // then
+        assertEquals(expected, actual, "Should return followed profile ids");
     }
 }
