@@ -11,8 +11,12 @@ import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
+import razepl.dev.social365.posts.exceptions.PostDoesNotExistException;
+import razepl.dev.social365.posts.exceptions.UserIsNotAuthorException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -39,6 +43,46 @@ public class PostServiceImpl implements PostService {
         return posts.map(post -> postMapper.toPostResponse(post, profileId));
     }
 
+    //TODO: Implement handling images
+    @Override
+    public final PostResponse createPost(String profileId, String content) {
+        log.info("Creating post for profileId: {}, with content: {}", profileId, content);
+
+        Post post = Post
+                .builder()
+                .authorId(profileId)
+                .content(content)
+                .creationDateTime(LocalDateTime.now())
+                .build();
+
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} created for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
+    }
+
+    @Override
+    public final PostResponse editPost(String profileId, String postId, String content) {
+        log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
+
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new PostDoesNotExistException(postId));
+
+        log.info("Found post with id: {}", post);
+
+        if (!post.getAuthorId().equals(profileId)) {
+            throw new UserIsNotAuthorException(profileId);
+        }
+        post.setContent(content);
+
+        Post savedPost = postRepository.save(post);
+
+        log.info("Post with id: {} edited for profile with id: {}", savedPost.getPostId(), profileId);
+
+        return postMapper.toPostResponse(savedPost, profileId);
+    }
+
     @Override
     public final PostResponse updateLikePostCount(String profileId, String postId) {
         return null;
@@ -56,16 +100,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public final PostResponse updateSharesCount(String profileId, String postId) {
-        return null;
-    }
-
-    @Override
-    public final PostResponse createPost(String profileId, String content) {
-        return null;
-    }
-
-    @Override
-    public final PostResponse editPost(String profileId, String postId, String content) {
         return null;
     }
 
