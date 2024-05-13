@@ -28,8 +28,9 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
     public final Page<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
+                                                          @RequestParam(Params.PROFILE_ID) String profileId,
                                                           Pageable pageable) {
-        return commentService.getCommentsForPost(postId, pageable);
+        return commentService.getCommentsForPost(postId, profileId, pageable);
     }
 
     @Override
@@ -46,7 +47,8 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
-    public final CommentResponse deleteComment(@RequestParam(Params.COMMENT_ID) String commentId) {
-        return commentService.deleteComment(commentId);
+    public final CommentResponse deleteComment(@RequestParam(Params.COMMENT_ID) String commentId,
+                                               @RequestParam(Params.PROFILE_ID) String profileId) {
+        return commentService.deleteComment(commentId, profileId);
     }
 }

@@ -38,4 +38,11 @@ public class Comment {
     @Version
     private long version;
 
+    public final boolean isLikedBy(String profileId) {
+        return userLikedIds.contains(profileId);
+    }
+
+    public final int getLikesCount() {
+        return userLikedIds.size();
+    }
 }

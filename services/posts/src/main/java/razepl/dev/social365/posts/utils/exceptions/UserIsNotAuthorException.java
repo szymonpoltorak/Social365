@@ -10,7 +10,7 @@ public class UserIsNotAuthorException extends AbstractException {
     private static final long serialVersionUID = 3474933945377402654L;
 
     public UserIsNotAuthorException(String profileId) {
-        super(HttpStatus.UNAUTHORIZED, "User of id %s is not the author of this post".formatted(profileId));
+        super(HttpStatus.UNAUTHORIZED, "User of id %s is not the author!".formatted(profileId));
     }
 
 }

@@ -52,7 +52,7 @@ public class Post {
         return bookmarkedUserIds.contains(profileId);
     }
 
-    public final boolean isPostLikedBy(String profileId) {
+    public final boolean isLikedBy(String profileId) {
         return userLikedIds.contains(profileId);
     }
 

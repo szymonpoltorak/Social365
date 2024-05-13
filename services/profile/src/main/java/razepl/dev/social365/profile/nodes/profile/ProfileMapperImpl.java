@@ -63,6 +63,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfilePostResponse
                 .builder()
+                .profileId(profile.getProfileId())
                 .username(profile.getEmail().getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())

@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
 
         Post post = getPostFromRepository(postId);
 
-        if (post.isPostLikedBy(profileId)) {
+        if (post.isLikedBy(profileId)) {
             post.getUserLikedIds().remove(profileId);
         } else {
             post.getUserLikedIds().add(profileId);
