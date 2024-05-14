@@ -1,8 +1,8 @@
 package razepl.dev.social365.posts.api.posts;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +25,8 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @GetMapping(value = PostMappings.GET_POSTS_ON_PAGE)
-    public final Page<PostResponse> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                   Pageable pageable) {
+    public final Slice<PostResponse> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                    Pageable pageable) {
         return postService.getPostsOnPage(profileId, pageable);
     }
 

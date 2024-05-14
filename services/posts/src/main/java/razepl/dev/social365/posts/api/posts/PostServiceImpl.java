@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
@@ -33,7 +34,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
-    public Page<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
+    public Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
 
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
@@ -41,9 +42,9 @@ public class PostServiceImpl implements PostService {
 
         log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
 
-        Page<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds, pageable);
+        Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds, pageable);
 
-        log.info("Found {} posts for profile with id: {}", posts.getTotalElements(), profileId);
+        log.info("Found {} posts for profile with id: {}", posts.getSize(), profileId);
 
         return posts.map(post -> postMapper.toPostResponse(post, profileId));
     }

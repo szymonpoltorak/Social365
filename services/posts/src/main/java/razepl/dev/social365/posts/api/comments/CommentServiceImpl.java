@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
@@ -28,12 +29,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
 
     @Override
-    public final Page<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
+    public final Slice<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageable);
 
-        Page<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
+        Slice<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
 
-        log.info("Found {} comments for post with id: {}", comments.getTotalElements(), postId);
+        log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
         return comments.map(comment -> commentMapper.toCommentResponse(comment, profileId));
     }

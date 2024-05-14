@@ -23,7 +23,6 @@ public class Comment {
     @PrimaryKey
     private UUID commentId;
 
-    @PrimaryKey
     private UUID postId;
 
     private String authorId;
