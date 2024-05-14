@@ -5,13 +5,15 @@ public final class ProfileMappings {
 
     public static final String GET_PROFILE_SUMMARY_MAPPING = "/summary";
 
-    public static final String GET_POST_PROFILE_INFO_MAPPING = "/post-info";
+    public static final String GET_POST_PROFILE_INFO_MAPPING = "/postInfo";
 
     public static final String CREATE_USERS_PROFILE_MAPPING = "/create";
 
-    public static final String GET_BASIC_PROFILE_INFO_MAPPING = "/basic-info";
+    public static final String GET_BASIC_PROFILE_INFO_MAPPING = "/basicInfo";
 
-    public static final String UPDATE_PROFILE_BIO_MAPPING = "/update-bio";
+    public static final String UPDATE_PROFILE_BIO_MAPPING = "/updateBio";
+
+    public static final String GET_FOLLOWED_IDS = "/getFriendsIds";
 
     private ProfileMappings() {
     }

@@ -11,6 +11,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,6 +36,20 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     )
     Page<FriendData> findFriendsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId,
                                             Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (f:Profile)-[:FOLLOWED_BY]->(p:Profile)
+                    WHERE p.profileId = $profileId
+                    RETURN f.profileId
+                    """,
+            countQuery = """
+                    MATCH (f:Profile)-[:FOLLOWED_BY]->(p:Profile)
+                    WHERE p.profileId = $profileId
+                    RETURN COUNT(f)
+                    """
+    )
+    List<String> findFollowedIdsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId);
 
     @Query(
             value = """

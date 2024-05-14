@@ -56,7 +56,7 @@ export class PostComponent implements OnInit {
     ngOnInit(): void {
         this.comments = [
             {
-                commentId: 1,
+                commentId: "1",
                 commentLikesCount: 5,
                 content: "This is a great post!",
                 author: {
@@ -69,7 +69,7 @@ export class PostComponent implements OnInit {
                 isLiked: false
             },
             {
-                commentId: 2,
+                commentId: "2",
                 commentLikesCount: 15,
                 content: "I love this post! Especially the part about the new Angular version!",
                 author: {
