@@ -23,10 +23,14 @@ public class CommentValidatorImpl implements CommentValidator {
         if (contentLength > MAX_COMMENT_LENGTH) {
             throw new InvalidCommentRequestException("Comment content cannot be longer than 500 characters!");
         }
-        if (commentRequest.objectId() == null) {
+        String objectId = commentRequest.objectId();
+
+        if (objectId == null || objectId.isEmpty() || objectId.isBlank()) {
             throw new InvalidCommentRequestException("Comment object id cannot be null!");
         }
-        if (commentRequest.profileId() == null) {
+        String profileId = commentRequest.profileId();
+
+        if (profileId == null || profileId.isEmpty() || profileId.isBlank()) {
             throw new InvalidCommentRequestException("Comment profile id cannot be null!");
         }
         if (contentLength < MIN_COMMENT_LENGTH) {
