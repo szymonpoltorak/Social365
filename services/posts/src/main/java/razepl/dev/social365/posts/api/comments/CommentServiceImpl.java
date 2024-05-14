@@ -13,6 +13,7 @@ import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
+import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final CommentValidator commentValidator;
 
     @Override
     public final Page<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
@@ -41,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("Adding comment to post with id: {}, with content: {}", commentRequest.objectId(),
                 commentRequest.content());
 
-        //TODO: add object validation
+        commentValidator.validateCommentRequest(commentRequest);
 
         Comment comment = Comment
                 .builder()
@@ -63,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("Editing comment with id: {}, with content: {}", commentRequest.objectId(),
                 commentRequest.content());
 
-        //TODO: add object validation
+        commentValidator.validateCommentRequest(commentRequest);
 
         Comment comment = getCommentFromRepository(commentRequest.objectId());
 

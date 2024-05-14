@@ -15,6 +15,7 @@ import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
+import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final ProfileService profileService;
+    private final PostValidator postValidator;
     private final CommentRepository commentRepository;
 
     @Override
@@ -51,6 +53,8 @@ public class PostServiceImpl implements PostService {
     public PostResponse createPost(String profileId, String content) {
         log.info("Creating post for profileId: {}, with content: {}", profileId, content);
 
+        postValidator.validatePostContent(content);
+
         Post post = Post
                 .builder()
                 .authorId(profileId)
@@ -68,6 +72,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse editPost(String profileId, String postId, String content) {
         log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
+
+        postValidator.validatePostContent(content);
 
         Post post = getPostFromRepository(postId);
 
