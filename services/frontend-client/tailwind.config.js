@@ -37,6 +37,8 @@ export const theme = {
             "feed-md": "1142px",
             "feed-sm": "838px",
 
+            "p-xl": "1526px",
+
             "r-s": "576px",
             "r-sm": "732px",
             "r-sl": "1000px",

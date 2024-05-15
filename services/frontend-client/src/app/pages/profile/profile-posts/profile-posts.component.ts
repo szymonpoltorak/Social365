@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
@@ -32,7 +32,7 @@ import { RouterPaths } from "@enums/router-paths.enum";
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'
 })
-export class ProfilePostsComponent {
+export class ProfilePostsComponent implements OnInit {
     protected posts: Post[] = [
         {
             postId: 1,
@@ -86,6 +86,7 @@ export class ProfilePostsComponent {
     };
     protected isEditing: boolean = false;
     protected bioControl: FormControl<string | null> = new FormControl(this.profile.description);
+    protected readonly RouterPaths = RouterPaths;
     protected items: Post[] = [
         {
             postId: 1,
@@ -148,9 +149,26 @@ export class ProfilePostsComponent {
             areNotificationTurnedOn: true,
         },
     ];
+    protected displayedItems: Post[] = [];
+    protected numberOfItemsToDisplay: number = 3;
 
     constructor(public router: Router) {
     }
 
-    protected readonly RouterPaths = RouterPaths;
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any): void {
+        const windowWidth = event.target.innerWidth;
+
+        if (windowWidth <= 1526) {
+            this.numberOfItemsToDisplay = 2;
+        } else {
+            this.numberOfItemsToDisplay = 3; // or any other number you want
+        }
+        this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
+    }
+
+    ngOnInit(): void {
+        this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
+    }
+
 }
