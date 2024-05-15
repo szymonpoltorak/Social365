@@ -2,7 +2,7 @@
     <mat-card-header class="flex justify-between items-center mb-5">
         <mat-card-title>Friends</mat-card-title>
 
-        <div class="flex gap-3 items-center">
+        <div class="flex r-s:gap-3 max-r-s:gap-1 items-center">
             <div class="flex items-center bg-tertiary mm:p-1.5 rounded-xl">
                 <input matInput
                        type="text"
@@ -20,18 +20,22 @@
                 </button>
             </div>
 
-            <button mat-button color="primary" aria-label="Friend Requests">
-                Friend Requests
-            </button>
+            <div class="max-f-xs:hidden">
+                <button mat-button color="primary" aria-label="Friend Requests">
+                    <span class="max-r-s:hidden">Friend</span> Requests
+                </button>
+            </div>
 
-            <button mat-button color="primary" aria-label="Find Friends">
-                Find friends
-            </button>
+            <div class="max-f-s:hidden">
+                <button mat-button color="primary" aria-label="Find Friends">
+                    Find <span class="max-r-s:hidden">friends</span>
+                </button>
+            </div>
         </div>
     </mat-card-header>
 
     <mat-card-content>
-        <div class="grid grid-cols-3">
+        <div class="grid feed-sm:grid-cols-3 max-feed-sm:grid-cols-2 max-r-s:grid-cols-1">
             @for (friend of friends; track friend) {
                 <app-friend-profile [friend]="friend"></app-friend-profile>
             }

@@ -9,7 +9,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TabOption } from "@interfaces/profile/tab-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
-import { MatButton } from "@angular/material/button";
+import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { User } from "@interfaces/feed/user.interface";
 import { filter, Subject, takeUntil } from "rxjs";
@@ -27,7 +27,8 @@ import { RouteDetectionService } from "@services/profile/route-detection.service
         MatTabsModule,
         RouterOutlet,
         RouterLink,
-        MatButton
+        MatButton,
+        MatMiniFabButton
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'

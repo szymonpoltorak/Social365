@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-content>
-        <div class="grid grid-cols-2 gap-8">
-            <div>
+        <div class="grid tb:grid-cols-3 max-tb:grid-cols-1 gap-8">
+            <div class="tb:col-span-1">
                 <mat-card-title>About</mat-card-title>
 
                 <mat-chip-listbox aria-label="Menu selected" class="mat-mdc-chip-set-stacked">
@@ -16,7 +16,7 @@
                 </mat-chip-listbox>
             </div>
 
-            <div>
+            <div class="tb:col-span-2">
                 <router-outlet></router-outlet>
             </div>
         </div>
