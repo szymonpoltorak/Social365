@@ -39,6 +39,9 @@ export const theme = {
 
             "p-xl": "1526px",
 
+            "f-xs": "375px",
+            "f-s": "472px",
+
             "r-s": "576px",
             "r-sm": "732px",
             "r-sl": "1000px",
