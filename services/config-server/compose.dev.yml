@@ -15,8 +15,9 @@ services:
             - social365-network
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${CONFIG_SERVER_PORT}/actuator/health" ]
+            start_period: 25s
             interval: 10s
-            timeout: 5s
-            retries: 3
+            timeout: 10s
+            retries: 10
         volumes:
             - "./:/home/config-server"

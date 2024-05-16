@@ -34,6 +34,11 @@ services:
                 condition: service_healthy
             profile-neo4j:
                 condition: service_started
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${PROFILE_SERVICE_PORT}/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
 
 networks:
     profiles-network:
