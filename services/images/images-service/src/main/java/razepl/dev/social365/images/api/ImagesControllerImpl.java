@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.constants.ImagesMappings;
 import razepl.dev.social365.images.api.constants.ImagesParams;
 import razepl.dev.social365.images.api.data.ImageResponse;
+import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 
@@ -27,6 +28,14 @@ public class ImagesControllerImpl implements ImagesController {
     public final ImageResponse uploadImage(@RequestParam(ImagesParams.USERNAME) String username,
                                            @RequestBody MultipartFile image) {
         return imagesService.uploadImage(username, image);
+    }
+
+    @Override
+    @PostMapping(value = ImagesMappings.UPLOAD_POST_IMAGE_MAPPING)
+    public final PostImageResponse uploadPostImage(@RequestParam(ImagesParams.POST_ID) String postId,
+                                                   @RequestParam(ImagesParams.USERNAME) String username,
+                                                   @RequestBody MultipartFile image) {
+        return imagesService.uploadPostImage(postId, username, image);
     }
 
     @Override
