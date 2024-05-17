@@ -29,6 +29,8 @@ public class Post {
 
     private LocalDateTime creationDateTime;
 
+    private boolean hasAttachments;
+
     @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> userNotificationIds;
 

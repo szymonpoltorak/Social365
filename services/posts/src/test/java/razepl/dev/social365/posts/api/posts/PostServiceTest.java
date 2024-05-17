@@ -62,7 +62,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostResponse result = postService.createPost(profileId, content);
+        PostResponse result = postService.createPost(profileId, content, true);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);

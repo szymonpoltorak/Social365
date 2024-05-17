@@ -2,6 +2,9 @@ package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -29,9 +32,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
-    private static final String PROFILE_FOUND_IN_REPOSITORY = "Profile found in repository: {}";
     private static final int MINIMAL_AGE = 13;
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
+    private static final int PAGE_SIZE = 20;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
@@ -42,10 +45,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileRequest updateProfileBio(String profileId, String bio) {
         log.info("Updating profile bio for profileId: {}", profileId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
+        Profile profile = getProfileFromRepository(profileId);
 
         profile.setBio(bio);
 
@@ -55,12 +55,14 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final List<String> getFollowedProfileIds(String profileId) {
+    public final Page<String> getFollowedProfileIds(String profileId, int pageNumber) {
         log.info("Getting friends ids for profile with id: {}", profileId);
 
-        List<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-        log.info("Found {} friends ids for profile with id: {}", friendsIds.size(), profileId);
+        Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
+
+        log.info("Found {} friends ids for profile with id: {}", friendsIds.getTotalElements(), profileId);
 
         return friendsIds;
     }
@@ -69,12 +71,8 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileSummaryResponse getProfileSummary(String profileId) {
         log.info("Getting profile summary for user with id: {}", profileId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
+        Profile profile = getProfileFromRepository(profileId);
 
-        log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
-
-        //TODO: posts count, profile picture url
         return profileMapper.mapProfileToProfileSummaryResponse(profile);
     }
 
@@ -82,10 +80,7 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfilePostResponse getPostProfileInfo(String profileId) {
         log.info("Getting post profile info for profile with id: {}", profileId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
+        Profile profile = getProfileFromRepository(profileId);
 
         return profileMapper.mapProfileToProfilePostResponse(profile);
     }
@@ -148,11 +143,17 @@ public class ProfileServiceImpl implements ProfileService {
     public final ProfileResponse getBasicProfileInfo(String profileId) {
         log.info("Getting basic profile info for profile with id: {}", profileId);
 
+        Profile profile = getProfileFromRepository(profileId);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
+    }
+
+    private Profile getProfileFromRepository(String profileId) {
         Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
-        log.info(PROFILE_FOUND_IN_REPOSITORY, profile);
+        log.info("Profile found in repository: {}", profile);
 
-        return profileMapper.mapProfileToProfileResponse(profile);
+        return profile;
     }
 }

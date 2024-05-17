@@ -19,7 +19,6 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -34,24 +33,32 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
+    public final int getUsersPostCount(String profileId) {
+        log.info("Getting post count for profile with id: {}", profileId);
+
+        return postRepository.countAllByAuthorId(profileId);
+    }
+
+    @Override
     public Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
 
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
-        List<String> friendsIds = profileService.getFriendsIds(profileId);
+        int pageNumber = pageable.getPageNumber();
 
-        log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
+        Page<String> friendsIds = profileService.getFriendsIds(profileId, pageNumber);
 
-        Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds, pageable);
+        log.info("Found {} friends for profile with id: {}", friendsIds.getTotalElements(), profileId);
+
+        Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds.toList(), pageable);
 
         log.info("Found {} posts for profile with id: {}", posts.getSize(), profileId);
 
         return posts.map(post -> postMapper.toPostResponse(post, profileId));
     }
 
-    //TODO: Implement handling images
     @Override
-    public PostResponse createPost(String profileId, String content) {
+    public PostResponse createPost(String profileId, String content, boolean hasAttachments) {
         log.info("Creating post for profileId: {}, with content: {}", profileId, content);
 
         postValidator.validatePostContent(content);
@@ -61,6 +68,7 @@ public class PostServiceImpl implements PostService {
                 .authorId(profileId)
                 .content(content)
                 .creationDateTime(LocalDateTime.now())
+                .hasAttachments(hasAttachments)
                 .build();
 
         Post savedPost = postRepository.save(post);

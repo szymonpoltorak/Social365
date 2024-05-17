@@ -6,6 +6,8 @@ import razepl.dev.social365.posts.api.posts.data.PostResponse;
 
 public interface PostController {
 
+    int getUsersPostCount(String profileId);
+
     Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable);
 
     PostResponse updateLikePostCount(String profileId, String postId);
@@ -16,7 +18,7 @@ public interface PostController {
 
     PostResponse updateSharesCount(String profileId, String postId);
 
-    PostResponse createPost(String profileId, String content);
+    PostResponse createPost(String profileId, String content, boolean hasAttachments);
 
     PostResponse editPost(String profileId, String postId, String content);
 

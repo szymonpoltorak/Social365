@@ -8,6 +8,8 @@ public final class ProfileParams {
 
     public static final String BIO = "bio";
 
+    public static final String PAGE_NUMBER = "pageNumber";
+
     private ProfileParams() {
     }
 }
