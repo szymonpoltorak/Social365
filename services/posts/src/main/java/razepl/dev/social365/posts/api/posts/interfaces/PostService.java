@@ -1,6 +1,5 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 
@@ -8,7 +7,7 @@ public interface PostService {
 
     int getUsersPostCount(String profileId);
 
-    Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable);
+    Slice<PostResponse> getPostsOnPage(String profileId, int pageSize, int pageNumber);
 
     PostResponse updateLikePostCount(String profileId, String postId);
 

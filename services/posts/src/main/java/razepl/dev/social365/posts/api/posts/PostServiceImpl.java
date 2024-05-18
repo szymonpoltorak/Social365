@@ -3,8 +3,10 @@ package razepl.dev.social365.posts.api.posts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
@@ -19,6 +21,9 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -40,21 +45,41 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
+    public Slice<PostResponse> getPostsOnPage(String profileId, int pageSize, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int currentPageNumber = pageable.getPageNumber();
+        int currentPageSize = pageable.getPageSize();
+        boolean hasNext;
+        Collection<Post> result = new ArrayList<>(pageable.getPageSize() + 1);
 
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
-        int pageNumber = pageable.getPageNumber();
+        while (true) {
+            Page<String> friendsIds = profileService.getFriendsIds(profileId, pageNumber);
 
-        Page<String> friendsIds = profileService.getFriendsIds(profileId, pageNumber);
+            log.info("Found {} friends for profile with id: {}", friendsIds.getTotalElements(), profileId);
 
-        log.info("Found {} friends for profile with id: {}", friendsIds.getTotalElements(), profileId);
+            Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds.toList(), pageable);
 
-        Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds.toList(), pageable);
+            log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
 
-        log.info("Found {} posts for profile with id: {}", posts.getSize(), profileId);
+            result.addAll(posts.getContent());
 
-        return posts.map(post -> postMapper.toPostResponse(post, profileId));
+            hasNext = posts.hasNext();
+
+            if (result.size() >= pageable.getPageSize() || !posts.hasNext()) {
+                break;
+            }
+            pageable = PageRequest.of(++currentPageNumber, currentPageSize - result.size());
+        }
+        log.info("Found posts returning result...");
+
+        List<PostResponse> slice = result
+                .parallelStream()
+                .map(post -> postMapper.toPostResponse(post, profileId))
+                .toList();
+
+        return new SliceImpl<>(slice, pageable, hasNext);
     }
 
     @Override

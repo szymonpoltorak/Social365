@@ -5,7 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
+import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
@@ -14,12 +19,14 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,6 +42,9 @@ class PostServiceTest {
     private PostServiceImpl postService;
 
     @Mock
+    private ProfileService profileService;
+
+    @Mock
     private PostValidator postValidator;
 
     @Mock
@@ -43,6 +53,28 @@ class PostServiceTest {
     @BeforeEach
     final void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    final void getPostsOnPage_fullPageReturnedByRepository() {
+        String profileId = "profileId";
+        int pageNumber = 1;
+        int pageSize = 3;
+        List<Post> posts = List.of(Post.builder().build(), Post.builder().build(), Post.builder().build());
+        List<PostResponse> expected = List.of(PostResponse.builder().build(), PostResponse.builder().build(),
+                PostResponse.builder().build());
+
+        when(postRepository.findAllByFollowedUserIds(any(), any()))
+                .thenReturn(new SliceImpl<>(posts));
+        when(profileService.getFriendsIds(eq(profileId), anyInt()))
+                .thenReturn(new PageImpl<>(List.of("friendId1", "friendId2", "friendId3")));
+        when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
+                .thenReturn(PostResponse.builder().build());
+
+        Slice<PostResponse> result = postService.getPostsOnPage(profileId, pageNumber, pageSize);
+
+        verify(postRepository).findAllByFollowedUserIds(any(), any());
+        assertEquals(expected, result.getContent());
     }
 
     @Test

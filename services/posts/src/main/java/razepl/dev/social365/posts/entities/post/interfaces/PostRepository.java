@@ -15,7 +15,7 @@ import java.util.UUID;
 @Repository
 public interface PostRepository extends CassandraRepository<Post, UUID> {
 
-    @Query("select * from posts where author_id in :followedIds")
+    @Query("select * from posts where author_id in :followedIds order by creation_date_time desc")
     Slice<Post> findAllByFollowedUserIds(@Param("followedIds") List<String> followedIds, Pageable pageable);
 
     @Query("select count(*) from posts where author_id = :profileId")
