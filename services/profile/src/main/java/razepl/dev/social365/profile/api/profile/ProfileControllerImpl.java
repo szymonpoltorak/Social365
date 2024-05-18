@@ -1,6 +1,7 @@
 package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +16,6 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,8 +32,9 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
-    public final List<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
-        return profileService.getFollowedProfileIds(profileId);
+    public final Page<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                    @RequestParam(ProfileParams.PAGE_NUMBER) int pageNumber) {
+        return profileService.getFollowedProfileIds(profileId, pageNumber);
     }
 
     @Override

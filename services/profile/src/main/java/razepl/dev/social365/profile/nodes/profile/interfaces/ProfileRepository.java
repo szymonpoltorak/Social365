@@ -49,7 +49,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    List<String> findFollowedIdsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId);
+    Page<String> findFollowedIdsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId, Pageable pageable);
 
     @Query(
             value = """

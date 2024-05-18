@@ -3,8 +3,10 @@ package razepl.dev.social365.posts.api.posts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
@@ -19,6 +21,8 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,24 +38,52 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
-    public Slice<PostResponse> getPostsOnPage(String profileId, Pageable pageable) {
+    public final int getUsersPostCount(String profileId) {
+        log.info("Getting post count for profile with id: {}", profileId);
+
+        return postRepository.countAllByAuthorId(profileId);
+    }
+
+    @Override
+    public Slice<PostResponse> getPostsOnPage(String profileId, int pageSize, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int currentPageNumber = pageable.getPageNumber();
+        int currentPageSize = pageable.getPageSize();
+        boolean hasNext;
+        Collection<Post> result = new ArrayList<>(pageable.getPageSize() + 1);
 
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
-        List<String> friendsIds = profileService.getFriendsIds(profileId);
+        while (true) {
+            Page<String> friendsIds = profileService.getFriendsIds(profileId, pageNumber);
 
-        log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
+            log.info("Found {} friends for profile with id: {}", friendsIds.getTotalElements(), profileId);
 
-        Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds, pageable);
+            Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds.toList(), pageable);
 
-        log.info("Found {} posts for profile with id: {}", posts.getSize(), profileId);
+            log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
 
-        return posts.map(post -> postMapper.toPostResponse(post, profileId));
+            result.addAll(posts.getContent());
+
+            hasNext = posts.hasNext();
+
+            if (result.size() >= pageable.getPageSize() || !posts.hasNext()) {
+                break;
+            }
+            pageable = PageRequest.of(++currentPageNumber, currentPageSize - result.size());
+        }
+        log.info("Found posts returning result...");
+
+        List<PostResponse> slice = result
+                .parallelStream()
+                .map(post -> postMapper.toPostResponse(post, profileId))
+                .toList();
+
+        return new SliceImpl<>(slice, pageable, hasNext);
     }
 
-    //TODO: Implement handling images
     @Override
-    public PostResponse createPost(String profileId, String content) {
+    public PostResponse createPost(String profileId, String content, boolean hasAttachments) {
         log.info("Creating post for profileId: {}, with content: {}", profileId, content);
 
         postValidator.validatePostContent(content);
@@ -61,6 +93,7 @@ public class PostServiceImpl implements PostService {
                 .authorId(profileId)
                 .content(content)
                 .creationDateTime(LocalDateTime.now())
+                .hasAttachments(hasAttachments)
                 .build();
 
         Post savedPost = postRepository.save(post);

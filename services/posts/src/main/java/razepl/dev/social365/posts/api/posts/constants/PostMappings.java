@@ -20,6 +20,8 @@ public final class PostMappings {
 
     public static final String DELETE_POST = "/deletePost";
 
+    public static final String GET_USERS_POST_COUNT = "/usersPostCount";
+
     private PostMappings() {
     }
 }

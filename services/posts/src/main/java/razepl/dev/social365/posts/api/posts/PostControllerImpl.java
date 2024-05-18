@@ -1,7 +1,6 @@
 package razepl.dev.social365.posts.api.posts;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +23,17 @@ public class PostControllerImpl implements PostController {
     private final PostService postService;
 
     @Override
+    @GetMapping(value = PostMappings.GET_USERS_POST_COUNT)
+    public final int getUsersPostCount(@RequestParam(Params.PROFILE_ID) String profileId) {
+        return postService.getUsersPostCount(profileId);
+    }
+
+    @Override
     @GetMapping(value = PostMappings.GET_POSTS_ON_PAGE)
     public final Slice<PostResponse> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                    Pageable pageable) {
-        return postService.getPostsOnPage(profileId, pageable);
+                                                    @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                    @RequestParam(Params.PAGE_SIZE) int pageSize) {
+        return postService.getPostsOnPage(profileId, pageNumber, pageSize);
     }
 
     @Override
@@ -61,8 +67,9 @@ public class PostControllerImpl implements PostController {
     @Override
     @PostMapping(value = PostMappings.CREATE_POST)
     public final PostResponse createPost(@RequestParam(Params.PROFILE_ID) String profileId,
-                                         @RequestParam(Params.CONTENT) String content) {
-        return postService.createPost(profileId, content);
+                                         @RequestParam(Params.CONTENT) String content,
+                                         @RequestParam(Params.HAS_ATTACHMENTS) boolean hasAttachments) {
+        return postService.createPost(profileId, content, hasAttachments);
     }
 
     @Override

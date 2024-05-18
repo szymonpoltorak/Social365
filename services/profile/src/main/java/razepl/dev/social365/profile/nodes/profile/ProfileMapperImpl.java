@@ -17,6 +17,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
+import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
@@ -32,6 +33,7 @@ public class ProfileMapperImpl implements ProfileMapper {
     private static final String PROFILE_IS_NULL = "Profile is null";
     private final ImagesServiceClient imagesServiceClient;
     private final AboutMapper aboutMapper;
+    private final PostCommentsService postCommentsService;
 
     @Override
     public final ProfileSummaryResponse mapProfileToProfileSummaryResponse(Profile profile) {
@@ -45,7 +47,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .username(profile.getEmail().getEmailValue())
                 .followersCount(profile.getFollowers().size())
                 .friendsCount(profile.getFriends().size())
-                .postsCount(0) //TODO: Implement posts count
+                .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .subtitle(getSubtitle(profile))
                 .bio(profile.getBio())
