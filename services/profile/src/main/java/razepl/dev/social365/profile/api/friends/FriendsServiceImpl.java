@@ -13,6 +13,8 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
+import razepl.dev.social365.profile.exceptions.UserAlreadySendFriendRequestException;
+import razepl.dev.social365.profile.exceptions.UserDidNotSendFriendRequestException;
 import razepl.dev.social365.profile.exceptions.UsersAlreadyFriendsException;
 import razepl.dev.social365.profile.exceptions.UsersAreNotFriendsException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
@@ -28,8 +30,6 @@ public class FriendsServiceImpl implements FriendsService {
 
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
-
-    //TODO: add sending friend requests, declining friend requests
 
     @Override
     public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
@@ -150,6 +150,58 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Unfollowing user with id : {} ...", toFollowId);
 
         profileRepository.deleteFollowsRelation(profileId, toFollowId);
+
+        return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    @Override
+    public final FriendResponse sendFriendRequest(String profileId, String friendId) {
+        log.info("Sending friend request from profile with id: {} to user with id: {}", profileId, friendId);
+
+        Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
+
+        if (profileRepository.areUsersFriends(profileId, friendId)) {
+            throw new UsersAlreadyFriendsException(profileId, friendId);
+        }
+        if (profileRepository.doesUserWantToBeFriendWith(profileId, friendId)) {
+            throw new UserAlreadySendFriendRequestException(profileId, friendId);
+        }
+        log.info("Sending friend request. to user : {} ...", friendId);
+
+        profileRepository.createWantsToBeFriendWithRelation(profileId, friendId);
+
+        return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    @Override
+    public final FriendResponse acceptFriendRequest(String profileId, String friendId) {
+        log.info("Accepting friend request from profile with id: {} to user with id: {}", profileId, friendId);
+
+        Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
+
+        if (!profileRepository.doesUserWantToBeFriendWith(profileId, friendId)) {
+            throw new UserDidNotSendFriendRequestException(profileId, friendId);
+        }
+        log.info("Accepting friend request. from user : {} ...", profileId);
+
+        profileRepository.createFriendsWithRelation(profileId, friendId);
+        profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
+
+        return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    @Override
+    public final FriendResponse declineFriendRequest(String profileId, String friendId) {
+        log.info("Declining friend request from profile with id: {} to user with id: {}", profileId, friendId);
+
+        Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
+
+        if (!profileRepository.doesUserWantToBeFriendWith(profileId, friendId)) {
+            throw new UserDidNotSendFriendRequestException(profileId, friendId);
+        }
+        log.info("Declining friend request. from user : {} ...", profileId);
+
+        profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }

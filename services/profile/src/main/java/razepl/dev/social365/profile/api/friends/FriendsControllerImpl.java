@@ -71,13 +71,35 @@ public class FriendsControllerImpl implements FriendsController {
     @Override
     @PutMapping(value = FriendMappings.ADD_PROFILE_TO_FOLLOWERS)
     public final FriendResponse addProfileToFollowed(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
-                                                     @RequestParam(FriendsParams.TO_FOLLOW) String toFollow) {
-        return friendsService.addProfileToFollowed(profileId, toFollow);
+                                                     @RequestParam(FriendsParams.TO_FOLLOW_ID) String toFollowId) {
+        return friendsService.addProfileToFollowed(profileId, toFollowId);
     }
 
     @Override
     @DeleteMapping(value = FriendMappings.REMOVE_PROFILE_FROM_FOLLOWERS)
-    public final FriendResponse removeProfileFromFollowed(String profileId, String toFollowId) {
+    public final FriendResponse removeProfileFromFollowed(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                          @RequestParam(FriendsParams.TO_FOLLOW_ID) String toFollowId) {
         return friendsService.removeProfileFromFollowed(profileId, toFollowId);
+    }
+
+    @Override
+    @PostMapping(value = FriendMappings.SEND_FRIEND_REQUEST)
+    public final FriendResponse sendFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                  @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.sendFriendRequest(profileId, friendId);
+    }
+
+    @Override
+    @PutMapping(value = FriendMappings.ACCEPT_FRIEND_REQUEST)
+    public final FriendResponse acceptFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                    @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.acceptFriendRequest(profileId, friendId);
+    }
+
+    @Override
+    @DeleteMapping(value = FriendMappings.DECLINE_FRIEND_REQUEST)
+    public final FriendResponse declineFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                     @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.declineFriendRequest(profileId, friendId);
     }
 }

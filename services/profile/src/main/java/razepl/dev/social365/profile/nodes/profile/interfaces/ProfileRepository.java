@@ -29,9 +29,16 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query("""
             MATCH (p:Profile)-[:FOLLOWS]->(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $toFollowId
-            RETURN COUNT(f) > 0
+            RETURN COUNT(p) > 0
             """)
     boolean doesUserFollowProfile(String profileId, String toFollowId);
+
+    @Query("""
+            MATCH (p:Profile)-[:WANTS_TO_BE_FRIEND_WITH]->(f:Profile)
+            WHERE p.profileId = $profileId and f.profileId = $friendId
+            RETURN COUNT(p) > 0
+            """)
+    boolean doesUserWantToBeFriendWith(String profileId, String friendId);
 
     @Query("""
             MATCH (p:Profile {profileId: $profileId})
@@ -60,6 +67,13 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             DELETE fr
             """)
     void deleteFriendshipRelationship(String profileId, String friendId);
+
+    @Query("""
+            MATCH(p:Profile)-[fr:WANTS_TO_BE_FRIEND_WITH]-(f:Profile)
+            WHERE p.profileId = $profileId and f.profileId = $friendId
+            DELETE fr
+            """)
+    void deleteWantsToBeFriendWithRelation(String profileId, String friendId);
 
     @Query("""
             MATCH(p:Profile)-[fr:FOLLOWS]-(f:Profile)
@@ -134,4 +148,5 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     )
     Page<FriendSuggestion> findProfileSuggestions(@Param(ProfileParams.PROFILE_ID) String profileId,
                                                   Pageable pageable);
+
 }

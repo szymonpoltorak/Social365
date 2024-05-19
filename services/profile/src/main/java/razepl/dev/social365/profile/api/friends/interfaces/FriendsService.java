@@ -23,4 +23,10 @@ public interface FriendsService {
 
     FriendResponse removeProfileFromFollowed(String profileId, String toFollowId);
 
+    FriendResponse sendFriendRequest(String profileId, String friendId);
+
+    FriendResponse acceptFriendRequest(String profileId, String friendId);
+
+    FriendResponse declineFriendRequest(String profileId, String friendId);
+
 }

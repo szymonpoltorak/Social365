@@ -18,6 +18,12 @@ public final class FriendMappings {
 
     public static final String REMOVE_PROFILE_FROM_FOLLOWERS = "/removeProfileFromFollowers";
 
+    public static final String SEND_FRIEND_REQUEST = "/sendFriendRequest";
+
+    public static final String ACCEPT_FRIEND_REQUEST = "/acceptFriendRequest";
+
+    public static final String DECLINE_FRIEND_REQUEST = "/declineFriendRequest";
+
     private FriendMappings() {
     }
 
