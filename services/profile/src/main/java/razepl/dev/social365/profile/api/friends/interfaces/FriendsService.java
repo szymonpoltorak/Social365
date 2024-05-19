@@ -9,6 +9,8 @@ public interface FriendsService {
 
     Page<FriendResponse> getFriends(String profileId, Pageable pageable);
 
+    Page<String> getFollowedProfileIds(String profileId, int pageNumber);
+
     Page<FriendSuggestionResponse> getFriendRequests(String profileId, Pageable pageable);
 
     Page<FriendSuggestionResponse> getFriendSuggestions(String profileId, Pageable pageable);

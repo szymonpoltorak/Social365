@@ -3,6 +3,7 @@ package razepl.dev.social365.profile.api.friends;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
@@ -21,6 +22,8 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 @Service
 @RequiredArgsConstructor
 public class FriendsServiceImpl implements FriendsService {
+
+    private static final int PAGE_SIZE = 20;
 
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
@@ -63,22 +66,16 @@ public class FriendsServiceImpl implements FriendsService {
     public final FriendResponse removeUserFromFriends(String profileId, String friendId) {
         log.info("Removing friend with id: {} from profile with id: {}", friendId, profileId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
+        Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
-        Profile friend = profileRepository.findByProfileId(friendId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info("Found profile and friend.");
-
-        if (!profile.getFriends().contains(friend)) {
+        if (!profileRepository.areUsersFriends(profileId, friendId)) {
             throw new UsersAreNotFriendsException(profileId, friendId);
         }
         log.info("Removing friend...");
 
-        profile.getFriends().remove(friend);
+        profileRepository.deleteFriendshipRelationship(profileId, friendId);
 
-        profile = profileRepository.save(profile);
+        // TODO: remove following status
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -87,24 +84,31 @@ public class FriendsServiceImpl implements FriendsService {
     public final FriendResponse addUserToFriends(String profileId, String friendId) {
         log.info("Adding friend with id: {} to profile with id: {}", friendId, profileId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
+        Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
-        Profile friend = profileRepository.findByProfileId(friendId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info("Found profile and friend.");
-
-        if (profile.getFriends().contains(friend)) {
+        if (profileRepository.areUsersFriends(profileId, friendId)) {
             throw new UsersAlreadyFriendsException(profileId, friendId);
         }
         log.info("Adding friend...");
 
-        profile = addFriend(profile, friend);
+        profileRepository.createFriendsWithRelation(profileId, friendId);
 
-        addFriend(friend, profile);
+        // TODO: add following status
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    @Override
+    public final Page<String> getFollowedProfileIds(String profileId, int pageNumber) {
+        log.info("Getting friends ids for profile with id: {}", profileId);
+
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+
+        Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
+
+        log.info("Found {} friends ids for profile with id: {}", friendsIds.getTotalElements(), profileId);
+
+        return friendsIds;
     }
 
     @Override
@@ -116,6 +120,8 @@ public class FriendsServiceImpl implements FriendsService {
 
         Profile friend = profileRepository.findByProfileId(friendId)
                 .orElseThrow(ProfileNotFoundException::new);
+
+        //TODO: fix follow status
 
         log.info("Found profile and friend.");
 
@@ -129,10 +135,15 @@ public class FriendsServiceImpl implements FriendsService {
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
-    private Profile addFriend(Profile profile, Profile friend) {
-        profile.getFriends().add(friend);
-        profile.getFollowers().add(friend);
+    private Profile getProfileAndCheckFriendExistence(String profileId, String friendId) {
+        Profile profile = profileRepository.findByProfileId(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
 
-        return profileRepository.save(profile);
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Found profile: {} and friend {}.", profile, friend);
+
+        return profile;
     }
 }

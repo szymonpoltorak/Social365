@@ -18,9 +18,10 @@ services:
                 condition: service_healthy
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${POSTS_SERVICE_PORT}/actuator/health" ]
+            start_period: 15s
             interval: 5s
             timeout: 10s
-            retries: 5
+            retries: 8
 
     posts-cassandra:
         container_name: ${POSTS_CASSANDRA_HOSTNAME}

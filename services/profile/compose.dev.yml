@@ -36,12 +36,16 @@ services:
                 condition: service_healthy
             profile-neo4j:
                 condition: service_started
+            posts-comments:
+                condition: service_healthy
+            images-service:
+                condition: service_healthy
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${PROFILE_SERVICE_PORT}/actuator/health" ]
-            start_period: 25s
+            start_period: 35s
             interval: 10s
-            timeout: 10s
-            retries: 10
+            timeout: 5s
+            retries: 3
 
 networks:
     profiles-network:

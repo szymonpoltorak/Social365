@@ -16,6 +16,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsController;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
+import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 
 @RestController
@@ -30,6 +31,13 @@ public class FriendsControllerImpl implements FriendsController {
     public final Page<FriendResponse> getFriends(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
                                                  Pageable pageable) {
         return friendsService.getFriends(profileId, pageable);
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
+    public final Page<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                    @RequestParam(ProfileParams.PAGE_NUMBER) int pageNumber) {
+        return friendsService.getFollowedProfileIds(profileId, pageNumber);
     }
 
     @Override

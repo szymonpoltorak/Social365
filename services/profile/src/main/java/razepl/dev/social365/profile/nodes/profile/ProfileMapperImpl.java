@@ -46,7 +46,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .builder()
                 .username(profile.getEmail().getEmailValue())
                 .followersCount(profile.getFollowers().size())
-                .friendsCount(profile.getFriends().size())
+                .friendsCount(profile.getFriendships().size())
                 .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .subtitle(getSubtitle(profile))

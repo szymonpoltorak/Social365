@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
@@ -99,6 +100,27 @@ class FriendsServiceTest {
     }
 
     @Test
+    final void test_getFollowedProfileIds_shouldReturnData() {
+        // given
+        String profileId = "1234";
+        Profile profile = new Profile();
+        profile.setFollowers(Set.of(new Profile()));
+        List<String> expected = List.of("1234");
+        Pageable pageable = PageRequest.of(0, 20);
+
+        // when
+        when(profileRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(profile));
+        when(profileRepository.findFollowedIdsByProfileId(profileId, pageable))
+                .thenReturn(new PageImpl<>(expected));
+
+        Page<String> actual = friendsService.getFollowedProfileIds(profileId, 0);
+
+        // then
+        assertEquals(expected, actual, "Should return followed profile ids");
+    }
+
+    @Test
     final void test_getFriendSuggestions_shouldReturn() {
         // given
         int page = 0;
@@ -138,7 +160,7 @@ class FriendsServiceTest {
 
         Profile profile = Profile
                 .builder()
-                .friends(set)
+                .friendships(set)
                 .build();
         FriendResponse expected = FriendResponse.builder().build();
 
@@ -167,14 +189,14 @@ class FriendsServiceTest {
                 .builder()
                 .profileId(friendId)
                 .bio("jdhjdkjsadhkajd")
-                .friends(new HashSet<>())
+                .friendships(new HashSet<>())
                 .followers(new HashSet<>())
                 .build();
 
         Profile profile = Profile
                 .builder()
                 .profileId(profileId)
-                .friends(new HashSet<>())
+                .friendships(new HashSet<>())
                 .followers(new HashSet<>())
                 .build();
         FriendResponse expected = FriendResponse.builder().build();

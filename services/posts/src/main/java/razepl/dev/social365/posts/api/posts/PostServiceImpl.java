@@ -65,9 +65,9 @@ public class PostServiceImpl implements PostService {
 
             result.addAll(posts.getContent());
 
-            hasNext = posts.hasNext();
-
             if (result.size() >= pageable.getPageSize() || !posts.hasNext()) {
+                hasNext = posts.hasNext();
+
                 break;
             }
             pageable = PageRequest.of(++currentPageNumber, currentPageSize - result.size());
