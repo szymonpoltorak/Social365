@@ -85,9 +85,9 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     //TODO: Review the queries below
     @Query(
             value = """
-                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)
+                    MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
-                    WITH f, EXISTS((f)-[:FOLLOWED_BY]->(p)) as isFollowed
+                    WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
                     OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
                     RETURN f, COUNT(f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
@@ -103,13 +103,13 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 
     @Query(
             value = """
-                    MATCH (f:Profile)-[:FOLLOWED_BY]->(p:Profile)
+                    MATCH (f:Profile)<-[:FOLLOWS]-(p:Profile)
                     WHERE p.profileId = $profileId
                     RETURN f.profileId
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
-                    MATCH (f:Profile)-[:FOLLOWED_BY]->(p:Profile)
+                    MATCH (f:Profile)<-[:FOLLOWS]-(p:Profile)
                     WHERE p.profileId = $profileId
                     RETURN COUNT(f)
                     """
@@ -120,7 +120,8 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             value = """
                     MATCH (f:Profile)-[:WANTS_TO_BE_FRIEND_WITH]->(p:Profile)
                     WHERE p.profileId = $profileId
-                    RETURN f, COUNT(f) as mutualFriendsCount
+                    OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
+                    RETURN f, COUNT(f1) as mutualFriendsCount
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
