@@ -9,8 +9,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.profile.clients.posts.comments.constants.CommentRequest;
-import razepl.dev.social365.profile.clients.posts.comments.data.PostResponse;
+import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
+import razepl.dev.social365.profile.exceptions.UsersAlreadyFriendsException;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -63,8 +63,12 @@ public class PlaceholderData implements CommandLineRunner {
 
         for (int i = 0; i < profiles.size(); i++) {
             for (int j = 0; j < profiles.size(); j++) {
-                if (i != j) {
-                    friendsService.addUserToFriends(profiles.get(i).profileId(), profiles.get(j).profileId());
+                try {
+                    if (i != j) {
+                        friendsService.addUserToFriends(profiles.get(i).profileId(), profiles.get(j).profileId());
+                    }
+                } catch (UsersAlreadyFriendsException | UserAlreadyFollows e) {
+                    // ignore
                 }
             }
         }

@@ -69,9 +69,15 @@ public class FriendsControllerImpl implements FriendsController {
     }
 
     @Override
-    @PutMapping(value = FriendMappings.CHANGE_FOLLOW_STATUS)
-    public final FriendResponse changeFollowStatus(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
-                                                   @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
-        return friendsService.changeFollowStatus(profileId, friendId);
+    @PutMapping(value = FriendMappings.ADD_PROFILE_TO_FOLLOWERS)
+    public final FriendResponse addProfileToFollowed(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                     @RequestParam(FriendsParams.TO_FOLLOW) String toFollow) {
+        return friendsService.addProfileToFollowed(profileId, toFollow);
+    }
+
+    @Override
+    @DeleteMapping(value = FriendMappings.REMOVE_PROFILE_FROM_FOLLOWERS)
+    public final FriendResponse removeProfileFromFollowed(String profileId, String toFollowId) {
+        return friendsService.removeProfileFromFollowed(profileId, toFollowId);
     }
 }

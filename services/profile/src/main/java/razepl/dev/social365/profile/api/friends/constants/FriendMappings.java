@@ -14,7 +14,9 @@ public final class FriendMappings {
 
     public static final String GET_FRIENDS_ON_PAGE = "/getFriends";
 
-    public static final String CHANGE_FOLLOW_STATUS = "/changeFollowStatus";
+    public static final String ADD_PROFILE_TO_FOLLOWERS = "/addProfileToFollowers";
+
+    public static final String REMOVE_PROFILE_FROM_FOLLOWERS = "/removeProfileFromFollowers";
 
     private FriendMappings() {
     }

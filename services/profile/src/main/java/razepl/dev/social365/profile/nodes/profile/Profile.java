@@ -24,7 +24,9 @@ import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
+import razepl.dev.social365.profile.nodes.profile.relationship.Follows;
 import razepl.dev.social365.profile.nodes.profile.relationship.FriendsWith;
+import razepl.dev.social365.profile.nodes.profile.relationship.WantsToBeFriendWith;
 
 import java.util.Set;
 
@@ -90,12 +92,11 @@ public class Profile {
     @Relationship(type = "FROM", direction = Relationship.Direction.OUTGOING)
     private AboutDetails homeTown;
 
-    //TODO: Make it nodes to make it work
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Relationship(type = "WANTS_TO_BE_FRIEND_WITH", direction = Relationship.Direction.OUTGOING)
-    private Set<Profile> friendRequests;
+    private Set<WantsToBeFriendWith> friendRequests;
 
     @JsonIgnore
     @ToString.Exclude
@@ -103,12 +104,11 @@ public class Profile {
     @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
     private Set<FriendsWith> friendships;
 
-    //TODO: Make it nodes to make it work
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.OUTGOING)
-    private Set<Profile> followers;
+    @Relationship(type = "FOLLOWS", direction = Relationship.Direction.OUTGOING)
+    private Set<Follows> followers;
 
     final String getFullName() {
         return String.format("%s %s", firstName, lastName);

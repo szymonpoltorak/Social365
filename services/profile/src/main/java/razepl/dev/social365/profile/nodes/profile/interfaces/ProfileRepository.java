@@ -11,7 +11,6 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,6 +27,13 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     boolean areUsersFriends(String profileId, String friendId);
 
     @Query("""
+            MATCH (p:Profile)-[:FOLLOWS]->(f:Profile)
+            WHERE p.profileId = $profileId and f.profileId = $toFollowId
+            RETURN COUNT(f) > 0
+            """)
+    boolean doesUserFollowProfile(String profileId, String toFollowId);
+
+    @Query("""
             MATCH (p:Profile {profileId: $profileId})
             MATCH (f:Profile {profileId: $friendId})
             CREATE (p)-[:FRIENDS_WITH]->(f)
@@ -35,11 +41,32 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     void createFriendsWithRelation(String profileId, String friendId);
 
     @Query("""
+            MATCH (p:Profile {profileId: $profileId})
+            MATCH (f:Profile {profileId: $toFollowId})
+            CREATE (p)-[:FOLLOWED_BY]->(f)
+            """)
+    void createFollowsRelation(String profileId, String toFollowId);
+
+    @Query("""
+            MATCH (p:Profile {profileId: $profileId})
+            MATCH (f:Profile {profileId: $friendId})
+            CREATE (p)-[:WANTS_TO_BE_FRIEND_WITH]->(f)
+            """)
+    void createWantsToBeFriendWithRelation(String profileId, String friendId);
+
+    @Query("""
             MATCH(p:Profile)-[fr:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             DELETE fr
             """)
     void deleteFriendshipRelationship(String profileId, String friendId);
+
+    @Query("""
+            MATCH(p:Profile)-[fr:FOLLOWS]-(f:Profile)
+            WHERE p.profileId = $profileId and f.profileId = toFollow
+            DELETE fr
+            """)
+    void deleteFollowsRelation(String profileId, String toFollowId);
 
     //TODO: Review the queries below
     @Query(

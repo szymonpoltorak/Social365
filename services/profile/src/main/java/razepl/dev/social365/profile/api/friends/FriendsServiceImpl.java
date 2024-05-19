@@ -12,6 +12,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.exceptions.UsersAlreadyFriendsException;
 import razepl.dev.social365.profile.exceptions.UsersAreNotFriendsException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
@@ -27,6 +28,8 @@ public class FriendsServiceImpl implements FriendsService {
 
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
+
+    //TODO: add sending friend requests, declining friend requests
 
     @Override
     public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
@@ -74,8 +77,12 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Removing friend...");
 
         profileRepository.deleteFriendshipRelationship(profileId, friendId);
+        profileRepository.deleteFriendshipRelationship(friendId, profileId);
 
-        // TODO: remove following status
+        log.info("Removing follow relation...");
+
+        profileRepository.deleteFollowsRelation(profileId, friendId);
+        profileRepository.deleteFollowsRelation(friendId, profileId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -89,11 +96,15 @@ public class FriendsServiceImpl implements FriendsService {
         if (profileRepository.areUsersFriends(profileId, friendId)) {
             throw new UsersAlreadyFriendsException(profileId, friendId);
         }
-        log.info("Adding friend...");
+        log.info("Adding friendship relation...");
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
+        profileRepository.createFriendsWithRelation(friendId, profileId);
 
-        // TODO: add following status
+        log.info("Adding follow relation...");
+
+        profileRepository.createFollowsRelation(profileId, friendId);
+        profileRepository.createFollowsRelation(friendId, profileId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -112,25 +123,33 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse changeFollowStatus(String profileId, String friendId) {
-        log.info("Changing follow status for profile with id: {} and friend with id: {}", profileId, friendId);
+    public final FriendResponse addProfileToFollowed(String profileId, String toFollowId) {
+        log.info("Adding follow status for profile with id: {} and user with id: {}", profileId, toFollowId);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
+        Profile profile = getProfileAndCheckFriendExistence(profileId, toFollowId);
 
-        Profile friend = profileRepository.findByProfileId(friendId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        //TODO: fix follow status
-
-        log.info("Found profile and friend.");
-
-        if (profile.getFollowers().contains(friend)) {
-            profile.getFollowers().remove(friend);
-        } else {
-            profile.getFollowers().add(friend);
+        if (profileRepository.doesUserFollowProfile(profileId, toFollowId)) {
+            throw new UserAlreadyFollows(profileId, toFollowId);
         }
-        profile = profileRepository.save(profile);
+        log.info("Following user with id : {} ...", toFollowId);
+
+        profileRepository.createFollowsRelation(profileId, toFollowId);
+
+        return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    @Override
+    public final FriendResponse removeProfileFromFollowed(String profileId, String toFollowId) {
+        log.info("Removing follow status for profile with id: {} and user with id: {}", profileId, toFollowId);
+
+        Profile profile = getProfileAndCheckFriendExistence(profileId, toFollowId);
+
+        if (!profileRepository.doesUserFollowProfile(profileId, toFollowId)) {
+            throw new UserAlreadyFollows(profileId, toFollowId);
+        }
+        log.info("Unfollowing user with id : {} ...", toFollowId);
+
+        profileRepository.deleteFollowsRelation(profileId, toFollowId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }

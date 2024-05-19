@@ -15,13 +15,13 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 @RelationshipProperties
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendsWith {
+public class Follows {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @TargetNode
-    private Profile friend;
+    private Profile follower;
 
 }

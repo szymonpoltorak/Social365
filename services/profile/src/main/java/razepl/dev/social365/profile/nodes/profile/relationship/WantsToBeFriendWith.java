@@ -15,7 +15,7 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 @RelationshipProperties
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendsWith {
+public class WantsToBeFriendWith {
 
     @Id
     @GeneratedValue

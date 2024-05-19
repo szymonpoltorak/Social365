@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -218,7 +217,7 @@ class FriendsServiceTest {
     }
 
     @Test
-    final void test_changeFollowStatus_shouldReturn() {
+    final void test_addProfileToFollowed_shouldReturn() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
@@ -243,14 +242,14 @@ class FriendsServiceTest {
         when(profileMapper.mapProfileToFriendResponse(profile, -1, false))
                 .thenReturn(expected);
 
-        FriendResponse actual = friendsService.changeFollowStatus(profileId, friendId);
+        FriendResponse actual = friendsService.addProfileToFollowed(profileId, friendId);
 
         // then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    final void test_changeFollowStatus_throwProfileNotFoundException() {
+    final void test_addProfileToFollowed_throwProfileNotFoundException() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
@@ -260,11 +259,11 @@ class FriendsServiceTest {
                 .thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.changeFollowStatus(profileId, friendId));
+        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.addProfileToFollowed(profileId, friendId));
     }
 
     @Test
-    final void test_changeFollowStatus_throwProfileNotFoundExceptionOnFriend() {
+    final void test_addProfileToFollowed_throwProfileNotFoundExceptionOnFriend() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
@@ -276,7 +275,7 @@ class FriendsServiceTest {
                 .thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.changeFollowStatus(profileId, friendId));
+        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.addProfileToFollowed(profileId, friendId));
     }
 
 }
