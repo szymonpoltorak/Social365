@@ -2,7 +2,6 @@ package razepl.dev.social365.posts.api.comments;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.UUID;
 
 @Slf4j
@@ -48,10 +48,12 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = Comment
                 .builder()
+                .commentId(UUID.randomUUID())
                 .postId(UUID.fromString(commentRequest.objectId()))
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
                 .creationDateTime(LocalDateTime.now())
+                .userLikedIds(new HashSet<>())
                 .build();
 
         Comment savedComment = commentRepository.save(comment);

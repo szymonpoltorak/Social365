@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -21,26 +21,30 @@ import java.util.UUID;
 public class Post {
 
     @PrimaryKey
+    @Column(value = "post_id")
     private UUID postId;
 
+    @Column(value = "author_id")
     private String authorId;
 
     private String content;
 
+    @Column(value = "creation_date_time")
     private LocalDateTime creationDateTime;
 
+    @Column(value = "has_attachments")
     private boolean hasAttachments;
 
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
+    @Column(value = "user_notification_ids")
     private Set<String> userNotificationIds;
 
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
+    @Column(value = "user_liked_ids")
     private Set<String> userLikedIds;
 
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
+    @Column(value = "user_shared_ids")
     private Set<String> userSharedIds;
 
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
+    @Column(value = "bookmarked_user_ids")
     private Set<String> bookmarkedUserIds;
 
     @Version

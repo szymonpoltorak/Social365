@@ -13,7 +13,7 @@ public final class ProfileMappings {
 
     public static final String UPDATE_PROFILE_BIO_MAPPING = "/updateBio";
 
-    public static final String GET_FOLLOWED_IDS = "/getFriendsIds";
+    public static final String GET_FOLLOWED_IDS = "/getFollowedIds";
 
     private ProfileMappings() {
     }

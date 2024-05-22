@@ -12,7 +12,7 @@ import razepl.dev.social365.profile.clients.posts.comments.constants.PostComment
 import razepl.dev.social365.profile.clients.posts.comments.constants.PostParams;
 import razepl.dev.social365.profile.clients.posts.comments.data.PostResponse;
 
-@FeignClient(name = "POSTS-COMMENTS")
+@FeignClient(name = "POSTS-COMMENTS", url = "http://posts-comments:8082")
 public interface PostCommentsService {
 
     @GetMapping(value = PostCommentsMappings.GET_USERS_POST_COUNT)

@@ -9,6 +9,7 @@ import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
+import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 
 @Slf4j
 @Component
@@ -17,6 +18,7 @@ public class PostMapperImpl implements PostMapper {
 
     private final ProfileService profileService;
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     @Override
     public final PostResponse toPostResponse(Post post, String profileId) {
@@ -38,6 +40,10 @@ public class PostMapperImpl implements PostMapper {
                 .shares(post.getUserSharedIds().size())
                 .comments(commentRepository.countAllByPostId(post.getPostId()))
                 .build();
+//
+//        .likes(postRepository.countLikesByPostId(post.getPostId()))
+//                .comments(commentRepository.countAllByPostId(post.getPostId()))
+//                .shares(postRepository.countSharesByPostId(post.getPostId()))
 
         return PostResponse
                 .builder()

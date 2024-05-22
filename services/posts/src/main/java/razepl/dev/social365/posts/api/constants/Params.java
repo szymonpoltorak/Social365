@@ -16,6 +16,8 @@ public final class Params {
 
     public static final String PAGE_SIZE = "pageSize";
 
+    public static final String FOLLOWED_IDS = "followedIds";
+
     private Params() {
     }
 }

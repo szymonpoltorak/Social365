@@ -1,16 +1,14 @@
-package razepl.dev.social365.profile.config;
+package razepl.dev.social365.init;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
-import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
-import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
-import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
-import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
-import razepl.dev.social365.profile.exceptions.UsersAlreadyFriendsException;
+import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
+import razepl.dev.social365.init.clients.posts.comments.constants.CommentRequest;
+import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
+import razepl.dev.social365.init.clients.profile.ProfileService;
+import razepl.dev.social365.init.clients.profile.data.ProfileRequest;
+import razepl.dev.social365.init.clients.profile.data.ProfileResponse;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -22,15 +20,13 @@ import java.util.random.RandomGenerator;
 
 @Configuration
 @RequiredArgsConstructor
-public class PlaceholderData implements CommandLineRunner {
+public class Initializer implements CommandLineRunner {
 
     private final ProfileService profileService;
-    private final FriendsService friendsService;
     private final PostCommentsService postCommentsService;
 
     @Override
-    @Transactional("transactionManager")
-    public void run(String... args) {
+    public final void run(String... args) {
         final int numberOfProfiles = 10;
         List<String> firstNames = List.of("Andrzej", "Jan", "Tomasz", "Piotr", "Pawel", "Mariusz",
                 "Wojciech", "Kacper", "Kamil", "Krzysztof");
@@ -65,31 +61,33 @@ public class PlaceholderData implements CommandLineRunner {
             for (int j = 0; j < profiles.size(); j++) {
                 try {
                     if (i != j) {
-                        friendsService.addUserToFriends(profiles.get(i).profileId(), profiles.get(j).profileId());
+                        profileService.addUserToFriends(profiles.get(i).profileId(), profiles.get(j).profileId());
                     }
-                } catch (UsersAlreadyFriendsException | UserAlreadyFollows e) {
+                } catch (Exception e) {
                     // ignore
                 }
             }
         }
 
-//        List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.", "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
-//        List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
-//
-//        profiles.forEach(profile -> {
-//            String postContent = postContents.get(random.nextInt(postContents.size()));
-//            PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
-//
-//            for (int i = 0; i < 3; i++) {
-//                String commentContent = commentContents.get(random.nextInt(commentContents.size()));
-//                CommentRequest commentRequest = CommentRequest
-//                        .builder()
-//                        .profileId(profile.profileId())
-//                        .objectId(postResponse.postId())
-//                        .content(commentContent)
-//                        .build();
-//                postCommentsService.addCommentToPost(commentRequest);
-//            }
-//        });
+        List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.", "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
+        List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
+
+        profiles.forEach(profile -> {
+            String postContent = postContents.get(random.nextInt(postContents.size()));
+            PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
+
+            for (int i = 0; i < commentContents.size(); i++) {
+                String commentContent = commentContents.get(random.nextInt(commentContents.size()));
+                CommentRequest commentRequest = CommentRequest
+                        .builder()
+                        .profileId(profile.profileId())
+                        .objectId(postResponse.postId())
+                        .content(commentContent)
+                        .build();
+                postCommentsService.addCommentToPost(commentRequest);
+            }
+        });
+
+        System.exit(0);
     }
 }

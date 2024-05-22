@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
+import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
+import razepl.dev.social365.profile.nodes.about.mail.Email;
+import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
 import java.util.Optional;
@@ -150,4 +153,45 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     Page<FriendSuggestion> findProfileSuggestions(@Param(ProfileParams.PROFILE_ID) String profileId,
                                                   Pageable pageable);
 
+    @Query("""
+            MATCH (p:Profile)<-[:FOLLOWS]-(f:Profile)
+            WHERE p.profileId = $profileId
+            RETURN COUNT(f)
+            """)
+    int getFollowersCount(String profileId);
+
+    @Query("""
+            MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
+            WHERE p.profileId = $profileId
+            RETURN COUNT(f)
+            """)
+    int getFriendsCount(String profileId);
+
+    @Query("""
+            MATCH (p:Profile)-[:HAS]->(e:Email)
+            WHERE p.profileId = $profileId
+            RETURN e
+            """)
+    Email getEmailByProfileId(String profileId);
+
+    @Query("""
+            MATCH (p:Profile)-[:WORKS_AS]->(w:Workplace)
+            WHERE p.profileId = $profileId
+            RETURN w
+            """)
+    Workplace getWorkplaceByProfileId(String profileId);
+
+    @Query("""
+            MATCH (p:Profile)-[:STUDIED_AT]->(a:AboutDetails)
+            WHERE p.profileId = $profileId
+            RETURN a
+            """)
+    AboutDetails getCollegeByProfileId(String profileId);
+
+    @Query("""
+            MATCH (p:Profile)-[:WENT_TO]->(a:AboutDetails)
+            WHERE p.profileId = $profileId
+            RETURN a
+            """)
+    AboutDetails getHighSchoolByProfileId(String profileId);
 }

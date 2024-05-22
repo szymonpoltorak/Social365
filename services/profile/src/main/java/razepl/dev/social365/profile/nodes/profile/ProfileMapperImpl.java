@@ -22,6 +22,7 @@ import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
+import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 
@@ -34,6 +35,7 @@ public class ProfileMapperImpl implements ProfileMapper {
     private final ImagesServiceClient imagesServiceClient;
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
+    private final ProfileRepository profileRepository;
 
     @Override
     public final ProfileSummaryResponse mapProfileToProfileSummaryResponse(Profile profile) {
@@ -45,8 +47,8 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfileSummaryResponse
                 .builder()
                 .username(profile.getEmail().getEmailValue())
-                .followersCount(profile.getFollowers().size())
-                .friendsCount(profile.getFriendships().size())
+                .followersCount(profileRepository.getFollowersCount(profile.getProfileId()))
+                .friendsCount(profileRepository.getFriendsCount(profile.getProfileId()))
                 .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .subtitle(getSubtitle(profile))
@@ -66,7 +68,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfilePostResponse
                 .builder()
                 .profileId(profile.getProfileId())
-                .username(profile.getEmail().getEmailValue())
+                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
@@ -86,7 +88,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
                 .profilePictureLink(getProfilePicturePath(profile))
-                .username(profile.getEmail().getEmailValue())
+                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .build();
     }
 
@@ -99,7 +101,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfileRequest
                 .builder()
-                .username(profile.getEmail().getEmailValue())
+                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
                 .lastName(profile.getLastName())
                 .firstName(profile.getFirstName())
@@ -226,17 +228,17 @@ public class ProfileMapperImpl implements ProfileMapper {
     }
 
     private String getSubtitle(Profile profile) {
-        Workplace workplace = profile.getWorkplace();
+        Workplace workplace = profileRepository.getWorkplaceByProfileId(profile.getProfileId());
 
         if (workplace != null) {
             return workplace.getSubtitle();
         }
-        AboutDetails college = profile.getCollege();
+        AboutDetails college = profileRepository.getCollegeByProfileId(profile.getProfileId());
 
         if (college != null) {
             return college.getPropertyValue();
         }
-        AboutDetails highSchool = profile.getHighSchool();
+        AboutDetails highSchool = profileRepository.getHighSchoolByProfileId(profile.getProfileId());
 
         if (highSchool != null) {
             return highSchool.getPropertyValue();
