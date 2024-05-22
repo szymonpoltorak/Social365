@@ -2,7 +2,7 @@ package razepl.dev.social365.posts.api.comments.constants;
 
 public final class CommentMappings {
 
-    public static final String COMMENT_MAPPING = "/api/v1/comments";
+    public static final String COMMENT_MAPPING = "/api/v1/posts/comments";
 
     public static final String GET_COMMENTS_FOR_POST = "/getCommentsForPost";
 

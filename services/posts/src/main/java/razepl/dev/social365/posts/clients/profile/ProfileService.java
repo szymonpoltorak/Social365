@@ -8,7 +8,7 @@ import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.clients.profile.constants.ProfileMappings;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 
-@FeignClient(name = "PROFILE-SERVICE")
+@FeignClient(name = "PROFILE-SERVICE", url = "http://profile-service:8083")
 public interface ProfileService {
 
     @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)

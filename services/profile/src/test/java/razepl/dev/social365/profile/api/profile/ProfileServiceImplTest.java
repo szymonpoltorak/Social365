@@ -4,10 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
@@ -25,9 +21,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -192,26 +186,5 @@ class ProfileServiceImplTest {
 
         // then
         assertEquals(expected, actual, "Should return profile response");
-    }
-
-    @Test
-    final void test_getFollowedProfileIds_shouldReturnData() {
-        // given
-        String profileId = "1234";
-        Profile profile = new Profile();
-        profile.setFollowers(Set.of(new Profile()));
-        List<String> expected = List.of("1234");
-        Pageable pageable = PageRequest.of(0, 20);
-
-        // when
-        when(profileRepository.findByProfileId(profileId))
-                .thenReturn(Optional.of(profile));
-        when(profileRepository.findFollowedIdsByProfileId(profileId, pageable))
-                .thenReturn(new PageImpl<>(expected));
-
-        Page<String> actual = profileService.getFollowedProfileIds(profileId, 0);
-
-        // then
-        assertEquals(expected, actual, "Should return followed profile ids");
     }
 }

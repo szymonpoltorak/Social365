@@ -16,6 +16,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsController;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
+import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
 
 @RestController
@@ -30,6 +31,13 @@ public class FriendsControllerImpl implements FriendsController {
     public final Page<FriendResponse> getFriends(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
                                                  Pageable pageable) {
         return friendsService.getFriends(profileId, pageable);
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
+    public final Page<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                    @RequestParam(ProfileParams.PAGE_NUMBER) int pageNumber) {
+        return friendsService.getFollowedProfileIds(profileId, pageNumber);
     }
 
     @Override
@@ -61,9 +69,37 @@ public class FriendsControllerImpl implements FriendsController {
     }
 
     @Override
-    @PutMapping(value = FriendMappings.CHANGE_FOLLOW_STATUS)
-    public final FriendResponse changeFollowStatus(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
-                                                   @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
-        return friendsService.changeFollowStatus(profileId, friendId);
+    @PutMapping(value = FriendMappings.ADD_PROFILE_TO_FOLLOWERS)
+    public final FriendResponse addProfileToFollowed(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                     @RequestParam(FriendsParams.TO_FOLLOW_ID) String toFollowId) {
+        return friendsService.addProfileToFollowed(profileId, toFollowId);
+    }
+
+    @Override
+    @DeleteMapping(value = FriendMappings.REMOVE_PROFILE_FROM_FOLLOWERS)
+    public final FriendResponse removeProfileFromFollowed(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                          @RequestParam(FriendsParams.TO_FOLLOW_ID) String toFollowId) {
+        return friendsService.removeProfileFromFollowed(profileId, toFollowId);
+    }
+
+    @Override
+    @PostMapping(value = FriendMappings.SEND_FRIEND_REQUEST)
+    public final FriendResponse sendFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                  @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.sendFriendRequest(profileId, friendId);
+    }
+
+    @Override
+    @PutMapping(value = FriendMappings.ACCEPT_FRIEND_REQUEST)
+    public final FriendResponse acceptFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                    @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.acceptFriendRequest(profileId, friendId);
+    }
+
+    @Override
+    @DeleteMapping(value = FriendMappings.DECLINE_FRIEND_REQUEST)
+    public final FriendResponse declineFriendRequest(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
+                                                     @RequestParam(FriendsParams.FRIEND_ID) String friendId) {
+        return friendsService.declineFriendRequest(profileId, friendId);
     }
 }

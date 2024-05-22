@@ -9,6 +9,10 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
 
+logging:
+    level:
+        org.springframework.data.neo4j.cypher: ERROR
+
 spring:
     neo4j:
         uri: ${NEO4J_URI}

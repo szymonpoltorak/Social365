@@ -9,6 +9,8 @@ public interface FriendsService {
 
     Page<FriendResponse> getFriends(String profileId, Pageable pageable);
 
+    Page<String> getFollowedProfileIds(String profileId, int pageNumber);
+
     Page<FriendSuggestionResponse> getFriendRequests(String profileId, Pageable pageable);
 
     Page<FriendSuggestionResponse> getFriendSuggestions(String profileId, Pageable pageable);
@@ -17,6 +19,14 @@ public interface FriendsService {
 
     FriendResponse addUserToFriends(String profileId, String friendId);
 
-    FriendResponse changeFollowStatus(String profileId, String friendId);
+    FriendResponse addProfileToFollowed(String profileId, String friendId);
+
+    FriendResponse removeProfileFromFollowed(String profileId, String toFollowId);
+
+    FriendResponse sendFriendRequest(String profileId, String friendId);
+
+    FriendResponse acceptFriendRequest(String profileId, String friendId);
+
+    FriendResponse declineFriendRequest(String profileId, String friendId);
 
 }

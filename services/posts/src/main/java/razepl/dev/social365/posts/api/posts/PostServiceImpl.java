@@ -23,6 +23,7 @@ import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,9 +66,9 @@ public class PostServiceImpl implements PostService {
 
             result.addAll(posts.getContent());
 
-            hasNext = posts.hasNext();
-
             if (result.size() >= pageable.getPageSize() || !posts.hasNext()) {
+                hasNext = posts.hasNext();
+
                 break;
             }
             pageable = PageRequest.of(++currentPageNumber, currentPageSize - result.size());
@@ -90,10 +91,15 @@ public class PostServiceImpl implements PostService {
 
         Post post = Post
                 .builder()
+                .postId(UUID.randomUUID())
                 .authorId(profileId)
                 .content(content)
                 .creationDateTime(LocalDateTime.now())
                 .hasAttachments(hasAttachments)
+                .userLikedIds(new HashSet<>())
+                .userSharedIds(new HashSet<>())
+                .userNotificationIds(new HashSet<>())
+                .bookmarkedUserIds(new HashSet<>())
                 .build();
 
         Post savedPost = postRepository.save(post);

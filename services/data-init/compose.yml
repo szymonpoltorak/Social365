@@ -1,0 +1,18 @@
+services:
+    data-initializer:
+        container_name: data-initializer
+        image: data-initializer
+        hostname: data-initializer
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+            -   path: "../.env"
+                required: true
+        networks:
+            - social365-network
+        ports:
+            - "8079:8079"
+        depends_on:
+            api-gateway:
+                condition: service_healthy

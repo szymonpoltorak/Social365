@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface CommentRepository extends CassandraRepository<Comment, UUID> {
 
-    @Query("select count(*) from comments where post_id = :objectId")
+    @Query("select count(*) from comments where post_id = :objectId ALLOW FILTERING")
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
 
     @Query("delete from comments where post_id = :objectId")

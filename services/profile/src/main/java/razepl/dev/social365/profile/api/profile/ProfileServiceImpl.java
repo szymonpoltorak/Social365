@@ -34,7 +34,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     private static final int MINIMAL_AGE = 13;
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
-    private static final int PAGE_SIZE = 20;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
@@ -52,19 +51,6 @@ public class ProfileServiceImpl implements ProfileService {
         profile = profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
-    }
-
-    @Override
-    public final Page<String> getFollowedProfileIds(String profileId, int pageNumber) {
-        log.info("Getting friends ids for profile with id: {}", profileId);
-
-        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-
-        Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
-
-        log.info("Found {} friends ids for profile with id: {}", friendsIds.getTotalElements(), profileId);
-
-        return friendsIds;
     }
 
     @Override
@@ -113,6 +99,24 @@ public class ProfileServiceImpl implements ProfileService {
         return profileMapper.mapProfileToProfileResponse(savedProfile);
     }
 
+    @Override
+    public final ProfileResponse getBasicProfileInfo(String profileId) {
+        log.info("Getting basic profile info for profile with id: {}", profileId);
+
+        Profile profile = getProfileFromRepository(profileId);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
+    }
+
+    private Profile getProfileFromRepository(String profileId) {
+        Profile profile = profileRepository.findByProfileId(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Profile found in repository: {}", profile);
+
+        return profile;
+    }
+
     private Email getMail(ProfileRequest profileRequest) {
         Email email = Email
                 .builder()
@@ -139,21 +143,4 @@ public class ProfileServiceImpl implements ProfileService {
         return savedBirthDate;
     }
 
-    @Override
-    public final ProfileResponse getBasicProfileInfo(String profileId) {
-        log.info("Getting basic profile info for profile with id: {}", profileId);
-
-        Profile profile = getProfileFromRepository(profileId);
-
-        return profileMapper.mapProfileToProfileResponse(profile);
-    }
-
-    private Profile getProfileFromRepository(String profileId) {
-        Profile profile = profileRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info("Profile found in repository: {}", profile);
-
-        return profile;
-    }
 }

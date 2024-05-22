@@ -36,6 +36,7 @@ services:
                 condition: service_started
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${PROFILE_SERVICE_PORT}/actuator/health" ]
+            start_period: 35s
             interval: 10s
             timeout: 5s
             retries: 3

@@ -17,13 +17,16 @@ import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+import razepl.dev.social365.profile.nodes.profile.relationship.Follows;
+import razepl.dev.social365.profile.nodes.profile.relationship.FriendsWith;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
@@ -99,6 +102,27 @@ class FriendsServiceTest {
     }
 
     @Test
+    final void test_getFollowedProfileIds_shouldReturnData() {
+        // given
+        String profileId = "1234";
+        Profile profile = new Profile();
+        profile.setFollowers(Set.of(new Follows()));
+        List<String> expected = List.of("1234");
+        Pageable pageable = PageRequest.of(0, 20);
+
+        // when
+        when(profileRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(profile));
+        when(profileRepository.findFollowedIdsByProfileId(profileId, pageable))
+                .thenReturn(new PageImpl<>(expected));
+
+        Page<String> actual = friendsService.getFollowedProfileIds(profileId, 0);
+
+        // then
+        assertEquals(expected, actual.getContent(), "Should return followed profile ids");
+    }
+
+    @Test
     final void test_getFriendSuggestions_shouldReturn() {
         // given
         int page = 0;
@@ -131,14 +155,14 @@ class FriendsServiceTest {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
-        Profile friend = Profile.builder().build();
+        FriendsWith friend = FriendsWith.builder().build();
 
-        Set<Profile> set = new HashSet<>();
+        Set<FriendsWith> set = new HashSet<>();
         set.add(friend);
 
         Profile profile = Profile
                 .builder()
-                .friends(set)
+                .friendships(set)
                 .build();
         FriendResponse expected = FriendResponse.builder().build();
 
@@ -146,7 +170,9 @@ class FriendsServiceTest {
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.ofNullable(profile));
         when(profileRepository.findByProfileId(friendId))
-                .thenReturn(Optional.ofNullable(friend));
+                .thenReturn(Optional.ofNullable(new Profile()));
+        when(profileRepository.areUsersFriends(profileId, friendId))
+                .thenReturn(true);
         when(profileRepository.save(profile))
                 .thenReturn(profile);
         when(profileMapper.mapProfileToFriendResponse(profile, -1, false))
@@ -156,6 +182,10 @@ class FriendsServiceTest {
 
         // then
         Assertions.assertEquals(expected, actual);
+        verify(profileRepository).deleteFriendshipRelationship(profileId, friendId);
+        verify(profileRepository).deleteFriendshipRelationship(friendId, profileId);
+        verify(profileRepository).deleteFollowsRelation(profileId, friendId);
+        verify(profileRepository).deleteFollowsRelation(friendId, profileId);
     }
 
     @Test
@@ -167,14 +197,14 @@ class FriendsServiceTest {
                 .builder()
                 .profileId(friendId)
                 .bio("jdhjdkjsadhkajd")
-                .friends(new HashSet<>())
+                .friendships(new HashSet<>())
                 .followers(new HashSet<>())
                 .build();
 
         Profile profile = Profile
                 .builder()
                 .profileId(profileId)
-                .friends(new HashSet<>())
+                .friendships(new HashSet<>())
                 .followers(new HashSet<>())
                 .build();
         FriendResponse expected = FriendResponse.builder().build();
@@ -196,13 +226,13 @@ class FriendsServiceTest {
     }
 
     @Test
-    final void test_changeFollowStatus_shouldReturn() {
+    final void test_addProfileToFollowed_shouldReturn() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
-        Profile friend = Profile.builder().build();
+        Follows friend = Follows.builder().build();
 
-        Set<Profile> set = new HashSet<>();
+        Set<Follows> set = new HashSet<>();
         set.add(friend);
 
         Profile profile = Profile
@@ -215,20 +245,20 @@ class FriendsServiceTest {
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.ofNullable(profile));
         when(profileRepository.findByProfileId(friendId))
-                .thenReturn(Optional.ofNullable(friend));
+                .thenReturn(Optional.ofNullable(new Profile()));
         when(profileRepository.save(profile))
                 .thenReturn(profile);
         when(profileMapper.mapProfileToFriendResponse(profile, -1, false))
                 .thenReturn(expected);
 
-        FriendResponse actual = friendsService.changeFollowStatus(profileId, friendId);
+        FriendResponse actual = friendsService.addProfileToFollowed(profileId, friendId);
 
         // then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    final void test_changeFollowStatus_throwProfileNotFoundException() {
+    final void test_addProfileToFollowed_throwProfileNotFoundException() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
@@ -238,11 +268,11 @@ class FriendsServiceTest {
                 .thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.changeFollowStatus(profileId, friendId));
+        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.addProfileToFollowed(profileId, friendId));
     }
 
     @Test
-    final void test_changeFollowStatus_throwProfileNotFoundExceptionOnFriend() {
+    final void test_addProfileToFollowed_throwProfileNotFoundExceptionOnFriend() {
         // given
         String profileId = "profileId";
         String friendId = "friendId";
@@ -254,7 +284,7 @@ class FriendsServiceTest {
                 .thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.changeFollowStatus(profileId, friendId));
+        Assertions.assertThrows(ProfileNotFoundException.class, () -> friendsService.addProfileToFollowed(profileId, friendId));
     }
 
 }

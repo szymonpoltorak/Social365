@@ -31,13 +31,6 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
-    @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
-    public final Page<String> getFollowedProfileIds(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
-                                                    @RequestParam(ProfileParams.PAGE_NUMBER) int pageNumber) {
-        return profileService.getFollowedProfileIds(profileId, pageNumber);
-    }
-
-    @Override
     @PostMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
     public final ProfileRequest updateProfileBio(@RequestParam(ProfileParams.PROFILE_ID) String profileId,
                                                  @RequestParam(ProfileParams.BIO) String bio) {

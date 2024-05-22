@@ -2,8 +2,6 @@ services:
     frontend-client:
         container_name: frontend-client
         image: frontend-client
-        depends_on:
-            - api-gateway
         build:
             context: .
             dockerfile: Dockerfile.prod
