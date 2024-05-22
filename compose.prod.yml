@@ -17,6 +17,8 @@ include:
             - ./services/profile/compose.prod.yml
     -   path:
             - ./services/posts/compose.prod.yml
+    -   path:
+            - ./services/data-init/compose.yml
 
 services: {}
 

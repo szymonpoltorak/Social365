@@ -9,7 +9,7 @@ import razepl.dev.social365.init.clients.profile.data.FriendResponse;
 import razepl.dev.social365.init.clients.profile.data.ProfileRequest;
 import razepl.dev.social365.init.clients.profile.data.ProfileResponse;
 
-@FeignClient(name = "PROFILE-SERVICE", url = "http://localhost:8083")
+@FeignClient(name = "PROFILE-SERVICE", url = "http://profile-service:8083")
 public interface ProfileService {
 
     @PostMapping(value = ProfileMappings.CREATE_USERS_PROFILE_MAPPING)
