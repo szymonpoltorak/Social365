@@ -26,4 +26,10 @@ export enum RouterPaths {
     FRIEND_REQUESTS = "requests",
     FRIEND_SUGGESTIONS = "suggestions",
 
+    LOGIN_PATH = "auth/login",
+    LOGIN_PATH_DIRECT = "/auth/login",
+
+    REGISTER_PATH = "auth/register",
+    REGISTER_PATH_DIRECT = "/auth/register",
+
 }
