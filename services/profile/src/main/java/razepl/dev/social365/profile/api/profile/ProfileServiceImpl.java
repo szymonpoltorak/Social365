@@ -13,6 +13,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
+import razepl.dev.social365.profile.exceptions.UsernameAlreadyClaimedException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
@@ -76,6 +77,9 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
         log.info("Profile request: {}", profileRequest);
 
+        if (profileRepository.existsByUsername(profileRequest.username())) {
+            throw new UsernameAlreadyClaimedException(profileRequest.username());
+        }
         if (Period.between(profileRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
             throw new TooYoungForAccountException();
         }

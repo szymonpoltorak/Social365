@@ -194,4 +194,11 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             RETURN a
             """)
     AboutDetails getHighSchoolByProfileId(String profileId);
+
+    @Query("""
+            MATCH (e:Email)
+            WHERE e.emailValue = $username
+            RETURN COUNT(e) > 0
+            """)
+    boolean existsByUsername(String username);
 }
