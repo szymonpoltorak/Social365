@@ -1,0 +1,128 @@
+<div class="max-md:flex max-md:flex-col ms:items-center md:grid md:grid-cols-2 md:grid-rows-1 justify-center overflow-y-hidden h-screen">
+    <div class="flex justify-center items-center">
+        <div class="flex flex-col">
+            <div class="hover:cursor-default text-6xl font-bold mb-2">
+                Social<span class="text-primary">365</span>
+            </div>
+
+            <div class="font-extralight text-xs">
+                Use your Social<span class="text-primary">365</span> account
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center flex-col md:m-8 max-md:m-4 max-md:items-center max-w-[35em]">
+        <form class="bg-secondary p-5 rounded-2xl" [formGroup]="registerForm" (ngSubmit)="submitForm()">
+            <div class="text-4xl font-bold mb-3">Create account</div>
+
+            <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                <mat-label>Email</mat-label>
+
+                <input matInput
+                       formControlName="email"
+                       placeholder="example@mail.com" required>
+
+                <mat-error *ngIf="registerForm.controls['email'].hasError('required')">
+                    Email is <strong>required</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['email'].hasError('email')">
+                    Email is <strong>invalid</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <div formGroupName="passwords">
+                <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                    <mat-label>Password</mat-label>
+
+                    <input matInput
+                           formControlName="password"
+                           placeholder="My really hard password" required>
+
+                    <mat-error *ngIf="passwordsGroup.controls['password'].hasError('required')">
+                        Password is <strong>required</strong>
+                    </mat-error>
+
+                    <mat-error *ngIf="passwordsGroup.controls['password'].hasError('minlength')">
+                        Password must be at least <strong>8 characters</strong>
+                    </mat-error>
+
+                    <mat-error *ngIf="passwordsGroup.controls['password'].hasError('maxlength')">
+                        Password must be at most <strong>32 characters</strong>
+                    </mat-error>
+
+                    <mat-error class="text-justify" *ngIf="passwordsGroup.controls['password'].hasError('pattern')">
+                        Password must contain at least one <strong>uppercase letter</strong>, one <strong>lowercase letter</strong>,
+                        one <strong>number</strong> and one <strong>special character</strong> and between <strong>8 and 32 characters</strong>.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                    <mat-label>Repeat Password</mat-label>
+
+                    <input matInput
+                           formControlName="confirmPassword"
+                           placeholder="My really hard password" required>
+
+                    <mat-error *ngIf="passwordsGroup.controls['confirmPassword'].hasError('required')">
+                        Password is <strong>required</strong>
+                    </mat-error>
+
+                    <mat-error *ngIf="passwordsGroup.controls['confirmPassword'].hasError('minlength')">
+                        Password must be at least <strong>8 characters</strong>
+                    </mat-error>
+
+                    <mat-error *ngIf="passwordsGroup.controls['confirmPassword'].hasError('maxlength')">
+                        Password must be at most <strong>32 characters</strong>
+                    </mat-error>
+
+                    <mat-error *ngIf="passwordsGroup.hasError('passwordMatch')">
+                        Passwords do not <strong>match</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                <mat-label>Enter your date of birth</mat-label>
+
+                <input matInput
+                       placeholder="12/12/1999"
+                       maxlength="10"
+                       formControlName="dateOfBirth"
+                       [matDatepicker]="datepicker" required>
+
+                <mat-hint align="end">MM/DD/YYYY</mat-hint>
+
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+
+                <mat-datepicker #datepicker></mat-datepicker>
+
+                <mat-error *ngIf="registerForm.controls['dateOfBirth'].hasError('required')">
+                    Date of birth is <strong>required</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['dateOfBirth'].hasError('matDatepickerParse')">
+                    Date of birth is <strong>invalid</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['dateOfBirth'].hasError('wrongAge')">
+                    Date of birth must be <strong>at least 13 years old</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <div class="flex justify-end gap-3 items-center">
+                <button mat-button
+                        routerLink="/auth/login"
+                        type="button">
+                    <mat-icon>keyboard_return</mat-icon>
+                    Return
+                </button>
+
+                <button mat-fab extended color="primary" type="submit">
+                    <mat-icon>login</mat-icon>
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

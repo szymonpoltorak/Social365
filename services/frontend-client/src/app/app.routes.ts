@@ -62,6 +62,16 @@ export const routes: Routes = [
         ]
     },
     {
+        path: RouterPaths.LOGIN_PATH,
+        loadComponent: () => import("@pages/auth/login/login.component")
+            .then(m => m.LoginComponent),
+    },
+    {
+        path: RouterPaths.REGISTER_PATH,
+        loadComponent: () => import("@pages/auth/register/register.component")
+            .then(m => m.RegisterComponent),
+    },
+    {
         path: RouterPaths.FRIENDS_PATH,
         loadComponent: () => import("./pages/friends/friends.component")
             .then(m => m.FriendsComponent),
