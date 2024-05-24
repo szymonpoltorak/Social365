@@ -22,6 +22,7 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -39,6 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final BirthDateRepository birthDateRepository;
     private final MailRepository mailRepository;
     private final ProfileMapper profileMapper;
+    private final ParamValidator paramValidator;
 
     @Override
     public final ProfileRequest updateProfileBio(String profileId, String bio) {
@@ -76,6 +78,7 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
         log.info("Profile request: {}", profileRequest);
 
+        paramValidator.validateProfileRequest(profileRequest);
 
         BirthDate birthDate = getBirthDate(profileRequest);
 
