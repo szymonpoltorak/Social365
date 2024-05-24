@@ -63,12 +63,12 @@ export const routes: Routes = [
     },
     {
         path: RouterPaths.LOGIN_PATH,
-        loadComponent: () => import("./pages/login/login.component")
+        loadComponent: () => import("@pages/auth/login/login.component")
             .then(m => m.LoginComponent),
     },
     {
         path: RouterPaths.REGISTER_PATH,
-        loadComponent: () => import("./pages/register/register.component")
+        loadComponent: () => import("@pages/auth/register/register.component")
             .then(m => m.RegisterComponent),
     },
     {
