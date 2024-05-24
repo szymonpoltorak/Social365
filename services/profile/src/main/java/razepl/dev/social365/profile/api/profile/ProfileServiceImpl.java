@@ -33,7 +33,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
-    private static final int MINIMAL_AGE = 13;
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
 
     private final ProfileRepository profileRepository;
@@ -77,12 +76,7 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
         log.info("Profile request: {}", profileRequest);
 
-        if (profileRepository.existsByUsername(profileRequest.username())) {
-            throw new UsernameAlreadyClaimedException(profileRequest.username());
-        }
-        if (Period.between(profileRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
-            throw new TooYoungForAccountException();
-        }
+
         BirthDate birthDate = getBirthDate(profileRequest);
 
         Email email = getMail(profileRequest);
