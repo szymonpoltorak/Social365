@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.entities.comment.Comment;
+import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
@@ -17,6 +20,7 @@ import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -29,14 +33,19 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
 
     @Override
-    public final Slice<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
+    public final DataPage<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageable);
 
         Slice<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
 
         log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
-        return comments.map(comment -> commentMapper.toCommentResponse(comment, profileId));
+        List<CommentResponse> data =  comments
+                .stream()
+                .map(comment -> commentMapper.toCommentResponse(comment, profileId))
+                .toList();
+
+        return new DataPage<>(data, pageable.getPageNumber(), pageable.getPageSize(), comments.hasNext());
     }
 
     @Override
@@ -48,12 +57,15 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = Comment
                 .builder()
-                .commentId(UUID.randomUUID())
-                .postId(UUID.fromString(commentRequest.objectId()))
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.randomUUID())
+                        .postId(UUID.fromString(commentRequest.objectId()))
+                        .build()
+                )
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
                 .creationDateTime(LocalDateTime.now())
-                .userLikedIds(new HashSet<>())
                 .build();
 
         Comment savedComment = commentRepository.save(comment);

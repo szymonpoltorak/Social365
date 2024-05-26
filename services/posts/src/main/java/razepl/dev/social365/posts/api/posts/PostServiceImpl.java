@@ -2,18 +2,20 @@ package razepl.dev.social365.posts.api.posts;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
+import razepl.dev.social365.posts.entities.post.PostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
@@ -23,8 +25,8 @@ import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -46,8 +48,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Slice<PostResponse> getPostsOnPage(String profileId, int pageSize, int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public DataPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize) {
+        Pageable pageable = CassandraPageRequest.of(pageNumber, pageSize);
         int currentPageNumber = pageable.getPageNumber();
         int currentPageSize = pageable.getPageSize();
         boolean hasNext;
@@ -56,11 +58,13 @@ public class PostServiceImpl implements PostService {
         log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
 
         while (true) {
-            Page<String> friendsIds = profileService.getFriendsIds(profileId, pageNumber);
+            List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, pageNumber).toList());
 
-            log.info("Found {} friends for profile with id: {}", friendsIds.getTotalElements(), profileId);
+            log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
 
-            Slice<Post> posts = postRepository.findAllByFollowedUserIds(friendsIds.toList(), pageable);
+            friendsIds.add(profileId);
+
+            Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
             log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
 
@@ -71,35 +75,35 @@ public class PostServiceImpl implements PostService {
 
                 break;
             }
-            pageable = PageRequest.of(++currentPageNumber, currentPageSize - result.size());
+            pageable = CassandraPageRequest.of(++currentPageNumber, currentPageSize - result.size());
         }
         log.info("Found posts returning result...");
 
-        List<PostResponse> slice = result
+        List<PostData> slice = result
                 .parallelStream()
                 .map(post -> postMapper.toPostResponse(post, profileId))
                 .toList();
 
-        return new SliceImpl<>(slice, pageable, hasNext);
+        return new DataPage<>(slice, currentPageNumber, pageSize, hasNext);
     }
 
     @Override
-    public PostResponse createPost(String profileId, String content, boolean hasAttachments) {
+    public PostData createPost(String profileId, String content, boolean hasAttachments) {
         log.info("Creating post for profileId: {}, with content: {}", profileId, content);
 
         postValidator.validatePostContent(content);
 
         Post post = Post
                 .builder()
-                .postId(UUID.randomUUID())
-                .authorId(profileId)
+                .key(PostKey
+                        .builder()
+                        .authorId(profileId)
+                        .postId(UUID.randomUUID())
+                        .creationDateTime(LocalDateTime.now())
+                        .build()
+                )
                 .content(content)
-                .creationDateTime(LocalDateTime.now())
                 .hasAttachments(hasAttachments)
-                .userLikedIds(new HashSet<>())
-                .userSharedIds(new HashSet<>())
-                .userNotificationIds(new HashSet<>())
-                .bookmarkedUserIds(new HashSet<>())
                 .build();
 
         Post savedPost = postRepository.save(post);
@@ -110,7 +114,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse editPost(String profileId, String postId, String content) {
+    public PostData editPost(String profileId, String postId, String content) {
         log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
 
         postValidator.validatePostContent(content);
@@ -130,7 +134,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse updateLikePostCount(String profileId, String postId) {
+    public PostData updateLikePostCount(String profileId, String postId) {
         log.info("Updating like count for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);
@@ -148,7 +152,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse updateNotificationStatus(String profileId, String postId) {
+    public PostData updateNotificationStatus(String profileId, String postId) {
         log.info("Updating notification status for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);
@@ -166,7 +170,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse updateBookmarkStatus(String profileId, String postId) {
+    public PostData updateBookmarkStatus(String profileId, String postId) {
         log.info("Updating bookmark status for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);
@@ -184,16 +188,38 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse updateSharesCount(String profileId, String postId) {
+    public PostData sharePost(String profileId, String postId) {
         log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);
+
+        Post sharedPost = Post
+                .builder()
+                .key(PostKey
+                        .builder()
+                        .authorId(profileId)
+                        .postId(UUID.randomUUID())
+                        .creationDateTime(LocalDateTime.now())
+                        .build()
+                )
+                .content("")
+                .originalPostId(post.getPostId())
+                .hasAttachments(false)
+                .userLikedIds(Set.of())
+                .userSharedIds(Set.of())
+                .userNotificationIds(Set.of())
+                .bookmarkedUserIds(Set.of())
+                .build();
 
         post.sharePostByProfile(profileId);
 
         Post savedPost = postRepository.save(post);
 
         log.info("Post with id: {} shares count updated for profile with id: {}", savedPost.getPostId(), profileId);
+
+        Post savedSharedPost = postRepository.save(sharedPost);
+
+        log.info("Post with id: {} shared for profile with id: {}", savedSharedPost.getPostId(), profileId);
 
         return postMapper.toPostResponse(savedPost, profileId);
     }

@@ -1,25 +1,25 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
-import org.springframework.data.domain.Slice;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 
 public interface PostController {
 
     int getUsersPostCount(String profileId);
 
-    Slice<PostResponse> getPostsOnPage(String profileId, int pageSize, int pageNumber);
+    DataPage<PostData>  getPostsOnPage(String profileId, int pageSize, int pageNumber);
 
-    PostResponse updateLikePostCount(String profileId, String postId);
+    PostData updateLikePostCount(String profileId, String postId);
 
-    PostResponse updateNotificationStatus(String profileId, String postId);
+    PostData updateNotificationStatus(String profileId, String postId);
 
-    PostResponse updateBookmarkStatus(String profileId, String postId);
+    PostData updateBookmarkStatus(String profileId, String postId);
 
-    PostResponse updateSharesCount(String profileId, String postId);
+    PostData updateSharesCount(String profileId, String postId);
 
-    PostResponse createPost(String profileId, String content, boolean hasAttachments);
+    PostData createPost(String profileId, String content, boolean hasAttachments);
 
-    PostResponse editPost(String profileId, String postId, String content);
+    PostData editPost(String profileId, String postId, String content);
 
     PostResponse deletePost(String profileId, String postId);
 

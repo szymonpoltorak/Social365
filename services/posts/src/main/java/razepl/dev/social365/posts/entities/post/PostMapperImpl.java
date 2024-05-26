@@ -3,6 +3,7 @@ package razepl.dev.social365.posts.entities.post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.data.PostStatistics;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
@@ -21,7 +22,7 @@ public class PostMapperImpl implements PostMapper {
     private final PostRepository postRepository;
 
     @Override
-    public final PostResponse toPostResponse(Post post, String profileId) {
+    public final PostData toPostResponse(Post post, String profileId) {
         if (post == null) {
             log.warn("Post is null");
 
@@ -34,16 +35,14 @@ public class PostMapperImpl implements PostMapper {
         }
         Profile author = profileService.getProfileDetails(post.getAuthorId());
 
+        //TODO: getting attachments for posts
+
         PostStatistics statistics = PostStatistics
                 .builder()
-                .likes(post.getUserLikedIds().size())
-                .shares(post.getUserSharedIds().size())
+                .likes(post.getLikesCount())
+                .shares(post.getSharesCount())
                 .comments(commentRepository.countAllByPostId(post.getPostId()))
                 .build();
-//
-//        .likes(postRepository.countLikesByPostId(post.getPostId()))
-//                .comments(commentRepository.countAllByPostId(post.getPostId()))
-//                .shares(postRepository.countSharesByPostId(post.getPostId()))
 
         return PostResponse
                 .builder()

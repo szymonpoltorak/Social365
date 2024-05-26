@@ -19,6 +19,7 @@ import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
 import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
@@ -36,6 +37,7 @@ public class ProfileMapperImpl implements ProfileMapper {
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
     private final ProfileRepository profileRepository;
+    private final EmailRepository emailRepository;
 
     @Override
     public final ProfileSummaryResponse mapProfileToProfileSummaryResponse(Profile profile) {
@@ -68,7 +70,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfilePostResponse
                 .builder()
                 .profileId(profile.getProfileId())
-                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
+                .username(emailRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
@@ -88,7 +90,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
                 .profilePictureLink(getProfilePicturePath(profile))
-                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
+                .username(emailRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .build();
     }
 
@@ -101,7 +103,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         }
         return ProfileRequest
                 .builder()
-                .username(profileRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
+                .username(emailRepository.getEmailByProfileId(profile.getProfileId()).getEmailValue())
                 .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
                 .lastName(profile.getLastName())
                 .firstName(profile.getFirstName())

@@ -2,7 +2,6 @@ package razepl.dev.social365.posts.api.comments;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +16,7 @@ import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +27,9 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
-    public final Slice<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
-                                                           @RequestParam(Params.PROFILE_ID) String profileId,
-                                                           Pageable pageable) {
+    public final DataPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
+                                                              @RequestParam(Params.PROFILE_ID) String profileId,
+                                                              Pageable pageable) {
         return commentService.getCommentsForPost(postId, profileId, pageable);
     }
 

@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
@@ -64,16 +64,16 @@ class PostServiceTest {
         List<PostResponse> expected = List.of(PostResponse.builder().build(), PostResponse.builder().build(),
                 PostResponse.builder().build());
 
-        when(postRepository.findAllByFollowedUserIds(any(), any()))
+        when(postRepository.findAllByFollowedUserIdsOrProfileId(any(), any()))
                 .thenReturn(new SliceImpl<>(posts));
         when(profileService.getFriendsIds(eq(profileId), anyInt()))
                 .thenReturn(new PageImpl<>(List.of("friendId1", "friendId2", "friendId3")));
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(PostResponse.builder().build());
 
-        Slice<PostResponse> result = postService.getPostsOnPage(profileId, pageNumber, pageSize);
+        Slice<PostData> result = postService.getPostsOnPage(profileId, pageNumber, pageSize);
 
-        verify(postRepository).findAllByFollowedUserIds(any(), any());
+        verify(postRepository).findAllByFollowedUserIdsOrProfileId(any(), any());
         assertEquals(expected, result.getContent());
     }
 
@@ -94,7 +94,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostResponse result = postService.createPost(profileId, content, true);
+        PostData result = postService.createPost(profileId, content, true);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -115,7 +115,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostResponse result = postService.editPost(profileId, postId, content);
+        PostData result = postService.editPost(profileId, postId, content);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);

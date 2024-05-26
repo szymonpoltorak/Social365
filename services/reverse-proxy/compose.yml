@@ -7,7 +7,7 @@ services:
                 required: true
         build:
             context: .
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile
         depends_on:
             frontend-client:
                 condition: service_healthy

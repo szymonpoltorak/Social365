@@ -29,6 +29,8 @@ public class CommentMapperImpl implements CommentMapper {
         }
         Profile author = profileService.getProfileDetails(comment.getAuthorId());
 
+        //TODO: getting attachments for comments
+
         return CommentResponse
                 .builder()
                 .isLiked(comment.isLikedBy(profileId))

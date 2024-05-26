@@ -21,11 +21,7 @@ import java.util.UUID;
 public class Comment {
 
     @PrimaryKey
-    @Column(value = "comment_id")
-    private UUID commentId;
-
-    @Column(value = "post_id")
-    private UUID postId;
+    private CommentKey key;
 
     @Column(value = "author_id")
     private String authorId;
@@ -41,11 +37,19 @@ public class Comment {
     @Version
     private long version;
 
+    public final UUID getCommentId() {
+        return key.getCommentId();
+    }
+
+    public final UUID getPostId() {
+        return key.getPostId();
+    }
+
     public final boolean isLikedBy(String profileId) {
-        return userLikedIds.contains(profileId);
+        return userLikedIds != null && userLikedIds.contains(profileId);
     }
 
     public final int getLikesCount() {
-        return userLikedIds.size();
+        return userLikedIds != null ? userLikedIds.size() : 0;
     }
 }

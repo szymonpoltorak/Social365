@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.api.posts.constants.PostMappings;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
@@ -30,53 +32,53 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @GetMapping(value = PostMappings.GET_POSTS_ON_PAGE)
-    public final Slice<PostResponse> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                    @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                    @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final DataPage<PostData> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                   @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                   @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return postService.getPostsOnPage(profileId, pageNumber, pageSize);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_LIKE_POST_COUNT)
-    public final PostResponse updateLikePostCount(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                  @RequestParam(Params.POST_ID) String postId) {
+    public final PostData updateLikePostCount(@RequestParam(Params.PROFILE_ID) String profileId,
+                                              @RequestParam(Params.POST_ID) String postId) {
         return postService.updateLikePostCount(profileId, postId);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_NOTIFICATION_STATUS)
-    public final PostResponse updateNotificationStatus(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                       @RequestParam(Params.POST_ID) String postId) {
+    public final PostData updateNotificationStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                   @RequestParam(Params.POST_ID) String postId) {
         return postService.updateNotificationStatus(profileId, postId);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_BOOKMARK_STATUS)
-    public final PostResponse updateBookmarkStatus(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                   @RequestParam(Params.POST_ID) String postId) {
+    public final PostData updateBookmarkStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+                                               @RequestParam(Params.POST_ID) String postId) {
         return postService.updateBookmarkStatus(profileId, postId);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_SHARES_COUNT)
-    public final PostResponse updateSharesCount(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateSharesCount(profileId, postId);
+    public final PostData updateSharesCount(@RequestParam(Params.PROFILE_ID) String profileId,
+                                            @RequestParam(Params.POST_ID) String postId) {
+        return postService.sharePost(profileId, postId);
     }
 
     @Override
     @PostMapping(value = PostMappings.CREATE_POST)
-    public final PostResponse createPost(@RequestParam(Params.PROFILE_ID) String profileId,
-                                         @RequestParam(Params.CONTENT) String content,
-                                         @RequestParam(Params.HAS_ATTACHMENTS) boolean hasAttachments) {
+    public final PostData createPost(@RequestParam(Params.PROFILE_ID) String profileId,
+                                     @RequestParam(Params.CONTENT) String content,
+                                     @RequestParam(Params.HAS_ATTACHMENTS) boolean hasAttachments) {
         return postService.createPost(profileId, content, hasAttachments);
     }
 
     @Override
     @PutMapping(value = PostMappings.EDIT_POST)
-    public final PostResponse editPost(@RequestParam(Params.PROFILE_ID) String profileId,
-                                       @RequestParam(Params.POST_ID) String postId,
-                                       @RequestParam(Params.CONTENT) String content) {
+    public final PostData editPost(@RequestParam(Params.PROFILE_ID) String profileId,
+                                   @RequestParam(Params.POST_ID) String postId,
+                                   @RequestParam(Params.CONTENT) String content) {
         return postService.editPost(profileId, postId, content);
     }
 

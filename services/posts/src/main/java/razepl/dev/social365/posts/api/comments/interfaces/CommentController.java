@@ -1,13 +1,13 @@
 package razepl.dev.social365.posts.api.comments.interfaces;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.posts.data.DataPage;
 
 public interface CommentController {
 
-    Slice<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable);
+    DataPage<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable);
 
     CommentResponse addCommentToPost(CommentRequest commentRequest);
 

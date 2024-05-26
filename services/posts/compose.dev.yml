@@ -8,7 +8,7 @@ services:
                 required: true
         build:
             context: .
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile.dev
         ports:
             - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
         volumes:

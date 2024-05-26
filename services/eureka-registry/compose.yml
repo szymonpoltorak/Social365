@@ -8,18 +8,15 @@ services:
                 condition: service_started
         build:
             context: .
-            dockerfile: Dockerfile.dev
+            dockerfile: Dockerfile
         env_file:
             - path: "../.env"
               required: true
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://${EUREKA_REGISTRY_HOSTNAME}:${EUREKA_REGISTRY_PORT}/actuator/health" ]
-            start_period: 25s
             interval: 10s
-            timeout: 10s
-            retries: 10
-        volumes:
-            -   "./:/home/eureka-registry"
+            timeout: 5s
+            retries: 3
         ports:
             - "${EUREKA_REGISTRY_PORT}:${EUREKA_REGISTRY_PORT}"
         networks:

@@ -53,7 +53,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query("""
             MATCH (p:Profile {profileId: $profileId})
             MATCH (f:Profile {profileId: $toFollowId})
-            CREATE (p)-[:FOLLOWED_BY]->(f)
+            CREATE (p)-[:FOLLOWS]->(f)
             """)
     void createFollowsRelation(String profileId, String toFollowId);
 
@@ -166,13 +166,6 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             RETURN COUNT(f)
             """)
     int getFriendsCount(String profileId);
-
-    @Query("""
-            MATCH (p:Profile)-[:HAS]->(e:Email)
-            WHERE p.profileId = $profileId
-            RETURN e
-            """)
-    Email getEmailByProfileId(String profileId);
 
     @Query("""
             MATCH (p:Profile)-[:WORKS_AS]->(w:Workplace)

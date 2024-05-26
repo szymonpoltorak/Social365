@@ -9,7 +9,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.EmailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.mobile.interfaces.MobileRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;

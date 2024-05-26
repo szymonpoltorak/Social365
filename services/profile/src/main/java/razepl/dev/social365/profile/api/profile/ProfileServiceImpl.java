@@ -2,9 +2,6 @@ package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -12,22 +9,17 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
-import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
-import razepl.dev.social365.profile.exceptions.UsernameAlreadyClaimedException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -38,7 +30,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
-    private final MailRepository mailRepository;
+    private final EmailRepository mailRepository;
     private final ProfileMapper profileMapper;
     private final ParamValidator paramValidator;
 
@@ -94,6 +86,9 @@ public class ProfileServiceImpl implements ProfileService {
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
                 .build();
         Profile savedProfile = profileRepository.save(profile);
+
+        mailRepository.createEmailHasRelation(email.getMailId(), savedProfile.getProfileId());
+        birthDateRepository.createBornOnRelation(birthDate.getBirthDateId(), savedProfile.getProfileId());
 
         log.info("Saved profile: {}", savedProfile);
 
