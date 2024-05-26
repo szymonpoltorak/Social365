@@ -6,8 +6,6 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 public interface AboutContactService {
 
-    ProfileRequest addProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest);
-
     ProfileRequest updateProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest);
 
     ProfileRequest updateProfileEmailPrivacyLevel(String profileId, PrivacyLevel privacyLevel);

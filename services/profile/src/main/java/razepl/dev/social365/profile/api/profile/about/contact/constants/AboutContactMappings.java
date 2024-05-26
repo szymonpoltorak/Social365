@@ -10,8 +10,6 @@ public final class AboutContactMappings {
 
     public static final String ABOUT_CONTACT_API_MAPPING = "/api/v1/profile/about/contact";
 
-    public static final String ADD_PROFILE_PHONE_NUMBER_MAPPING = "/addPhone";
-
     private AboutContactMappings() {
     }
 }

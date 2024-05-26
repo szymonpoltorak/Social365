@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
+import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
@@ -146,6 +146,8 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
         when(emailRepository.save(email))
                 .thenReturn(email);
+        when(emailRepository.findEmailByProfileId(profileId))
+                .thenReturn(Optional.of(email));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -192,6 +194,8 @@ class AboutContactServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(mobileRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(mobile));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -219,7 +223,7 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
 
         // then
-        Assertions.assertThrows(ProfileDetailsNotFoundException.class, () -> {
+        Assertions.assertThrows(MobileNotFoundException.class, () -> {
             aboutContactService.deleteProfilePhoneNumber(profileId);
         });
     }

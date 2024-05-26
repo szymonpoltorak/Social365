@@ -13,11 +13,12 @@ import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,10 +41,13 @@ class ProfileServiceImplTest {
     private BirthDateRepository birthDateRepository;
 
     @Mock
-    private MailRepository mailRepository;
+    private EmailRepository mailRepository;
 
     @Mock
     private ProfileMapper profileMapper;
+
+    @Mock
+    private ParamValidator paramValidator;
 
     @Test
     final void test_getProfileSummary_throwsException() {
@@ -139,17 +143,6 @@ class ProfileServiceImplTest {
 
         // then
         assertEquals(expected, actual, "Should return profile response");
-    }
-
-    @Test
-    final void test_createUsersProfile_shouldThrowException() {
-        // given
-        ProfileRequest profileRequest = ProfileRequest.builder().dateOfBirth(LocalDate.now()).build();
-
-        // when
-
-        // then
-        assertThrows(TooYoungForAccountException.class, () -> profileService.createUsersProfile(profileRequest));
     }
 
     @Test

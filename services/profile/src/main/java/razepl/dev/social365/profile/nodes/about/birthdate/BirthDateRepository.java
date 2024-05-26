@@ -8,7 +8,12 @@ import java.util.Optional;
 
 @Repository
 public interface BirthDateRepository extends Neo4jRepository<BirthDate, String> {
-    Optional<BirthDate> findByProfileProfileId(String profileId);
+    @Query("""
+            MATCH (p:Profile)-[:BORN_ON]->(b:BirthDate)
+            WHERE p.profileId = $profileId
+            RETURN b
+            """)
+    Optional<BirthDate> findByProfileId(String profileId);
 
     @Query("""
             MATCH (p:Profile {profileId: $profileId})

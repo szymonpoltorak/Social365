@@ -24,12 +24,6 @@ public class AboutContactControllerImpl implements AboutContactController {
     private final AboutContactService aboutContactService;
 
     @Override
-    @PostMapping(value = AboutContactMappings.ADD_PROFILE_PHONE_NUMBER_MAPPING)
-    public final ProfileRequest addProfilePhoneNumber(@RequestBody AboutDetailsRequest phoneNumberRequest) {
-        return aboutContactService.addProfilePhoneNumber(phoneNumberRequest);
-    }
-
-    @Override
     @PutMapping(value = AboutContactMappings.UPDATE_PROFILE_PHONE_NUMBER_MAPPING)
     public final ProfileRequest updateProfilePhoneNumber(@RequestBody AboutDetailsRequest phoneNumberRequest) {
         return aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);

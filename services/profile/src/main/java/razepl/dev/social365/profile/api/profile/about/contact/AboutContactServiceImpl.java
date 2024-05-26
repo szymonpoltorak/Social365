@@ -32,35 +32,6 @@ public class AboutContactServiceImpl implements AboutContactService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final ProfileRequest addProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest) {
-        log.info("Adding profile phone number with request: {}", phoneNumberRequest);
-
-        Profile profile = profileRepository.findByProfileId(phoneNumberRequest.profileId())
-                .orElseThrow(ProfileNotFoundException::new);
-
-        log.info("Profile for adding phone number: {}", profile);
-
-        Optional<Mobile> mobileOptional = mobileRepository.findByProfileId(phoneNumberRequest.profileId());
-
-        if (mobileOptional.isPresent()) {
-            throw new AboutDetailsAlreadyExistException(phoneNumberRequest.profileId());
-        }
-        Mobile mobile = Mobile
-                .builder()
-                .phoneNumber(phoneNumberRequest.detailsValue())
-                .privacyLevel(phoneNumberRequest.privacyLevel())
-                .build();
-
-        mobile = mobileRepository.save(mobile);
-
-        mobileRepository.createMobileHasRelationship(mobile.getMobileId(), phoneNumberRequest.profileId());
-
-        log.info("Created mobile: {}", mobile);
-
-        return profileMapper.mapProfileToProfileRequest(profile);
-    }
-
-    @Override
     public final ProfileRequest updateProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest) {
         log.info("Updating profile phone number with request: {}", phoneNumberRequest);
 
@@ -69,18 +40,35 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating phone number: {}", profile);
 
-        Mobile mobile = mobileRepository.findByProfileId(phoneNumberRequest.profileId())
-                .orElseThrow(() -> new MobileNotFoundException(profile.getProfileId()));
+        Optional<Mobile> mobileOptional = mobileRepository.findByProfileId(phoneNumberRequest.profileId());
 
-        log.info("Mobile for updating: {}", mobile);
+        if (mobileOptional.isEmpty()) {
+            log.info("Mobile not found for updating, creating new one");
 
-        mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
-        mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
+            Mobile mobile = Mobile
+                    .builder()
+                    .phoneNumber(phoneNumberRequest.detailsValue())
+                    .privacyLevel(phoneNumberRequest.privacyLevel())
+                    .build();
 
-        mobile = mobileRepository.save(mobile);
+            mobile = mobileRepository.save(mobile);
 
-        log.info("Updated mobile: {}", mobile);
+            mobileRepository.createMobileHasRelationship(mobile.getMobileId(), profile.getProfileId());
 
+            log.info("Created mobile: {}", mobile);
+
+        } else {
+            log.info("Mobile found for updating, updating existing one");
+
+            Mobile mobile = mobileOptional.get();
+
+            mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
+            mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
+
+            mobile = mobileRepository.save(mobile);
+
+            log.info("Updated mobile: {}", mobile);
+        }
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
