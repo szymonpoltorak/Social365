@@ -2,6 +2,7 @@ package razepl.dev.social365.profile.api.profile.about.contact;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,12 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 public class AboutContactControllerImpl implements AboutContactController {
 
     private final AboutContactService aboutContactService;
+
+    @Override
+    @PostMapping(value = AboutContactMappings.ADD_PROFILE_PHONE_NUMBER_MAPPING)
+    public final ProfileRequest addProfilePhoneNumber(@RequestBody AboutDetailsRequest phoneNumberRequest) {
+        return aboutContactService.addProfilePhoneNumber(phoneNumberRequest);
+    }
 
     @Override
     @PutMapping(value = AboutContactMappings.UPDATE_PROFILE_PHONE_NUMBER_MAPPING)

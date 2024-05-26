@@ -5,6 +5,8 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
 
+import java.util.Optional;
+
 @Repository
 public interface EmailRepository extends Neo4jRepository<Email, String> {
 
@@ -13,7 +15,7 @@ public interface EmailRepository extends Neo4jRepository<Email, String> {
             WHERE p.profileId = $profileId
             RETURN e
             """)
-    Email getEmailByProfileId(String profileId);
+    Optional<Email> findEmailByProfileId(String profileId);
 
 
     @Query("""
