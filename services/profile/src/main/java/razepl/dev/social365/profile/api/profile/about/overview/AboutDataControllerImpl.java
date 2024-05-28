@@ -12,7 +12,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResp
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.interfaces.AboutDataController;
 import razepl.dev.social365.profile.api.profile.about.overview.interfaces.AboutDataService;
-import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
+import razepl.dev.social365.profile.api.profile.constants.Params;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,25 +23,25 @@ public class AboutDataControllerImpl implements AboutDataController {
 
     @Override
     @GetMapping(value = AboutMappings.OVERVIEW_MAPPING)
-    public final OverviewResponse getOverview(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+    public final OverviewResponse getOverview(@RequestParam(Params.PROFILE_ID) String profileId) {
         return aboutDataService.getOverview(profileId);
     }
 
     @Override
     @GetMapping(value = AboutMappings.WORK_EDUCATION_MAPPING)
-    public final WorkEducationResponse getWorkEducation(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+    public final WorkEducationResponse getWorkEducation(@RequestParam(Params.PROFILE_ID) String profileId) {
         return aboutDataService.getWorkEducation(profileId);
     }
 
     @Override
     @GetMapping(value = AboutMappings.LOCATIONS_MAPPING)
-    public final LocationsResponse getLocations(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+    public final LocationsResponse getLocations(@RequestParam(Params.PROFILE_ID) String profileId) {
         return aboutDataService.getLocations(profileId);
     }
 
     @Override
     @GetMapping(value = AboutMappings.CONTACT_INFO_MAPPING)
-    public final ContactInfoResponse getContactInfo(@RequestParam(ProfileParams.PROFILE_ID) String profileId) {
+    public final ContactInfoResponse getContactInfo(@RequestParam(Params.PROFILE_ID) String profileId) {
         return aboutDataService.getContactInfo(profileId);
     }
 }

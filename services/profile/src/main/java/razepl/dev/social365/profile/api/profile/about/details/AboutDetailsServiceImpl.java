@@ -151,7 +151,6 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
             log.info("Saved relationship status : {}", relationshipStatus);
         }
-
         log.info("Updated relationship status : {}", status);
 
         return profileMapper.mapProfileToProfileRequest(profile);

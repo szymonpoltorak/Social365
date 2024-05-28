@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactService;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.exceptions.AboutDetailsAlreadyExistException;
 import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
@@ -81,7 +80,7 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating email privacy level: {}", profile);
 
-        Email email = emailRepository.findEmailByProfileId(profileId)
+        Email email = emailRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileDetailsNotFoundException::new);
 
         log.info("Email for updating: {}", email);

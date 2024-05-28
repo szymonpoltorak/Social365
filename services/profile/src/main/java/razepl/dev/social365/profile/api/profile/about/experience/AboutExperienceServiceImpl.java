@@ -19,6 +19,8 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,21 +40,37 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
         log.info("Profile for work place update: {}", profile);
 
-        Workplace workplace = profile.getWorkplace();
+        Optional<Workplace> workplaceOptional = workplaceRepository.findWorkplaceByProfileId(profile.getProfileId());
 
-        log.info("Workplace: {}", workplace);
+        if (workplaceOptional.isEmpty()) {
+            log.info("Workplace does not exist creating new one.");
 
-        if (workplace == null) {
-            workplace = new Workplace();
+            Workplace workplace = Workplace
+                    .builder()
+                    .workplaceName(workPlaceRequest.workplace())
+                    .position(workPlaceRequest.position())
+                    .privacyLevel(workPlaceRequest.privacyLevel())
+                    .build();
+
+            workplace = workplaceRepository.save(workplace);
+
+            workplaceRepository.createWorkplaceHasRelationship(workplace.getWorkplaceId(), profile.getProfileId());
+
+            log.info("Created workplace: {}", workplace);
+
+        } else {
+            log.info("Workplace found updating it.");
+
+            Workplace workplace = workplaceOptional.get();
+
+            workplace.setWorkplaceName(workPlaceRequest.workplace());
+            workplace.setPosition(workPlaceRequest.position());
+            workplace.setPrivacyLevel(workPlaceRequest.privacyLevel());
+
+            workplace = workplaceRepository.save(workplace);
+
+            log.info("Updated workplace: {}", workplace);
         }
-        workplace.setPosition(workPlaceRequest.position());
-        workplace.setPrivacyLevel(workPlaceRequest.privacyLevel());
-        workplace.setWorkplaceName(workPlaceRequest.workplace());
-
-        workplace = workplaceRepository.save(workplace);
-
-        log.info("Updated workplace: {}", workplace);
-
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
@@ -62,12 +80,13 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
         Profile profile = getProfileAndValidateRequest(educationRequest, DetailsType.COLLEGE);
 
-        AboutDetails college = profile.getCollege();
+        Optional<AboutDetails> collegeOptional = aboutDetailsRepository.findCollegeByProfileId(profile.getProfileId());
 
-        log.info("College: {}", college);
+        AboutDetails college = updateDetailsObject(educationRequest, collegeOptional, DetailsType.COLLEGE);
 
-        college = updateDetailsObject(educationRequest, college, DetailsType.COLLEGE);
-
+        if (collegeOptional.isEmpty()) {
+            aboutDetailsRepository.createCollegeStudiedAtRelationship(college.getAboutDetailsId(), profile.getProfileId());
+        }
         log.info("Updated college: {}", college);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -79,12 +98,14 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
         Profile profile = getProfileAndValidateRequest(highSchoolRequest, DetailsType.HIGH_SCHOOL);
 
-        AboutDetails highSchool = profile.getHighSchool();
+        Optional<AboutDetails> highSchoolOptional = aboutDetailsRepository
+                .findHighSchoolByProfileId(profile.getProfileId());
 
-        log.info("High school: {}", highSchool);
+        AboutDetails highSchool = updateDetailsObject(highSchoolRequest, highSchoolOptional, DetailsType.HIGH_SCHOOL);
 
-        highSchool = updateDetailsObject(highSchoolRequest, highSchool, DetailsType.HIGH_SCHOOL);
-
+        if (highSchoolOptional.isEmpty()) {
+            aboutDetailsRepository.createHighSchoolWentToRelationship(highSchool.getAboutDetailsId(), profile.getProfileId());
+        }
         log.info("Updated high school: {}", highSchool);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -97,13 +118,11 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
-        AboutDetails highSchool = profile.getHighSchool();
+        AboutDetails highSchool = aboutDetailsRepository.findHighSchoolByProfileId(profileId)
+                .orElseThrow(ProfileDetailsNotFoundException::new);
 
         log.info("High school to be deleted: {}", highSchool);
 
-        if (highSchool == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
         aboutDetailsRepository.delete(highSchool);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -116,13 +135,11 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
-        Workplace workplace = profile.getWorkplace();
+        Workplace workplace = workplaceRepository.findWorkplaceByProfileId(profileId)
+                .orElseThrow(ProfileDetailsNotFoundException::new);
 
         log.info("Workplace to be deleted: {}", workplace);
 
-        if (workplace == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
         workplaceRepository.delete(workplace);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -135,29 +152,47 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
-        AboutDetails college = profile.getCollege();
+        AboutDetails college = aboutDetailsRepository.findCollegeByProfileId(profileId)
+                .orElseThrow(ProfileDetailsNotFoundException::new);
 
         log.info("College to be deleted: {}", college);
 
-        if (college == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
         aboutDetailsRepository.delete(college);
 
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
-    private AboutDetails updateDetailsObject(AboutDetailsRequest request, AboutDetails details,
+    private AboutDetails updateDetailsObject(AboutDetailsRequest request, Optional<AboutDetails> detailsOptional,
                                              DetailsType detailsType) {
-        if (details == null) {
-            details = AboutDetails.builder()
-                    .detailsType(detailsType)
-                    .build();
-        }
-        details.setPrivacyLevel(request.privacyLevel());
-        details.setPropertyValue(request.detailsValue());
+        if (detailsOptional.isEmpty()) {
+            log.info("Details of type {} does not exist creating new one.", detailsType);
 
-        return aboutDetailsRepository.save(details);
+            AboutDetails details = AboutDetails
+                    .builder()
+                    .detailsType(detailsType)
+                    .propertyValue(request.detailsValue())
+                    .privacyLevel(request.privacyLevel())
+                    .build();
+
+            details = aboutDetailsRepository.save(details);
+
+            log.info("Created details : {}", details);
+
+            return details;
+
+        }
+        log.info("Details of type {} found updating it.", detailsType);
+
+        AboutDetails details = detailsOptional.get();
+
+        details.setPropertyValue(request.detailsValue());
+        details.setPrivacyLevel(request.privacyLevel());
+
+        details = aboutDetailsRepository.save(details);
+
+        log.info("Updated details : {}", details);
+
+        return details;
     }
 
     private Profile getProfileAndValidateRequest(AboutDetailsRequest request, DetailsType detailsType) {
@@ -167,7 +202,6 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         if (request.detailsType() != detailsType) {
             throw new IllegalDetailsTypeException();
         }
-
         log.info("Profile for update: {}", profile);
 
         return profile;

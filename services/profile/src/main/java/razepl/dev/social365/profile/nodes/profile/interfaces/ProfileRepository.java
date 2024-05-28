@@ -8,9 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
-import razepl.dev.social365.profile.api.profile.constants.ProfileParams;
+import razepl.dev.social365.profile.api.profile.constants.Params;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
-import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
@@ -20,70 +19,79 @@ import java.util.Optional;
 public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 
     @Query("MATCH (p:Profile) WHERE p.profileId = $profileId RETURN p")
-    Optional<Profile> findByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId);
+    Optional<Profile> findByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             RETURN COUNT(f) > 0
             """)
-    boolean areUsersFriends(String profileId, String friendId);
+    boolean areUsersFriends(@Param(Params.PROFILE_ID) String profileId,
+                            @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH (p:Profile)-[:FOLLOWS]->(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $toFollowId
             RETURN COUNT(p) > 0
             """)
-    boolean doesUserFollowProfile(String profileId, String toFollowId);
+    boolean doesUserFollowProfile(@Param(Params.PROFILE_ID) String profileId,
+                                  @Param(Params.TO_FOLLOW_ID) String toFollowId);
 
     @Query("""
             MATCH (p:Profile)-[:WANTS_TO_BE_FRIEND_WITH]->(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             RETURN COUNT(p) > 0
             """)
-    boolean doesUserWantToBeFriendWith(String profileId, String friendId);
+    boolean doesUserWantToBeFriendWith(@Param(Params.PROFILE_ID) String profileId,
+                                       @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH (p:Profile {profileId: $profileId})
             MATCH (f:Profile {profileId: $friendId})
             CREATE (p)-[:FRIENDS_WITH]->(f)
             """)
-    void createFriendsWithRelation(String profileId, String friendId);
+    void createFriendsWithRelation(@Param(Params.PROFILE_ID) String profileId,
+                                   @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH (p:Profile {profileId: $profileId})
             MATCH (f:Profile {profileId: $toFollowId})
             CREATE (p)-[:FOLLOWS]->(f)
             """)
-    void createFollowsRelation(String profileId, String toFollowId);
+    void createFollowsRelation(@Param(Params.PROFILE_ID) String profileId,
+                               @Param(Params.TO_FOLLOW_ID) String toFollowId);
 
     @Query("""
             MATCH (p:Profile {profileId: $profileId})
             MATCH (f:Profile {profileId: $friendId})
             CREATE (p)-[:WANTS_TO_BE_FRIEND_WITH]->(f)
             """)
-    void createWantsToBeFriendWithRelation(String profileId, String friendId);
+    void createWantsToBeFriendWithRelation(@Param(Params.PROFILE_ID) String profileId,
+                                           @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH(p:Profile)-[fr:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             DELETE fr
             """)
-    void deleteFriendshipRelationship(String profileId, String friendId);
+    void deleteFriendshipRelationship(@Param(Params.PROFILE_ID) String profileId,
+                                      @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH(p:Profile)-[fr:WANTS_TO_BE_FRIEND_WITH]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             DELETE fr
             """)
-    void deleteWantsToBeFriendWithRelation(String profileId, String friendId);
+    void deleteWantsToBeFriendWithRelation(@Param(Params.PROFILE_ID) String profileId,
+                                           @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
             MATCH(p:Profile)-[fr:FOLLOWS]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = toFollow
             DELETE fr
             """)
-    void deleteFollowsRelation(String profileId, String toFollowId);
+    void deleteFollowsRelation(@Param(Params.PROFILE_ID) String profileId,
+                               @Param(Params.TO_FOLLOW_ID) String toFollowId);
 
     //TODO: Review the queries below
     @Query(
@@ -101,7 +109,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    Page<FriendData> findFriendsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId,
+    Page<FriendData> findFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId,
                                             Pageable pageable);
 
     @Query(
@@ -117,7 +125,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    Page<String> findFollowedIdsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId, Pageable pageable);
+    Page<String> findFollowedIdsByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
 
     @Query(
             value = """
@@ -133,7 +141,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    Page<FriendSuggestion> findFriendRequestsByProfileId(@Param(ProfileParams.PROFILE_ID) String profileId,
+    Page<FriendSuggestion> findFriendRequestsByProfileId(@Param(Params.PROFILE_ID) String profileId,
                                                          Pageable pageable);
 
     @Query(
@@ -150,7 +158,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(p1)
                     """
     )
-    Page<FriendSuggestion> findProfileSuggestions(@Param(ProfileParams.PROFILE_ID) String profileId,
+    Page<FriendSuggestion> findProfileSuggestions(@Param(Params.PROFILE_ID) String profileId,
                                                   Pageable pageable);
 
     @Query("""
@@ -158,40 +166,40 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             WHERE p.profileId = $profileId
             RETURN COUNT(f)
             """)
-    int getFollowersCount(String profileId);
+    int getFollowersCount(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId
             RETURN COUNT(f)
             """)
-    int getFriendsCount(String profileId);
+    int getFriendsCount(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (p:Profile)-[:WORKS_AS]->(w:Workplace)
             WHERE p.profileId = $profileId
             RETURN w
             """)
-    Workplace getWorkplaceByProfileId(String profileId);
+    Workplace getWorkplaceByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (p:Profile)-[:STUDIED_AT]->(a:AboutDetails)
             WHERE p.profileId = $profileId
             RETURN a
             """)
-    AboutDetails getCollegeByProfileId(String profileId);
+    AboutDetails getCollegeByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (p:Profile)-[:WENT_TO]->(a:AboutDetails)
             WHERE p.profileId = $profileId
             RETURN a
             """)
-    AboutDetails getHighSchoolByProfileId(String profileId);
+    AboutDetails getHighSchoolByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
             MATCH (e:Email)
             WHERE e.emailValue = $username
             RETURN COUNT(e) > 0
             """)
-    boolean existsByUsername(String username);
+    boolean existsByUsername(@Param(Params.USERNAME) String username);
 }

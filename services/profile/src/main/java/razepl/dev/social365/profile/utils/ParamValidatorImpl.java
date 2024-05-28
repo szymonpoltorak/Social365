@@ -20,7 +20,7 @@ public class ParamValidatorImpl implements ParamValidator {
 
     private static final int MINIMAL_AGE = 13;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+){3,100}$");
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]{3,100}$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]{2,100}$");
 
     private final ProfileRepository profileRepository;
 

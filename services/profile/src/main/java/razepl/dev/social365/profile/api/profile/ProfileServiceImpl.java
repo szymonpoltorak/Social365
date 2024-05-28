@@ -88,6 +88,7 @@ public class ProfileServiceImpl implements ProfileService {
         Profile savedProfile = profileRepository.save(profile);
 
         mailRepository.createEmailHasRelation(email.getMailId(), savedProfile.getProfileId());
+
         birthDateRepository.createBornOnRelation(birthDate.getBirthDateId(), savedProfile.getProfileId());
 
         log.info("Saved profile: {}", savedProfile);
