@@ -11,6 +11,9 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
+import { Either } from "@core/types/feed/either.type";
+import { SharedPost } from "@interfaces/feed/shared-post.interface";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: 'app-profile-posts',
@@ -27,13 +30,14 @@ import { RouterPaths } from "@enums/router-paths.enum";
         MatInput,
         CdkTextareaAutosize,
         ReactiveFormsModule,
-        MatButton
+        MatButton,
+        NgIf
     ],
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'
 })
 export class ProfilePostsComponent implements OnInit {
-    protected posts: Post[] = [
+    protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
@@ -46,13 +50,15 @@ export class ProfilePostsComponent implements OnInit {
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
+            statistics: {
+                likes: 445,
+                comments: 155,
+                shares: 25,
+            },
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg"
         },
         {
             postId: 2,
@@ -64,12 +70,15 @@ export class ProfilePostsComponent implements OnInit {
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
-            likes: 225,
-            comments: 112,
-            shares: 79,
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
+            imageLink: ""
         }
     ];
     protected profile: Profile = {
@@ -87,7 +96,7 @@ export class ProfilePostsComponent implements OnInit {
     protected isEditing: boolean = false;
     protected bioControl: FormControl<string | null> = new FormControl(this.profile.description);
     protected readonly RouterPaths = RouterPaths;
-    protected items: Post[] = [
+    protected items: Either<Post, SharedPost>[] = [
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
@@ -100,56 +109,38 @@ export class ProfilePostsComponent implements OnInit {
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
+            statistics: {
+                likes: 445,
+                comments: 155,
+                shares: 25,
+            },
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
         },
         {
-            postId: 1,
-            content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
-                "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
-                "            bred for hunting.",
+            postId: 2,
+            content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
-            creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
-            isPostLiked: true,
-            isBookmarked: false,
-            areNotificationTurnedOn: true,
-        },
-        {
-            postId: 1,
-            content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
-                "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
-                "            bred for hunting.",
-            author: {
-                fullName: "Shiba Inu",
-                subtitle: "Software Developer",
-                username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            creationDateTime: new Date("2021-01-01T12:00:00"),
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
             },
-            creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
-            isPostLiked: true,
-            isBookmarked: false,
-            areNotificationTurnedOn: true,
-        },
+            isPostLiked: false,
+            isBookmarked: true,
+            areNotificationTurnedOn: false,
+            imageLink: "",
+        }
     ];
-    protected displayedItems: Post[] = [];
+    protected displayedItems: Either<Post, SharedPost>[] = [];
     protected numberOfItemsToDisplay: number = 3;
 
     constructor(public router: Router) {

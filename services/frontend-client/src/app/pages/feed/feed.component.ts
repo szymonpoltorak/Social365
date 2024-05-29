@@ -6,6 +6,8 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Post } from "@interfaces/feed/post.interface";
+import { Either } from "@core/types/feed/either.type";
+import { SharedPost } from "@interfaces/feed/shared-post.interface";
 
 @Component({
     selector: 'app-feed',
@@ -32,7 +34,7 @@ export class FeedComponent implements OnInit{
         numberOfFollowers: 300,
         profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
-    protected posts: Post[] = [
+    protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
@@ -45,13 +47,15 @@ export class FeedComponent implements OnInit{
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
+            statistics: {
+                likes: 445,
+                comments: 155,
+                shares: 25,
+            },
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
         },
         {
             postId: 2,
@@ -63,13 +67,15 @@ export class FeedComponent implements OnInit{
                 profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
-            likes: 225,
-            imageLink: "",
-            comments: 112,
-            shares: 79,
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
+            imageLink: "",
         }
     ];
 

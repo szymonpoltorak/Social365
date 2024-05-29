@@ -15,6 +15,9 @@ import { NgOptimizedImage } from "@angular/common";
 import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import { Either } from "@core/types/feed/either.type";
+import { SharedPost } from '@core/interfaces/feed/shared-post.interface';
+import { SharedPostComponent } from "@pages/feed/posts-feed/shared-post/shared-post.component";
 
 @Component({
     selector: 'app-posts-feed',
@@ -35,7 +38,8 @@ import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
         ReactiveFormsModule,
         PickerComponent,
         NgOptimizedImage,
-        AvatarPhotoComponent
+        AvatarPhotoComponent,
+        SharedPostComponent
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
@@ -43,7 +47,7 @@ import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 export class PostsFeedComponent implements OnInit {
     protected currentUser !: User;
     protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
-    @Input() posts !: Post[];
+    @Input() posts !: Either<Post, SharedPost>[];
     isOpened: boolean = false;
 
     constructor(private localStorage: LocalStorageService) {
@@ -60,5 +64,9 @@ export class PostsFeedComponent implements OnInit {
         this.contentControl.setValue(this.contentControl.value + $event.emoji.native);
 
         this.isOpened = !this.isOpened;
+    }
+
+    isPost(post: Either<Post, SharedPost>): boolean {
+        return Object.prototype.hasOwnProperty.call(post, "postId");
     }
 }

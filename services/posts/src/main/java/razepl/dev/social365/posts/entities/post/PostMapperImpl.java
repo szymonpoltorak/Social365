@@ -3,14 +3,16 @@ package razepl.dev.social365.posts.entities.post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.data.PostStatistics;
+import razepl.dev.social365.posts.api.posts.data.SharedPostResponse;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
+import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 
 @Slf4j
 @Component
@@ -54,6 +56,18 @@ public class PostMapperImpl implements PostMapper {
                 .isBookmarked(post.isBookmarkedBy(profileId))
                 .creationDateTime(post.getCreationDateTime())
                 .content(post.getContent())
+                .build();
+    }
+
+    @Override
+    public final PostData toSharedPostResponse(Post sharingPost, String profileId) {
+        Post sharedPost = postRepository.findById(sharingPost.getOriginalPostId())
+                .orElseThrow(() -> new PostDoesNotExistException(sharingPost.getOriginalPostId().toString()));
+
+        return SharedPostResponse
+                .builder()
+                .sharingPost(toPostResponse(sharingPost, profileId))
+                .sharedPost(toPostResponse(sharedPost, profileId))
                 .build();
     }
 }

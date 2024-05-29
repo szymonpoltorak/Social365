@@ -16,6 +16,8 @@ import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/pos
 import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
 import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { Either } from "@core/types/feed/either.type";
+import { SharedPost } from "@interfaces/feed/shared-post.interface";
 
 @Component({
     selector: 'app-post',
@@ -45,7 +47,9 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
-    @Input() post !: Post;
+    @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
+    post !: Post;
+
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
     protected user !: User;
@@ -88,7 +92,7 @@ export class PostComponent implements OnInit {
     likePost(): void {
         this.post.isPostLiked = !this.post.isPostLiked;
 
-        this.post.likes = this.post.isPostLiked ? this.post.likes + 1 : this.post.likes - 1;
+        this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
     }
 
     getCommentsForPost(): void {

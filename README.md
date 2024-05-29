@@ -1,6 +1,8 @@
 # Social365
 
 Social Media application made with modern technologies. This is repository for my diploma project. Goal is to create an App in Microservice architecture.
+Frontend is made with Angular 17 and Angular Material. Backend is made with Spring Boot 3. UI is full responsive and PWA ready.
+
 
 ## Technology stack
 
@@ -8,6 +10,7 @@ Social Media application made with modern technologies. This is repository for m
 
 * Angular 17
 * Angular Material
+* Angular PWA
 * Tailwindcss
 
 2. Backend
@@ -19,6 +22,7 @@ Social Media application made with modern technologies. This is repository for m
 * Spring Data
 * Spring Cloud Api Gateway
 * Spring Cloud Config Server
+* Spring Doc OpenApi
 
 3. Databases
 

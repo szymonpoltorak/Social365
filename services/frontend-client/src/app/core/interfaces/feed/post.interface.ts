@@ -1,4 +1,5 @@
 import { User } from "@interfaces/feed/user.interface";
+import { PostStatistics } from "@interfaces/feed/post-statistics.interface";
 
 export interface Post {
     postId: number;
@@ -6,10 +7,8 @@ export interface Post {
     isBookmarked: boolean;
     creationDateTime: Date;
     content: string;
-    likes: number;
-    comments: number;
-    shares: number;
-    imageLink ?: string;
+    statistics: PostStatistics;
     isPostLiked: boolean;
     author: User;
+    imageLink ?: string;
 }

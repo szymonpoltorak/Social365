@@ -1,7 +1,6 @@
 package razepl.dev.social365.posts.api.posts;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.api.posts.constants.PostMappings;
 import razepl.dev.social365.posts.api.posts.data.DataPage;
-import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 
 @RestController

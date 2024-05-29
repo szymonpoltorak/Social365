@@ -55,6 +55,10 @@
     </form>
 
     @for (post of posts; track post) {
-        <app-post [post]="post"></app-post>
+        @if (isPost(post)) {
+            <app-post [post]="post"></app-post>
+        } @else {
+            <app-shared-post [post]="post"></app-shared-post>
+        }
     }
 </div>

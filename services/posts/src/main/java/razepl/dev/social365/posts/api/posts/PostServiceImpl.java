@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.posts.data.DataPage;
-import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
@@ -81,7 +80,12 @@ public class PostServiceImpl implements PostService {
 
         List<PostData> slice = result
                 .parallelStream()
-                .map(post -> postMapper.toPostResponse(post, profileId))
+                .map(post -> {
+                    if (post.isSharedPost()) {
+                        return postMapper.toSharedPostResponse(post, profileId);
+                    }
+                    return postMapper.toPostResponse(post, profileId);
+                })
                 .toList();
 
         return new DataPage<>(slice, currentPageNumber, pageSize, hasNext);

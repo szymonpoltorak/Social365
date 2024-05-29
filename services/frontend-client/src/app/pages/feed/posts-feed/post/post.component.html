@@ -19,18 +19,18 @@
             @if (post.isPostLiked) {
                 <mat-icon class="transform scale-75">thumb_up</mat-icon>
 
-                <span class="text-sm">You and {{ post.likes - 1 }} others</span>
+                <span class="text-sm">You and {{ post.statistics.likes - 1 }} others</span>
             } @else {
                 <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
 
-                <span class="text-sm">{{ post.likes }}</span>
+                <span class="text-sm">{{ post.statistics.likes }}</span>
             }
         </div>
 
         <div class="flex justify-center items-center gap-3">
-            <div class="text-sm">{{ post.comments }} comments</div>
+            <div class="text-sm">{{ post.statistics.comments }} comments</div>
 
-            <div class="text-sm">{{ post.shares }} shares</div>
+            <div class="text-sm">{{ post.statistics.shares }} shares</div>
         </div>
     </div>
 
