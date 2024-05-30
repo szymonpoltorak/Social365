@@ -56,12 +56,18 @@
         <button mat-menu-item aria-label="logout"
                 (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
             @if (post.areNotificationTurnedOn) {
-                <mat-icon>notifications</mat-icon>
-            } @else {
-                <mat-icon>notifications_none</mat-icon>
-            }
+                <div class="flex items-center">
+                    <mat-icon>notifications_active</mat-icon>
 
-            <span>Turn off notifications</span>
+                    <span>Turn off notifications</span>
+                </div>
+            } @else {
+                <div class="flex items-center">
+                    <mat-icon>notifications_off</mat-icon>
+
+                    <span>Turn on notifications</span>
+                </div>
+            }
         </button>
     </mat-menu>
 </div>
