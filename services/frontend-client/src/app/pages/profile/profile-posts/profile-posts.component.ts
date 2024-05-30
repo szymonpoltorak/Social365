@@ -137,7 +137,27 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            imageLink: "",
+            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
+        },
+        {
+            postId: 2,
+            content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
+            author: {
+                fullName: "Shiba Inu",
+                subtitle: "Software Developer",
+                username: "shiba-inu@gmail.com",
+                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            },
+            creationDateTime: new Date("2021-01-01T12:00:00"),
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
+            isPostLiked: false,
+            isBookmarked: true,
+            areNotificationTurnedOn: false,
+            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
         }
     ];
     protected displayedItems: Either<Post, SharedPost>[] = [];

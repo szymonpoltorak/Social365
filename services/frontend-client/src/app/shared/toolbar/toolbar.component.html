@@ -90,11 +90,13 @@
                 <span>Profile</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
-                <mat-icon>message</mat-icon>
+            <div class="sm:hidden">
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon>message</mat-icon>
 
-                <span>Messages</span>
-            </button>
+                    <span>Messages</span>
+                </button>
+            </div>
 
             <button mat-menu-item
                     (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_SUGGESTIONS])"
@@ -104,11 +106,13 @@
                 <span>Friend Suggestions</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
-                <mat-icon>notifications</mat-icon>
+            <div class="sm:hidden">
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon>notifications</mat-icon>
 
-                <span>Notifications</span>
-            </button>
+                    <span>Notifications</span>
+                </button>
+            </div>
 
             <button mat-menu-item
                     (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_REQUESTS])"
