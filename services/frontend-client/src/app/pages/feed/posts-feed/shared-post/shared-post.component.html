@@ -1,1 +1,88 @@
-<p>shared-post works!</p>
+<mat-card class="mb-4">
+    <app-post-header [post]="post.sharingPost" [username]="user.username"></app-post-header>
+
+    <mat-card-content class="mb-3">
+        <p class="text-justify font-light">
+            {{ post.sharingPost.content }}
+        </p>
+    </mat-card-content>
+
+    <div class="border-solid border-1 m-2 rounded-2xl">
+        <app-post-header [post]="post.sharedPost" [username]="user.username" [isSharedPost]="true"></app-post-header>
+
+        <mat-card-content class="mb-3">
+            <p class="text-justify font-light">
+                {{ post.sharedPost.content }}
+            </p>
+        </mat-card-content>
+
+        @if (post.imageLink !== "" && post.imageLink !== undefined) {
+            <img mat-card-image
+                 class="mb-4"
+                 src="{{ post.imageLink }}"
+                 alt="Photo of a Shiba Inu">
+        }
+    </div>
+
+    <div class="flex justify-between p-2">
+        <div class="flex items-center gap-2">
+            @if (post.sharingPost.isPostLiked) {
+                <mat-icon class="transform scale-75">thumb_up</mat-icon>
+
+                <span class="text-sm">You and {{ post.sharingPost.statistics.likes - 1 }} others</span>
+            } @else {
+                <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
+
+                <span class="text-sm">{{ post.sharingPost.statistics.likes }}</span>
+            }
+        </div>
+
+        <div class="flex justify-center items-center gap-3">
+            <div class="text-sm">{{ post.sharingPost.statistics.comments }} comments</div>
+
+            <div class="text-sm">{{ post.sharingPost.statistics.shares }} shares</div>
+        </div>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <mat-card-actions class="flex justify-between">
+        <button mat-button aria-label="Like"
+                [color]="post.sharingPost.isPostLiked ? 'primary': 'basic'"
+                type="button" (click)="likePost()">
+            @if (post.sharingPost.isPostLiked) {
+                <mat-icon>thumb_up</mat-icon>
+            } @else {
+                <mat-icon>thumb_up_off_alt</mat-icon>
+            }
+            LIKE
+        </button>
+
+        <button mat-button aria-label="Comments" type="button" (click)="getCommentsForPost()">
+            <mat-icon>comment</mat-icon>
+            COMMENT
+        </button>
+
+        <button mat-button aria-label="Share" type="button">
+            <mat-icon>share</mat-icon>
+            SHARE
+        </button>
+    </mat-card-actions>
+
+    @if (areCommentsVisible) {
+        <app-comment-create [user]="user"></app-comment-create>
+    }
+
+    @if (areCommentsVisible) {
+        @for (comment of comments; track comment) {
+            <app-comment [comment]="comment"></app-comment>
+        }
+
+        <div class="m-2">
+            <button mat-button type="button">
+                <mat-icon>expand_more</mat-icon>
+                Load More Comments
+            </button>
+        </div>
+    }
+</mat-card>

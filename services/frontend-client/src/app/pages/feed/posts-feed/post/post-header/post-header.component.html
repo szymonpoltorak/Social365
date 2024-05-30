@@ -17,13 +17,15 @@
                 </div>
             </mat-card-title>
 
-            <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
+            <mat-card-subtitle>{{ post.author.subtitle }}</mat-card-subtitle>
         </div>
     </div>
 
-    <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
-        <mat-icon>more_vert</mat-icon>
-    </button>
+    @if (!isSharedPost) {
+        <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    }
 
     <mat-menu #postOptions="matMenu" xPosition="before">
         @if (post.author.username === username) {

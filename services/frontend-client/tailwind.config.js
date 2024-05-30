@@ -49,6 +49,9 @@ export const theme = {
             "r-l": "1740px",
             "r-xl": "1970px",
             "r-xxl": "2560px",
+        },
+        borderWidth: {
+            "1": "1px"
         }
     }
 };

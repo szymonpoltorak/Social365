@@ -35,6 +35,51 @@ export class FeedComponent implements OnInit{
         profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected posts: Either<Post, SharedPost>[] = [
+
+        new SharedPost(
+            {
+                postId: 3,
+                content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
+                author: {
+                    fullName: "James Doe",
+                    subtitle: "Software Developer",
+                    username: "james@gmail.com",
+                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                },
+                creationDateTime: new Date("2021-01-01T12:00:00"),
+                statistics: {
+                    likes: 225,
+                    comments: 112,
+                    shares: 79,
+                },
+                isPostLiked: false,
+                isBookmarked: true,
+                areNotificationTurnedOn: false,
+                imageLink: "",
+            },
+            {
+                postId: 1,
+                content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
+                    "A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
+                    "bred for hunting.",
+                author: {
+                    fullName: "Shiba Inu",
+                    subtitle: "Software Developer",
+                    username: "shiba-inu@gmail.com",
+                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                },
+                creationDateTime: new Date(),
+                statistics: {
+                    likes: 445,
+                    comments: 155,
+                    shares: 25,
+                },
+                isPostLiked: true,
+                isBookmarked: false,
+                areNotificationTurnedOn: true,
+                imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
+            }
+        ),
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +

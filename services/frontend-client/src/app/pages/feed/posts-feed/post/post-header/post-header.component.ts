@@ -31,5 +31,6 @@ import { Post } from "@interfaces/feed/post.interface";
 export class PostHeaderComponent {
     @Input() post !: Post;
     @Input() username !: string;
+    @Input() isSharedPost: boolean = false;
 
 }
