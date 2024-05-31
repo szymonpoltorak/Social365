@@ -53,7 +53,9 @@
             COMMENT
         </button>
 
-        <button mat-button aria-label="Share" type="button">
+        <button mat-button aria-label="Share"
+                (click)="sharePost()"
+                type="button">
             <mat-icon>share</mat-icon>
             SHARE
         </button>

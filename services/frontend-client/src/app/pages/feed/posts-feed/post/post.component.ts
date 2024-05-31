@@ -18,6 +18,11 @@ import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
+import { MatDialog } from "@angular/material/dialog";
+import { take } from 'rxjs';
+import {
+    CreateSharePostDialogComponent
+} from "@pages/feed/posts-feed/create-share-post-dialog/create-share-post-dialog.component";
 
 @Component({
     selector: 'app-post',
@@ -54,7 +59,8 @@ export class PostComponent implements OnInit {
     comments: PostComment[] = [];
     protected user !: User;
 
-    constructor(private localStorage: LocalStorageService) {
+    constructor(private localStorage: LocalStorageService,
+                public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -97,5 +103,13 @@ export class PostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.areCommentsVisible = !this.areCommentsVisible;
+    }
+
+    sharePost(): void {
+        const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
+            minHeight: '100px',
+            minWidth: '320px',
+        });
+        createDialog.afterClosed().pipe(take(1)).subscribe();
     }
 }

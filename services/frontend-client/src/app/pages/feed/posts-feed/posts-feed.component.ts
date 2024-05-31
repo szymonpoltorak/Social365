@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatCard, MatCardActions } from "@angular/material/card";
-import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
 import { MatButton, MatFabButton, MatIconButton } from "@angular/material/button";
@@ -21,6 +21,7 @@ import { SharedPostComponent } from "@pages/feed/posts-feed/shared-post/shared-p
 import { MatMenu, MatMenuItem } from "@angular/material/menu";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { DropImageComponent } from "@shared/drop-image/drop-image.component";
 
 
 @Component({
@@ -46,7 +47,9 @@ import { AttachImage } from "@interfaces/feed/attach-image.interface";
         SharedPostComponent,
         MatIconButton,
         MatMenu,
-        MatMenuItem
+        MatMenuItem,
+        MatSuffix,
+        DropImageComponent
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'
@@ -55,15 +58,9 @@ export class PostsFeedComponent implements OnInit {
     protected currentUser !: User;
     protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
     @Input() posts !: Either<Post, SharedPost>[];
-    @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
     isOpened: boolean = false;
-    isAttachingImagesOpened: boolean = true;
-    allowedFileTypes: string[] = [
-        'image/jpeg',
-        'image/png',
-    ];
-    isUploading = false;
-    attachedImages: AttachImage[] = [];
+    isAttachingImagesOpened: boolean = false;
+    attachedImagesLength: number = 0;
 
     constructor(private localStorage: LocalStorageService,
                 private snackBar: MatSnackBar) {
@@ -71,34 +68,6 @@ export class PostsFeedComponent implements OnInit {
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserFromStorage();
-    }
-
-    handleChange(event: any): void {
-        const files: File[] = event.target.files as File[];
-
-        for (const file of files) {
-            if (this.allowedFileTypes.indexOf(file.type) === -1) {
-                this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close');
-
-                continue;
-            }
-            this.attachedImages.push({
-                fileUrl: URL.createObjectURL(file),
-                file: file,
-            });
-        }
-
-        if (this.attachedImages.length > 0) {
-            this.snackBar.open(`Successfully attached ${ this.attachedImages.length } images!`, 'Close');
-        }
-        this.isAttachingImagesOpened = false;
-    }
-
-    handleRemovesFile(fileToRemove: AttachImage): void {
-        if (this.fileInput && this.fileInput.nativeElement) {
-            this.fileInput.nativeElement.value = null;
-        }
-        this.attachedImages = this.attachedImages.filter((file) => file !== fileToRemove);
     }
 
     emojiSelected($event: EmojiEvent): void {

@@ -1,7 +1,7 @@
 <div class="flex flex-col h-fit w-full overflow-y-auto">
-    <form class="mb-3">
+    <form class="max-feed-sm:mt-3 mb-3">
         <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
-            <div class="flex items-center gap-5 mb-4">
+            <div class="flex items-center gap-5 mb-4 relative">
                 <app-avatar-photo [imageLink]="currentUser.profileImagePath"></app-avatar-photo>
 
                 <mat-form-field class="w-full">
@@ -13,33 +13,14 @@
                               placeholder="I am thinking about...">
                     </textarea>
 
+                    <button mat-icon-button color="basic" matSuffix
+                            (click)="isOpened = !isOpened"
+                            aria-label="Add Feeling" type="button">
+                        <mat-icon>mood</mat-icon>
+                    </button>
+
                     <mat-hint align="end">{{ postContent.value.length }} / 300</mat-hint>
                 </mat-form-field>
-            </div>
-
-            <mat-divider class="divider"></mat-divider>
-
-            <div class="flex items-center justify-evenly relative">
-                <button mat-button color="basic"
-                        (click)="isAttachingImagesOpened = !isAttachingImagesOpened"
-                        aria-label="Attach Image" type="button">
-                    <mat-icon>image</mat-icon>
-                    Image
-                </button>
-
-                <button mat-button color="basic"
-                        (click)="isOpened = !isOpened"
-                        aria-label="Add Feeling" type="button">
-                    <mat-icon>mood</mat-icon>
-                    Feeling
-                </button>
-
-                <button mat-raised-button color="primary"
-                        [disabled]="postContent.value.length === 0 && attachedImages.length === 0"
-                        aria-label="New Post" type="submit">
-                    <mat-icon>send</mat-icon>
-                    Post
-                </button>
 
                 @if (isOpened) {
                     <emoji-mart
@@ -48,63 +29,35 @@
                             set="twitter"
                             title="Pick your emoji…"
                             emoji="point_up"
+                            [isNative]="true"
                             (emojiSelect)="emojiSelected($event)"
                             [darkMode]="true">
                     </emoji-mart>
                 }
             </div>
+
+            <mat-divider class="divider"></mat-divider>
+
+            <div class="flex items-center justify-evenly">
+                <button mat-button color="basic"
+                        (click)="isAttachingImagesOpened = !isAttachingImagesOpened"
+                        aria-label="Attach Image" type="button">
+                    <mat-icon>image</mat-icon>
+                    Image
+                </button>
+
+                <button mat-raised-button color="primary"
+                        [disabled]="postContent.value.length === 0 && attachedImagesLength === 0"
+                        aria-label="New Post" type="submit">
+                    <mat-icon>send</mat-icon>
+                    Post
+                </button>
+            </div>
         </mat-card>
 
-        @if (isAttachingImagesOpened || attachedImages.length > 0) {
-            <mat-card class="mt-3">
-                @if (isAttachingImagesOpened) {
-                    <div class="m-2 border-dashed border-2 cursor-pointer rounded-2xl h-56 p-3 flex flex-col items-center justify-center gap-3">
-                        <div class="font-bold">
-                            <input
-                                #fileInput
-                                type="file"
-                                (change)="handleChange($event)"
-                                [multiple]="true"
-                                [accept]="allowedFileTypes"
-                                class="absolute w-full h-56 cursor-pointer opacity-0 top-0 left-0"/>
-
-                            Drop you image here
-                        </div>
-
-                        <div class="font-light text-xs">
-                            Or
-                        </div>
-
-                        <button mat-fab extended
-                                (click)="fileInput.click()"
-                                color="primary"
-                                type="button">
-                            <mat-icon>add</mat-icon>
-
-                            <span>Upload</span>
-                        </button>
-                    </div>
-                }
-
-                @if (attachedImages.length > 0) {
-                    <div class="mb-3 flex gap-3 w-full overflow-x-scroll h-fit items-center">
-                        @for (file of attachedImages; track file) {
-                            <div class="relative min-w-full h-fit overflow-x-scroll">
-                                <img alt="Users image"
-                                     class="w-full h-fit"
-                                     src="{{ file.fileUrl }}">
-
-                                <button class="delete-button"
-                                        (click)="handleRemovesFile(file)"
-                                        mat-icon-button type="button">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </div>
-                        }
-                    </div>
-                }
-            </mat-card>
-        }
+        <app-drop-image [isAttachingImagesOpened]="isAttachingImagesOpened"
+                        (attachedImagesLength)="attachedImagesLength = $event">
+        </app-drop-image>
     </form>
 
     @for (post of posts; track post) {
