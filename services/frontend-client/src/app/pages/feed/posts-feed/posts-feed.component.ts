@@ -11,7 +11,7 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
-import { NgIf, NgOptimizedImage, NgStyle } from "@angular/common";
+import { NgOptimizedImage } from "@angular/common";
 import { User } from "@interfaces/feed/user.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
@@ -19,11 +19,9 @@ import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from '@core/interfaces/feed/shared-post.interface';
 import { SharedPostComponent } from "@pages/feed/posts-feed/shared-post/shared-post.component";
 import { MatMenu, MatMenuItem } from "@angular/material/menu";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
 
-interface MyFile {
-    fileUrl: string;
-    file: File;
-}
 
 @Component({
     selector: 'app-posts-feed',
@@ -46,8 +44,6 @@ interface MyFile {
         NgOptimizedImage,
         AvatarPhotoComponent,
         SharedPostComponent,
-        NgStyle,
-        NgIf,
         MatIconButton,
         MatMenu,
         MatMenuItem
@@ -67,33 +63,42 @@ export class PostsFeedComponent implements OnInit {
         'image/png',
     ];
     isUploading = false;
-    myFiles: MyFile[] = [];
+    attachedImages: AttachImage[] = [];
 
-    constructor(private localStorage: LocalStorageService) {
+    constructor(private localStorage: LocalStorageService,
+                private snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserFromStorage();
     }
 
-    //TODO: implement file type validation
     handleChange(event: any): void {
         const files: File[] = event.target.files as File[];
 
         for (const file of files) {
-            this.myFiles.push({
+            if (this.allowedFileTypes.indexOf(file.type) === -1) {
+                this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close');
+
+                continue;
+            }
+            this.attachedImages.push({
                 fileUrl: URL.createObjectURL(file),
                 file: file,
             });
         }
+
+        if (this.attachedImages.length > 0) {
+            this.snackBar.open(`Successfully attached ${ this.attachedImages.length } images!`, 'Close');
+        }
         this.isAttachingImagesOpened = false;
     }
 
-    handleRemovesFile(fileToRemove: MyFile): void {
+    handleRemovesFile(fileToRemove: AttachImage): void {
         if (this.fileInput && this.fileInput.nativeElement) {
             this.fileInput.nativeElement.value = null;
         }
-        this.myFiles = this.myFiles.filter((file) => file !== fileToRemove);
+        this.attachedImages = this.attachedImages.filter((file) => file !== fileToRemove);
     }
 
     emojiSelected($event: EmojiEvent): void {

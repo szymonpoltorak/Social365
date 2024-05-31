@@ -35,7 +35,7 @@
                 </button>
 
                 <button mat-raised-button color="primary"
-                        [disabled]="postContent.value.length === 0 && myFiles.length === 0"
+                        [disabled]="postContent.value.length === 0 && attachedImages.length === 0"
                         aria-label="New Post" type="submit">
                     <mat-icon>send</mat-icon>
                     Post
@@ -55,7 +55,7 @@
             </div>
         </mat-card>
 
-        @if (isAttachingImagesOpened || myFiles.length > 0) {
+        @if (isAttachingImagesOpened || attachedImages.length > 0) {
             <mat-card class="mt-3">
                 @if (isAttachingImagesOpened) {
                     <div class="m-2 border-dashed border-2 cursor-pointer rounded-2xl h-56 p-3 flex flex-col items-center justify-center gap-3">
@@ -86,9 +86,9 @@
                     </div>
                 }
 
-                @if (myFiles.length > 0) {
+                @if (attachedImages.length > 0) {
                     <div class="mb-3 flex gap-3 w-full overflow-x-scroll h-fit items-center">
-                        @for (file of myFiles; track file) {
+                        @for (file of attachedImages; track file) {
                             <div class="relative min-w-full h-fit overflow-x-scroll">
                                 <img alt="Users image"
                                      class="w-full h-fit"
