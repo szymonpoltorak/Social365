@@ -33,12 +33,21 @@
                 </div>
 
                 <div matRipple
+                     tabindex="0"
+                     (keydown.enter)="isMakingReply = !isMakingReply"
+                     (click)="isMakingReply = !isMakingReply"
                      class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover">
                     REPLY
                 </div>
             </div>
         </div>
     </div>
+
+    @if (isMakingReply) {
+        <div [ngClass]="{ 'ml-3': replyLevel - 1 > 0 }">
+            <app-comment-create [user]="currentUser"></app-comment-create>
+        </div>
+    }
 
     <div [ngClass]="{ 'ml-3': replyLevel > 0 }">
         @if (!isReply) {
