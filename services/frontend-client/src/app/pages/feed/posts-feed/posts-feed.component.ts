@@ -62,8 +62,7 @@ export class PostsFeedComponent implements OnInit {
     isAttachingImagesOpened: boolean = false;
     attachedImagesLength: number = 0;
 
-    constructor(private localStorage: LocalStorageService,
-                private snackBar: MatSnackBar) {
+    constructor(private localStorage: LocalStorageService) {
     }
 
     ngOnInit(): void {

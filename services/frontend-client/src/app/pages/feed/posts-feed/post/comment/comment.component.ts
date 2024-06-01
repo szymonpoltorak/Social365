@@ -22,6 +22,10 @@ import { MatTooltip } from "@angular/material/tooltip";
 })
 export class CommentComponent {
     @Input() comment!: PostComment;
+    // TODO: remove this when the backend is ready
+    @Input() isReply: boolean = false;
+    @Input() replyLevel: number = 3;
+    replyComments: PostComment[] = [];
 
     onLikeComment(): void {
         this.comment.isLiked = !this.comment.isLiked;
