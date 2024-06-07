@@ -13,7 +13,7 @@ export class SharedPost {
         return this.sharingPost.author;
     }
 
-    get imageLink() {
-        return this.sharedPost.imageLink;
+    get imageLinks() {
+        return this.sharedPost.imageLinks;
     }
 }

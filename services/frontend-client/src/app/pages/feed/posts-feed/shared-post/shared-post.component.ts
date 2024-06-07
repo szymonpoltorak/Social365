@@ -17,6 +17,7 @@ import {
 } from "@pages/feed/posts-feed/create-share-post-dialog/create-share-post-dialog.component";
 import { take } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
+import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 
 @Component({
     selector: 'app-shared-post',
@@ -31,7 +32,8 @@ import { MatDialog } from "@angular/material/dialog";
         MatCardImage,
         MatDivider,
         MatIcon,
-        PostHeaderComponent
+        PostHeaderComponent,
+        PostImageViewerComponent
     ],
     templateUrl: './shared-post.component.html',
     styleUrl: './shared-post.component.scss'

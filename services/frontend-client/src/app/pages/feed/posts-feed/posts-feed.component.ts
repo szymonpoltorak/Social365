@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatCard, MatCardActions } from "@angular/material/card";
 import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
@@ -19,8 +19,6 @@ import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from '@core/interfaces/feed/shared-post.interface';
 import { SharedPostComponent } from "@pages/feed/posts-feed/shared-post/shared-post.component";
 import { MatMenu, MatMenuItem } from "@angular/material/menu";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { DropImageComponent } from "@shared/drop-image/drop-image.component";
 
 

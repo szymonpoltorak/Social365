@@ -23,6 +23,8 @@ import { take } from 'rxjs';
 import {
     CreateSharePostDialogComponent
 } from "@pages/feed/posts-feed/create-share-post-dialog/create-share-post-dialog.component";
+import { NgOptimizedImage } from "@angular/common";
+import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 
 @Component({
     selector: 'app-post',
@@ -46,7 +48,9 @@ import {
         PickerComponent,
         CommentComponent,
         MatHint,
-        CommentCreateComponent
+        CommentCreateComponent,
+        NgOptimizedImage,
+        PostImageViewerComponent
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'

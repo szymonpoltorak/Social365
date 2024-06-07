@@ -7,11 +7,8 @@
         </p>
     </mat-card-content>
 
-    @if (post.imageLink !== "" && post.imageLink !== undefined) {
-        <img mat-card-image
-             class="mb-4"
-             src="{{ post.imageLink }}"
-             alt="Photo of a Shiba Inu">
+    @if (post.imageLinks.length !== 0 && post.imageLinks != undefined) {
+        <app-post-image-viewer [imageLinks]="post.imageLinks"></app-post-image-viewer>
     }
 
     <div class="flex justify-between p-2">
@@ -63,9 +60,7 @@
 
     @if (areCommentsVisible) {
         <app-comment-create [user]="user"></app-comment-create>
-    }
 
-    @if (areCommentsVisible) {
         @for (comment of comments; track comment) {
             <app-comment [comment]="comment"></app-comment>
         }
