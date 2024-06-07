@@ -45,8 +45,6 @@ export class ToolbarComponent implements OnInit {
     @Input() isOnFeed!: boolean;
     options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
     filteredOptions !: Observable<string[]>;
-    links: string[] = ["home", "groups"];
-    activeLink: string = "home";
     newMessages: number = 5;
     newNotifications: number = 0;
 

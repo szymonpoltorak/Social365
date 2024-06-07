@@ -31,26 +31,6 @@
         </mat-autocomplete>
     </form>
 
-    <span class="flex flex-grow-0.6 flex-auto"></span>
-
-    @if (isOnFeed) {
-        <div class="max-md:hidden">
-            <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-                @for (link of links; track link) {
-                    <a class="w-36" mat-tab-link
-                       [active]="activeLink === link"
-                       (keydown.enter)="activeLink = link"
-                       tabindex="0"
-                       (click)="activeLink = link">
-                        <mat-icon>{{ link }}</mat-icon>
-                    </a>
-                }
-            </nav>
-
-            <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
-        </div>
-    }
-
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
     <div class="flex gap-5">
