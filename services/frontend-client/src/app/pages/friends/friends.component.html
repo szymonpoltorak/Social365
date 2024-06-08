@@ -1,7 +1,7 @@
 <div class="w-full overflow-y-hidden h-full mb-96">
     <app-toolbar></app-toolbar>
 
-    <div class="grid ml:grid-cols-3 sm:grid-cols-4 xl:grid-cols-7 gap-3 border-t-2 border-tertiary h-full">
+    <div class="grid ml:grid-cols-3 sm:grid-cols-4 xl:grid-cols-7 gap-3 border-t-2 border-tertiary h-full mt-16">
         <div class="max-ml:hidden min-mm:col-span-1 flex flex-col gap-3 border-tertiary border-r-2 bg-secondary p-3 h-full max-r-s:w-32 max-w-96">
             @for (option of options; track option) {
                 <app-list-select-option [option]="option"
