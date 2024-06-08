@@ -13,7 +13,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 
 @Component({
     selector: 'app-toolbar',
@@ -40,7 +40,7 @@ import { User } from "@interfaces/feed/user.interface";
 })
 export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
-    protected user !: User;
+    protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
     @Input() isOnFeed!: boolean;
     options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
@@ -57,7 +57,7 @@ export class ToolbarComponent implements OnInit {
             startWith(''),
             map(value => this._filter(value || '')),
         );
-        this.user = this.localStorageService.getUserFromStorage();
+        this.user = this.localStorageService.getUserProfileFromStorage();
     }
 
     private _filter(value: string): string[] {

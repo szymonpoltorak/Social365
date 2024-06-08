@@ -14,7 +14,7 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/post-header.component";
 import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
@@ -61,7 +61,7 @@ export class PostComponent implements OnInit {
 
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
-    protected user !: User;
+    protected user !: Profile;
 
     constructor(private localStorage: LocalStorageService,
                 public dialog: MatDialog) {
@@ -74,10 +74,11 @@ export class PostComponent implements OnInit {
                 commentLikesCount: 5,
                 content: "This is a great post!",
                 author: {
+                    profileId: "1",
                     fullName: "John Doe",
                     subtitle: "Software Developer",
                     username: "shiba@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date(),
                 isLiked: false
@@ -87,16 +88,17 @@ export class PostComponent implements OnInit {
                 commentLikesCount: 15,
                 content: "I love this post! Especially the part about the new Angular version!",
                 author: {
+                    profileId: "1",
                     fullName: "Jacek Kowalski",
                     subtitle: "Business Analyst",
                     username: "shiba@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date("2021-01-01T12:00:00"),
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserFromStorage();
+        this.user = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {

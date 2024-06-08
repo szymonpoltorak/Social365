@@ -11,6 +11,8 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.ContactInfoR
 import razepl.dev.social365.profile.api.profile.about.overview.data.LocationsResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
+import razepl.dev.social365.profile.api.profile.data.BirthdayData;
+import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
@@ -104,7 +106,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profileId(profile.getProfileId())
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
-                .profilePictureLink(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile))
                 .username(email.getEmailValue())
                 .build();
     }
@@ -236,17 +238,26 @@ public class ProfileMapperImpl implements ProfileMapper {
     }
 
     @Override
-    public FriendSuggestionResponse mapFriendSuggestionToFriendSuggestionResponse(FriendSuggestion friendSuggestion) {
+    public final FriendSuggestionResponse mapFriendSuggestionToFriendSuggestionResponse(FriendSuggestion friendSuggestion) {
         return mapProfileToFriendSuggestionResponse(friendSuggestion.profile(), friendSuggestion.mutualFriendsCount());
     }
 
     @Override
-    public FriendResponse mapFriendDataToFriendResponse(FriendData friendData) {
+    public final FriendResponse mapFriendDataToFriendResponse(FriendData friendData) {
         return mapProfileToFriendResponse(
                 friendData.profile(),
                 friendData.mutualFriendsCount(),
                 friendData.isFollowed()
         );
+    }
+
+    @Override
+    public final BirthdayInfoResponse mapBirthdayDataToBirthdayInfoResponse(BirthdayData birthdayData) {
+        return BirthdayInfoResponse
+                .builder()
+                .profile(mapProfileToProfileResponse(birthdayData.friend()))
+                .age(birthdayData.birthDate().getAge())
+                .build();
     }
 
     private String getProfilePicturePath(Profile profile) {

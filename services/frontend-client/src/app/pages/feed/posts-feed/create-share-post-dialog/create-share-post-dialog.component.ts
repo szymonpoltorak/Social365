@@ -7,7 +7,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
@@ -33,12 +33,12 @@ import { MatIcon } from "@angular/material/icon";
 })
 export class CreateSharePostDialogComponent implements OnInit {
     protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
-    currentUser !: User;
+    currentUser !: Profile;
 
     constructor(private localStorage: LocalStorageService) {
     }
 
     ngOnInit(): void {
-        this.currentUser = this.localStorage.getUserFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 }

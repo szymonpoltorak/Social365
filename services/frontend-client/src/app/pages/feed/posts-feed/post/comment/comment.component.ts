@@ -6,7 +6,7 @@ import { MatRipple } from "@angular/material/core";
 import { DatePipe, NgClass } from "@angular/common";
 import { MatTooltip } from "@angular/material/tooltip";
 import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
-import { User } from '@core/interfaces/feed/user.interface';
+import { Profile } from '@interfaces/feed/profile.interface';
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatButton } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -34,14 +34,14 @@ export class CommentComponent implements OnInit {
     @Input() isReply: boolean = false;
     @Input() replyLevel: number = 3;
     replyComments: PostComment[] = [];
-    currentUser !: User;
+    currentUser !: Profile;
     isMakingReply: boolean = false;
 
     constructor(private localStorage: LocalStorageService) {
     }
 
     ngOnInit(): void {
-        this.currentUser = this.localStorage.getUserFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
         this.replyComments.push(this.comment);
     }
 

@@ -2,7 +2,12 @@ package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import razepl.dev.social365.profile.api.profile.data.BirthdayData;
+import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
@@ -27,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 public class ProfileServiceImpl implements ProfileService {
 
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
+    private static final int PAGE_SIZE = 3;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
@@ -45,6 +51,19 @@ public class ProfileServiceImpl implements ProfileService {
         profile = profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber) {
+        log.info("Getting today birthdays for user with id: {}", profileId);
+
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+
+        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
+
+        log.info("Found {} birthdays", birthdayDataPage.getTotalElements());
+
+        return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
     }
 
     @Override

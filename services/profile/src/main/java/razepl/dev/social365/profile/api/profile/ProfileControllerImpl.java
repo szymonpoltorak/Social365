@@ -1,6 +1,8 @@
 package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.constants.Params;
+import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
@@ -22,6 +25,13 @@ import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 public class ProfileControllerImpl implements ProfileController {
 
     private final ProfileService profileService;
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING)
+    public final Page<BirthdayInfoResponse> getTodayBirthdays(@Param(Params.PROFILE_ID) String profileId,
+                                                              @Param(Params.PAGE_NUMBER) int pageNumber) {
+        return profileService.getTodayBirthdays(profileId, pageNumber);
+    }
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)

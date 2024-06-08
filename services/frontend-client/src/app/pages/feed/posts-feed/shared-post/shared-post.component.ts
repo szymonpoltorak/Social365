@@ -10,7 +10,7 @@ import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
 import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/post-header.component";
 import { PostComment } from "@interfaces/feed/post-comment.interface";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import {
     CreateSharePostDialogComponent
@@ -44,7 +44,7 @@ export class SharedPostComponent implements OnInit {
 
     protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
-    protected user !: User;
+    protected user !: Profile;
 
     constructor(private localStorage: LocalStorageService,
                 public dialog: MatDialog) {
@@ -57,10 +57,11 @@ export class SharedPostComponent implements OnInit {
                 commentLikesCount: 5,
                 content: "This is a great post!",
                 author: {
+                    profileId: "1",
                     fullName: "John Doe",
                     subtitle: "Software Developer",
                     username: "shiba@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date(),
                 isLiked: false
@@ -70,16 +71,17 @@ export class SharedPostComponent implements OnInit {
                 commentLikesCount: 15,
                 content: "I love this post! Especially the part about the new Angular version!",
                 author: {
+                    profileId: "1",
                     fullName: "Jacek Kowalski",
                     subtitle: "Business Analyst",
                     username: "shiba@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba2.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date("2021-01-01T12:00:00"),
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserFromStorage();
+        this.user = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {

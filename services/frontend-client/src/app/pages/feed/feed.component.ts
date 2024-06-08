@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { Profile } from "@interfaces/feed/profile.interface";
+import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Post } from "@interfaces/feed/post.interface";
@@ -22,7 +22,8 @@ import { SharedPost } from "@interfaces/feed/shared-post.interface";
     styleUrl: './feed.component.scss'
 })
 export class FeedComponent implements OnInit{
-    protected profile: Profile = {
+    protected profileInfo: ProfileInfo = {
+        profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
@@ -32,7 +33,7 @@ export class FeedComponent implements OnInit{
         postCount: 256,
         numberOfFriends: 1025,
         numberOfFollowers: 300,
-        profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected posts: Either<Post, SharedPost>[] = [
         {
@@ -41,10 +42,11 @@ export class FeedComponent implements OnInit{
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -67,10 +69,11 @@ export class FeedComponent implements OnInit{
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -94,10 +97,11 @@ export class FeedComponent implements OnInit{
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -118,10 +122,11 @@ export class FeedComponent implements OnInit{
                 postId: 3,
                 content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
                 author: {
+                    profileId: "1",
                     fullName: "James Doe",
                     subtitle: "Software Developer",
                     username: "james@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
                 },
                 creationDateTime: new Date("2021-01-01T12:00:00"),
                 statistics: {
@@ -140,10 +145,11 @@ export class FeedComponent implements OnInit{
                     "A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                     "bred for hunting.",
                 author: {
+                    profileId: "1",
                     fullName: "Shiba Inu",
                     subtitle: "Software Developer",
                     username: "shiba-inu@gmail.com",
-                    profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
                 },
                 creationDateTime: new Date(),
                 statistics: {
@@ -163,10 +169,11 @@ export class FeedComponent implements OnInit{
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -183,10 +190,11 @@ export class FeedComponent implements OnInit{
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             statistics: {
@@ -206,10 +214,11 @@ export class FeedComponent implements OnInit{
 
     ngOnInit(): void {
         this.localStorage.saveUserToStorage({
-            fullName: this.profile.fullName,
-            username: this.profile.username,
-            subtitle: this.profile.subtitle,
-            profileImagePath: this.profile.profileImagePath
+            profileId: this.profileInfo.profileId,
+            fullName: this.profileInfo.fullName,
+            username: this.profileInfo.username,
+            subtitle: this.profileInfo.subtitle,
+            profilePictureUrl: this.profileInfo.profilePictureUrl
         });
     }
 }

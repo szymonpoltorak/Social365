@@ -13,7 +13,7 @@
 
             <mat-card-content>
                 @if (!isEditing) {
-                    <span class="text-justify">{{ profile.description }}</span>
+                    <span class="text-justify">{{ profileInfo.description }}</span>
                 } @else {
                     <mat-form-field class="w-full">
                         <textarea matInput
@@ -40,7 +40,7 @@
                     <mat-card-title>Photos</mat-card-title>
 
                     <button mat-button
-                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_PHOTOS])"
+                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profileInfo.username, RouterPaths.PROFILE_PHOTOS])"
                             color="primary"
                             aria-label="edit bio">
                         See more photos
@@ -67,7 +67,7 @@
                     <mat-card-title>Friends</mat-card-title>
 
                     <button mat-button
-                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.FRIENDS_PATH])"
+                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profileInfo.username, RouterPaths.FRIENDS_PATH])"
                             color="primary"
                             aria-label="edit bio">
                         See more friends
@@ -79,7 +79,7 @@
                         @for (item of displayedItems; track item) {
                             <div class="flex flex-col justify-center items-center hover:cursor-pointer transition duration-300 ease-in-out hover:brightness-110">
                                 <img class="rounded-xl w-56 h-56"
-                                     [src]="item.author.profileImagePath"
+                                     [src]="item.author.profilePictureUrl"
                                      alt="Post photo">
 
                                 <span class="font-semibold">{{ item.author.fullName }}</span>

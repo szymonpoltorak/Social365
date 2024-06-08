@@ -3,7 +3,7 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -34,7 +34,7 @@ import { Optional } from "@core/types/profile/optional.type";
 })
 export class CommentCreateComponent {
     protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
-    @Input() user !: User;
+    @Input() user !: Profile;
     isOpened: boolean = false;
     allowedFileTypes: string[] = [
         'image/jpeg',

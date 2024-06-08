@@ -28,14 +28,24 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 export class FriendsFeedComponent {
     protected birthdayInfos: BirthdayInfo[] = [
         {
-            fullName: "Jan Kowalski",
+            profile: {
+                profileId: "1",
+                fullName: "Jacek Kowalski",
+                username: "jacek@gmail.com",
+                subtitle: "Student at Warsaw University of Technology",
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            },
             age: 25,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         },
         {
-            fullName: "Marek Nowak",
+            profile: {
+                profileId: "2",
+                fullName: "Marek Nowak",
+                username: "marek@gmail.com",
+                subtitle: "Web developer at Google",
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+            },
             age: 30,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
         }
     ];
 

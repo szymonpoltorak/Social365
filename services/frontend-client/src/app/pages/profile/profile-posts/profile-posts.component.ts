@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { Profile } from "@interfaces/feed/profile.interface";
+import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField } from "@angular/material/form-field";
@@ -44,10 +44,11 @@ export class ProfilePostsComponent implements OnInit {
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -64,10 +65,11 @@ export class ProfilePostsComponent implements OnInit {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             statistics: {
@@ -81,7 +83,8 @@ export class ProfilePostsComponent implements OnInit {
             imageLinks: []
         }
     ];
-    protected profile: Profile = {
+    protected profileInfo: ProfileInfo = {
+        profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
@@ -91,10 +94,10 @@ export class ProfilePostsComponent implements OnInit {
         postCount: 256,
         numberOfFriends: 1025,
         numberOfFollowers: 300,
-        profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected isEditing: boolean = false;
-    protected bioControl: FormControl<string | null> = new FormControl(this.profile.description);
+    protected bioControl: FormControl<string | null> = new FormControl(this.profileInfo.description);
     protected readonly RouterPaths = RouterPaths;
     protected items: Either<Post, SharedPost>[] = [
         {
@@ -103,10 +106,11 @@ export class ProfilePostsComponent implements OnInit {
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
             statistics: {
@@ -123,10 +127,11 @@ export class ProfilePostsComponent implements OnInit {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             statistics: {
@@ -143,10 +148,11 @@ export class ProfilePostsComponent implements OnInit {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
             statistics: {
@@ -173,7 +179,7 @@ export class ProfilePostsComponent implements OnInit {
         if (windowWidth <= 1526) {
             this.numberOfItemsToDisplay = 2;
         } else {
-            this.numberOfItemsToDisplay = 3; // or any other number you want
+            this.numberOfItemsToDisplay = 3;
         }
         this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
     }
