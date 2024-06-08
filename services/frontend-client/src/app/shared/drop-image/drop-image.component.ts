@@ -26,7 +26,6 @@ export class DropImageComponent {
         'image/jpeg',
         'image/png',
     ];
-    isUploading = false;
     attachedImages: AttachImage[] = [];
 
     constructor(private snackBar: MatSnackBar) {
@@ -37,7 +36,9 @@ export class DropImageComponent {
 
         for (const file of files) {
             if (this.allowedFileTypes.indexOf(file.type) === -1) {
-                this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close');
+                this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close', {
+                    duration: 2000,
+                });
 
                 continue;
             }
@@ -48,7 +49,9 @@ export class DropImageComponent {
         }
 
         if (this.attachedImages.length > 0) {
-            this.snackBar.open(`Successfully attached ${ this.attachedImages.length } images!`, 'Close');
+            this.snackBar.open(`Successfully attached ${ this.attachedImages.length } images!`, 'Close', {
+                duration: 2000,
+            });
         }
         this.isAttachingImagesOpened = false;
         this.attachedImagesLength.emit(this.attachedImages.length);

@@ -50,8 +50,15 @@
     }
 
     <div [ngClass]="{ 'ml-12': replyLevel > 0 }">
-        @if (!isReply) {
-            <app-comment [comment]="comment" [replyLevel]="replyLevel - 1" [isReply]="true"></app-comment>
+        @if (!isReply && replyComments.length > 0) {
+            @for (reply of replyComments; track reply) {
+                <app-comment [comment]="reply" [replyLevel]="replyLevel - 1" [isReply]="true"></app-comment>
+            }
+
+            <button mat-button class="mb-3">
+                <mat-icon>expand_more</mat-icon>
+                Load more replies
+            </button>
         }
     </div>
 </div>

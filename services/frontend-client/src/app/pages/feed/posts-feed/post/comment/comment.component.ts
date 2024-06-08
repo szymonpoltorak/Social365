@@ -8,6 +8,8 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { CommentCreateComponent } from "@pages/feed/posts-feed/post/comment-create/comment-create.component";
 import { User } from '@core/interfaces/feed/user.interface';
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { MatButton } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: 'app-comment',
@@ -19,7 +21,9 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
         NgClass,
         MatTooltip,
         DatePipe,
-        CommentCreateComponent
+        CommentCreateComponent,
+        MatButton,
+        MatIconModule
     ],
     templateUrl: './comment.component.html',
     styleUrl: './comment.component.scss'
@@ -38,6 +42,7 @@ export class CommentComponent implements OnInit {
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserFromStorage();
+        this.replyComments.push(this.comment);
     }
 
     onLikeComment(): void {

@@ -7,6 +7,10 @@
     transform-origin: bottom right;
 }
 
+.delete-button {
+    @apply absolute top-0 right-0 flex items-center;
+}
+
 @media only screen and (min-device-width: 1024px) {
     .picker {
         transform: scale(1);
