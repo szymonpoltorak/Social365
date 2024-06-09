@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.PageInfo;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.posts.data.DataPage;
 import razepl.dev.social365.posts.entities.comment.Comment;
@@ -31,14 +32,34 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
 
     @Override
-    public final DataPage<CommentResponse> getCommentsForPost(String postId, String profileId, Pageable pageable) {
-        log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageable);
+    public final DataPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
+        log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
+
+        Pageable pageable = pageInfo.toPageable();
+
+        Slice<Comment> comments = commentRepository.findAllReplyCommentsByCommentId(UUID.fromString(commentId), pageable);
+
+        log.info("Found {} replies for comment with id: {}", comments.getSize(), commentId);
+
+        List<CommentResponse> data = comments
+                .stream()
+                .map(comment -> commentMapper.toCommentResponse(comment, profileId))
+                .toList();
+
+        return new DataPage<>(data, pageable.getPageNumber(), pageable.getPageSize(), comments.hasNext());
+    }
+
+    @Override
+    public final DataPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
+        log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageInfo);
+
+        Pageable pageable = pageInfo.toPageable();
 
         Slice<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
 
         log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
-        List<CommentResponse> data =  comments
+        List<CommentResponse> data = comments
                 .stream()
                 .map(comment -> commentMapper.toCommentResponse(comment, profileId))
                 .toList();
@@ -48,10 +69,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public final CommentResponse addCommentToPost(CommentRequest commentRequest) {
-        log.info("Adding comment to post with id: {}, with content: {}", commentRequest.objectId(),
-                commentRequest.content());
+        log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.objectId(),
+                commentRequest.profileId());
 
         commentValidator.validateCommentRequest(commentRequest);
+
+        String replyToCommentId = commentRequest.replyToCommentId();
+
+        log.info("Replying comment id: {}", replyToCommentId);
 
         Comment comment = Comment
                 .builder()
@@ -61,6 +86,8 @@ public class CommentServiceImpl implements CommentService {
                         .postId(UUID.fromString(commentRequest.objectId()))
                         .build()
                 )
+                .hasAttachments(commentRequest.hasAttachment())
+                .replyToCommentId(replyToCommentId != null ? UUID.fromString(replyToCommentId) : null)
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
                 .creationDateTime(LocalDateTime.now())

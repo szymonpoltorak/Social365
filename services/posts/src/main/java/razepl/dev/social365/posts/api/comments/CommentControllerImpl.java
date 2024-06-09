@@ -1,7 +1,6 @@
 package razepl.dev.social365.posts.api.comments;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.PageInfo;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
@@ -26,11 +26,18 @@ public class CommentControllerImpl implements CommentController {
     private final CommentService commentService;
 
     @Override
+    public final DataPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                                @RequestParam(Params.PROFILE_ID) String profileId,
+                                                                @RequestBody PageInfo pageInfo) {
+        return commentService.getRepliesForComment(commentId, profileId, pageInfo);
+    }
+
+    @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
     public final DataPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
                                                               @RequestParam(Params.PROFILE_ID) String profileId,
-                                                              Pageable pageable) {
-        return commentService.getCommentsForPost(postId, profileId, pageable);
+                                                              @RequestBody PageInfo pageInfo) {
+        return commentService.getCommentsForPost(postId, profileId, pageInfo);
     }
 
     @Override

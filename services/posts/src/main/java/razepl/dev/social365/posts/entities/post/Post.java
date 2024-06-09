@@ -28,6 +28,7 @@ public class Post {
     @Column(value = "has_attachments")
     private boolean hasAttachments;
 
+    @Column(value = "original_post_id")
     private UUID originalPostId;
 
     @Column(value = "user_notification_ids")

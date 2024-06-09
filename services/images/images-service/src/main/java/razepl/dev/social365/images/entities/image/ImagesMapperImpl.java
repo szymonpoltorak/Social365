@@ -1,8 +1,10 @@
 package razepl.dev.social365.images.entities.image;
 
 import org.springframework.stereotype.Component;
+import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
+import razepl.dev.social365.images.entities.image.comment.CommentImage;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.post.PostImage;
 
@@ -33,6 +35,20 @@ public class ImagesMapperImpl implements ImagesMapper {
                 .postId(postImage.getPostId())
                 .imagePath(postImage.getImagePath())
                 .username(postImage.getUsername())
+                .build();
+    }
+
+    @Override
+    public final CommentImageResponse toCommentResponse(CommentImage savedImage) {
+        if (savedImage == null) {
+            return null;
+        }
+        return CommentImageResponse
+                .builder()
+                .commentId(savedImage.getCommentId())
+                .imageId(savedImage.getImageId())
+                .username(savedImage.getUsername())
+                .imagePath(savedImage.getImagePath())
                 .build();
     }
 

@@ -28,6 +28,12 @@ public class Comment {
 
     private String content;
 
+    @Column(value = "has_attachments")
+    private boolean hasAttachments;
+
+    @Column(value = "reply_to_comment_id")
+    private UUID replyToCommentId;
+
     @Column(value = "creation_date_time")
     private LocalDateTime creationDateTime;
 

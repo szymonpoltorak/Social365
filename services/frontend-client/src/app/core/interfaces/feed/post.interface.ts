@@ -10,5 +10,5 @@ export interface Post {
     statistics: PostStatistics;
     isPostLiked: boolean;
     author: Profile;
-    imageLinks: string[];
+    imageUrls: string[];
 }

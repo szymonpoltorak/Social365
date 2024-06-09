@@ -57,7 +57,7 @@ export class FeedComponent implements OnInit{
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: [
+            imageUrls: [
                 "https://material.angular.io/assets/img/examples/shiba2.jpg",
                 "https://material.angular.io/assets/img/examples/shiba1.jpg",
                 "https://material.angular.io/assets/img/examples/shiba2.jpg",
@@ -84,7 +84,7 @@ export class FeedComponent implements OnInit{
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: [
+            imageUrls: [
                 "https://material.angular.io/assets/img/examples/shiba2.jpg",
                 "https://material.angular.io/assets/img/examples/shiba1.jpg",
                 "https://material.angular.io/assets/img/examples/shiba2.jpg",
@@ -112,7 +112,7 @@ export class FeedComponent implements OnInit{
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: [
+            imageUrls: [
                 "https://material.angular.io/assets/img/examples/shiba2.jpg",
                 "https://material.angular.io/assets/img/examples/shiba1.jpg",
             ],
@@ -137,7 +137,7 @@ export class FeedComponent implements OnInit{
                 isPostLiked: false,
                 isBookmarked: true,
                 areNotificationTurnedOn: false,
-                imageLinks: [],
+                imageUrls: [],
             },
             {
                 postId: 1,
@@ -160,7 +160,7 @@ export class FeedComponent implements OnInit{
                 isPostLiked: true,
                 isBookmarked: false,
                 areNotificationTurnedOn: true,
-                imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+                imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
             }
         ),
         {
@@ -184,7 +184,7 @@ export class FeedComponent implements OnInit{
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         },
         {
             postId: 2,
@@ -205,7 +205,7 @@ export class FeedComponent implements OnInit{
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            imageLinks: [],
+            imageUrls: [],
         }
     ];
 

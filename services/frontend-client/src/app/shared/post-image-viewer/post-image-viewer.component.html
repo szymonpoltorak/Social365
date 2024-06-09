@@ -1,41 +1,41 @@
-@if (imageLinks.length === 1) {
-    <img [src]="imageLinks[currentImage]"
+@if (imageUrls.length === 1) {
+    <img [src]="imageUrls[currentImage]"
          mat-card-image
          class="w-full hover:cursor-pointer"
          alt="Photo of a Shiba Inu">
 
-} @else if (imageLinks.length === 2) {
+} @else if (imageUrls.length === 2) {
     <div class="grid grid-cols-2 gap-1 items-stretch">
-        <img [src]="imageLinks[0]"
+        <img [src]="imageUrls[0]"
              class="w-full h-full object-cover hover:cursor-pointer"
              alt="Photo of a Shiba Inu">
 
-        <img [src]="imageLinks[1]"
+        <img [src]="imageUrls[1]"
              class="w-full h-full object-cover hover:cursor-pointer"
              alt="Photo of a Shiba Inu">
     </div>
 } @else {
     <div class="grid grid-cols-2 gap-1">
-        <img [src]="imageLinks[currentImage]"
+        <img [src]="imageUrls[currentImage]"
              class="w-full h-full object-cover object-center hover:cursor-pointer"
              alt="Photo of a Shiba Inu">
 
         <div class="grid gap-1">
-            <img [src]="imageLinks[1]"
+            <img [src]="imageUrls[1]"
                  class="w-full h-full object-cover hover:cursor-pointer"
                  alt="Photo of a Shiba Inu">
 
             <div class="relative">
-                @if (imageLinks.length - 3 > 0) {
+                @if (imageUrls.length - 3 > 0) {
                     <span class="text-4xl absolute left-[50%] bottom-[50%] transform translate-x-[-50%] translate-y-[50%] z-40">
-                    + {{ imageLinks.length - 3 }}
+                    + {{ imageUrls.length - 3 }}
                     </span>
 
-                    <img [src]="imageLinks[2]"
+                    <img [src]="imageUrls[2]"
                          class="w-full h-full object-cover brightness-50 hover:cursor-pointer"
                          alt="Photo of a Shiba Inu">
                 } @else {
-                    <img [src]="imageLinks[2]"
+                    <img [src]="imageUrls[2]"
                          class="w-full h-full object-cover hover:cursor-pointer"
                          alt="Photo of a Shiba Inu">
                 }

@@ -59,7 +59,7 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"]
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"]
         },
         {
             postId: 2,
@@ -80,7 +80,7 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            imageLinks: []
+            imageUrls: []
         }
     ];
     protected profileInfo: ProfileInfo = {
@@ -121,7 +121,7 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
-            imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         },
         {
             postId: 2,
@@ -142,7 +142,7 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         },
         {
             postId: 2,
@@ -163,7 +163,7 @@ export class ProfilePostsComponent implements OnInit {
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
-            imageLinks: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         }
     ];
     protected displayedItems: Either<Post, SharedPost>[] = [];

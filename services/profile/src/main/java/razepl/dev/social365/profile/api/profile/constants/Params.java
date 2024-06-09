@@ -16,7 +16,7 @@ public final class Params {
 
     public static final String FRIEND_ID = "friendId";
 
-    public static final String TO_FOLLOW_ID = "toFollow";
+    public static final String TO_FOLLOW_ID = "toFollowId";
 
     public static final String BIRTHDATE_ID = "birthDateId";
 

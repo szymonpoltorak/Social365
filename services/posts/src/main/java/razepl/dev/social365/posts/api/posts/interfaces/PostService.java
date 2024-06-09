@@ -15,7 +15,7 @@ public interface PostService {
 
     PostData updateBookmarkStatus(String profileId, String postId);
 
-    PostData sharePost(String profileId, String postId);
+    PostData sharePost(String profileId, String postId, String content);
 
     PostData createPost(String profileId, String content, boolean hasAttachments);
 

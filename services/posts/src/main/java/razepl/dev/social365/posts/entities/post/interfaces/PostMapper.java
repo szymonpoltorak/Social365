@@ -7,5 +7,7 @@ public interface PostMapper {
 
     PostData toPostResponse(Post post, String profileId);
 
+    PostData toPostResponseNoImages(Post post, String profileId);
+
     PostData toSharedPostResponse(Post sharingPost, String profileId);
 }

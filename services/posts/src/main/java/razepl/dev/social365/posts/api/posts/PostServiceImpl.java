@@ -48,33 +48,43 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public DataPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize) {
-        Pageable pageable = CassandraPageRequest.of(pageNumber, pageSize);
-        int currentPageNumber = pageable.getPageNumber();
-        int currentPageSize = pageable.getPageSize();
-        boolean hasNext;
-        Collection<Post> result = new ArrayList<>(pageable.getPageSize() + 1);
-
-        log.info("Getting posts for profileId: {}, with pageable : {}", profileId, pageable);
+        int currentPageNumber = pageNumber;
+        int currentPageSize = pageSize;
+        boolean hasNext = false;
+        Pageable pageable = CassandraPageRequest.of(0, pageSize);
+        Collection<Post> result = new ArrayList<>(currentPageSize + 1);
+        List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, currentPageNumber).toList());
 
         while (true) {
-            List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, pageNumber).toList());
-
             log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
 
+            if (friendsIds.isEmpty()) {
+                return new DataPage<>(List.of(), currentPageNumber, pageSize, false);
+            }
             friendsIds.add(profileId);
 
             Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
             log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
 
+            //TODO: this will not work for sure for more users but for now i cannot test it (it is when page number is bigger than 0)
+            if (pageNumber > 0) {
+                int i = pageNumber - 1;
+                pageable = posts.nextPageable();
+
+                while (i-- > 0) {
+                    pageable = pageable.next();
+                }
+                continue;
+            }
             result.addAll(posts.getContent());
 
-            if (result.size() >= pageable.getPageSize() || !posts.hasNext()) {
+            if (result.size() >= currentPageSize || !posts.hasNext()) {
                 hasNext = posts.hasNext();
 
                 break;
             }
-            pageable = CassandraPageRequest.of(++currentPageNumber, currentPageSize - result.size());
+            friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, ++currentPageNumber).toList());
         }
         log.info("Found posts returning result...");
 
@@ -114,7 +124,7 @@ public class PostServiceImpl implements PostService {
 
         log.info("Post with id: {} created for profile with id: {}", savedPost.getPostId(), profileId);
 
-        return postMapper.toPostResponse(savedPost, profileId);
+        return postMapper.toPostResponseNoImages(savedPost, profileId);
     }
 
     @Override
@@ -192,7 +202,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData sharePost(String profileId, String postId) {
+    public PostData sharePost(String profileId, String postId, String content) {
         log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);
@@ -206,7 +216,7 @@ public class PostServiceImpl implements PostService {
                         .creationDateTime(LocalDateTime.now())
                         .build()
                 )
-                .content("")
+                .content(content)
                 .originalPostId(post.getPostId())
                 .hasAttachments(false)
                 .userLikedIds(Set.of())

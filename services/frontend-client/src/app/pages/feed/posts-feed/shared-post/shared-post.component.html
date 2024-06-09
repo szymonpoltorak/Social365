@@ -16,8 +16,8 @@
             </p>
         </mat-card-content>
 
-        @if (post.imageLinks != undefined && post.imageLinks.length !== 0) {
-            <app-post-image-viewer [imageLinks]="post.imageLinks"></app-post-image-viewer>
+        @if (post.imageUrls != undefined && post.imageUrls.length !== 0) {
+            <app-post-image-viewer [imageUrls]="post.imageUrls"></app-post-image-viewer>
         }
     </div>
 

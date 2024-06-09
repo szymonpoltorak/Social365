@@ -21,7 +21,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest(null, "objectId", "profileId");
+        CommentRequest commentRequest = new CommentRequest(null, "objectId", "profileId", null, false);
 
         // when
 
@@ -32,7 +32,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsEmpty() {
         // given
-        CommentRequest commentRequest = new CommentRequest("", "objectId", "profileId");
+        CommentRequest commentRequest = new CommentRequest("", "objectId", "profileId", null, false);
 
         // when
 
@@ -43,7 +43,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsBlank() {
         // given
-        CommentRequest commentRequest = new CommentRequest("   ", "objectId", "profileId");
+        CommentRequest commentRequest = new CommentRequest("   ", "objectId", "profileId", null, false);
 
         // when
 
@@ -54,7 +54,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsTooShort() {
         // given
-        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", "a");
+        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", "a", null, false);
 
         // when
 
@@ -66,7 +66,7 @@ class CommentValidatorTest {
     final void validateCommentRequest_throwsException_whenContentIsTooLong() {
         // given
         String longContent = "a".repeat(501);
-        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", longContent);
+        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", longContent, null, false);
 
         // when
 
@@ -77,7 +77,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenObjectIdIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", null, "profileId");
+        CommentRequest commentRequest = new CommentRequest("Valid content", null, "profileId", null, false);
 
         // when
 
@@ -88,7 +88,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenProfileIdIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", null);
+        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", null, null, false);
 
         // when
 
@@ -99,7 +99,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_doesNotThrowException_whenRequestIsValid() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", "profileId");
+        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", "profileId", null, false);
 
         // when
 

@@ -16,7 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 })
 export class PostImageViewerComponent {
 
-    @Input() imageLinks !: string[];
+    @Input() imageUrls !: string[];
     currentImage: number = 0;
 
 }

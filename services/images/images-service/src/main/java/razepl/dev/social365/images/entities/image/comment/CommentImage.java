@@ -1,4 +1,4 @@
-package razepl.dev.social365.images.entities.image.post;
+package razepl.dev.social365.images.entities.image.comment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,8 +26,8 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(columnList = Params.POST_ID))
-public class PostImage {
+@Table(indexes = @Index(columnList = Params.COMMENT_ID))
+public class CommentImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +37,7 @@ public class PostImage {
     private String username;
 
     @Column(unique = true, nullable = false)
-    private String postId;
+    private String commentId;
 
     @Column(unique = true, nullable = false)
     private String imagePath;
@@ -61,11 +61,11 @@ public class PostImage {
         if (thisEffectiveClass != oEffectiveClass) {
             return false;
         }
-        PostImage image = (PostImage) o;
+        CommentImage image = (CommentImage) o;
 
         return Objects.equals(imageId, image.imageId) &&
                 Objects.equals(username, image.username) &&
-                Objects.equals(postId, image.postId) &&
+                Objects.equals(commentId, image.commentId) &&
                 Objects.equals(imagePath, image.imagePath);
     }
 

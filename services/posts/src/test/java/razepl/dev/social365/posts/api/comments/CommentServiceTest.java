@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.entities.comment.Comment;
+import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
@@ -46,10 +47,15 @@ class CommentServiceTest {
     @Test
     final void addCommentToPost_validatesAndSavesComment() {
         UUID postId = UUID.randomUUID();
-        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content");
+        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content", null, false);
         Comment comment = Comment
                 .builder()
-                .postId(UUID.fromString(commentRequest.objectId()))
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.fromString(commentRequest.objectId()))
+                        .postId(postId)
+                        .build()
+                )
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
                 .creationDateTime(LocalDateTime.now())
@@ -70,10 +76,15 @@ class CommentServiceTest {
     @Test
     final void editComment_validatesAndUpdatesComment() {
         UUID postId = UUID.randomUUID();
-        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content");
+        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content", null, false);
         Comment comment = Comment
                 .builder()
-                .postId(UUID.fromString(commentRequest.objectId()))
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.fromString(commentRequest.objectId()))
+                        .postId(postId)
+                        .build()
+                )
                 .authorId(commentRequest.profileId())
                 .content("old content")
                 .creationDateTime(LocalDateTime.now())
@@ -96,10 +107,15 @@ class CommentServiceTest {
     @Test
     final void editComment_throwsException_whenUserIsNotAuthor() {
         UUID postId = UUID.randomUUID();
-        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content");
+        CommentRequest commentRequest = new CommentRequest(postId.toString(), "profileId", "content", null, false);
         Comment comment = Comment
                 .builder()
-                .postId(UUID.fromString(commentRequest.objectId()))
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.fromString(commentRequest.objectId()))
+                        .postId(postId)
+                        .build()
+                )
                 .authorId("anotherProfileId")
                 .content("old content")
                 .creationDateTime(LocalDateTime.now())
@@ -118,7 +134,12 @@ class CommentServiceTest {
         String profileId = "profileId";
         Comment comment = Comment
                 .builder()
-                .postId(postId)
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.fromString(commentId))
+                        .postId(postId)
+                        .build()
+                )
                 .authorId(profileId)
                 .content("content")
                 .creationDateTime(LocalDateTime.now())
@@ -139,7 +160,12 @@ class CommentServiceTest {
         String profileId = "profileId";
         Comment comment = Comment
                 .builder()
-                .postId(postId)
+                .key(CommentKey
+                        .builder()
+                        .commentId(UUID.fromString(commentId))
+                        .postId(postId)
+                        .build()
+                )
                 .authorId("anotherProfileId")
                 .content("content")
                 .creationDateTime(LocalDateTime.now())
