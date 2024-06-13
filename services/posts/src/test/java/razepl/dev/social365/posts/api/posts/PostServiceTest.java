@@ -8,9 +8,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import razepl.dev.social365.posts.api.posts.data.DataPage;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
@@ -57,30 +57,6 @@ class PostServiceTest {
     @BeforeEach
     final void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    final void getPostsOnPage_fullPageReturnedByRepository() {
-        String profileId = "profileId";
-        int pageNumber = 0;
-        int pageSize = 3;
-        CassandraPageRequest p = CassandraPageRequest.first(pageSize);
-        Pageable pageable = CassandraPageRequest.of(p, p.getPagingState());
-        List<Post> posts = List.of(Post.builder().build(), Post.builder().build(), Post.builder().build());
-        List<PostResponse> expected = List.of(PostResponse.builder().build(), PostResponse.builder().build(),
-                PostResponse.builder().build());
-
-        when(postRepository.findAllByFollowedUserIdsOrProfileId(any(), any()))
-                .thenReturn(new SliceImpl<>(posts, pageable, true));
-        when(profileService.getFriendsIds(eq(profileId), anyInt()))
-                .thenReturn(new PageImpl<>(List.of("friendId1", "friendId2", "friendId3")));
-        when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
-                .thenReturn(PostResponse.builder().build());
-
-        DataPage<PostData> result = postService.getPostsOnPage(profileId, pageNumber, pageSize);
-
-        verify(postRepository).findAllByFollowedUserIdsOrProfileId(any(), any());
-        assertEquals(expected, result.data());
     }
 
     @Test

@@ -40,8 +40,8 @@ services:
             test: [ "CMD", "curl", "--fail", "http://localhost:${PROFILE_SERVICE_PORT}/actuator/health" ]
             start_period: 35s
             interval: 10s
-            timeout: 5s
-            retries: 3
+            timeout: 10s
+            retries: 10
 
 networks:
     profiles-network:

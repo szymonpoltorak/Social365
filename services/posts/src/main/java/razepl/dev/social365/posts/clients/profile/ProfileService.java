@@ -13,7 +13,7 @@ public interface ProfileService {
 
     @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)
     Page<String> getFriendsIds(@RequestParam(Params.PROFILE_ID) String profileId,
-                               @RequestParam(Params.PAGE_NUMBER) int pageNumber);
+                               @RequestParam(Params.FRIENDS_PAGE_NUMBER) int pageNumber);
 
     @GetMapping(value = ProfileMappings.GET_POST_PROFILE_INFO_MAPPING)
     Profile getProfileDetails(@RequestParam(Params.PROFILE_ID) String profileId);

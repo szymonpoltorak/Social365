@@ -1,13 +1,14 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
-import razepl.dev.social365.posts.api.posts.data.DataPage;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 
 public interface PostService {
 
     int getUsersPostCount(String profileId);
 
-    DataPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize);
+    PostsCassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo);
 
     PostData updateLikePostCount(String profileId, String postId);
 

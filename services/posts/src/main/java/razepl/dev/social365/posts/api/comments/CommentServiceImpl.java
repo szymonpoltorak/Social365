@@ -2,20 +2,24 @@ package razepl.dev.social365.posts.api.comments;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
-import razepl.dev.social365.posts.api.comments.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.CassandraPagingState;
+import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
-import razepl.dev.social365.posts.api.posts.data.DataPage;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
+import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
@@ -32,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
 
     @Override
-    public final DataPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
+    public final CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
         log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
 
         Pageable pageable = pageInfo.toPageable();
@@ -41,16 +45,11 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Found {} replies for comment with id: {}", comments.getSize(), commentId);
 
-        List<CommentResponse> data = comments
-                .stream()
-                .map(comment -> commentMapper.toCommentResponse(comment, profileId))
-                .toList();
-
-        return new DataPage<>(data, pageable.getPageNumber(), pageable.getPageSize(), comments.hasNext());
+        return mapToCassandraPage(comments, profileId);
     }
 
     @Override
-    public final DataPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
+    public final CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageInfo);
 
         Pageable pageable = pageInfo.toPageable();
@@ -59,12 +58,20 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
+        return mapToCassandraPage(comments, profileId);
+    }
+
+    private CassandraPage<CommentResponse> mapToCassandraPage(Slice<Comment> comments, String profileId) {
         List<CommentResponse> data = comments
                 .stream()
                 .map(comment -> commentMapper.toCommentResponse(comment, profileId))
                 .toList();
 
-        return new DataPage<>(data, pageable.getPageNumber(), pageable.getPageSize(), comments.hasNext());
+        CassandraPageRequest nextPageable = (CassandraPageRequest) comments.nextPageable();
+
+        PagingState pagingState = PagingState.newInstance(nextPageable.getPagingState());
+
+        return new CommentsCassandraPage<>(data, nextPageable.getPageSize(), nextPageable.hasNext(), pagingState);
     }
 
     @Override

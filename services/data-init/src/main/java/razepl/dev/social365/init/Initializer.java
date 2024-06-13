@@ -1,6 +1,7 @@
 package razepl.dev.social365.init;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.random.RandomGenerator;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class Initializer implements CommandLineRunner {
@@ -68,6 +70,7 @@ public class Initializer implements CommandLineRunner {
                 }
             }
         }
+        log.info(profiles.toString());
 
         List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.", "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
         List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
@@ -83,6 +86,8 @@ public class Initializer implements CommandLineRunner {
                         .profileId(profile.profileId())
                         .objectId(postResponse.postId())
                         .content(commentContent)
+                        .replyToCommentId(null)
+                        .hasAttachment(false)
                         .build();
                 postCommentsService.addCommentToPost(commentRequest);
             }

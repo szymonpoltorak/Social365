@@ -3,11 +3,11 @@ package razepl.dev.social365.posts.api.posts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import razepl.dev.social365.posts.api.posts.data.DataPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
@@ -19,6 +19,9 @@ import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
@@ -40,55 +43,52 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
-    public final int getUsersPostCount(String profileId) {
-        log.info("Getting post count for profile with id: {}", profileId);
+    public PostsCassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
+        log.info("Getting posts for profile with id: {}, using page info : {}", profileId, pageInfo);
 
-        return postRepository.countAllByAuthorId(profileId);
-    }
-
-    @Override
-    public DataPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize) {
-        int currentPageNumber = pageNumber;
-        int currentPageSize = pageSize;
-        boolean hasNext = false;
-        Pageable pageable = CassandraPageRequest.of(0, pageSize);
-        Collection<Post> result = new ArrayList<>(currentPageSize + 1);
-        List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, currentPageNumber).toList());
+        int currentFriendPage = pageInfo.friendPageNumber();
+        int pageSize = pageInfo.pageSize();
+        Pageable pageable = pageInfo.toPageable();
+        Collection<Post> result = new ArrayList<>(pageSize + 1);
 
         while (true) {
-            log.info("Found {} friends for profile with id: {}", friendsIds.size(), profileId);
+            Page<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
+            List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, currentFriendPage).toList());
 
             if (friendsIds.isEmpty()) {
-                return new DataPage<>(List.of(), currentPageNumber, pageSize, false);
-            }
-            friendsIds.add(profileId);
+                log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
+                return createCassandraPage((CassandraPageRequest) pageable, result, profileId, currentFriendPage);
+            }
             Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
             log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
 
-            //TODO: this will not work for sure for more users but for now i cannot test it (it is when page number is bigger than 0)
-            if (pageNumber > 0) {
-                int i = pageNumber - 1;
-                pageable = posts.nextPageable();
-
-                while (i-- > 0) {
-                    pageable = pageable.next();
-                }
-                continue;
-            }
             result.addAll(posts.getContent());
 
-            if (result.size() >= currentPageSize || !posts.hasNext()) {
-                hasNext = posts.hasNext();
+            int resultSize = result.size();
 
-                break;
+            if (resultSize >= pageSize) {
+                log.info("Found enough posts returning result of size: {}", resultSize);
+
+                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
             }
-            friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, ++currentPageNumber).toList());
+            if (!friendsPage.hasNext()) {
+                log.info("There are no more friends to fetch posts from returning result of size: {}", resultSize);
+
+                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
+            }
+            currentFriendPage++;
         }
+    }
+
+    private PostsCassandraPage<PostData> createCassandraPage(CassandraPageRequest pageable, Collection<Post> result,
+                                                             String profileId, int currentFriendsPage) {
         log.info("Found posts returning result...");
 
-        List<PostData> slice = result
+        PagingState pagingState = PagingState.newInstance(pageable.getPagingState());
+
+        List<PostData> content = result
                 .parallelStream()
                 .map(post -> {
                     if (post.isSharedPost()) {
@@ -98,7 +98,15 @@ public class PostServiceImpl implements PostService {
                 })
                 .toList();
 
-        return new DataPage<>(slice, currentPageNumber, pageSize, hasNext);
+        return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),
+                pageable.hasNext(), PagingState.encode(pagingState));
+    }
+
+    @Override
+    public final int getUsersPostCount(String profileId) {
+        log.info("Getting post count for profile with id: {}", profileId);
+
+        return postRepository.countAllByAuthorId(profileId);
     }
 
     @Override

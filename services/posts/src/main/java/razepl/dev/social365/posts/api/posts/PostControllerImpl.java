@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.api.posts.constants.PostMappings;
-import razepl.dev.social365.posts.api.posts.data.DataPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +32,11 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @GetMapping(value = PostMappings.GET_POSTS_ON_PAGE)
-    public final DataPage<PostData> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                   @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                   @RequestParam(Params.PAGE_SIZE) int pageSize) {
-        return postService.getPostsOnPage(profileId, pageNumber, pageSize);
+    public final PostsCassandraPage<PostData> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                             @RequestParam(Params.FRIENDS_PAGE_NUMBER) int friendsPageNumber,
+                                                             @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                             @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+        return postService.getPostsOnPage(profileId, PageInfo.of(friendsPageNumber, pageSize, pagingState));
     }
 
     @Override

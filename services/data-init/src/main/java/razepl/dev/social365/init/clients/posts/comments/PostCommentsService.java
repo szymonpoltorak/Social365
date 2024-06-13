@@ -15,10 +15,10 @@ import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
 public interface PostCommentsService {
 
     @GetMapping(value = PostCommentsMappings.GET_USERS_POST_COUNT)
-    int getUsersPostCount(@RequestParam("profileId") String profileId);
+    int getUsersPostCount(@RequestParam(PostParams.PROFILE_ID) String profileId);
 
     @PostMapping(value = PostCommentsMappings.CREATE_POST)
-    PostResponse createPost(@RequestParam("profileId") String profileId,
+    PostResponse createPost(@RequestParam(PostParams.PROFILE_ID) String profileId,
                             @RequestParam(PostParams.CONTENT) String content,
                             @RequestParam(PostParams.HAS_ATTACHMENTS) boolean hasAttachments);
 
