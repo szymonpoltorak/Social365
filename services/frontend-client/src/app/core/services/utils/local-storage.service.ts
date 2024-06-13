@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 
 @Injectable({
     providedIn: 'root'
 })
 export class LocalStorageService {
-    getUserFromStorage(): User {
+    getUserProfileFromStorage(): Profile {
         const user: string | null = localStorage.getItem('currentUser');
 
         if (!user) {
@@ -14,7 +14,7 @@ export class LocalStorageService {
         return JSON.parse(user);
     }
 
-    saveUserToStorage(user: User): void {
+    saveUserToStorage(user: Profile): void {
         localStorage.setItem('currentUser', JSON.stringify(user));
     }
 }

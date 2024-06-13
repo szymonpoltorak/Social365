@@ -6,9 +6,9 @@
             <mat-icon>cake</mat-icon>
 
             @if (birthdayInfos.length === 1) {
-                <strong>{{ birthdayInfos[0].fullName }}'s</strong> birthday is today!
+                <strong>{{ birthdayInfos[0].profile.fullName }}'s</strong> birthday is today!
             } @else {
-                <strong>{{ birthdayInfos[0].fullName }}</strong> and
+                <strong>{{ birthdayInfos[0].profile.fullName }}</strong> and
                 <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
             }
         </button>
@@ -16,11 +16,14 @@
         @if (isExpanded) {
             @for (birthdayInfo of birthdayInfos; track birthdayInfo) {
                 <div class="flex justify-start gap-3 w-full mb-2 p-2 rounded-md items-center">
-                    <app-avatar-photo [imageLink]="birthdayInfo.imageLink"></app-avatar-photo>
+                    <app-avatar-photo class="hover:cursor-pointer"
+                                      (click)="router.navigate([RouterPaths.PROFILE_DIRECT, birthdayInfo.profile.username, RouterPaths.PROFILE_POSTS])"
+                                      [imageLink]="birthdayInfo.profile.profilePictureUrl">
+                    </app-avatar-photo>
 
                     <div class="flex flex-col w-full">
                         <div class="flex justify-between w-full">
-                            <span class="font-semibold mb-1">{{ birthdayInfo.fullName }}</span>
+                            <span class="font-semibold mb-1">{{ birthdayInfo.profile.fullName }}</span>
 
                             <span class="text-xs font-extralight mb-1">{{ birthdayInfo.age }} years old</span>
                         </div>

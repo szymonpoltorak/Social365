@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 
 @Builder
 public record CommentResponse(String commentId, int commentLikesCount, String content, Profile author,
-                              LocalDateTime creationDateTime, boolean isLiked) {
+                              LocalDateTime creationDateTime, boolean isLiked, String imageUrl) {
 }

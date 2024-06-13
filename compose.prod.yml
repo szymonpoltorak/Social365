@@ -6,13 +6,13 @@ include:
 #    -   path:
 #            - ./services/authorization/compose.prod.yml
     -   path:
-            - ./services/eureka-registry/compose.prod.yml
+            - ./services/eureka-registry/compose.yml
     -   path:
-            - ./services/reverse-proxy/compose.prod.yml
+            - ./services/reverse-proxy/compose.yml
     -   path:
             - ./services/images/compose.prod.yml
     -   path:
-            - ./services/api-gateway/compose.prod.yml
+            - ./services/api-gateway/compose.yml
     -   path:
             - ./services/profile/compose.prod.yml
     -   path:

@@ -32,8 +32,6 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
@@ -83,6 +81,7 @@ class AboutDetailsServiceTest {
                 .build();
         Profile profile = Profile
                 .builder()
+                .profileId("profileId")
                 .build();
         ProfileRequest expected = ProfileRequest
                 .builder()
@@ -91,6 +90,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(genderRequest.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(genderRepository.findByProfileId(genderRequest.profileId()))
+                .thenReturn(Optional.of(gender));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -170,7 +171,7 @@ class AboutDetailsServiceTest {
                 .build();
 
         // when
-        when(dateOfBirthRepository.findByProfileProfileId(dateOfBirthRequest.profileId()))
+        when(dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId()))
                 .thenReturn(Optional.empty());
 
         // then
@@ -199,7 +200,7 @@ class AboutDetailsServiceTest {
                 .build();
 
         // when
-        when(dateOfBirthRepository.findByProfileProfileId(dateOfBirthRequest.profileId()))
+        when(dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId()))
                 .thenReturn(Optional.of(birthDate));
 
         // then
@@ -228,7 +229,7 @@ class AboutDetailsServiceTest {
                 .build();
 
         // when
-        when(dateOfBirthRepository.findByProfileProfileId(dateOfBirthRequest.profileId()))
+        when(dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId()))
                 .thenReturn(Optional.of(birthDate));
 
         // then
@@ -258,7 +259,7 @@ class AboutDetailsServiceTest {
         ProfileRequest expected = ProfileRequest.builder().build();
 
         // when
-        when(dateOfBirthRepository.findByProfileProfileId(dateOfBirthRequest.profileId()))
+        when(dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId()))
                 .thenReturn(Optional.of(birthDate));
         when(dateOfBirthRepository.save(birthDate))
                 .thenReturn(birthDate);
@@ -302,6 +303,7 @@ class AboutDetailsServiceTest {
                 .build();
         Profile profile = Profile
                 .builder()
+                .profileId(relationshipStatusRequest.profileId())
                 .relationshipStatus(new RelationshipStatus())
                 .build();
         RelationshipStatus status = profile.getRelationshipStatus();
@@ -310,6 +312,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(relationshipStatusRequest.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(relationshipStatusRepository.findByProfileId(profile.getProfileId()))
+                .thenReturn(Optional.of(profile.getRelationshipStatus()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -377,6 +381,7 @@ class AboutDetailsServiceTest {
                 .build();
         Profile profile = Profile
                 .builder()
+                .profileId("profileId")
                 .currentCity(new AboutDetails())
                 .build();
         AboutDetails currentCity = profile.getCurrentCity();
@@ -385,6 +390,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(cityRequest.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findCurrentCityByProfileId(profile.getProfileId()))
+                .thenReturn(Optional.of(profile.getCurrentCity()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -452,6 +459,7 @@ class AboutDetailsServiceTest {
                 .build();
         Profile profile = Profile
                 .builder()
+                .profileId(homeRequest.profileId())
                 .homeTown(new AboutDetails())
                 .build();
         AboutDetails homeTown = profile.getHomeTown();
@@ -460,6 +468,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(homeRequest.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findHomeTownByProfileId(profile.getProfileId()))
+                .thenReturn(Optional.of(profile.getHomeTown()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -509,6 +519,7 @@ class AboutDetailsServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .relationshipStatus(new RelationshipStatus())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -516,6 +527,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(relationshipStatusRepository.findByProfileId(profile.getProfileId()))
+                .thenReturn(Optional.of(profile.getRelationshipStatus()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -565,6 +578,7 @@ class AboutDetailsServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .homeTown(new AboutDetails())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -572,6 +586,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findHomeTownByProfileId(profileId))
+                .thenReturn(Optional.of(profile.getHomeTown()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -621,6 +637,7 @@ class AboutDetailsServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .currentCity(new AboutDetails())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -628,6 +645,8 @@ class AboutDetailsServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findCurrentCityByProfileId(profileId))
+                .thenReturn(Optional.of(profile.getCurrentCity()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 

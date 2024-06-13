@@ -6,16 +6,19 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactService;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.EmailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.mobile.interfaces.MobileRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,18 +39,35 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating phone number: {}", profile);
 
-        Mobile mobile = profile.getPhoneNumber();
+        Optional<Mobile> mobileOptional = mobileRepository.findByProfileId(phoneNumberRequest.profileId());
 
-        if (mobile == null) {
-            mobile = new Mobile();
+        if (mobileOptional.isEmpty()) {
+            log.info("Mobile not found for updating, creating new one");
+
+            Mobile mobile = Mobile
+                    .builder()
+                    .phoneNumber(phoneNumberRequest.detailsValue())
+                    .privacyLevel(phoneNumberRequest.privacyLevel())
+                    .build();
+
+            mobile = mobileRepository.save(mobile);
+
+            mobileRepository.createMobileHasRelationship(mobile.getMobileId(), profile.getProfileId());
+
+            log.info("Created mobile: {}", mobile);
+
+        } else {
+            log.info("Mobile found for updating, updating existing one");
+
+            Mobile mobile = mobileOptional.get();
+
+            mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
+            mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
+
+            mobile = mobileRepository.save(mobile);
+
+            log.info("Updated mobile: {}", mobile);
         }
-        mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
-        mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
-
-        mobile = mobileRepository.save(mobile);
-
-        log.info("Updated mobile: {}", mobile);
-
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
@@ -60,7 +80,10 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating email privacy level: {}", profile);
 
-        Email email = profile.getEmail();
+        Email email = emailRepository.findByProfileId(profileId)
+                .orElseThrow(ProfileDetailsNotFoundException::new);
+
+        log.info("Email for updating: {}", email);
 
         email.setPrivacyLevel(privacyLevel);
 
@@ -80,11 +103,11 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for deleting phone number: {}", profile);
 
-        Mobile mobile = profile.getPhoneNumber();
+        Mobile mobile = mobileRepository.findByProfileId(profileId)
+                .orElseThrow(() -> new MobileNotFoundException(profile.getProfileId()));
 
-        if (mobile == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
+        log.info("Mobile for deleting: {}", mobile);
+
         mobileRepository.delete(mobile);
 
         return profileMapper.mapProfileToProfileRequest(profile);

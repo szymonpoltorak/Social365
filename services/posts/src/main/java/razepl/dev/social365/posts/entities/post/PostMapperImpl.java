@@ -5,11 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.data.PostStatistics;
+import razepl.dev.social365.posts.api.posts.data.SharedPostResponse;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
+import razepl.dev.social365.posts.clients.images.ImageService;
+import razepl.dev.social365.posts.clients.images.data.PostImage;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
+import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -19,9 +26,35 @@ public class PostMapperImpl implements PostMapper {
     private final ProfileService profileService;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final ImageService imageService;
 
     @Override
-    public final PostResponse toPostResponse(Post post, String profileId) {
+    public final PostData toPostResponse(Post post, String profileId) {
+        if (post == null) {
+            log.warn("Post is null");
+
+            return null;
+        }
+        if (profileId == null) {
+            log.warn("ProfileId is null");
+
+            return null;
+        }
+        Profile author = profileService.getProfileDetails(post.getAuthorId());
+        List<String> imagePaths = getImagePaths(post);
+
+        PostStatistics statistics = PostStatistics
+                .builder()
+                .likes(post.getLikesCount())
+                .shares(post.getSharesCount())
+                .comments(commentRepository.countAllByPostId(post.getPostId()))
+                .build();
+
+        return buildPostResponse(author, post, profileId, imagePaths, statistics);
+    }
+
+    @Override
+    public final PostData toPostResponseNoImages(Post post, String profileId) {
         if (post == null) {
             log.warn("Post is null");
 
@@ -36,15 +69,39 @@ public class PostMapperImpl implements PostMapper {
 
         PostStatistics statistics = PostStatistics
                 .builder()
-                .likes(post.getUserLikedIds().size())
-                .shares(post.getUserSharedIds().size())
+                .likes(post.getLikesCount())
+                .shares(post.getSharesCount())
                 .comments(commentRepository.countAllByPostId(post.getPostId()))
                 .build();
-//
-//        .likes(postRepository.countLikesByPostId(post.getPostId()))
-//                .comments(commentRepository.countAllByPostId(post.getPostId()))
-//                .shares(postRepository.countSharesByPostId(post.getPostId()))
 
+        return buildPostResponse(author, post, profileId, List.of(), statistics);
+    }
+
+    @Override
+    public final PostData toSharedPostResponse(Post sharingPost, String profileId) {
+        Post sharedPost = postRepository.findById(sharingPost.getOriginalPostId())
+                .orElseThrow(() -> new PostDoesNotExistException(sharingPost.getOriginalPostId().toString()));
+
+        return SharedPostResponse
+                .builder()
+                .sharingPost(toPostResponse(sharingPost, profileId))
+                .sharedPost(toPostResponse(sharedPost, profileId))
+                .build();
+    }
+
+    private List<String> getImagePaths(Post post) {
+        if (post.isHasAttachments()) {
+            return imageService
+                    .getPostImages(post.getPostId().toString())
+                    .stream()
+                    .map(PostImage::imagePath)
+                    .toList();
+        }
+        return List.of();
+    }
+
+    private PostResponse buildPostResponse(Profile author, Post post, String profileId,
+                                           List<String> imagePaths, PostStatistics statistics) {
         return PostResponse
                 .builder()
                 .author(author)
@@ -55,6 +112,7 @@ public class PostMapperImpl implements PostMapper {
                 .isBookmarked(post.isBookmarkedBy(profileId))
                 .creationDateTime(post.getCreationDateTime())
                 .content(post.getContent())
+                .imageUrls(imagePaths)
                 .build();
     }
 }

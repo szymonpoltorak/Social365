@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.entities.image.Image;
+import razepl.dev.social365.images.entities.image.comment.CommentImage;
+import razepl.dev.social365.images.entities.image.comment.interfaces.CommentImageRepository;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
 import razepl.dev.social365.images.entities.image.post.PostImage;
@@ -16,6 +19,7 @@ import razepl.dev.social365.images.entities.image.post.interfaces.PostImagesRepo
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,6 +32,7 @@ public class ImagesServiceImpl implements ImagesService {
     private final FileManagementService fileManagementService;
     private final ImagesMapper imagesMapper;
     private final PostImagesRepository postImagesRepository;
+    private final CommentImageRepository commentImageRepository;
 
     @Override
     public final ImageResponse uploadImage(String username, MultipartFile image) {
@@ -50,6 +55,28 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
+    public final CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image) {
+        log.info("Uploading comment image for user: {}", username);
+
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, image.getOriginalFilename()).toString();
+
+        CommentImage imageEntity = CommentImage
+                .builder()
+                .username(username)
+                .imagePath(imagePath)
+                .commentId(commentId)
+                .build();
+
+        CommentImage savedImage = commentImageRepository.save(imageEntity);
+
+        log.info("Comment image saved: {}", savedImage);
+
+        fileManagementService.saveFile(imagePath, image);
+
+        return imagesMapper.toCommentResponse(savedImage);
+    }
+
+    @Override
     public final PostImageResponse uploadPostImage(String postId, String username, MultipartFile image) {
         log.info("Uploading post image for user: {}", username);
 
@@ -69,6 +96,32 @@ public class ImagesServiceImpl implements ImagesService {
         fileManagementService.saveFile(imagePath, image);
 
         return imagesMapper.toPostImageResponse(savedImage);
+    }
+
+    @Override
+    public final CommentImageResponse getCommentImage(String commentId) {
+        log.info("Getting comment image for commentId: {}", commentId);
+
+        CommentImage commentImage = commentImageRepository.findCommentImageByCommentId(commentId)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Comment image found: {}", commentImage);
+
+        return imagesMapper.toCommentResponse(commentImage);
+    }
+
+    @Override
+    public final List<PostImageResponse> getPostImages(String postId) {
+        log.info("Getting post images for postId: {}", postId);
+
+        List<PostImage> postImages = postImagesRepository.findPostImagesByPostId(postId);
+
+        log.info("Post images found: {}", postImages);
+
+        return postImages
+                .stream()
+                .map(imagesMapper::toPostImageResponse)
+                .toList();
     }
 
     @Override

@@ -21,19 +21,15 @@ import java.util.UUID;
 public class Post {
 
     @PrimaryKey
-    @Column(value = "post_id")
-    private UUID postId;
-
-    @Column(value = "author_id")
-    private String authorId;
+    private PostKey key;
 
     private String content;
 
-    @Column(value = "creation_date_time")
-    private LocalDateTime creationDateTime;
-
     @Column(value = "has_attachments")
     private boolean hasAttachments;
+
+    @Column(value = "original_post_id")
+    private UUID originalPostId;
 
     @Column(value = "user_notification_ids")
     private Set<String> userNotificationIds;
@@ -50,16 +46,46 @@ public class Post {
     @Version
     private long version;
 
+    public final UUID getPostId() {
+        return key.getPostId();
+    }
+
+    public final String getAuthorId() {
+        return key.getAuthorId();
+    }
+
+    public final LocalDateTime getCreationDateTime() {
+        return key.getCreationDateTime();
+    }
+
+    public final boolean isSharedPost() {
+        return originalPostId != null;
+    }
+
+    public final int getLikesCount() {
+        if (userLikedIds == null) {
+            return 0;
+        }
+        return userLikedIds.size();
+    }
+
+    public final int getSharesCount() {
+        if (userSharedIds == null) {
+            return 0;
+        }
+        return userSharedIds.size();
+    }
+
     public final boolean areNotificationsTurnedOnBy(String profileId) {
-        return userNotificationIds.contains(profileId);
+        return userNotificationIds != null && userNotificationIds.contains(profileId);
     }
 
     public final boolean isBookmarkedBy(String profileId) {
-        return bookmarkedUserIds.contains(profileId);
+        return bookmarkedUserIds != null && bookmarkedUserIds.contains(profileId);
     }
 
     public final boolean isLikedBy(String profileId) {
-        return userLikedIds.contains(profileId);
+        return userLikedIds != null && userLikedIds.contains(profileId);
     }
 
     public final void sharePostByProfile(String profileId) {

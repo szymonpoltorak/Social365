@@ -5,14 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
+import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
+import razepl.dev.social365.posts.entities.post.PostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
@@ -56,45 +60,22 @@ class PostServiceTest {
     }
 
     @Test
-    final void getPostsOnPage_fullPageReturnedByRepository() {
-        String profileId = "profileId";
-        int pageNumber = 1;
-        int pageSize = 3;
-        List<Post> posts = List.of(Post.builder().build(), Post.builder().build(), Post.builder().build());
-        List<PostResponse> expected = List.of(PostResponse.builder().build(), PostResponse.builder().build(),
-                PostResponse.builder().build());
-
-        when(postRepository.findAllByFollowedUserIds(any(), any()))
-                .thenReturn(new SliceImpl<>(posts));
-        when(profileService.getFriendsIds(eq(profileId), anyInt()))
-                .thenReturn(new PageImpl<>(List.of("friendId1", "friendId2", "friendId3")));
-        when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
-                .thenReturn(PostResponse.builder().build());
-
-        Slice<PostResponse> result = postService.getPostsOnPage(profileId, pageNumber, pageSize);
-
-        verify(postRepository).findAllByFollowedUserIds(any(), any());
-        assertEquals(expected, result.getContent());
-    }
-
-    @Test
     final void createPost_validatesAndSavesPost() {
         String profileId = "profileId";
         String content = "content";
         Post post = Post
                 .builder()
-                .authorId(profileId)
+                .key(PostKey.builder().authorId(profileId).creationDateTime(LocalDateTime.now()).build())
                 .content(content)
-                .creationDateTime(LocalDateTime.now())
                 .build();
         PostResponse postResponse = PostResponse.builder().build();
 
         when(postRepository.save(any(Post.class)))
                 .thenReturn(post);
-        when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
+        when(postMapper.toPostResponseNoImages(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostResponse result = postService.createPost(profileId, content, true);
+        PostData result = postService.createPost(profileId, content, true);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -105,7 +86,11 @@ class PostServiceTest {
         String profileId = "profileId";
         String postId = UUID.randomUUID().toString();
         String content = "content";
-        Post post = Post.builder().authorId(profileId).content(content).creationDateTime(LocalDateTime.now()).build();
+        Post post = Post
+                .builder()
+                .key(PostKey.builder().authorId(profileId).creationDateTime(LocalDateTime.now()).build())
+                .content(content)
+                .build();
         PostResponse postResponse = PostResponse.builder().build();
 
         when(postRepository.findById(UUID.fromString(postId)))
@@ -115,7 +100,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostResponse result = postService.editPost(profileId, postId, content);
+        PostData result = postService.editPost(profileId, postId, content);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -128,9 +113,8 @@ class PostServiceTest {
         String content = "content";
         Post post = Post
                 .builder()
-                .authorId("anotherProfileId")
+                .key(PostKey.builder().authorId("differentId").creationDateTime(LocalDateTime.now()).build())
                 .content(content)
-                .creationDateTime(LocalDateTime.now())
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
@@ -145,10 +129,8 @@ class PostServiceTest {
         String postId = UUID.randomUUID().toString();
         Post post = Post
                 .builder()
-                .authorId(profileId)
-                .postId(UUID.fromString(postId))
+                .key(PostKey.builder().authorId(profileId).postId(UUID.fromString(postId)).creationDateTime(LocalDateTime.now()).build())
                 .content("content")
-                .creationDateTime(LocalDateTime.now())
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
@@ -165,9 +147,8 @@ class PostServiceTest {
         String postId = UUID.randomUUID().toString();
         Post post = Post
                 .builder()
-                .authorId("anotherProfileId")
+                .key(PostKey.builder().authorId("id").postId(UUID.fromString(postId)).creationDateTime(LocalDateTime.now()).build())
                 .content("content")
-                .creationDateTime(LocalDateTime.now())
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))

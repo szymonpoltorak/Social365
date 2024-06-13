@@ -165,6 +165,7 @@ class AboutExperienceServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .highSchool(AboutDetails.builder().detailsType(DetailsType.HIGH_SCHOOL).build())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -172,6 +173,8 @@ class AboutExperienceServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findHighSchoolByProfileId(profileId))
+                .thenReturn(Optional.of(profile.getHighSchool()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -220,6 +223,7 @@ class AboutExperienceServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .workplace(Workplace.builder().build())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -227,6 +231,8 @@ class AboutExperienceServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(workplaceRepository.findWorkplaceByProfileId(profileId))
+                .thenReturn(Optional.of(profile.getWorkplace()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -258,6 +264,7 @@ class AboutExperienceServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .college(AboutDetails.builder().detailsType(DetailsType.COLLEGE).build())
                 .build();
         ProfileRequest expected = ProfileRequest.builder().build();
@@ -265,6 +272,8 @@ class AboutExperienceServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.findCollegeByProfileId(profileId))
+                .thenReturn(Optional.of(profile.getCollege()));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 

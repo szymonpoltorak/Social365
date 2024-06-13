@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { Profile } from "@interfaces/feed/profile.interface";
+import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField } from "@angular/material/form-field";
@@ -11,6 +11,9 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
+import { Either } from "@core/types/feed/either.type";
+import { SharedPost } from "@interfaces/feed/shared-post.interface";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: 'app-profile-posts',
@@ -27,52 +30,61 @@ import { RouterPaths } from "@enums/router-paths.enum";
         MatInput,
         CdkTextareaAutosize,
         ReactiveFormsModule,
-        MatButton
+        MatButton,
+        NgIf
     ],
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'
 })
 export class ProfilePostsComponent implements OnInit {
-    protected posts: Post[] = [
+    protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
+            statistics: {
+                likes: 445,
+                comments: 155,
+                shares: 25,
+            },
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"]
         },
         {
             postId: 2,
             content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date("2021-01-01T12:00:00"),
-            likes: 225,
-            comments: 112,
-            shares: 79,
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
             isPostLiked: false,
             isBookmarked: true,
             areNotificationTurnedOn: false,
+            imageUrls: []
         }
     ];
-    protected profile: Profile = {
+    protected profileInfo: ProfileInfo = {
+        profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
@@ -82,74 +94,79 @@ export class ProfilePostsComponent implements OnInit {
         postCount: 256,
         numberOfFriends: 1025,
         numberOfFollowers: 300,
-        profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected isEditing: boolean = false;
-    protected bioControl: FormControl<string | null> = new FormControl(this.profile.description);
+    protected bioControl: FormControl<string | null> = new FormControl(this.profileInfo.description);
     protected readonly RouterPaths = RouterPaths;
-    protected items: Post[] = [
+    protected items: Either<Post, SharedPost>[] = [
         {
             postId: 1,
             content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
                 "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
                 "            bred for hunting.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
+            statistics: {
+                likes: 445,
+                comments: 155,
+                shares: 25,
+            },
             isPostLiked: true,
             isBookmarked: false,
             areNotificationTurnedOn: true,
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         },
         {
-            postId: 1,
-            content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
-                "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
-                "            bred for hunting.",
+            postId: 2,
+            content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
-            creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
-            isPostLiked: true,
-            isBookmarked: false,
-            areNotificationTurnedOn: true,
+            creationDateTime: new Date("2021-01-01T12:00:00"),
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
+            isPostLiked: false,
+            isBookmarked: true,
+            areNotificationTurnedOn: false,
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         },
         {
-            postId: 1,
-            content: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\n" +
-                "            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\n" +
-                "            bred for hunting.",
+            postId: 2,
+            content: "The Shiba Inu is medium small, compact. I love being around people and I am very loyal to my family.",
             author: {
+                profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
-                profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
-            creationDateTime: new Date(),
-            likes: 445,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba2.jpg",
-            comments: 155,
-            shares: 25,
-            isPostLiked: true,
-            isBookmarked: false,
-            areNotificationTurnedOn: true,
-        },
+            creationDateTime: new Date("2021-01-01T12:00:00"),
+            statistics: {
+                likes: 225,
+                comments: 112,
+                shares: 79,
+            },
+            isPostLiked: false,
+            isBookmarked: true,
+            areNotificationTurnedOn: false,
+            imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
+        }
     ];
-    protected displayedItems: Post[] = [];
+    protected displayedItems: Either<Post, SharedPost>[] = [];
     protected numberOfItemsToDisplay: number = 3;
 
     constructor(public router: Router) {
@@ -162,7 +179,7 @@ export class ProfilePostsComponent implements OnInit {
         if (windowWidth <= 1526) {
             this.numberOfItemsToDisplay = 2;
         } else {
-            this.numberOfItemsToDisplay = 3; // or any other number you want
+            this.numberOfItemsToDisplay = 3;
         }
         this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
     }

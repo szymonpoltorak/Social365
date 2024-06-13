@@ -1,0 +1,61 @@
+@if (imageUrls.length === 1) {
+    <img [src]="imageUrls[0]"
+         mat-card-image
+         class="w-full h-full hover:cursor-pointer"
+         (click)="showImage(0)"
+         (keyup.enter)="showImage(0)"
+         tabindex="0"
+         alt="Photo">
+
+} @else if (imageUrls.length === 2) {
+    <div class="grid grid-cols-2 gap-1 items-stretch">
+        @for (image of imageUrls; track image) {
+            <img [src]="image"
+                 class="w-full h-full object-cover hover:cursor-pointer"
+                 (click)="showImage(imageUrls.indexOf(image))"
+                 (keyup.enter)="showImage(imageUrls.indexOf(image))"
+                 tabindex="0"
+                 alt="Photo">
+        }
+    </div>
+} @else {
+    <div class="grid grid-cols-2 gap-1">
+        <img [src]="imageUrls[0]"
+             class="w-full h-full object-cover object-center hover:cursor-pointer"
+             (click)="showImage(0)"
+             (keyup.enter)="showImage(0)"
+             tabindex="0"
+             alt="Photo">
+
+        <div class="grid gap-1">
+            <img [src]="imageUrls[1]"
+                 class="w-full h-full object-cover hover:cursor-pointer"
+                 (click)="showImage(1)"
+                 (keyup.enter)="showImage(1)"
+                 tabindex="0"
+                 alt="Photo">
+
+            <div class="relative">
+                @if (imageUrls.length - 3 > 0) {
+                    <span class="text-4xl absolute left-[50%] bottom-[50%] transform translate-x-[-50%] translate-y-[50%] z-40">
+                    + {{ imageUrls.length - 3 }}
+                    </span>
+
+                    <img [src]="imageUrls[2]"
+                         class="w-full h-full object-cover brightness-50 hover:cursor-pointer"
+                         (click)="showImage(2)"
+                         (keyup.enter)="showImage(2)"
+                         tabindex="0"
+                         alt="Photo">
+                } @else {
+                    <img [src]="imageUrls[2]"
+                         class="w-full h-full object-cover hover:cursor-pointer"
+                         (click)="showImage(2)"
+                         (keyup.enter)="showImage(2)"
+                         tabindex="0"
+                         alt="Photo">
+                }
+            </div>
+        </div>
+    </div>
+}

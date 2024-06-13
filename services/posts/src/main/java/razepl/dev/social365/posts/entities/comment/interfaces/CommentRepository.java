@@ -22,4 +22,7 @@ public interface CommentRepository extends CassandraRepository<Comment, UUID> {
 
     @Query("select * from comments where post_id = :objectId")
     Slice<Comment> findAllByPostId(String postId, Pageable pageable);
+
+    @Query("select * from comments where reply_to_comment_id = :commentId")
+    Slice<Comment> findAllReplyCommentsByCommentId(UUID commentId, Pageable pageable);
 }

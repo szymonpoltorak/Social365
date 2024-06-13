@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.Version;
-import razepl.dev.social365.images.api.constants.ImagesParams;
+import razepl.dev.social365.images.api.constants.Params;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(columnList = ImagesParams.USERNAME))
+@Table(indexes = @Index(columnList = Params.USERNAME))
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

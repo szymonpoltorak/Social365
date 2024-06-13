@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
@@ -14,6 +15,7 @@ import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 public class CommentMapperImpl implements CommentMapper {
 
     private final ProfileService profileService;
+    private final ImageService imageService;
 
     @Override
     public final CommentResponse toCommentResponse(Comment comment, String profileId) {
@@ -29,6 +31,9 @@ public class CommentMapperImpl implements CommentMapper {
         }
         Profile author = profileService.getProfileDetails(comment.getAuthorId());
 
+        String imageUrl = comment.isHasAttachments() ? imageService
+                .getCommentImage(comment.getCommentId().toString()).imagePath() : "";
+
         return CommentResponse
                 .builder()
                 .isLiked(comment.isLikedBy(profileId))
@@ -36,6 +41,7 @@ public class CommentMapperImpl implements CommentMapper {
                 .commentLikesCount(comment.getLikesCount())
                 .content(comment.getContent())
                 .creationDateTime(comment.getCreationDateTime())
+                .imageUrl(imageUrl)
                 .author(author)
                 .build();
     }

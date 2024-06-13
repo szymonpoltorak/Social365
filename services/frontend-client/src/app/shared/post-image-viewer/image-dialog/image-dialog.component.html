@@ -1,0 +1,23 @@
+<div class="relative">
+    <img [src]="data.imageUrls[data.imageIndex]" alt="Image real size" class="w-full h-full">
+
+    @if (data.imageIndex - 1 >= 0) {
+        <div class="prev-image-button">
+            <button mat-icon-button
+                    (click)="data.imageIndex = data.imageIndex - 1"
+                    class="icon-button-large image-button">
+                <mat-icon> arrow_back_ios</mat-icon>
+            </button>
+        </div>
+    }
+
+    @if (data.imageUrls.length > data.imageIndex + 1) {
+        <div class="next-image-button">
+            <button mat-icon-button
+                    (click)="data.imageIndex = data.imageIndex + 1"
+                    class="icon-button-large image-button">
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+        </div>
+    }
+</div>

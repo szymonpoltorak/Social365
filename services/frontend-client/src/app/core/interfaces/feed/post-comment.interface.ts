@@ -1,10 +1,10 @@
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 
 export interface PostComment {
     commentId: string;
     commentLikesCount: number;
     content: string;
-    author: User;
+    author: Profile;
     creationDateTime: Date;
     isLiked: boolean;
 }

@@ -6,28 +6,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import razepl.dev.social365.profile.api.profile.data.BirthdayData;
+import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
-import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
-import razepl.dev.social365.profile.exceptions.UsernameAlreadyClaimedException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.interfaces.MailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -35,10 +32,11 @@ import java.util.List;
 public class ProfileServiceImpl implements ProfileService {
 
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
+    private static final int PAGE_SIZE = 3;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
-    private final MailRepository mailRepository;
+    private final EmailRepository mailRepository;
     private final ProfileMapper profileMapper;
     private final ParamValidator paramValidator;
 
@@ -53,6 +51,19 @@ public class ProfileServiceImpl implements ProfileService {
         profile = profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public final Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber) {
+        log.info("Getting today birthdays for user with id: {}", profileId);
+
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+
+        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
+
+        log.info("Found {} birthdays", birthdayDataPage.getTotalElements());
+
+        return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
     }
 
     @Override
@@ -94,6 +105,10 @@ public class ProfileServiceImpl implements ProfileService {
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
                 .build();
         Profile savedProfile = profileRepository.save(profile);
+
+        mailRepository.createEmailHasRelation(email.getMailId(), savedProfile.getProfileId());
+
+        birthDateRepository.createBornOnRelation(birthDate.getBirthDateId(), savedProfile.getProfileId());
 
         log.info("Saved profile: {}", savedProfile);
 

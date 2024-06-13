@@ -1,6 +1,6 @@
 <div class="flex justify-between items-center">
     <div class="flex items-center p-3 gap-3">
-        <app-avatar-photo [imageLink]="post.author.profileImagePath"></app-avatar-photo>
+        <app-avatar-photo [imageLink]="post.author.profilePictureUrl"></app-avatar-photo>
 
         <div>
             <mat-card-title>
@@ -17,13 +17,15 @@
                 </div>
             </mat-card-title>
 
-            <mat-card-subtitle>Cutest dog you see today</mat-card-subtitle>
+            <mat-card-subtitle>{{ post.author.subtitle }}</mat-card-subtitle>
         </div>
     </div>
 
-    <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
-        <mat-icon>more_vert</mat-icon>
-    </button>
+    @if (!isSharedPost) {
+        <button mat-icon-button aria-label="More" [matMenuTriggerFor]="postOptions">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    }
 
     <mat-menu #postOptions="matMenu" xPosition="before">
         @if (post.author.username === username) {
@@ -54,12 +56,18 @@
         <button mat-menu-item aria-label="logout"
                 (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
             @if (post.areNotificationTurnedOn) {
-                <mat-icon>notifications</mat-icon>
-            } @else {
-                <mat-icon>notifications_none</mat-icon>
-            }
+                <div class="flex items-center">
+                    <mat-icon>notifications_active</mat-icon>
 
-            <span>Turn off notifications</span>
+                    <span>Turn off notifications</span>
+                </div>
+            } @else {
+                <div class="flex items-center">
+                    <mat-icon>notifications_off</mat-icon>
+
+                    <span>Turn on notifications</span>
+                </div>
+            }
         </button>
     </mat-menu>
 </div>

@@ -1,5 +1,6 @@
+import { Profile } from "@interfaces/feed/profile.interface";
+
 export interface BirthdayInfo {
-    fullName: string;
+    profile: Profile;
     age: number;
-    imageLink: string;
 }

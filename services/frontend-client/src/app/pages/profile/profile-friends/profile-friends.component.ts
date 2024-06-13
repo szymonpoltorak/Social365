@@ -8,6 +8,7 @@ import { MatInput } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: 'app-profile-friends',
@@ -26,6 +27,7 @@ import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-pr
         MatTooltip,
         ReactiveFormsModule,
         FriendProfileComponent,
+        RouterLink,
     ],
     templateUrl: './profile-friends.component.html',
     styleUrl: './profile-friends.component.scss'

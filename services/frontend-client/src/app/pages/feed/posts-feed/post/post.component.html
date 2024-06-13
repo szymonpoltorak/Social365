@@ -7,11 +7,8 @@
         </p>
     </mat-card-content>
 
-    @if (post.imageLink !== "" && post.imageLink !== undefined) {
-        <img mat-card-image
-             class="mb-4"
-             src="{{ post.imageLink }}"
-             alt="Photo of a Shiba Inu">
+    @if (post.imageUrls != undefined && post.imageUrls.length !== 0) {
+        <app-post-image-viewer [imageUrls]="post.imageUrls"></app-post-image-viewer>
     }
 
     <div class="flex justify-between p-2">
@@ -19,18 +16,18 @@
             @if (post.isPostLiked) {
                 <mat-icon class="transform scale-75">thumb_up</mat-icon>
 
-                <span class="text-sm">You and {{ post.likes - 1 }} others</span>
+                <span class="text-sm">You and {{ post.statistics.likes - 1 }} others</span>
             } @else {
                 <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
 
-                <span class="text-sm">{{ post.likes }}</span>
+                <span class="text-sm">{{ post.statistics.likes }}</span>
             }
         </div>
 
         <div class="flex justify-center items-center gap-3">
-            <div class="text-sm">{{ post.comments }} comments</div>
+            <div class="text-sm">{{ post.statistics.comments }} comments</div>
 
-            <div class="text-sm">{{ post.shares }} shares</div>
+            <div class="text-sm">{{ post.statistics.shares }} shares</div>
         </div>
     </div>
 
@@ -53,7 +50,9 @@
             COMMENT
         </button>
 
-        <button mat-button aria-label="Share" type="button">
+        <button mat-button aria-label="Share"
+                (click)="sharePost()"
+                type="button">
             <mat-icon>share</mat-icon>
             SHARE
         </button>
@@ -61,9 +60,7 @@
 
     @if (areCommentsVisible) {
         <app-comment-create [user]="user"></app-comment-create>
-    }
 
-    @if (areCommentsVisible) {
         @for (comment of comments; track comment) {
             <app-comment [comment]="comment"></app-comment>
         }

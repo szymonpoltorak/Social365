@@ -18,7 +18,8 @@ export const theme = {
             "mat-hover": "#464059",
             "available": "#49f030",
             "unavailable": "#6a6580",
-            "mat-primary-hover": "#3c4157"
+            "mat-primary-hover": "#3c4157",
+            "card-secondary": "#36314a",
         },
         spacing: {
             "26": "110px",
@@ -49,6 +50,9 @@ export const theme = {
             "r-l": "1740px",
             "r-xl": "1970px",
             "r-xxl": "2560px",
+        },
+        borderWidth: {
+            "1": "1px"
         }
     }
 };

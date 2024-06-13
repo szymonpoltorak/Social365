@@ -29,8 +29,8 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 public class AboutDetailsServiceImpl implements AboutDetailsService {
 
     private static final String PROFILE_FOUND_IN_REPOSITORY_FROM_REQUEST = "Profile found in repository from request : {}";
+    private static final int MINIMUM_AGE = 13;
 
     private final RelationshipStatusRepository relationshipStatusRepository;
     private final ProfileRepository profileRepository;
@@ -51,18 +52,34 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
         log.info("New gender data : {}", genderRequest);
 
         Profile profile = getProfileData(genderRequest.profileId());
-        Gender gender = profile.getGender();
+        Optional<Gender> genderOptional = genderRepository.findByProfileId(genderRequest.profileId());
 
-        log.info("Gender : {}", gender);
+        if (genderOptional.isEmpty()) {
+            log.info("No Gender data found creating new one.");
 
-        if (gender == null) {
-            gender = new Gender();
+            Gender gender = Gender
+                    .builder()
+                    .genderType(genderRequest.gender())
+                    .privacyLevel(genderRequest.privacyLevel())
+                    .build();
+
+            gender = genderRepository.save(gender);
+
+            genderRepository.createIsGenderRelation(profile.getProfileId(), gender.getGenderId());
+
+            log.info("Created gender : {}", gender);
+        } else {
+            log.info("Gender found updating it");
+
+            Gender gender = genderOptional.get();
+
+            gender.setGenderType(genderRequest.gender());
+            gender.setPrivacyLevel(genderRequest.privacyLevel());
+
+            gender = genderRepository.save(gender);
+
+            log.info("Saved gender : {}", gender);
         }
-        gender.setGenderType(genderRequest.gender());
-        gender.setPrivacyLevel(genderRequest.privacyLevel());
-
-        genderRepository.save(gender);
-
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
@@ -81,12 +98,12 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     public final ProfileRequest updateProfileDateOfBirth(DateOfBirthRequest dateOfBirthRequest) {
         log.info("New date of birth data : {}", dateOfBirthRequest);
 
-        BirthDate birthDate = dateOfBirthRepository.findByProfileProfileId(dateOfBirthRequest.profileId())
+        BirthDate birthDate = dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Birth of date for profile id {} : {}", dateOfBirthRequest.profileId(), birthDate);
 
-        if (Period.between(dateOfBirthRequest.dateOfBirth(), LocalDate.now()).getYears() < 13) {
+        if (Period.between(dateOfBirthRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMUM_AGE) {
             throw new TooYoungForAccountException();
         }
         if (dateOfBirthRequest.dateOfBirth().isAfter(LocalDate.now())) {
@@ -106,13 +123,34 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
         Profile profile = getProfileData(relationshipStatusRequest.profileId());
 
-        RelationshipStatus status = profile.getRelationshipStatus();
+        Optional<RelationshipStatus> status = relationshipStatusRepository.findByProfileId(profile.getProfileId());
 
-        status.setRelationshipStatus(relationshipStatusRequest.relationshipStatus());
-        status.setPrivacyLevel(relationshipStatusRequest.privacyLevel());
+        if (status.isEmpty()) {
+            log.info("No relationship status found creating new one.");
 
-        status = relationshipStatusRepository.save(status);
+            RelationshipStatus relationshipStatus = RelationshipStatus
+                    .builder()
+                    .relationshipStatus(relationshipStatusRequest.relationshipStatus())
+                    .privacyLevel(relationshipStatusRequest.privacyLevel())
+                    .build();
 
+            relationshipStatus = relationshipStatusRepository.save(relationshipStatus);
+
+            relationshipStatusRepository.createIsRelationshipStatusRelation(profile.getProfileId(), relationshipStatus.getRelationshipStatusId());
+
+            log.info("Created relationship status : {}", relationshipStatus);
+        } else {
+            log.info("Relationship status found updating it");
+
+            RelationshipStatus relationshipStatus = status.get();
+
+            relationshipStatus.setRelationshipStatus(relationshipStatusRequest.relationshipStatus());
+            relationshipStatus.setPrivacyLevel(relationshipStatusRequest.privacyLevel());
+
+            relationshipStatus = relationshipStatusRepository.save(relationshipStatus);
+
+            log.info("Saved relationship status : {}", relationshipStatus);
+        }
         log.info("Updated relationship status : {}", status);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -126,10 +164,15 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
             throw new IllegalDetailsTypeException();
         }
         Profile profile = getProfileData(cityRequest.profileId());
-        AboutDetails currentCity = profile.getCurrentCity();
 
-        currentCity = updateDetailsObject(cityRequest, currentCity, DetailsType.CURRENT_CITY);
+        Optional<AboutDetails> currentCityOptional = aboutDetailsRepository
+                .findCurrentCityByProfileId(profile.getProfileId());
 
+        AboutDetails currentCity = updateDetailsObject(cityRequest, currentCityOptional, DetailsType.CURRENT_CITY);
+
+        if (currentCityOptional.isEmpty()) {
+            aboutDetailsRepository.createLivesInRelation(cityRequest.profileId(), currentCity.getAboutDetailsId());
+        }
         log.info("Updated current city : {}", currentCity);
 
         return profileMapper.mapProfileToProfileRequest(profile);
@@ -143,11 +186,15 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
             throw new IllegalDetailsTypeException();
         }
         Profile profile = getProfileData(homeRequest.profileId());
-        AboutDetails homeTown = profile.getHomeTown();
 
-        homeTown = updateDetailsObject(homeRequest, homeTown, DetailsType.HOMETOWN);
+        Optional<AboutDetails> homeTownOptional = aboutDetailsRepository.findHomeTownByProfileId(profile.getProfileId());
 
-        log.info("Updated current city : {}", homeTown);
+        AboutDetails homeTown = updateDetailsObject(homeRequest, homeTownOptional, DetailsType.HOMETOWN);
+
+        if (homeTownOptional.isEmpty()) {
+            aboutDetailsRepository.createFromRelation(homeRequest.profileId(), homeTown.getAboutDetailsId());
+        }
+        log.info("Updated home town : {}", homeTown);
 
         return profileMapper.mapProfileToProfileRequest(profile);
     }
@@ -157,11 +204,10 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
         log.info("Deleting relationship status for profile id : {}", profileId);
 
         Profile profile = getProfileData(profileId);
-        RelationshipStatus status = profile.getRelationshipStatus();
 
-        if (status == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
+        RelationshipStatus status = relationshipStatusRepository.findByProfileId(profile.getProfileId())
+                .orElseThrow(ProfileDetailsNotFoundException::new);
+
         relationshipStatusRepository.delete(status);
 
         log.info("Deleted relationship status : {}", status);
@@ -175,11 +221,9 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
         Profile profile = getProfileData(profileId);
 
-        AboutDetails currentCity = profile.getCurrentCity();
+        AboutDetails currentCity = aboutDetailsRepository.findCurrentCityByProfileId(profile.getProfileId())
+                .orElseThrow(ProfileDetailsNotFoundException::new);
 
-        if (currentCity == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
         aboutDetailsRepository.delete(currentCity);
 
         log.info("Deleted current city : {}", currentCity);
@@ -193,11 +237,9 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
         Profile profile = getProfileData(profileId);
 
-        AboutDetails homeTown = profile.getHomeTown();
+        AboutDetails homeTown = aboutDetailsRepository.findHomeTownByProfileId(profile.getProfileId())
+                .orElseThrow(ProfileDetailsNotFoundException::new);
 
-        if (homeTown == null) {
-            throw new ProfileDetailsNotFoundException();
-        }
         aboutDetailsRepository.delete(homeTown);
 
         log.info("Deleted home town : {}", homeTown);
@@ -214,17 +256,37 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
         return profile;
     }
 
-    private AboutDetails updateDetailsObject(AboutDetailsRequest request, AboutDetails details,
+    private AboutDetails updateDetailsObject(AboutDetailsRequest request, Optional<AboutDetails> detailsOptional,
                                              DetailsType detailsType) {
-        if (details == null) {
-            details = AboutDetails.builder()
-                    .detailsType(detailsType)
-                    .build();
-        }
-        details.setPrivacyLevel(request.privacyLevel());
-        details.setPropertyValue(request.detailsValue());
+        if (detailsOptional.isEmpty()) {
+            log.info("Details of type {} does not exist creating new one.", detailsType);
 
-        return aboutDetailsRepository.save(details);
+            AboutDetails details = AboutDetails
+                    .builder()
+                    .detailsType(detailsType)
+                    .propertyValue(request.detailsValue())
+                    .privacyLevel(request.privacyLevel())
+                    .build();
+
+            details = aboutDetailsRepository.save(details);
+
+            log.info("Created details : {}", details);
+
+            return details;
+
+        }
+        log.info("Details of type {} found updating it.", detailsType);
+
+        AboutDetails details = detailsOptional.get();
+
+        details.setPropertyValue(request.detailsValue());
+        details.setPrivacyLevel(request.privacyLevel());
+
+        details = aboutDetailsRepository.save(details);
+
+        log.info("Updated details : {}", details);
+
+        return details;
     }
 
 }

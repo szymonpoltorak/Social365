@@ -1,18 +1,16 @@
 package razepl.dev.social365.profile.api.profile.about.contact;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
+import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.EmailRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.mobile.interfaces.MobileRepository;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
@@ -21,7 +19,6 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -149,6 +146,8 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
         when(emailRepository.save(email))
                 .thenReturn(email);
+        when(emailRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(email));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -195,6 +194,8 @@ class AboutContactServiceTest {
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.of(profile));
+        when(mobileRepository.findByProfileId(profileId))
+                .thenReturn(Optional.of(mobile));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
@@ -222,7 +223,7 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
 
         // then
-        Assertions.assertThrows(ProfileDetailsNotFoundException.class, () -> {
+        Assertions.assertThrows(MobileNotFoundException.class, () -> {
             aboutContactService.deleteProfilePhoneNumber(profileId);
         });
     }

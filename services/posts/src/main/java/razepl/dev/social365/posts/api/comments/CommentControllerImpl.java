@@ -1,8 +1,6 @@
 package razepl.dev.social365.posts.api.comments;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +15,8 @@ import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
+import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
+import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,11 +26,20 @@ public class CommentControllerImpl implements CommentController {
     private final CommentService commentService;
 
     @Override
+    public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                                     @RequestParam(Params.PROFILE_ID) String profileId,
+                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                                     @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+        return commentService.getRepliesForComment(commentId, profileId, PageInfo.of(pageSize, pagingState));
+    }
+
+    @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
-    public final Slice<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
-                                                           @RequestParam(Params.PROFILE_ID) String profileId,
-                                                           Pageable pageable) {
-        return commentService.getCommentsForPost(postId, profileId, pageable);
+    public final CassandraPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
+                                                                   @RequestParam(Params.PROFILE_ID) String profileId,
+                                                                   @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                                   @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+        return commentService.getCommentsForPost(postId, profileId, PageInfo.of(pageSize, pagingState));
     }
 
     @Override

@@ -3,6 +3,7 @@ package razepl.dev.social365.profile.api.profile;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
+import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
+import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
@@ -47,6 +50,12 @@ class ProfileControllerTest {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private BirthDateRepository birthDateRepository;
+
+    @Autowired
+    private EmailRepository mailRepository;
+
     @MockBean
     private ImagesServiceClient imagesServiceClient;
 
@@ -58,6 +67,13 @@ class ProfileControllerTest {
     @AfterAll
     static void afterAll() {
         neo4jContainer.stop();
+    }
+
+    @BeforeEach
+    final void beforeEach() {
+        profileRepository.deleteAll();
+        birthDateRepository.deleteAll();
+        mailRepository.deleteAll();
     }
 
     @Test
@@ -89,7 +105,7 @@ class ProfileControllerTest {
 
     @Test
     final void test_getPostProfileInfo_success() {
-        //
+        // given
         ProfileRequest profileRequest = ProfileRequest
                 .builder()
                 .userId(1L)

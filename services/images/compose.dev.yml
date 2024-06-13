@@ -17,8 +17,8 @@ services:
         healthcheck:
             test: pg_isready -U postgres
             interval: 10s
-            timeout: 5s
-            retries: 5
+            timeout: 10s
+            retries: 10
 
     images-service:
         env_file:
@@ -73,7 +73,7 @@ services:
             interval: 1s
             retries: 120
             start_period: 15s
-            timeout: 5s
+            timeout: 10s
         volumes:
             - images:/etc/nginx/html/images
 

@@ -1,4 +1,4 @@
-<div class="bg-secondary w-full h-fit top-0 flex sm:p-3 max-sm:p-1.5 items-center sticky z-50">
+<div class="bg-secondary w-full h-fit top-0 flex sm:p-3 max-sm:p-1.5 items-center fixed z-50">
     <h1 class="hover:cursor-pointer ml:text-xl max-ml:text-sm font-bold"
         matTooltip="Get back to the feed"
         routerLink="/feed">
@@ -30,26 +30,6 @@
             }
         </mat-autocomplete>
     </form>
-
-    <span class="flex flex-grow-0.6 flex-auto"></span>
-
-    @if (isOnFeed) {
-        <div class="max-md:hidden">
-            <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-                @for (link of links; track link) {
-                    <a class="w-36" mat-tab-link
-                       [active]="activeLink === link"
-                       (keydown.enter)="activeLink = link"
-                       tabindex="0"
-                       (click)="activeLink = link">
-                        <mat-icon>{{ link }}</mat-icon>
-                    </a>
-                }
-            </nav>
-
-            <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
-        </div>
-    }
 
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
@@ -90,11 +70,13 @@
                 <span>Profile</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
-                <mat-icon>message</mat-icon>
+            <div class="sm:hidden">
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon>message</mat-icon>
 
-                <span>Messages</span>
-            </button>
+                    <span>Messages</span>
+                </button>
+            </div>
 
             <button mat-menu-item
                     (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_SUGGESTIONS])"
@@ -104,11 +86,13 @@
                 <span>Friend Suggestions</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
-                <mat-icon>notifications</mat-icon>
+            <div class="sm:hidden">
+                <button mat-menu-item aria-label="settings">
+                    <mat-icon>notifications</mat-icon>
 
-                <span>Notifications</span>
-            </button>
+                    <span>Notifications</span>
+                </button>
+            </div>
 
             <button mat-menu-item
                     (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_REQUESTS])"

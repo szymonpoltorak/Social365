@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
-import { Profile } from "@interfaces/feed/profile.interface";
+import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
 import { MatCardModule } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
@@ -11,7 +11,7 @@ import { TabOption } from "@interfaces/profile/tab-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { User } from "@interfaces/feed/user.interface";
+import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RouteDetectionService } from "@services/profile/route-detection.service";
 
@@ -35,7 +35,8 @@ import { RouteDetectionService } from "@services/profile/route-detection.service
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profile: Profile = {
+    protected profileInfo: ProfileInfo = {
+        profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
@@ -45,7 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         postCount: 256,
         numberOfFriends: 1025,
         numberOfFollowers: 300,
-        profileImagePath: "https://material.angular.io/assets/img/examples/shiba1.jpg"
+        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
@@ -54,7 +55,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         { label: 'Photos', icon: 'image', route: RouterPaths.PROFILE_PHOTOS }
     ];
     protected activeRoute: TabOption = this.options[0];
-    protected currentUser !: User;
+    protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
 
     constructor(private activatedRoute: ActivatedRoute,
@@ -65,7 +66,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.username = this.activatedRoute.snapshot.params['username'];
-        this.currentUser = this.localStorage.getUserFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.activeRoute = this.routeDetectionService
             .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
