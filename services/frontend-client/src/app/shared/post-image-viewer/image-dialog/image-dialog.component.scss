@@ -1,0 +1,40 @@
+@mixin image-button {
+    @apply flex justify-center items-center;
+}
+
+button[mat-icon-button] {
+    $large-size-button: 100px;
+    $large-size-icon: 60px;
+
+    &.icon-button-large {
+        width: $large-size-button;
+        height: $large-size-button;
+        line-height: $large-size-button;
+
+        .mat-icon {
+            font-size: $large-size-icon;
+            width: $large-size-icon;
+            height: $large-size-icon;
+            line-height: $large-size-icon;
+        }
+
+        .mat-button-ripple {
+            font-size: inherit;
+            width: inherit;
+            height: inherit;
+            line-height: inherit;
+        }
+    }
+}
+
+.image-button {
+    @include image-button;
+}
+
+.prev-image-button {
+    @apply absolute left-2 bottom-[50%] transform translate-y-[50%] z-40;
+}
+
+.next-image-button {
+    @apply absolute bottom-[50%] right-2 transform translate-y-[50%] z-40;
+}
