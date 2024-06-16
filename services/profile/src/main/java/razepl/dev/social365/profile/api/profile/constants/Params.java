@@ -30,6 +30,8 @@ public final class Params {
 
     public static final String WORKPLACE_ID = "workplaceId";
 
+    public static final String PAGE_SIZE = "pageSize";
+
     private Params() {
     }
 }

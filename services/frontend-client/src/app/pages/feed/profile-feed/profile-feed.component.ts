@@ -3,7 +3,7 @@ import { MatButton } from "@angular/material/button";
 import { MatCard, MatCardContent, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
-import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
+import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { NgOptimizedImage } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
@@ -26,7 +26,7 @@ import { RouterPaths } from "@enums/router-paths.enum";
     styleUrl: './profile-feed.component.scss'
 })
 export class ProfileFeedComponent {
-    @Input() profile !: ProfileInfo;
+    @Input() profile !: ProfileSummary;
     protected readonly RouterPaths = RouterPaths;
 
     constructor(protected router: Router) {

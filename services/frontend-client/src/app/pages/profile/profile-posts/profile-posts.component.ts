@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
+import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField } from "@angular/material/form-field";
@@ -83,7 +83,7 @@ export class ProfilePostsComponent implements OnInit {
             imageUrls: []
         }
     ];
-    protected profileInfo: ProfileInfo = {
+    protected profileInfo: ProfileSummary = {
         profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",

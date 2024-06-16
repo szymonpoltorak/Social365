@@ -1,6 +1,6 @@
 import { Profile } from "@interfaces/feed/profile.interface";
 
-export interface ProfileInfo extends Profile {
+export interface ProfileSummary extends Profile {
     numberOfFollowers: number;
     description: string;
     postCount: number;

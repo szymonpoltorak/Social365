@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
+import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Post } from "@interfaces/feed/post.interface";
@@ -22,7 +22,7 @@ import { SharedPost } from "@interfaces/feed/shared-post.interface";
     styleUrl: './feed.component.scss'
 })
 export class FeedComponent implements OnInit{
-    protected profileInfo: ProfileInfo = {
+    protected profileInfo: ProfileSummary = {
         profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",

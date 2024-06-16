@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
-import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
+import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { MatCardModule } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
@@ -35,7 +35,7 @@ import { RouteDetectionService } from "@services/profile/route-detection.service
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo: ProfileInfo = {
+    protected profileInfo: ProfileSummary = {
         profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",

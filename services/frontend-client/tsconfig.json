@@ -58,6 +58,9 @@
             "@interfaces/*": [
                 "./src/app/core/interfaces/*"
             ],
+            "@api/*": [
+                "./src/app/core/services/api/*"
+            ],
         }
     },
     "angularCompilerOptions": {

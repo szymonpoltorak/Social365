@@ -85,14 +85,12 @@ public class AboutMapperImpl implements AboutMapper {
                     .orElseThrow(ProfileDetailsNotFoundException::new);
 
             return mapAboutDetailsToAboutOptionResponse(aboutDetails);
-        }
-        else if (detailsType == DetailsType.HIGH_SCHOOL) {
+        } else if (detailsType == DetailsType.HIGH_SCHOOL) {
             AboutDetails aboutDetails = aboutDetailsRepository.findHighSchoolByProfileId(profileId)
                     .orElseThrow(ProfileDetailsNotFoundException::new);
 
             return mapAboutDetailsToAboutOptionResponse(aboutDetails);
-        }
-        else if (detailsType == DetailsType.CURRENT_CITY) {
+        } else if (detailsType == DetailsType.CURRENT_CITY) {
             AboutDetails aboutDetails = aboutDetailsRepository.findCurrentCityByProfileId(profileId)
                     .orElseThrow(ProfileDetailsNotFoundException::new);
 

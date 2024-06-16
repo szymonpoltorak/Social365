@@ -5,12 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.constants.Params;
+import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -40,7 +41,7 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
-    @PostMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
+    @PutMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
     public final ProfileRequest updateProfileBio(@RequestParam(Params.PROFILE_ID) String profileId,
                                                  @RequestParam(Params.BIO) String bio) {
         return profileService.updateProfileBio(profileId, bio);

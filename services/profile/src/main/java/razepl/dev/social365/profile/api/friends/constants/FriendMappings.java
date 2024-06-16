@@ -12,6 +12,8 @@ public final class FriendMappings {
 
     public static final String ADD_FRIEND = "/addFriend";
 
+    public static final String GET_FOLLOWED_IDS = "/getFollowedIds";
+
     public static final String GET_FRIENDS_ON_PAGE = "/getFriends";
 
     public static final String ADD_PROFILE_TO_FOLLOWERS = "/addProfileToFollowers";

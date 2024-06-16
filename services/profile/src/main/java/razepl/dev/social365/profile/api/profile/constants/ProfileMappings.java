@@ -13,8 +13,6 @@ public final class ProfileMappings {
 
     public static final String UPDATE_PROFILE_BIO_MAPPING = "/updateBio";
 
-    public static final String GET_FOLLOWED_IDS = "/getFollowedIds";
-
     public static final String GET_TODAY_BIRTHDAYS_MAPPING = "/todayBirthdays";
 
     private ProfileMappings() {
