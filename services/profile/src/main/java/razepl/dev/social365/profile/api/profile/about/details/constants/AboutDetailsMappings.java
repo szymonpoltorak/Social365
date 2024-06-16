@@ -10,6 +10,18 @@ public final class AboutDetailsMappings {
 
     public static final String UPDATE_PROFILE_DATE_OF_BIRTH_MAPPING = "/updateDateOfBirth";
 
+    public static final String UPDATE_PROFILE_RELATIONSHIP_STATUS_MAPPING = "/updateRelationshipStatus";
+
+    public static final String DELETE_PROFILE_CURRENT_CITY_MAPPING = "/deleteCurrentCity";
+
+    public static final String DELETE_PROFILE_HOME_TOWN_MAPPING = "/deleteHomeTown";
+
+    public static final String DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING = "/deleteRelationshipStatus";
+
+    public static final String UPDATE_PROFILE_CURRENT_CITY_MAPPING = "/updateCurrentCity";
+
+    public static final String UPDATE_PROFILE_HOME_TOWN_MAPPING = "/updateHomeTown";
+
     private AboutDetailsMappings() {
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.profile.api.profile.about.details.constants.AboutDetailsMappings;
 import razepl.dev.social365.profile.api.profile.about.details.interfaces.AboutDetailsController;
 import razepl.dev.social365.profile.api.profile.about.details.interfaces.AboutDetailsService;
-import razepl.dev.social365.profile.api.profile.about.experience.constants.ProfileExperienceMappings;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.DateOfBirthRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequest;
@@ -44,37 +43,37 @@ public class AboutDetailsControllerImpl implements AboutDetailsController {
     }
 
     @Override
-    @PutMapping(value = ProfileExperienceMappings.UPDATE_PROFILE_RELATIONSHIP_STATUS_MAPPING)
+    @PutMapping(value = AboutDetailsMappings.UPDATE_PROFILE_RELATIONSHIP_STATUS_MAPPING)
     public final ProfileRequest updateProfileRelationshipStatus(@RequestBody RelationshipStatusRequest relationshipStatusRequest) {
         return aboutDetailsService.updateProfileRelationshipStatus(relationshipStatusRequest);
     }
 
     @Override
-    @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING)
+    @DeleteMapping(value = AboutDetailsMappings.DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING)
     public final ProfileRequest deleteProfileRelationshipStatus(@RequestParam String profileId) {
         return aboutDetailsService.deleteProfileRelationshipStatus(profileId);
     }
 
     @Override
-    @PutMapping(value = ProfileExperienceMappings.UPDATE_PROFILE_CURRENT_CITY_MAPPING)
+    @PutMapping(value = AboutDetailsMappings.UPDATE_PROFILE_CURRENT_CITY_MAPPING)
     public final ProfileRequest updateProfileCurrentCity(@RequestBody AboutDetailsRequest cityRequest) {
         return aboutDetailsService.updateProfileCurrentCity(cityRequest);
     }
 
     @Override
-    @PutMapping(value = ProfileExperienceMappings.UPDATE_PROFILE_HOME_TOWN_MAPPING)
+    @PutMapping(value = AboutDetailsMappings.UPDATE_PROFILE_HOME_TOWN_MAPPING)
     public final ProfileRequest updateProfileHomeTown(@RequestBody AboutDetailsRequest cityRequest) {
         return aboutDetailsService.updateProfileHomeTown(cityRequest);
     }
 
     @Override
-    @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_CURRENT_CITY_MAPPING)
+    @DeleteMapping(value = AboutDetailsMappings.DELETE_PROFILE_CURRENT_CITY_MAPPING)
     public final ProfileRequest deleteProfileCurrentCity(@RequestParam String profileId) {
         return aboutDetailsService.deleteProfileCurrentCity(profileId);
     }
 
     @Override
-    @DeleteMapping(value = ProfileExperienceMappings.DELETE_PROFILE_HOME_TOWN_MAPPING)
+    @DeleteMapping(value = AboutDetailsMappings.DELETE_PROFILE_HOME_TOWN_MAPPING)
     public final ProfileRequest deleteProfileHomeTown(@RequestParam String profileId) {
         return aboutDetailsService.deleteProfileHomeTown(profileId);
     }
