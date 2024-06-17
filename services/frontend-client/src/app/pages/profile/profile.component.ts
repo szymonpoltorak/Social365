@@ -69,7 +69,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
 
         this.profileService
-            .getBasicProfileInfo(this.username)
+            .getBasicProfileInfoByUsername(this.username)
             .subscribe((profile: Profile) => {
                 this.profileInfo = profile;
             });
