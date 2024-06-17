@@ -13,7 +13,7 @@ import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { filter, Subject, takeUntil } from "rxjs";
-import { RouteDetectionService } from "@services/profile/route-detection.service";
+import { RoutingService } from "@services/profile/routing.service";
 
 @Component({
     selector: 'app-profile-about',
@@ -48,7 +48,7 @@ export class ProfileAboutComponent implements OnInit, OnDestroy {
     private routerDestroy$: Subject<void> = new Subject<void>();
 
     constructor(private router: Router,
-                private routeDetectionService: RouteDetectionService) {
+                private routeDetectionService: RoutingService) {
     }
 
     ngOnInit(): void {

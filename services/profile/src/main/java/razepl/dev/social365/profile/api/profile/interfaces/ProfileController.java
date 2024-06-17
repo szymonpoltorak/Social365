@@ -11,6 +11,8 @@ public interface ProfileController {
 
     Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber);
 
+    ProfileResponse getBasicProfileInfoByUsername(String username);
+
     ProfileSummaryResponse getProfileSummary(String profileId);
 
     ProfilePostResponse getPostProfileInfo(String profileId);

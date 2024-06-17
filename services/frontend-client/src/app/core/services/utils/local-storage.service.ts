@@ -14,6 +14,15 @@ export class LocalStorageService {
         return JSON.parse(user);
     }
 
+    getUserProfileIdFromStorage(): string {
+        const user: string | null = localStorage.getItem('currentUser');
+
+        if (!user) {
+            throw new Error('User not found in local storage');
+        }
+        return JSON.parse(user).profileId;
+    }
+
     saveUserToStorage(user: Profile): void {
         localStorage.setItem('currentUser', JSON.stringify(user));
     }

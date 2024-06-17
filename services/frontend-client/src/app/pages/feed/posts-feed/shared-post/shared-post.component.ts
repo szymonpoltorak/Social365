@@ -61,6 +61,7 @@ export class SharedPostComponent implements OnInit {
                     fullName: "John Doe",
                     subtitle: "Software Developer",
                     username: "shiba@gmail.com",
+                    bio: "I am a simple man",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date(),
@@ -75,6 +76,7 @@ export class SharedPostComponent implements OnInit {
                     fullName: "Jacek Kowalski",
                     subtitle: "Business Analyst",
                     username: "shiba@gmail.com",
+                    bio: "I am a simple man",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
                 creationDateTime: new Date("2021-01-01T12:00:00"),

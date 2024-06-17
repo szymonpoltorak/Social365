@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { RouteOption } from "@interfaces/profile/route-option.interface";
+import { ActivatedRoute } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
 })
-export class RouteDetectionService {
+export class RoutingService {
+
+    constructor(private activatedRoute: ActivatedRoute) {
+    }
+
     getCurrentActivatedRouteOption<T extends RouteOption>(url: string[], options: T[]): T {
         const currentChildRoute: string = url[url.length - 1];
 
@@ -20,5 +25,9 @@ export class RouteDetectionService {
             throw new Error('Invalid route!');
         }
         return foundRoute;
+    }
+
+    getActivatedRouteParam(username: string): string {
+        return this.activatedRoute.snapshot.params[username];
     }
 }

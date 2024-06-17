@@ -6,7 +6,7 @@ import { MatRipple } from "@angular/material/core";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { ListSelectOptionComponent } from "@shared/list-select-option/list-select-option.component";
 import { filter, Subject, takeUntil } from "rxjs";
-import { RouteDetectionService } from "@services/profile/route-detection.service";
+import { RoutingService } from "@services/profile/routing.service";
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 
@@ -33,7 +33,7 @@ export class FriendsComponent implements OnInit {
     selectedOption !: RouteOption;
 
     constructor(private router: Router,
-                private routeDetectionService: RouteDetectionService) {
+                private routeDetectionService: RoutingService) {
     }
 
     ngOnInit(): void {

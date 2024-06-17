@@ -108,6 +108,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .username(email.getEmailValue())
+                .subtitle(getSubtitle(profile))
                 .build();
     }
 

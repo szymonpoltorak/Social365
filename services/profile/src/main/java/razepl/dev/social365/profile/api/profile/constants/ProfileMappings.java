@@ -15,6 +15,8 @@ public final class ProfileMappings {
 
     public static final String GET_TODAY_BIRTHDAYS_MAPPING = "/todayBirthdays";
 
+    public static final String GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING = "/basicInfoByUsername";
+
     private ProfileMappings() {
     }
 }

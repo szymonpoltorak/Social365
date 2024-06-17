@@ -67,6 +67,18 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    public final ProfileResponse getBasicProfileInfoByUsername(String username) {
+        log.info("Getting basic profile info for user with username: {}", username);
+
+        Profile profile = profileRepository.findByUsername(username)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Profile found : {}", profile);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
+    }
+
+    @Override
     public final ProfileSummaryResponse getProfileSummary(String profileId) {
         log.info("Getting profile summary for user with id: {}", profileId);
 

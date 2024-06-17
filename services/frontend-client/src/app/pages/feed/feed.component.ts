@@ -8,6 +8,7 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Post } from "@interfaces/feed/post.interface";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
+import { ProfileService } from '@core/services/api/profile/profile.service';
 
 @Component({
     selector: 'app-feed',
@@ -22,19 +23,7 @@ import { SharedPost } from "@interfaces/feed/shared-post.interface";
     styleUrl: './feed.component.scss'
 })
 export class FeedComponent implements OnInit{
-    protected profileInfo: ProfileSummary = {
-        profileId: "1",
-        fullName: "John Doe",
-        username: "john@gmail.com",
-        subtitle: "Web developer at Google",
-        description: "I am a simple man with big ambitions. " +
-            "I love to code and I am passionate about web development. " +
-            "I am a team player and I am always looking for new challenges.",
-        postCount: 256,
-        numberOfFriends: 1025,
-        numberOfFollowers: 300,
-        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-    };
+    protected profileInfo !: ProfileSummary;
     protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
@@ -45,6 +34,7 @@ export class FeedComponent implements OnInit{
                 profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
+                bio: "I am a simple man",
                 username: "shiba-inu@gmail.com",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
@@ -73,6 +63,7 @@ export class FeedComponent implements OnInit{
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
+                bio: "I am a simple man",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
@@ -100,6 +91,7 @@ export class FeedComponent implements OnInit{
                 profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
+                bio: "I am a simple man",
                 username: "shiba-inu@gmail.com",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
@@ -126,6 +118,7 @@ export class FeedComponent implements OnInit{
                     fullName: "James Doe",
                     subtitle: "Software Developer",
                     username: "james@gmail.com",
+                    bio: "I am a simple man",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
                 },
                 creationDateTime: new Date("2021-01-01T12:00:00"),
@@ -147,6 +140,7 @@ export class FeedComponent implements OnInit{
                 author: {
                     profileId: "1",
                     fullName: "Shiba Inu",
+                    bio: "I am a simple man",
                     subtitle: "Software Developer",
                     username: "shiba-inu@gmail.com",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
@@ -173,6 +167,7 @@ export class FeedComponent implements OnInit{
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
                 username: "shiba-inu@gmail.com",
+                bio: "I am a simple man",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
             creationDateTime: new Date(),
@@ -193,6 +188,7 @@ export class FeedComponent implements OnInit{
                 profileId: "1",
                 fullName: "Shiba Inu",
                 subtitle: "Software Developer",
+                bio: "I am a simple man",
                 username: "shiba-inu@gmail.com",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
@@ -209,16 +205,29 @@ export class FeedComponent implements OnInit{
         }
     ];
 
-    constructor(private localStorage: LocalStorageService) {
+    constructor(private localStorage: LocalStorageService,
+                private profileService: ProfileService) {
     }
 
     ngOnInit(): void {
-        this.localStorage.saveUserToStorage({
-            profileId: this.profileInfo.profileId,
-            fullName: this.profileInfo.fullName,
-            username: this.profileInfo.username,
-            subtitle: this.profileInfo.subtitle,
-            profilePictureUrl: this.profileInfo.profilePictureUrl
-        });
+        const profileId: string = "";
+
+        this.profileService
+            .getProfileSummary(profileId)
+            .subscribe((profileInfo: ProfileSummary) => {
+                this.profileInfo = profileInfo;
+
+                if (this.profileInfo.profileId !== this.localStorage.getUserProfileFromStorage().profileId) {
+                    this.localStorage.saveUserToStorage({
+                        profileId: this.profileInfo.profileId,
+                        fullName: this.profileInfo.fullName,
+                        username: this.profileInfo.username,
+                        subtitle: this.profileInfo.subtitle,
+                        bio: this.profileInfo.bio,
+                        profilePictureUrl: this.profileInfo.profilePictureUrl
+                    });
+                }
+            });
     }
+
 }

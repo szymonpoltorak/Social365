@@ -32,6 +32,7 @@ export class FriendsFeedComponent {
                 profileId: "1",
                 fullName: "Jacek Kowalski",
                 username: "jacek@gmail.com",
+                bio: "I am a simple man",
                 subtitle: "Student at Warsaw University of Technology",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },
@@ -42,6 +43,7 @@ export class FriendsFeedComponent {
                 profileId: "2",
                 fullName: "Marek Nowak",
                 username: "marek@gmail.com",
+                bio: "I am a simple man",
                 subtitle: "Web developer at Google",
                 profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
             },

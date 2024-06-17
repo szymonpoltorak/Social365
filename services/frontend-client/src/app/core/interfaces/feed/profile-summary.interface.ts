@@ -2,7 +2,7 @@ import { Profile } from "@interfaces/feed/profile.interface";
 
 export interface ProfileSummary extends Profile {
     numberOfFollowers: number;
-    description: string;
+    bio: string;
     postCount: number;
     numberOfFriends: number;
 }

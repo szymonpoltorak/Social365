@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
-import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { MatCardModule } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
@@ -13,7 +12,8 @@ import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
-import { RouteDetectionService } from "@services/profile/route-detection.service";
+import { RoutingService } from "@services/profile/routing.service";
+import { ProfileService } from "@api/profile/profile.service";
 
 @Component({
     selector: 'app-profile',
@@ -35,17 +35,14 @@ import { RouteDetectionService } from "@services/profile/route-detection.service
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo: ProfileSummary = {
+    protected profileInfo: Profile = {
         profileId: "1",
         fullName: "John Doe",
         username: "john@gmail.com",
         subtitle: "Web developer at Google",
-        description: "I am a simple man with big ambitions. " +
+        bio: "I am a simple man with big ambitions. " +
             "I love to code and I am passionate about web development. " +
             "I am a team player and I am always looking for new challenges.",
-        postCount: 256,
-        numberOfFriends: 1025,
-        numberOfFollowers: 300,
         profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
     };
     protected options: TabOption[] = [
@@ -58,18 +55,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
     protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private localStorage: LocalStorageService,
-                private routeDetectionService: RouteDetectionService,
+    constructor(private localStorage: LocalStorageService,
+                private routingService: RoutingService,
+                private profileService: ProfileService,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        this.username = this.activatedRoute.snapshot.params['username'];
+        this.username = this.routingService.getActivatedRouteParam("username");
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
-        this.activeRoute = this.routeDetectionService
+        this.activeRoute = this.routingService
             .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
+
+        this.profileService
+            .getBasicProfileInfo(this.username)
+            .subscribe((profile: Profile) => {
+                this.profileInfo = profile;
+            });
 
         this.router
             .events
@@ -81,7 +84,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 const newEvent: NavigationEnd = event as NavigationEnd;
                 const url: string[] = newEvent.url.split("/");
 
-                this.activeRoute = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
+                this.activeRoute = this.routingService.getCurrentActivatedRouteOption(url, this.options);
             });
     }
 

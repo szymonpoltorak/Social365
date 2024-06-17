@@ -35,6 +35,12 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
+    @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING)
+    public final ProfileResponse getBasicProfileInfoByUsername(@RequestParam(Params.USERNAME) String username) {
+        return profileService.getBasicProfileInfoByUsername(username);
+    }
+
+    @Override
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
     public final ProfileSummaryResponse getProfileSummary(@RequestParam(Params.PROFILE_ID) String profileId) {
         return profileService.getProfileSummary(profileId);
