@@ -14,6 +14,7 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
+import { ActivatedRouteKey } from "@enums/profile/activated-route-key.enum";
 
 @Component({
     selector: 'app-profile',
@@ -35,16 +36,7 @@ import { ProfileService } from "@api/profile/profile.service";
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo: Profile = {
-        profileId: "1",
-        fullName: "John Doe",
-        username: "john@gmail.com",
-        subtitle: "Web developer at Google",
-        bio: "I am a simple man with big ambitions. " +
-            "I love to code and I am passionate about web development. " +
-            "I am a team player and I am always looking for new challenges.",
-        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-    };
+    protected profileInfo !: Profile;
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
         { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
@@ -62,7 +54,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.username = this.routingService.getActivatedRouteParam("username");
+        this.username = this.routingService.getActivatedRouteParam(ActivatedRouteKey.USERNAME);
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.activeRoute = this.routingService
@@ -89,7 +81,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.routerDestroy$.next();
         this.routerDestroy$.complete();
     }
 }

@@ -6,7 +6,7 @@
                       [subLabel]="option.subLabel"
                       [option]="option.data">
     </app-about-option>
-} @else if (option.data === null && !option.isBeingEdited) {
+} @else if (option.data === null && !option.isBeingEdited && !canEdit) {
     <div>
         <button aria-label="Add button"
                 color="primary"
@@ -16,7 +16,7 @@
             {{ option.nullLabel }}
         </button>
     </div>
-} @else {
+} @else if (canEdit) {
     <div class="mt-3 mb-3">
         <mat-form-field class="w-full">
             <mat-label>{{ option.nullLabel }}</mat-label>

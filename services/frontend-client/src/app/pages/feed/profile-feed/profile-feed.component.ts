@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MatCard, MatCardContent, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
@@ -7,6 +7,8 @@ import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { NgOptimizedImage } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
+import { ProfileService } from "@api/profile/profile.service";
+import { LocalStorageService } from "@services/utils/local-storage.service";
 
 @Component({
     selector: 'app-profile-feed',
@@ -25,10 +27,33 @@ import { RouterPaths } from "@enums/router-paths.enum";
     templateUrl: './profile-feed.component.html',
     styleUrl: './profile-feed.component.scss'
 })
-export class ProfileFeedComponent {
-    @Input() profile !: ProfileSummary;
+export class ProfileFeedComponent implements OnInit {
+    protected profile !: ProfileSummary;
     protected readonly RouterPaths = RouterPaths;
 
-    constructor(protected router: Router) {
+    constructor(protected router: Router,
+                private profileService: ProfileService,
+                private localStorage: LocalStorageService) {
+    }
+
+    ngOnInit(): void {
+        const profileId: string = "18589033-011a-426a-968f-bc869dcea159";
+
+        this.profileService
+            .getProfileSummary(profileId)
+            .subscribe((profile: ProfileSummary) => {
+                this.profile = profile;
+
+                if (this.profile.profileId !== this.localStorage.getUserProfileFromStorage().profileId) {
+                    this.localStorage.saveUserToStorage({
+                        profileId: this.profile.profileId,
+                        fullName: this.profile.fullName,
+                        username: this.profile.username,
+                        subtitle: this.profile.subtitle,
+                        bio: this.profile.bio,
+                        profilePictureUrl: this.profile.profilePictureUrl
+                    });
+                }
+            });
     }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { ActivatedRoute } from "@angular/router";
+import { ActivatedRouteKey } from "@enums/profile/activated-route-key.enum";
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +28,7 @@ export class RoutingService {
         return foundRoute;
     }
 
-    getActivatedRouteParam(username: string): string {
+    getActivatedRouteParam(username: ActivatedRouteKey): string {
         return this.activatedRoute.snapshot.params[username];
     }
 }

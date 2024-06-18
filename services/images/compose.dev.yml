@@ -60,9 +60,9 @@ services:
         hostname: ${IMAGES_NGINX_HOSTNAME}
         build:
             context: images-nginx
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile
         ports:
-            - "${IMAGES_NGINX_PORT}:80"
+            - "${IMAGES_NGINX_PORT}:${IMAGES_NGINX_PORT}"
         networks:
             - social365-network
         depends_on:
@@ -75,7 +75,7 @@ services:
             start_period: 15s
             timeout: 10s
         volumes:
-            - images:/etc/nginx/html/images
+            - ./images-nginx/images:/etc/nginx/html/images
 
 volumes:
     images:

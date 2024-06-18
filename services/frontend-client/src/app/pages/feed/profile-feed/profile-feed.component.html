@@ -1,79 +1,82 @@
 <div class="flex flex-col m-4 h-fit sticky top-26">
-    <mat-card class="p-3 sticky">
-        <div class="flex flex-col justify-center items-center mb-3">
-            <div class="absolute rounded-3xl min-w-16 min-h-16 mb-8">
-                <img class="rounded-3xl h-24" priority
-                     [ngSrc]="profile.profilePictureUrl" width="96" height="96" alt="Profile Picture">
+    @if (profile != undefined) {
+        <mat-card class="p-3 sticky">
+            <div class="flex flex-col justify-center items-center mb-3">
+                <div class="absolute rounded-3xl min-w-16 min-h-16 mb-8">
+                    <img class="rounded-3xl h-24" priority
+                         [ngSrc]="profile.profilePictureUrl" width="96" height="96"
+                         alt="Profile Picture">
+                </div>
+
+                <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
+
+                <mat-card-title>{{ profile.fullName }}</mat-card-title>
+
+                <mat-card-subtitle>{{ profile.subtitle === null ? '' : profile.subtitle }}</mat-card-subtitle>
             </div>
 
-            <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
+            <mat-card-content class="text-justify">
+                {{ profile.bio }}
+            </mat-card-content>
 
-            <mat-card-title>{{ profile.fullName }}</mat-card-title>
-
-            <mat-card-subtitle>{{ profile.subtitle }}</mat-card-subtitle>
-        </div>
-
-        <mat-card-content class="text-justify">
-            {{ profile.bio }}
-        </mat-card-content>
-
-        <div class="mb-3 mt-3">
-            <mat-divider></mat-divider>
-        </div>
-
-        <div class="flex justify-center items-center gap-20">
-            <div class="flex flex-col items-center">
-                <p class="font-semibold">{{ profile.postCount }}</p>
-
-                <p class="text-xs font-extralight">Posts</p>
+            <div class="mb-3 mt-3">
+                <mat-divider></mat-divider>
             </div>
 
-            <div class="flex flex-col items-center">
-                <p class="font-semibold">{{ profile.numberOfFriends }}</p>
+            <div class="flex justify-center items-center gap-20">
+                <div class="flex flex-col items-center">
+                    <p class="font-semibold">{{ profile.postsCount }}</p>
 
-                <p class="text-xs font-extralight">Friends</p>
+                    <p class="text-xs font-extralight">Posts</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <p class="font-semibold">{{ profile.friendsCount }}</p>
+
+                    <p class="text-xs font-extralight">Friends</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <p class="font-semibold">{{ profile.followersCount }}</p>
+
+                    <p class="text-xs font-extralight">Followers</p>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center">
-                <p class="font-semibold">{{ profile.numberOfFollowers }}</p>
-
-                <p class="text-xs font-extralight">Followers</p>
+            <div class="mb-3 mt-3">
+                <mat-divider></mat-divider>
             </div>
-        </div>
 
-        <div class="mb-3 mt-3">
-            <mat-divider></mat-divider>
-        </div>
+            <button class="option-button"
+                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_POSTS])"
+                    mat-button>
+                <mat-icon class="transform scale-150">account_circle</mat-icon>
+                Profile
+            </button>
 
-        <button class="option-button"
-                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_POSTS])"
-                mat-button>
-            <mat-icon class="transform scale-150">account_circle</mat-icon>
-            Profile
-        </button>
+            <button class="option-button"
+                    (click)="router.navigate([RouterPaths.FRIENDS_PATH, RouterPaths.FRIEND_SUGGESTIONS])"
+                    mat-button>
+                <mat-icon class="transform scale-150">people</mat-icon>
+                Friends
+            </button>
 
-        <button class="option-button"
-                (click)="router.navigate([RouterPaths.FRIENDS_PATH, RouterPaths.FRIEND_SUGGESTIONS])"
-                mat-button>
-            <mat-icon class="transform scale-150">people</mat-icon>
-            Friends
-        </button>
+            <button class="option-button"
+                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_PHOTOS])"
+                    mat-button>
+                <mat-icon class="transform scale-150">image</mat-icon>
+                Photos
+            </button>
 
-        <button class="option-button"
-                (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_PHOTOS])"
-                mat-button>
-            <mat-icon class="transform scale-150">image</mat-icon>
-            Photos
-        </button>
+            <button class="option-button" mat-button>
+                <mat-icon class="transform scale-150">messages</mat-icon>
+                Messages
+            </button>
 
-        <button class="option-button" mat-button>
-            <mat-icon class="transform scale-150">messages</mat-icon>
-            Messages
-        </button>
-
-        <button class="option-button" mat-button>
-            <mat-icon class="transform scale-150">bookmark</mat-icon>
-            Bookmarks
-        </button>
-    </mat-card>
+            <button class="option-button" mat-button>
+                <mat-icon class="transform scale-150">bookmark</mat-icon>
+                Bookmarks
+            </button>
+        </mat-card>
+    }
 </div>

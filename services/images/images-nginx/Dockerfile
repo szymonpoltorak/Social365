@@ -6,6 +6,6 @@ COPY ./images /etc/nginx/html/images
 
 RUN chown -R nginx:nginx /etc/nginx/html/images
 
-EXPOSE 80
+EXPOSE 4000
 
 CMD ["nginx", "-g", "daemon off;"]

@@ -29,6 +29,7 @@ export class AboutSelectOptionComponent {
     @Input() selectEnum !: NonNullable<unknown>;
     @Input() option !: AboutOption;
     protected readonly Object = Object;
+    @Input() canEdit!: boolean;
 
     editData(): void {
         this.option.isBeingEdited = true;

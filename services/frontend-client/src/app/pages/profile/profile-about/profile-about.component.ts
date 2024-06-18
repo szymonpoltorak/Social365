@@ -70,7 +70,6 @@ export class ProfileAboutComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.routerDestroy$.next();
         this.routerDestroy$.complete();
     }
 

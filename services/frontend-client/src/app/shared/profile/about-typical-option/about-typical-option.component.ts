@@ -27,6 +27,7 @@ import { MatButton } from "@angular/material/button";
 })
 export class AboutTypicalOptionComponent {
     @Input() option !: AboutOption;
+    @Input() canEdit !: boolean;
 
     editData(): void {
         this.option.isBeingEdited = true;

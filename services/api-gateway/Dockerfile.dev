@@ -1,0 +1,11 @@
+FROM alpine:3.19.1
+
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17 gradle curl
+
+WORKDIR /home/api-gateway
+
+EXPOSE 8080
+
+EXPOSE 5005
+
+CMD ["gradle", "bootRun"]

@@ -28,6 +28,7 @@ import { MatDivider } from "@angular/material/divider";
 })
 export class AboutDateOptionComponent {
     @Input() option!: AboutOption;
+    @Input() canEdit!: boolean;
 
     editData(): void {
         this.option.isBeingEdited = true;

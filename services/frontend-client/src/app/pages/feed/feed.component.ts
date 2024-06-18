@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { ProfileFeedComponent } from "@pages/feed/profile-feed/profile-feed.component";
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
-import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Post } from "@interfaces/feed/post.interface";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
-import { ProfileService } from '@core/services/api/profile/profile.service';
 
 @Component({
     selector: 'app-feed',
@@ -22,8 +19,7 @@ import { ProfileService } from '@core/services/api/profile/profile.service';
     templateUrl: './feed.component.html',
     styleUrl: './feed.component.scss'
 })
-export class FeedComponent implements OnInit{
-    protected profileInfo !: ProfileSummary;
+export class FeedComponent {
     protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
@@ -204,30 +200,5 @@ export class FeedComponent implements OnInit{
             imageUrls: [],
         }
     ];
-
-    constructor(private localStorage: LocalStorageService,
-                private profileService: ProfileService) {
-    }
-
-    ngOnInit(): void {
-        const profileId: string = "";
-
-        this.profileService
-            .getProfileSummary(profileId)
-            .subscribe((profileInfo: ProfileSummary) => {
-                this.profileInfo = profileInfo;
-
-                if (this.profileInfo.profileId !== this.localStorage.getUserProfileFromStorage().profileId) {
-                    this.localStorage.saveUserToStorage({
-                        profileId: this.profileInfo.profileId,
-                        fullName: this.profileInfo.fullName,
-                        username: this.profileInfo.username,
-                        subtitle: this.profileInfo.subtitle,
-                        bio: this.profileInfo.bio,
-                        profilePictureUrl: this.profileInfo.profilePictureUrl
-                    });
-                }
-            });
-    }
 
 }
