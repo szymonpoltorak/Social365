@@ -204,7 +204,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     boolean existsByUsername(@Param(Params.USERNAME) String username);
 
     @Query("""
-            MATCH (p:Profile)->[:HAS]->(e:Email)
+            MATCH (p:Profile)-[:HAS]->(e:Email)
             WHERE e.emailValue = $username
             RETURN p
             """)

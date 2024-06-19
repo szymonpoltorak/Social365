@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MatCard, MatCardContent, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
@@ -37,23 +37,21 @@ export class ProfileFeedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const profileId: string = "18589033-011a-426a-968f-bc869dcea159";
+        const profileId: string = "d1264dbe-e16f-4b29-8bc5-3d54f6d2b93f";
 
         this.profileService
             .getProfileSummary(profileId)
             .subscribe((profile: ProfileSummary) => {
                 this.profile = profile;
 
-                if (this.profile.profileId !== this.localStorage.getUserProfileFromStorage().profileId) {
-                    this.localStorage.saveUserToStorage({
-                        profileId: this.profile.profileId,
-                        fullName: this.profile.fullName,
-                        username: this.profile.username,
-                        subtitle: this.profile.subtitle,
-                        bio: this.profile.bio,
-                        profilePictureUrl: this.profile.profilePictureUrl
-                    });
-                }
+                this.localStorage.saveUserToStorage({
+                    profileId: this.profile.profileId,
+                    fullName: this.profile.fullName,
+                    username: this.profile.username,
+                    subtitle: this.profile.subtitle,
+                    bio: this.profile.bio,
+                    profilePictureUrl: this.profile.profilePictureUrl
+                });
             });
     }
 }

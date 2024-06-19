@@ -8,10 +8,7 @@ export class LocalStorageService {
     getUserProfileFromStorage(): Profile {
         const user: string | null = localStorage.getItem('currentUser');
 
-        if (!user) {
-            throw new Error('User not found in local storage');
-        }
-        return JSON.parse(user);
+        return JSON.parse(user as string);
     }
 
     getUserProfileIdFromStorage(): string {

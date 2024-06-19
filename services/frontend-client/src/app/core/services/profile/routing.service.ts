@@ -29,6 +29,6 @@ export class RoutingService {
     }
 
     getActivatedRouteParam(username: ActivatedRouteKey): string {
-        return this.activatedRoute.snapshot.params[username];
+        return this.activatedRoute.snapshot.params["username"];
     }
 }
