@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { ActivatedRoute } from "@angular/router";
-import { ActivatedRouteKey } from "@enums/profile/activated-route-key.enum";
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoutingService {
-
-    constructor(private activatedRoute: ActivatedRoute) {
-    }
 
     getCurrentActivatedRouteOption<T extends RouteOption>(url: string[], options: T[]): T {
         const currentChildRoute: string = url[url.length - 1];
@@ -26,9 +22,5 @@ export class RoutingService {
             throw new Error('Invalid route!');
         }
         return foundRoute;
-    }
-
-    getActivatedRouteParam(username: ActivatedRouteKey): string {
-        return this.activatedRoute.snapshot.params["username"];
     }
 }

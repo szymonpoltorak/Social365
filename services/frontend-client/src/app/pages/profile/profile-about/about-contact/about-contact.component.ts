@@ -16,9 +16,8 @@ import { Gender } from "@enums/profile/gender.enum";
 import { AboutSelectOptionComponent } from "@shared/profile/about-select-option/about-select-option.component";
 import { AboutDateOptionComponent } from "@shared/profile/about-date-option/about-date-option.component";
 import { DatePipe } from "@angular/common";
-import { RoutingService } from "@services/profile/routing.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { ActivatedRouteKey } from "@enums/profile/activated-route-key.enum";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-about-contact',
@@ -84,14 +83,14 @@ export class AboutContactComponent implements OnInit {
     protected readonly Gender = Gender;
     protected canEdit: boolean = false;
 
-    constructor(private routingService: RoutingService,
+    constructor(private activatedRoute: ActivatedRoute,
                 private localStorage: LocalStorageService) {
     }
 
     ngOnInit(): void {
         this.canEdit = this.localStorage
             .getUserProfileFromStorage()
-            .username === this.routingService.getActivatedRouteParam(ActivatedRouteKey.USERNAME);
+            .username === this.activatedRoute.snapshot.params["username"];
     }
 
 }

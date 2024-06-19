@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
@@ -14,7 +14,6 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
-import { ActivatedRouteKey } from "@enums/profile/activated-route-key.enum";
 
 @Component({
     selector: 'app-profile',
@@ -50,11 +49,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
                 private profileService: ProfileService,
+                private activatedRoute: ActivatedRoute,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        this.username = this.routingService.getActivatedRouteParam(ActivatedRouteKey.USERNAME);
+        this.username = this.activatedRoute.snapshot.params["username"];
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.activeRoute = this.routingService
