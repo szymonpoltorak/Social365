@@ -209,4 +209,6 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             RETURN p
             """)
     Optional<Profile> findByUsername(@Param(Params.USERNAME) String username);
+
+    void updateByBioAndProfileId(String bio, String profileId);
 }

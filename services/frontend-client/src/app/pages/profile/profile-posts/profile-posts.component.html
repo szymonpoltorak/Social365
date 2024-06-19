@@ -13,7 +13,7 @@
 
             <mat-card-content>
                 @if (!isEditing) {
-                    <span class="text-justify">{{ profileInfo.bio }}</span>
+                    <span class="text-justify">{{ profileInfo.bio === null ? "" : profileInfo.bio }}</span>
                 } @else {
                     <mat-form-field class="w-full">
                         <textarea matInput
@@ -24,7 +24,7 @@
                     </mat-form-field>
 
                     <button class="w-full" mat-raised-button
-                            (click)="isEditing = !isEditing"
+                            (click)="editBio()"
                             aria-label="Update bio" color="primary">
                         <mat-icon>done</mat-icon>
 

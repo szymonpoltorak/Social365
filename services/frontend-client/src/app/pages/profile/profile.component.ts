@@ -63,8 +63,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profileService
             .getBasicProfileInfoByUsername(this.username)
             .subscribe((profile: Profile) => {
-                console.log(profile);
-
                 this.profileInfo = profile;
             });
 

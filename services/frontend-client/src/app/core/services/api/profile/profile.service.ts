@@ -6,6 +6,7 @@ import { ProfileMappings } from "@enums/api/profile/profile-mappings.enum";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { Page } from "@interfaces/feed/page.interface";
+import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -40,10 +41,12 @@ export class ProfileService {
         }).pipe(take(1));
     }
 
-    updateProfileBio(profileId: string, bio: string): Observable<Profile> {
-        return this.http.put<Profile>(ProfileMappings.UPDATE_PROFILE_BIO_MAPPING, {
-            profileId: profileId,
-            bio: bio
+    updateProfileBio(profileId: string, bio: string): Observable<ProfileRequest> {
+        return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BIO_MAPPING, {}, {
+            params: {
+                profileId: profileId,
+                bio: bio
+            }
         }).pipe(take(1));
     }
 

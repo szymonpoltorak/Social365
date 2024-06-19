@@ -48,6 +48,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         profile.setBio(bio);
 
+        //TODO: saving profile to repository removes all its relationships
         profile = profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);

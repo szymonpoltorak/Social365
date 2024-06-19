@@ -17,6 +17,7 @@ import { NgIf } from "@angular/common";
 import { ProfileService } from "@api/profile/profile.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 
 @Component({
     selector: 'app-profile-posts',
@@ -164,6 +165,7 @@ export class ProfilePostsComponent implements OnInit {
     ];
     protected displayedItems: Either<Post, SharedPost>[] = [];
     protected numberOfItemsToDisplay: number = 3;
+    protected currentUser !: Profile;
 
     constructor(public router: Router,
                 private localStorage: LocalStorageService,
@@ -183,6 +185,8 @@ export class ProfilePostsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
+
         this.profileService
             .getBasicProfileInfo(this.localStorage.getUserProfileIdFromStorage())
             .subscribe((profile: Profile) => {
@@ -194,4 +198,20 @@ export class ProfilePostsComponent implements OnInit {
         this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
     }
 
+    editBio(): void {
+        this.isEditing = !this.isEditing;
+
+        const bio: string | null = this.bioControl.value;
+
+        if (bio === null || this.profileInfo.profileId !== this.currentUser.profileId) {
+            return;
+        }
+        this.profileService
+            .updateProfileBio(this.currentUser.profileId, bio)
+            .subscribe(() => {
+                this.profileInfo.bio = bio;
+
+                this.bioControl.setValue(this.profileInfo.bio);
+            });
+    }
 }

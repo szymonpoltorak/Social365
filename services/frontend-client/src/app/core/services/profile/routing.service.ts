@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { RouteOption } from "@interfaces/profile/route-option.interface";
-import { ActivatedRoute } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -17,10 +16,6 @@ export class RoutingService {
             foundRoute = options
                 .find((option: T) => option.label.toLowerCase() === url[url.length - 2]);
         }
-
-        if (!foundRoute) {
-            throw new Error('Invalid route!');
-        }
-        return foundRoute;
+        return foundRoute as T;
     }
 }
