@@ -20,13 +20,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
 import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
-import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
-import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
-import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
@@ -44,8 +39,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
     private final ProfileRepository profileRepository;
-    private final EmailRepository emailRepository;
-    private final BirthDateRepository birthDateRepository;
 
     @Override
     public final ProfileSummaryResponse mapProfileToProfileSummaryResponse(Profile profile) {
@@ -54,12 +47,9 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        Email email = emailRepository.findByProfileId(profile.getProfileId())
-                .orElseThrow(ProfileDetailsNotFoundException::new);
-
         return ProfileSummaryResponse
                 .builder()
-                .username(email.getEmailValue())
+                .username(profile.getEmail().getEmailValue())
                 .followersCount(profileRepository.getFollowersCount(profile.getProfileId()))
                 .friendsCount(profileRepository.getFriendsCount(profile.getProfileId()))
                 .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
@@ -78,13 +68,10 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        Email email = emailRepository.findByProfileId(profile.getProfileId())
-                .orElseThrow(ProfileDetailsNotFoundException::new);
-
         return ProfilePostResponse
                 .builder()
                 .profileId(profile.getProfileId())
-                .username(email.getEmailValue())
+                .username(profile.getEmail().getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
@@ -98,16 +85,13 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        Email email = emailRepository.findByProfileId(profile.getProfileId())
-                .orElseThrow(ProfileDetailsNotFoundException::new);
-
         return ProfileResponse
                 .builder()
                 .profileId(profile.getProfileId())
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
                 .profilePictureUrl(getProfilePicturePath(profile))
-                .username(email.getEmailValue())
+                .username(profile.getEmail().getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .build();
     }
@@ -119,15 +103,10 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        Email email = emailRepository.findByProfileId(profile.getProfileId())
-                .orElseThrow(ProfileDetailsNotFoundException::new);
-        BirthDate birthDate = birthDateRepository.findByProfileId(profile.getProfileId())
-                .orElseThrow(ProfileDetailsNotFoundException::new);
-
         return ProfileRequest
                 .builder()
-                .username(email.getEmailValue())
-                .dateOfBirth(LocalDate.parse(birthDate.getDateOfBirth()))
+                .username(profile.getEmail().getEmailValue())
+                .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
                 .lastName(profile.getLastName())
                 .firstName(profile.getFirstName())
                 .build();
@@ -140,15 +119,13 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        String profileId = profile.getProfileId();
-
         return OverviewResponse
                 .builder()
-                .relationshipStatus(aboutMapper.mapRelationshipStatusToResponse(profileId))
-                .workplace(aboutMapper.mapWorkplaceToAboutOptionResponse(profileId))
-                .college(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.COLLEGE))
-                .highSchool(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.HIGH_SCHOOL))
-                .homeTown(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.HOMETOWN))
+                .relationshipStatus(aboutMapper.mapRelationshipStatusToResponse(profile.getRelationshipStatus()))
+                .workplace(aboutMapper.mapWorkplaceToAboutOptionResponse(profile.getWorkplace()))
+                .college(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getCollege()))
+                .highSchool(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getHighSchool()))
+                .homeTown(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getHomeTown()))
                 .build();
     }
 
@@ -159,12 +136,10 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        String profileId = profile.getProfileId();
-
         return LocationsResponse
                 .builder()
-                .currentCity(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.CURRENT_CITY))
-                .homeTown(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.HOMETOWN))
+                .currentCity(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getCurrentCity()))
+                .homeTown(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getHomeTown()))
                 .build();
     }
 
@@ -175,13 +150,11 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        String profileId = profile.getProfileId();
-
         return WorkEducationResponse
                 .builder()
-                .workplace(aboutMapper.mapWorkplaceToAboutOptionResponse(profileId))
-                .college(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.COLLEGE))
-                .highSchool(aboutMapper.mapAboutDetailsToAboutOptionResponse(profileId, DetailsType.HIGH_SCHOOL))
+                .workplace(aboutMapper.mapWorkplaceToAboutOptionResponse(profile.getWorkplace()))
+                .college(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getCollege()))
+                .highSchool(aboutMapper.mapAboutDetailsToAboutOptionResponse(profile.getHighSchool()))
                 .build();
     }
 
@@ -192,14 +165,12 @@ public class ProfileMapperImpl implements ProfileMapper {
 
             return null;
         }
-        String profileId = profile.getProfileId();
-
         return ContactInfoResponse
                 .builder()
-                .mobile(aboutMapper.mapMobileNumberToMobileNumberResponse(profileId))
-                .email(aboutMapper.mapEmailToAboutOptionResponse(profileId))
-                .gender(aboutMapper.mapGenderToAboutOptionResponse(profileId))
-                .birthDate(aboutMapper.mapBirthdayToAboutOptionResponse(profileId))
+                .mobile(aboutMapper.mapMobileNumberToMobileNumberResponse(profile.getPhoneNumber()))
+                .email(aboutMapper.mapEmailToAboutOptionResponse(profile.getEmail()))
+                .gender(aboutMapper.mapGenderToAboutOptionResponse(profile.getGender()))
+                .birthDate(aboutMapper.mapBirthdayToAboutOptionResponse(profile.getBirthDate()))
                 .build();
     }
 
@@ -270,17 +241,17 @@ public class ProfileMapperImpl implements ProfileMapper {
     }
 
     private String getSubtitle(Profile profile) {
-        Workplace workplace = profileRepository.getWorkplaceByProfileId(profile.getProfileId());
+        Workplace workplace = profile.getWorkplace();
 
         if (workplace != null) {
             return workplace.getSubtitle();
         }
-        AboutDetails college = profileRepository.getCollegeByProfileId(profile.getProfileId());
+        AboutDetails college = profile.getCollege();
 
         if (college != null) {
             return college.getPropertyValue();
         }
-        AboutDetails highSchool = profileRepository.getHighSchoolByProfileId(profile.getProfileId());
+        AboutDetails highSchool = profile.getHighSchool();
 
         if (highSchool != null) {
             return highSchool.getPropertyValue();

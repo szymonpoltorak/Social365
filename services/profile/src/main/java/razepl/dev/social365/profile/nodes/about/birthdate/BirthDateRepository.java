@@ -35,11 +35,4 @@ public interface BirthDateRepository extends Neo4jRepository<BirthDate, String> 
     )
     Page<BirthdayData> findTodayBirthdaysByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
 
-    @Query("""
-            MATCH (p:Profile {profileId: $profileId})
-            MATCH (b:BirthDate {birthDateId: $birthDateId})
-            CREATE (p)-[:BORN_ON]->(b)
-            """)
-    void createBornOnRelation(@Param(Params.PROFILE_ID) String profileId,
-                              @Param(Params.BIRTHDATE_ID) String birthDateId);
 }

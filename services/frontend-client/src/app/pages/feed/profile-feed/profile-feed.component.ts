@@ -37,7 +37,7 @@ export class ProfileFeedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const profileId: string = "05be6d3c-3503-4e8e-acc2-4b2b15cb72c9";
+        const profileId: string = "049305b1-340d-4e3f-8b06-a6e65eb54188";
 
         this.profileService
             .getProfileSummary(profileId)

@@ -77,12 +77,10 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Removing friend...");
 
         profileRepository.deleteFriendshipRelationship(profileId, friendId);
-        profileRepository.deleteFriendshipRelationship(friendId, profileId);
 
         log.info("Removing follow relation...");
 
         profileRepository.deleteFollowsRelation(profileId, friendId);
-        profileRepository.deleteFollowsRelation(friendId, profileId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -99,7 +97,6 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Adding friendship relation...");
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
-        profileRepository.createFriendsWithRelation(friendId, profileId);
 
         log.info("Adding follow relation...");
 

@@ -48,8 +48,9 @@ public class ProfileServiceImpl implements ProfileService {
 
         profile.setBio(bio);
 
-        //TODO: saving profile to repository removes all its relationships
         profile = profileRepository.save(profile);
+
+        log.info("Profile updated: {}", profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
     }
@@ -112,16 +113,12 @@ public class ProfileServiceImpl implements ProfileService {
                 .builder()
                 .userId(profileRequest.userId())
                 .email(email)
+                .birthDate(birthDate)
                 .firstName(profileRequest.firstName())
                 .lastName(profileRequest.lastName())
-                .birthDate(birthDate)
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
                 .build();
         Profile savedProfile = profileRepository.save(profile);
-
-        mailRepository.createEmailHasRelation(email.getMailId(), savedProfile.getProfileId());
-
-        birthDateRepository.createBornOnRelation(birthDate.getBirthDateId(), savedProfile.getProfileId());
 
         log.info("Saved profile: {}", savedProfile);
 

@@ -1,15 +1,12 @@
 package razepl.dev.social365.profile.nodes.profile;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -24,11 +21,6 @@ import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.constants.ValidationPatterns;
-import razepl.dev.social365.profile.nodes.profile.relationship.Follows;
-import razepl.dev.social365.profile.nodes.profile.relationship.FriendsWith;
-import razepl.dev.social365.profile.nodes.profile.relationship.WantsToBeFriendWith;
-
-import java.util.Set;
 
 @Data
 @Builder
@@ -91,24 +83,6 @@ public class Profile {
 
     @Relationship(type = "FROM", direction = Relationship.Direction.OUTGOING)
     private AboutDetails homeTown;
-
-    @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @Relationship(type = "WANTS_TO_BE_FRIEND_WITH", direction = Relationship.Direction.OUTGOING)
-    private Set<WantsToBeFriendWith> friendRequests;
-
-    @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
-    private Set<FriendsWith> friendships;
-
-    @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @Relationship(type = "FOLLOWS", direction = Relationship.Direction.OUTGOING)
-    private Set<Follows> followers;
 
     final String getFullName() {
         return String.format("%s %s", firstName, lastName);

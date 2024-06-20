@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
 
+
+//TODO: Upgrade this exception to be more specific
 public class ProfileDetailsNotFoundException extends AbstractException {
 
     @Serial

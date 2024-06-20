@@ -80,8 +80,7 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating email privacy level: {}", profile);
 
-        Email email = emailRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileDetailsNotFoundException::new);
+        Email email = profile.getEmail();
 
         log.info("Email for updating: {}", email);
 

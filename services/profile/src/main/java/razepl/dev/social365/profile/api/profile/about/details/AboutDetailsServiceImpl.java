@@ -98,8 +98,9 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     public final ProfileRequest updateProfileDateOfBirth(DateOfBirthRequest dateOfBirthRequest) {
         log.info("New date of birth data : {}", dateOfBirthRequest);
 
-        BirthDate birthDate = dateOfBirthRepository.findByProfileId(dateOfBirthRequest.profileId())
-                .orElseThrow(ProfileNotFoundException::new);
+        Profile profile = getProfileData(dateOfBirthRequest.profileId());
+
+        BirthDate birthDate = profile.getBirthDate();
 
         log.info("Birth of date for profile id {} : {}", dateOfBirthRequest.profileId(), birthDate);
 
@@ -114,7 +115,9 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
 
         birthDate = dateOfBirthRepository.save(birthDate);
 
-        return profileMapper.mapProfileToProfileRequest(birthDate.getProfile());
+        log.info("Updated birth date : {}", birthDate);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
     }
 
     @Override
