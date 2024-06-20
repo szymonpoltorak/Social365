@@ -6,6 +6,12 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { Router } from '@angular/router';
+import { Page } from "@interfaces/feed/page.interface";
+import { MatDialog } from "@angular/material/dialog";
+import {
+    BirthdayInfoDialogComponent
+} from "@pages/feed/friends-feed/birthday/birthday-info-dialog/birthday-info-dialog.component";
+import { BirthdayInfoComponent } from "@pages/feed/friends-feed/birthday/birthday-info/birthday-info.component";
 
 @Component({
     selector: 'app-birthday',
@@ -15,15 +21,23 @@ import { Router } from '@angular/router';
         MatIcon,
         MatDivider,
         AvatarPhotoComponent,
+        BirthdayInfoComponent,
     ],
     templateUrl: './birthday.component.html',
     styleUrl: './birthday.component.scss'
 })
 export class BirthdayComponent {
-    @Input() birthdayInfos !: BirthdayInfo[];
+    @Input() birthdayInfos !: Page<BirthdayInfo>;
     protected isExpanded: boolean = false;
     protected readonly RouterPaths = RouterPaths;
 
-    constructor(protected router: Router) {
+    constructor(protected router: Router,
+                private dialog: MatDialog) {
+    }
+
+    showInfosDialog(): void {
+        const dialogRef = this.dialog.open(BirthdayInfoDialogComponent, {
+            data: this.birthdayInfos
+        });
     }
 }

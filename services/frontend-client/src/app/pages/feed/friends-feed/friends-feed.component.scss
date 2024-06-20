@@ -1,3 +1,7 @@
 .birthday-button {
     @apply flex justify-start;
 }
+
+.container {
+    @apply p-3 w-full max-h-[48rem] overflow-y-auto;
+}

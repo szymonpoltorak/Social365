@@ -15,8 +15,8 @@ import { MatIconButton } from "@angular/material/button";
     styleUrl: './image-dialog.component.scss'
 })
 export class ImageDialogComponent {
+
     constructor(@Inject(MAT_DIALOG_DATA) protected data: ImageDialogData) {
     }
 
-    protected readonly console = console;
 }

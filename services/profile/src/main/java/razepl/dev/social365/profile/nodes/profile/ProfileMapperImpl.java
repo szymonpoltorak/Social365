@@ -20,6 +20,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
 import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
+import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
 import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
@@ -225,9 +226,12 @@ public class ProfileMapperImpl implements ProfileMapper {
 
     @Override
     public final BirthdayInfoResponse mapBirthdayDataToBirthdayInfoResponse(BirthdayData birthdayData) {
+        Profile friend = profileRepository.findByProfileId(birthdayData.friendId())
+                .orElseThrow(ProfileNotFoundException::new);
+
         return BirthdayInfoResponse
                 .builder()
-                .profile(mapProfileToProfileResponse(birthdayData.friend()))
+                .profile(mapProfileToProfileResponse(friend))
                 .age(birthdayData.birthDate().getAge())
                 .build();
     }

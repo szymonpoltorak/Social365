@@ -18,6 +18,7 @@ import { ProfileService } from "@api/profile/profile.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-profile-posts',
@@ -168,6 +169,7 @@ export class ProfilePostsComponent implements OnInit {
     protected currentUser !: Profile;
 
     constructor(public router: Router,
+                private matSnackBar: MatSnackBar,
                 private localStorage: LocalStorageService,
                 private profileService: ProfileService) {
     }
@@ -212,6 +214,8 @@ export class ProfilePostsComponent implements OnInit {
                 this.profileInfo.bio = bio;
 
                 this.bioControl.setValue(this.profileInfo.bio);
+
+                this.matSnackBar.open('Bio updated successfully!', 'Close');
             });
     }
 }

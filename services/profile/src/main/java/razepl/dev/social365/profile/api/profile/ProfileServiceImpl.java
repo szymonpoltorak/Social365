@@ -25,6 +25,7 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -63,7 +64,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
 
-        log.info("Found {} birthdays", birthdayDataPage.getTotalElements());
+        log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
         return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
     }

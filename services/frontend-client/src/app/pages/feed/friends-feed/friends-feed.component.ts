@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCard } from "@angular/material/card";
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -9,6 +9,9 @@ import { Observable, of } from "rxjs";
 import { AsyncPipe } from "@angular/common";
 import { BirthdayComponent } from "@pages/feed/friends-feed/birthday/birthday.component";
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
+import { ProfileService } from "@api/profile/profile.service";
+import { LocalStorageService } from "@services/utils/local-storage.service";
+import { Page } from "@interfaces/feed/page.interface";
 
 @Component({
     selector: 'app-friends-feed',
@@ -25,31 +28,10 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
     templateUrl: './friends-feed.component.html',
     styleUrl: './friends-feed.component.scss'
 })
-export class FriendsFeedComponent {
-    protected birthdayInfos: BirthdayInfo[] = [
-        {
-            profile: {
-                profileId: "1",
-                fullName: "Jacek Kowalski",
-                username: "jacek@gmail.com",
-                bio: "I am a simple man",
-                subtitle: "Student at Warsaw University of Technology",
-                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-            },
-            age: 25,
-        },
-        {
-            profile: {
-                profileId: "2",
-                fullName: "Marek Nowak",
-                username: "marek@gmail.com",
-                bio: "I am a simple man",
-                subtitle: "Web developer at Google",
-                profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-            },
-            age: 30,
-        }
-    ];
+export class FriendsFeedComponent implements OnInit {
+    protected birthdayInfos !: Page<BirthdayInfo>;
+
+    private pageNumber: number = 0;
 
     protected friends: Observable<FriendFeedOption[]> = of([
         {
@@ -92,4 +74,18 @@ export class FriendsFeedComponent {
             imageLink: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         }
     ]);
+
+    constructor(private profileService: ProfileService,
+                private localStorage: LocalStorageService) {
+    }
+
+    ngOnInit(): void {
+        const profileId: string = this.localStorage.getUserProfileIdFromStorage();
+
+        this.profileService
+            .getTodayBirthdays(profileId, this.pageNumber)
+            .subscribe(data => {
+                this.birthdayInfos = data;
+            });
+    }
 }

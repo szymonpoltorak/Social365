@@ -41,7 +41,7 @@ public class Initializer implements CommandLineRunner {
             String firstName = firstNames.get(i);
             String lastName = lastNames.get(random.nextInt(lastNames.size()));
             String email = firstName.toLowerCase(Locale.ROOT) + "." + lastName.toLowerCase(Locale.ROOT) + "@example.com";
-            LocalDate dateOfBirth = LocalDate.now().minusYears(13 + random.nextInt(50));
+            LocalDate dateOfBirth = LocalDate.now().minusYears((long) (13 + random.nextInt(50)));
 
             ProfileRequest profileRequest = ProfileRequest.builder()
                     .userId((long) i)

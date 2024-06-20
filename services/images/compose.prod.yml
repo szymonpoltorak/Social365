@@ -29,7 +29,7 @@ services:
         hostname: ${IMAGES_SERVICE_HOSTNAME}
         build:
             context: images-service
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile
         ports:
             - "${IMAGES_SERVICE_PORT}:${IMAGES_SERVICE_PORT}"
         volumes:

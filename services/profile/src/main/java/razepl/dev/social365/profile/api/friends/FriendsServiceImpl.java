@@ -37,7 +37,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileId(profileId, pageable);
 
-        log.info("Found {} friends for profile with id: {}", friends.getTotalElements(), profileId);
+        log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
 
         return friends.map(profileMapper::mapFriendDataToFriendResponse);
     }
@@ -49,7 +49,7 @@ public class FriendsServiceImpl implements FriendsService {
         Page<FriendSuggestion> friendRequests = profileRepository
                 .findFriendRequestsByProfileId(profileId, pageable);
 
-        log.info("Found {} friend requests for profile with id: {}", friendRequests.getTotalElements(), profileId);
+        log.info("Found {} friend requests for profile with id: {}", friendRequests.getNumberOfElements(), profileId);
 
         return friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
@@ -60,7 +60,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(profileId, pageable);
 
-        log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getTotalElements(), profileId);
+        log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getNumberOfElements(), profileId);
 
         return friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
@@ -114,7 +114,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
 
-        log.info("Found {} friends ids for profile with id: {}", friendsIds.getTotalElements(), profileId);
+        log.info("Found {} friends ids for profile with id: {}", friendsIds.getNumberOfElements(), profileId);
 
         return friendsIds;
     }
