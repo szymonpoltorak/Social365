@@ -4,6 +4,7 @@ import { Page } from "@interfaces/feed/page.interface";
 import { Observable, take } from 'rxjs';
 import { FriendsMappings } from "@enums/api/profile/friends-mappings.enum";
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
+import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,16 @@ export class FriendsService {
 
     getFriends(profileId: string, pageNumber: number, pageSize: number): Observable<Page<FriendElement>> {
         return this.http.get<Page<FriendElement>>(FriendsMappings.GET_FRIENDS_ON_PAGE, {
+            params: {
+                profileId: profileId,
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        }).pipe(take(1));
+    }
+
+    getFriendsFeedOptions(profileId: string, pageNumber: number, pageSize: number): Observable<Page<FriendFeedOption>> {
+        return this.http.get<Page<FriendFeedOption>>(FriendsMappings.GET_FRIENDS_FEED_OPTIONS, {
             params: {
                 profileId: profileId,
                 pageNumber: pageNumber,

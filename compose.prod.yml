@@ -1,22 +1,20 @@
 include:
     -   path:
-            - ./services/config-server/compose.prod.yml
+            - ./services/config-server/compose.yml
     -   path:
-            - ./services/frontend-client/compose.prod.yml
-#    -   path:
-#            - ./services/authorization/compose.prod.yml
+            - ./services/frontend-client/compose.yml
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
-            - ./services/images/compose.prod.yml
+            - ./services/images/compose.yml
     -   path:
             - ./services/api-gateway/compose.yml
     -   path:
-            - ./services/profile/compose.prod.yml
+            - ./services/profile/compose.yml
     -   path:
-            - ./services/posts/compose.prod.yml
+            - ./services/posts/compose.yml
     -   path:
             - ./services/data-init/compose.yml
 

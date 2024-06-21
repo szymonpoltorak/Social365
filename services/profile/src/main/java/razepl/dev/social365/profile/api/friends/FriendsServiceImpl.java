@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
+import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
@@ -33,13 +34,24 @@ public class FriendsServiceImpl implements FriendsService {
 
     @Override
     public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
-        log.info("Getting friends for profile with id: {}", profileId);
+        log.info("Getting friends for profile with id: {} with pageable : {}", profileId, pageable);
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileId(profileId, pageable);
 
         log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
 
         return friends.map(profileMapper::mapFriendDataToFriendResponse);
+    }
+
+    @Override
+    public final Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
+        log.info("Getting friends feed options for profileId: {} with pageable : {}", profileId, pageable);
+
+        Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(profileId, pageable);
+
+        log.info("Found online friends for feed : {}, for profileId: {}", friends.getNumberOfElements(), profileId);
+
+        return friends.map(profileMapper::mapProfileToFriendFeedResponse);
     }
 
     @Override

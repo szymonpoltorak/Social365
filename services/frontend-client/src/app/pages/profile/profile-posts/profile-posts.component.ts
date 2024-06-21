@@ -2,7 +2,6 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
-import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatFormField } from "@angular/material/form-field";
@@ -17,7 +16,6 @@ import { NgIf } from "@angular/common";
 import { ProfileService } from "@api/profile/profile.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

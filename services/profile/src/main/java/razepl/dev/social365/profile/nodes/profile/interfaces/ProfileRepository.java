@@ -116,7 +116,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     //TODO: Review the queries below
     @Query(
             value = """
-                    MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
                     WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
                     OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
@@ -129,8 +129,22 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    Page<FriendData> findFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId,
-                                            Pageable pageable);
+    Page<FriendData> findFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId and p.isOnline = true
+                    RETURN f
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId and p.isOnline = true
+                    RETURN COUNT(f)
+                    """
+    )
+    Page<Profile> findOnlineFriendsByProfileId(String profileId, Pageable pageable);
 
     @Query(
             value = """

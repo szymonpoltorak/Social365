@@ -1,12 +1,15 @@
 package razepl.dev.social365.profile.api.friends.interfaces;
 
 import org.springframework.data.domain.Page;
+import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 
 public interface FriendsController {
 
     Page<FriendResponse> getFriends(String profileId, int pageNumber, int pageSize);
+
+    Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, int pageNumber, int pageSize);
 
     Page<String> getFollowedProfileIds(String profileId, int pageNumber);
 

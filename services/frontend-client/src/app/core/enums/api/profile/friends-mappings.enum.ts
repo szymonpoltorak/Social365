@@ -11,8 +11,6 @@ export enum FriendsMappings {
     
     GET_FRIENDS_ON_PAGE = FRIENDS_MAPPING + "/getFriends",
 
-    GET_FOLLOWED_IDS = FRIENDS_MAPPING + "/getFollowedIds",
-    
     ADD_PROFILE_TO_FOLLOWERS = FRIENDS_MAPPING + "/addProfileToFollowers",
     
     REMOVE_PROFILE_FROM_FOLLOWERS = FRIENDS_MAPPING + "/removeProfileFromFollowers",
@@ -22,4 +20,6 @@ export enum FriendsMappings {
     ACCEPT_FRIEND_REQUEST = FRIENDS_MAPPING + "/acceptFriendRequest",
     
     DECLINE_FRIEND_REQUEST = FRIENDS_MAPPING + "/declineFriendRequest",
+
+    GET_FRIENDS_FEED_OPTIONS = FRIENDS_MAPPING + "/getFriendsFeedOptions"
 }

@@ -115,6 +115,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .userId(profileRequest.userId())
                 .email(email)
                 .birthDate(birthDate)
+                .isOnline(true)
                 .firstName(profileRequest.firstName())
                 .lastName(profileRequest.lastName())
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)

@@ -1,6 +1,7 @@
 package razepl.dev.social365.profile.nodes.profile.interfaces;
 
 import razepl.dev.social365.profile.api.friends.data.FriendData;
+import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
@@ -43,4 +44,6 @@ public interface ProfileMapper {
     FriendResponse mapFriendDataToFriendResponse(FriendData friendData);
 
     BirthdayInfoResponse mapBirthdayDataToBirthdayInfoResponse(BirthdayData birthdayData);
+
+    FriendFeedResponse mapProfileToFriendFeedResponse(Profile profile);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
+import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
@@ -22,7 +23,6 @@ import razepl.dev.social365.profile.clients.images.data.ImageResponse;
 import razepl.dev.social365.profile.clients.posts.comments.PostCommentsService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
-import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
 import razepl.dev.social365.profile.nodes.about.mapper.AboutMapper;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
@@ -236,7 +236,20 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .build();
     }
 
+    @Override
+    public final FriendFeedResponse mapProfileToFriendFeedResponse(Profile profile) {
+        return FriendFeedResponse
+                .builder()
+                .isOnline(profile.isOnline())
+                .profileId(profile.getProfileId())
+                .profilePictureUrl(getProfilePicturePath(profile))
+                .fullName(profile.getFullName())
+                .build();
+    }
+
     private String getProfilePicturePath(Profile profile) {
+        log.info("Profile : {}", profile);
+
         ImageResponse profilePicture = imagesServiceClient.getImagePath(profile.getProfilePictureId());
 
         log.info("Profile picture response: {}", profilePicture);

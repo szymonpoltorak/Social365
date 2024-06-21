@@ -26,6 +26,8 @@ public final class FriendMappings {
 
     public static final String DECLINE_FRIEND_REQUEST = "/declineFriendRequest";
 
+    public static final String GET_FRIENDS_FEED_OPTIONS = "/getFriendsFeedOptions";
+
     private FriendMappings() {
     }
 
