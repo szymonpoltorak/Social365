@@ -244,6 +244,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profileId(profile.getProfileId())
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .fullName(profile.getFullName())
+                .username(profile.getEmail().getEmailValue())
                 .build();
     }
 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
@@ -8,15 +8,19 @@ import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
-import { NgIf } from "@angular/common";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ProfileService } from "@api/profile/profile.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FriendsService } from '@core/services/api/profile/friends.service';
+import { Observable, Subject, takeUntil } from "rxjs";
+import { Page } from "@interfaces/feed/page.interface";
+import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 
 @Component({
     selector: 'app-profile-posts',
@@ -34,12 +38,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
         CdkTextareaAutosize,
         ReactiveFormsModule,
         MatButton,
-        NgIf
+        NgIf,
+        AsyncPipe
     ],
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'
 })
-export class ProfilePostsComponent implements OnInit {
+export class ProfilePostsComponent implements OnInit, OnDestroy {
+    private readonly FIRST_PAGE: number = 0;
     protected posts: Either<Post, SharedPost>[] = [
         {
             postId: 1,
@@ -91,6 +97,7 @@ export class ProfilePostsComponent implements OnInit {
     protected profileInfo !: Profile;
     protected isEditing: boolean = false;
     protected bioControl !: FormControl<string | null>;
+    private activateRouteDestroy$: Subject<void> = new Subject<void>();
     protected readonly RouterPaths = RouterPaths;
     protected items: Either<Post, SharedPost>[] = [
         {
@@ -162,12 +169,14 @@ export class ProfilePostsComponent implements OnInit {
             imageUrls: ["https://material.angular.io/assets/img/examples/shiba2.jpg"],
         }
     ];
-    protected displayedItems: Either<Post, SharedPost>[] = [];
+    protected friends !: Observable<Page<FriendFeedOption>>;
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
 
     constructor(public router: Router,
                 private matSnackBar: MatSnackBar,
+                private friendsService: FriendsService,
+                private activatedRoute: ActivatedRoute,
                 private localStorage: LocalStorageService,
                 private profileService: ProfileService) {
     }
@@ -175,27 +184,41 @@ export class ProfilePostsComponent implements OnInit {
     @HostListener('window:resize', ['$event'])
     onResize(event: any): void {
         const windowWidth: number = event.target.innerWidth;
+        const newDisplayItems: number = windowWidth <= 1526 ? 2 : 3;
 
-        if (windowWidth <= 1526) {
-            this.numberOfItemsToDisplay = 2;
-        } else {
-            this.numberOfItemsToDisplay = 3;
+        if (newDisplayItems !== this.numberOfItemsToDisplay) {
+            this.numberOfItemsToDisplay = newDisplayItems;
+
+            this.friends = this.friendsService
+                .getFriendsFeedOptions(this.currentUser.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
         }
-        this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
-        this.profileService
-            .getBasicProfileInfo(this.localStorage.getUserProfileIdFromStorage())
-            .subscribe((profile: Profile) => {
-                this.profileInfo = profile;
+        this.activatedRoute
+            .paramMap
+            .pipe(takeUntil(this.activateRouteDestroy$))
+            .subscribe((params) => {
+                const username: string = params.get("username") as string;
 
-                this.bioControl = new FormControl(this.profileInfo.bio);
-            });
+                this.profileService
+                    .getBasicProfileInfoByUsername(username)
+                    .pipe(takeUntil(this.activateRouteDestroy$))
+                    .subscribe((profile: Profile) => {
+                        this.profileInfo = profile;
 
-        this.displayedItems = this.items.slice(0, this.numberOfItemsToDisplay);
+                        this.bioControl = new FormControl(this.profileInfo.bio);
+                    });
+
+                this.friends = this.friendsService
+                    .getFriendsFeedOptions(this.currentUser.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
+            })
+    }
+
+    ngOnDestroy(): void {
+        this.activateRouteDestroy$.complete();
     }
 
     editBio(): void {
@@ -215,5 +238,10 @@ export class ProfilePostsComponent implements OnInit {
 
                 this.matSnackBar.open('Bio updated successfully!', 'Close');
             });
+    }
+
+    navigateToFriendProfile(username: string): void {
+        window.scrollTo(0, 0);
+        this.router.navigate([RouterPaths.PROFILE_DIRECT, username, RouterPaths.PROFILE_POSTS]);
     }
 }

@@ -39,18 +39,21 @@ export class FriendsFeedComponent implements OnInit {
             profileId: "1",
             fullName: "My Friends",
             isOnline: true,
+            username: "my-friends@example.com",
             profilePictureUrl: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         },
         {
             profileId: "2",
             fullName: "Family",
             isOnline: false,
+            username: "my-friends@example.com",
             profilePictureUrl: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         },
         {
             profileId: "3",
             fullName: "Students of WUT",
             isOnline: true,
+            username: "my-friends@example.com",
             profilePictureUrl: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         }
     ]);

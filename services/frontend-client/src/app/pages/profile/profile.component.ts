@@ -45,6 +45,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     protected activeRoute: TabOption = this.options[0];
     protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
+    private activateRouteDestroy$: Subject<void> = new Subject<void>();
 
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
@@ -54,17 +55,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.username = this.activatedRoute.snapshot.params["username"];
         this.currentUser = this.localStorage.getUserProfileFromStorage();
+
+        this.activatedRoute
+            .paramMap
+            .pipe(takeUntil(this.activateRouteDestroy$))
+            .subscribe((params) => {
+                this.username = params.get("username") as string;
+
+                this.profileService
+                    .getBasicProfileInfoByUsername(this.username)
+                    .subscribe((profile: Profile) => {
+                        this.profileInfo = profile;
+                    });
+            })
 
         this.activeRoute = this.routingService
             .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
-
-        this.profileService
-            .getBasicProfileInfoByUsername(this.username)
-            .subscribe((profile: Profile) => {
-                this.profileInfo = profile;
-            });
 
         this.router
             .events
@@ -82,5 +89,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.routerDestroy$.complete();
+        this.activateRouteDestroy$.complete();
     }
 }

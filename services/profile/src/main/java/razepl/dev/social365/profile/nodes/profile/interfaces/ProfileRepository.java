@@ -135,7 +135,8 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             value = """
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId and p.isOnline = true
-                    RETURN f
+                    MATCH (f)-[r:HAS]->(e:Email)
+                    RETURN f, collect(r) as rel, collect(e) as nodes
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
