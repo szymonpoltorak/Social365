@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between m-2 p-3 border border-divider rounded-xl">
     <div class="flex items-center gap-3">
-        <img [src]="friend.imageLink"
+        <img [src]="friend.profilePictureUrl"
              class="rounded-xl w-24 h-24"
              alt="Friends Profile Photo">
 
@@ -9,7 +9,7 @@
 
             <div matTooltip="Click to show mutual friends"
                  class="text-xs font-extralight hover:cursor-pointer hover:underline text-gray-400">
-                {{ friend.mutualFriends }} mutual friends
+                {{ friend.numOfMutualFriends }} mutual friends
             </div>
         </div>
     </div>

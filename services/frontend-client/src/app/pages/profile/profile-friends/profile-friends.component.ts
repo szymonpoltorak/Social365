@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
 import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -9,6 +9,10 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
 import { RouterLink } from "@angular/router";
+import { Page } from "@interfaces/feed/page.interface";
+import { FriendsService } from "@api/profile/friends.service";
+import { LocalStorageService } from '@core/services/utils/local-storage.service';
+import { Profile } from "@interfaces/feed/profile.interface";
 
 @Component({
     selector: 'app-profile-friends',
@@ -32,56 +36,24 @@ import { RouterLink } from "@angular/router";
     templateUrl: './profile-friends.component.html',
     styleUrl: './profile-friends.component.scss'
 })
-export class ProfileFriendsComponent {
+export class ProfileFriendsComponent implements OnInit {
+
     protected searchSocialControl: FormControl<string | null> = new FormControl<string>("");
-    protected friends: FriendProfileOption[] = [
-        {
-            username: "johndoe",
-            fullName: "John Doe",
-            mutualFriends: 5,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "janedoe",
-            fullName: "Jane Doe",
-            mutualFriends: 3,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "johndoe",
-            fullName: "John Doe",
-            mutualFriends: 5,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "janedoe",
-            fullName: "Jane Doe",
-            mutualFriends: 3,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "johndoe",
-            fullName: "John Doe",
-            mutualFriends: 5,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "janedoe",
-            fullName: "Jane Doe",
-            mutualFriends: 3,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "johndoe",
-            fullName: "John Doe",
-            mutualFriends: 5,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        },
-        {
-            username: "janedoe",
-            fullName: "Jane Doe",
-            mutualFriends: 3,
-            imageLink: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-        }
-    ];
+    protected friends !: Page<FriendProfileOption>;
+    private currentUser !: Profile;
+    private pageNumber: number = 0;
+    private pageSize: number = 15;
+
+    constructor(private friendsService: FriendsService,
+                private localStorage: LocalStorageService) {
+    }
+
+    ngOnInit(): void {
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
+
+        this.friendsService
+            .getFriends(this.currentUser.profileId, this.pageNumber, this.pageSize)
+            .subscribe((friends) => this.friends = friends);
+    }
+
 }

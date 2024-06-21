@@ -40,7 +40,7 @@
 
     <mat-card-content>
         <div class="grid feed-sm:grid-cols-3 max-feed-sm:grid-cols-2 max-r-s:grid-cols-1">
-            @for (friend of friends; track friend) {
+            @for (friend of friends.content; track friend) {
                 <app-friend-profile [friend]="friend"></app-friend-profile>
             }
         </div>

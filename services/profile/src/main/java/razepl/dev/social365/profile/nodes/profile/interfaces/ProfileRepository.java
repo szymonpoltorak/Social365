@@ -113,14 +113,13 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     void deleteFollowsRelation(@Param(Params.PROFILE_ID) String profileId,
                                @Param(Params.TO_FOLLOW_ID) String toFollowId);
 
-    //TODO: Review the queries below
     @Query(
             value = """
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
                     WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
-                    OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
-                    RETURN f, COUNT(f1) as mutualFriendsCount, isFollowed
+                    MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
+                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
