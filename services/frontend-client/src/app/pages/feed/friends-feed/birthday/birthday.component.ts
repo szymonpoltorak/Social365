@@ -36,7 +36,7 @@ export class BirthdayComponent {
     }
 
     showInfosDialog(): void {
-        const dialogRef = this.dialog.open(BirthdayInfoDialogComponent, {
+        this.dialog.open(BirthdayInfoDialogComponent, {
             data: this.birthdayInfos
         });
     }

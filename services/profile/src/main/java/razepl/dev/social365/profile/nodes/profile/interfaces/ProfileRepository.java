@@ -133,6 +133,26 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query(
             value = """
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId
+                        and (f.firstName contains $pattern OR f.lastName contains $pattern)
+                    WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
+                    MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
+                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)
+                    WHERE p.profileId = $profileId
+                    RETURN COUNT(f)
+                    """
+    )
+    Page<FriendData> findFriendsByProfileIdAndPattern(@Param(Params.PROFILE_ID)String profileId,
+                                                      @Param(Params.PATTERN)String pattern,
+                                                      Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId and p.isOnline = true
                     MATCH (f)-[r:HAS]->(e:Email)
                     RETURN f, collect(r) as rel, collect(e) as nodes

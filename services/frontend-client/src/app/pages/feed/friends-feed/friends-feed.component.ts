@@ -70,6 +70,7 @@ export class FriendsFeedComponent implements OnInit {
             .getTodayBirthdays(profileId, this.pageNumber)
             .subscribe(data => {
                 this.birthdayInfos = data;
+                this.pageNumber = this.birthdayInfos.number;
             });
 
         this.friends = this.friendsService.getFriendsFeedOptions(profileId, this.pageNumber, this.friendsPageSize);

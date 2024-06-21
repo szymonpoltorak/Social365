@@ -25,6 +25,18 @@ export class FriendsService {
         }).pipe(take(1));
     }
 
+    getFriendsByPattern(profileId: string, pattern: string,
+                        pageNumber: number, pageSize: number): Observable<Page<FriendProfileOption>> {
+        return this.http.get<Page<FriendProfileOption>>(FriendsMappings.GET_FRIENDS_BY_PATTERN, {
+            params: {
+                profileId: profileId,
+                pattern: pattern,
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        }).pipe(take(1));
+    }
+
     getFriendsFeedOptions(profileId: string, pageNumber: number, pageSize: number): Observable<Page<FriendFeedOption>> {
         return this.http.get<Page<FriendFeedOption>>(FriendsMappings.GET_FRIENDS_FEED_OPTIONS, {
             params: {

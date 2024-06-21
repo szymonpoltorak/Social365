@@ -10,6 +10,8 @@ public interface FriendsService {
 
     Page<FriendResponse> getFriends(String profileId, Pageable pageable);
 
+    Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, Pageable pageable);
+
     Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable);
 
     Page<String> getFollowedProfileIds(String profileId, int pageNumber);

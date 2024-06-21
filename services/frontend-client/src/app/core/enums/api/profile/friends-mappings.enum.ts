@@ -21,5 +21,7 @@ export enum FriendsMappings {
     
     DECLINE_FRIEND_REQUEST = FRIENDS_MAPPING + "/declineFriendRequest",
 
-    GET_FRIENDS_FEED_OPTIONS = FRIENDS_MAPPING + "/getFriendsFeedOptions"
+    GET_FRIENDS_FEED_OPTIONS = FRIENDS_MAPPING + "/getFriendsFeedOptions",
+
+    GET_FRIENDS_BY_PATTERN = FRIENDS_MAPPING + "/getFriendsByPattern"
 }

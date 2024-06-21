@@ -28,6 +28,8 @@ public final class FriendMappings {
 
     public static final String GET_FRIENDS_FEED_OPTIONS = "/getFriendsFeedOptions";
 
+    public static final String GET_FRIENDS_BY_PATTERN = "/getFriendsByPattern";
+
     private FriendMappings() {
     }
 

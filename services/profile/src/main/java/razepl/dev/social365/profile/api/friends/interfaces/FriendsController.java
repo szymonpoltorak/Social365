@@ -9,6 +9,8 @@ public interface FriendsController {
 
     Page<FriendResponse> getFriends(String profileId, int pageNumber, int pageSize);
 
+    Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, int pageNumber, int pageSize);
+
     Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, int pageNumber, int pageSize);
 
     Page<String> getFollowedProfileIds(String profileId, int pageNumber);
