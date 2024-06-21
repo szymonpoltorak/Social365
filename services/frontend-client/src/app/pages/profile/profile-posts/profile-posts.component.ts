@@ -21,6 +21,7 @@ import { FriendsService } from '@core/services/api/profile/friends.service';
 import { Observable, Subject, takeUntil } from "rxjs";
 import { Page } from "@interfaces/feed/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
+import { RoutingService } from '@core/services/profile/routing.service';
 
 @Component({
     selector: 'app-profile-posts',
@@ -173,10 +174,10 @@ export class ProfilePostsComponent implements OnInit, OnDestroy {
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
 
-    constructor(public router: Router,
+    constructor(protected router: Router,
+                private routingService: RoutingService,
                 private matSnackBar: MatSnackBar,
                 private friendsService: FriendsService,
-                private activatedRoute: ActivatedRoute,
                 private localStorage: LocalStorageService,
                 private profileService: ProfileService) {
     }
@@ -197,24 +198,9 @@ export class ProfilePostsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
-        this.activatedRoute
-            .paramMap
-            .pipe(takeUntil(this.activateRouteDestroy$))
-            .subscribe((params) => {
-                const username: string = params.get("username") as string;
+        const username: string = this.routingService.getCurrentUsernameForRoute(this.router.url.split("/"));
 
-                this.profileService
-                    .getBasicProfileInfoByUsername(username)
-                    .pipe(takeUntil(this.activateRouteDestroy$))
-                    .subscribe((profile: Profile) => {
-                        this.profileInfo = profile;
-
-                        this.bioControl = new FormControl(this.profileInfo.bio);
-                    });
-
-                this.friends = this.friendsService
-                    .getFriendsFeedOptions(this.currentUser.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
-            })
+        this.fetchFriendsAndProfileInfo(username);
     }
 
     ngOnDestroy(): void {
@@ -242,6 +228,23 @@ export class ProfilePostsComponent implements OnInit, OnDestroy {
 
     navigateToFriendProfile(username: string): void {
         window.scrollTo(0, 0);
-        this.router.navigate([RouterPaths.PROFILE_DIRECT, username, RouterPaths.PROFILE_POSTS]);
+
+        this.router
+            .navigate([RouterPaths.PROFILE_DIRECT, username, RouterPaths.PROFILE_POSTS])
+            .then(() => this.fetchFriendsAndProfileInfo(username));
+    }
+
+    private fetchFriendsAndProfileInfo(username: string): void {
+        this.profileService
+            .getBasicProfileInfoByUsername(username)
+            .pipe(takeUntil(this.activateRouteDestroy$))
+            .subscribe((profile: Profile) => {
+                this.profileInfo = profile;
+
+                this.bioControl = new FormControl(this.profileInfo.bio);
+
+                this.friends = this.friendsService
+                    .getFriendsFeedOptions(this.profileInfo.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
+            });
     }
 }

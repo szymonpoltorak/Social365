@@ -4,7 +4,7 @@
             <mat-card-header class="flex items-center justify-between mb-2">
                 <mat-card-title>Bio</mat-card-title>
 
-                @if (profileInfo.profileId !== currentUser.profileId) {
+                @if (profileInfo.profileId === currentUser.profileId) {
                     <button mat-icon-button
                             (click)="isEditing = !isEditing"
                             aria-label="edit bio">
