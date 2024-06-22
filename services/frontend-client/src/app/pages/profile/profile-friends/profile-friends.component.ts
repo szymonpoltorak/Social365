@@ -9,7 +9,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
 import { RouterLink } from "@angular/router";
-import { Page } from "@interfaces/feed/page.interface";
+import { Page } from "@interfaces/utils/page.interface";
 import { FriendsService } from "@api/profile/friends.service";
 import { LocalStorageService } from '@core/services/utils/local-storage.service';
 import { Profile } from "@interfaces/feed/profile.interface";

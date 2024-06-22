@@ -13,7 +13,7 @@
                    aria-label="Search Social365"
                    [formControl]="searchSocialControl"
                    [matAutocomplete]="auto"
-                   placeholder="Your friend name">
+                   placeholder="Users full name">
 
             <button mat-mini-fab
                     aria-label="Search"
@@ -25,8 +25,14 @@
         </div>
 
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            @for (option of filteredOptions | async; track option) {
-                <mat-option class="text-xs" [value]="option">{{ option }}</mat-option>
+            @for (option of (filteredOptions$ | async)?.content; track option) {
+                <mat-option [value]="option.fullName">
+                    <div class="flex items-center gap-2 text-xs">
+                        <app-avatar-photo [imageLink]="'/images/nouser@example.com/shiba1.jpg'"></app-avatar-photo>
+
+                        {{ option.fullName }}
+                    </div>
+                </mat-option>
             }
         </mat-autocomplete>
     </form>

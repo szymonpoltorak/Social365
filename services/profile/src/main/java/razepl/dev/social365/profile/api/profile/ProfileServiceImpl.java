@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
@@ -26,6 +27,7 @@ import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -67,6 +69,17 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
         return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
+    }
+
+    @Override
+    public final Page<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
+        log.info("Getting profiles by pattern: '{}', with pageable : {}", pattern, pageable);
+
+        Page<Profile> profiles = profileRepository.findAllByPattern(pattern.toLowerCase(Locale.ROOT), pageable);
+
+        log.info("Found {} profiles", profiles.getNumberOfElements());
+
+        return profiles.map(profileMapper::mapProfileToProfileQueryResponse);
     }
 
     @Override

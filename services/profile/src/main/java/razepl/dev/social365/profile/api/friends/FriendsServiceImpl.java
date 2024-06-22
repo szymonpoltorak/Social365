@@ -22,6 +22,8 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
+import java.util.Locale;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,7 +47,8 @@ public class FriendsServiceImpl implements FriendsService {
     public final Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, Pageable pageable) {
         log.info("Getting friends for profile with id: {} with pattern: {} and pageable : {}", profileId, pattern, pageable);
 
-        Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(profileId, pattern, pageable);
+        Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(profileId,
+                pattern.toLowerCase(Locale.ROOT), pageable);
 
         return mapFriendDataPageToFriendResponse(friends, profileId);
     }

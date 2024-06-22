@@ -12,6 +12,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducatio
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
@@ -46,4 +47,6 @@ public interface ProfileMapper {
     BirthdayInfoResponse mapBirthdayDataToBirthdayInfoResponse(BirthdayData birthdayData);
 
     FriendFeedResponse mapProfileToFriendFeedResponse(Profile profile);
+
+    ProfileQueryResponse mapProfileToProfileQueryResponse(Profile profile);
 }

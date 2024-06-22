@@ -19,7 +19,7 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendsService } from '@core/services/api/profile/friends.service';
 import { Observable, Subject, takeUntil } from "rxjs";
-import { Page } from "@interfaces/feed/page.interface";
+import { Page } from "@interfaces/utils/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { RoutingService } from '@core/services/profile/routing.service';
 

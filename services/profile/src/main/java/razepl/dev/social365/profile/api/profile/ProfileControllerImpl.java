@@ -2,6 +2,7 @@ package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import razepl.dev.social365.profile.api.profile.constants.Params;
 import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
@@ -32,6 +34,14 @@ public class ProfileControllerImpl implements ProfileController {
     public final Page<BirthdayInfoResponse> getTodayBirthdays(@Param(Params.PROFILE_ID) String profileId,
                                                               @Param(Params.PAGE_NUMBER) int pageNumber) {
         return profileService.getTodayBirthdays(profileId, pageNumber);
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING)
+    public final Page<ProfileQueryResponse> getProfilesByPattern(@Param(Params.PATTERN) String pattern,
+                                                                 @Param(Params.PAGE_NUMBER) int pageNumber,
+                                                                 @Param(Params.PAGE_SIZE) int pageSize) {
+        return profileService.getProfilesByPattern(pattern, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override

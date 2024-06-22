@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
-import { Page } from '@core/interfaces/feed/page.interface';
+import { Page } from '@interfaces/utils/page.interface';
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { ProfileService } from "@api/profile/profile.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";

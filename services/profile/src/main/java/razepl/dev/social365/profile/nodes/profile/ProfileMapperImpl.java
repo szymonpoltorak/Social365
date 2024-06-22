@@ -15,6 +15,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducatio
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
@@ -248,9 +249,17 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .build();
     }
 
-    private String getProfilePicturePath(Profile profile) {
-        log.info("Profile : {}", profile);
+    @Override
+    public final ProfileQueryResponse mapProfileToProfileQueryResponse(Profile profile) {
+        return ProfileQueryResponse
+                .builder()
+                .profileId(profile.getProfileId())
+                .profilePictureUrl(getProfilePicturePath(profile))
+                .fullName(profile.getFullName())
+                .build();
+    }
 
+    private String getProfilePicturePath(Profile profile) {
         ImageResponse profilePicture = imagesServiceClient.getImagePath(profile.getProfilePictureId());
 
         log.info("Profile picture response: {}", profilePicture);

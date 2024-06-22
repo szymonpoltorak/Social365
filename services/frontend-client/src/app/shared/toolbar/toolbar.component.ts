@@ -8,12 +8,16 @@ import { MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { map, Observable, startWith } from "rxjs";
+import { debounceTime, distinctUntilChanged, EMPTY, Observable, of, startWith, switchMap } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
+import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
+import { ProfileService } from "@api/profile/profile.service";
+import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
+import { Page } from "@interfaces/utils/page.interface";
 
 @Component({
     selector: 'app-toolbar',
@@ -33,7 +37,8 @@ import { Profile } from "@interfaces/feed/profile.interface";
         RouterLink,
         MatMenuTrigger,
         MatTabsModule,
-        MatBadge
+        MatBadge,
+        AvatarPhotoComponent
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -42,27 +47,32 @@ export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
+    private readonly FIRST_PAGE: number = 0;
+    private readonly PAGE_SIZE: number = 5;
     @Input() isOnFeed!: boolean;
-    options: string[] = ['Szymon Półtorak', 'Jacek Kowalski', 'John Smith', "Stefan Nowak"];
-    filteredOptions !: Observable<string[]>;
+    filteredOptions$ !: Observable<Page<ProfileQuery>>;
     newMessages: number = 5;
     newNotifications: number = 0;
 
     constructor(protected router: Router,
+                private profileService: ProfileService,
                 private localStorageService: LocalStorageService) {
     }
 
     ngOnInit(): void {
-        this.filteredOptions = this.searchSocialControl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(value || '')),
+        this.filteredOptions$ = this.searchSocialControl.valueChanges.pipe(
+            startWith(""),
+            distinctUntilChanged(),
+            debounceTime(750),
+            switchMap((pattern: string) => this.fetchProfiles(pattern))
         );
         this.user = this.localStorageService.getUserProfileFromStorage();
     }
 
-    private _filter(value: string): string[] {
-        const filterValue: string = value.toLowerCase();
-
-        return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    private fetchProfiles(pattern: string): Observable<Page<ProfileQuery>> {
+        if (pattern === "") {
+            return EMPTY;
+        }
+        return this.profileService.getProfilesByPattern(pattern, this.FIRST_PAGE, this.PAGE_SIZE);
     }
 }

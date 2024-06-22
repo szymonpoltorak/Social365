@@ -5,8 +5,9 @@ import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { ProfileMappings } from "@enums/api/profile/profile-mappings.enum";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
-import { Page } from "@interfaces/feed/page.interface";
+import { Page } from "@interfaces/utils/page.interface";
 import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
+import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,16 @@ export class ProfileService {
             params: {
                 profileId: profileId,
                 pageNumber: pageNumber
+            }
+        }).pipe(take(1));
+    }
+
+    getProfilesByPattern(pattern: string, pageNumber: number, pageSize: number): Observable<Page<ProfileQuery>> {
+        return this.http.get<Page<ProfileQuery>>(ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING, {
+            params: {
+                pattern: pattern,
+                pageNumber: pageNumber,
+                pageSize: pageSize
             }
         }).pipe(take(1));
     }

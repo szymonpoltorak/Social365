@@ -11,7 +11,7 @@ import { BirthdayComponent } from "@pages/feed/friends-feed/birthday/birthday.co
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { ProfileService } from "@api/profile/profile.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { Page } from "@interfaces/feed/page.interface";
+import { Page } from "@interfaces/utils/page.interface";
 import { FriendsService } from '@core/services/api/profile/friends.service';
 
 @Component({

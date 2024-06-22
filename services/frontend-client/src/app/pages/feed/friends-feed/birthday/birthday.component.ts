@@ -6,7 +6,7 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { Router } from '@angular/router';
-import { Page } from "@interfaces/feed/page.interface";
+import { Page } from "@interfaces/utils/page.interface";
 import { MatDialog } from "@angular/material/dialog";
 import {
     BirthdayInfoDialogComponent

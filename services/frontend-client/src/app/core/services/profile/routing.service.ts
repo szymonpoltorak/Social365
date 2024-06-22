@@ -22,4 +22,5 @@ export class RoutingService {
     getCurrentUsernameForRoute(url: string[]): string {
         return url.find((route: string) => route.includes('@')) || '';
     }
+
 }
