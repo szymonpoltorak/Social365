@@ -15,10 +15,10 @@ export class AboutDataService {
     constructor(private http: HttpClient) {
     }
 
-    getOverview(profileId: string): Observable<OverviewData> {
+    getOverview(username: string): Observable<OverviewData> {
         return this.http.get<OverviewData>(AboutDataMappings.OVERVIEW_MAPPING, {
             params: {
-                profileId: profileId
+                username: username
             }
         }).pipe(take(1));
     }

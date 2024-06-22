@@ -23,25 +23,25 @@ public class AboutDataControllerImpl implements AboutDataController {
 
     @Override
     @GetMapping(value = AboutMappings.OVERVIEW_MAPPING)
-    public final OverviewResponse getOverview(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return aboutDataService.getOverview(profileId);
+    public final OverviewResponse getOverview(@RequestParam(Params.USERNAME) String username) {
+        return aboutDataService.getOverview(username);
     }
 
     @Override
     @GetMapping(value = AboutMappings.WORK_EDUCATION_MAPPING)
-    public final WorkEducationResponse getWorkEducation(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return aboutDataService.getWorkEducation(profileId);
+    public final WorkEducationResponse getWorkEducation(@RequestParam(Params.USERNAME) String username) {
+        return aboutDataService.getWorkEducation(username);
     }
 
     @Override
     @GetMapping(value = AboutMappings.LOCATIONS_MAPPING)
-    public final LocationsResponse getLocations(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return aboutDataService.getLocations(profileId);
+    public final LocationsResponse getLocations(@RequestParam(Params.USERNAME) String username) {
+        return aboutDataService.getLocations(username);
     }
 
     @Override
     @GetMapping(value = AboutMappings.CONTACT_INFO_MAPPING)
-    public final ContactInfoResponse getContactInfo(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return aboutDataService.getContactInfo(profileId);
+    public final ContactInfoResponse getContactInfo(@RequestParam(Params.USERNAME) String username) {
+        return aboutDataService.getContactInfo(username);
     }
 }

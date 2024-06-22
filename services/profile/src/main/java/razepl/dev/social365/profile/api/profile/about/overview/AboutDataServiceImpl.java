@@ -22,43 +22,43 @@ public class AboutDataServiceImpl implements AboutDataService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final OverviewResponse getOverview(String profileId) {
-        log.info("Getting overview for profileId: {}", profileId);
+    public final OverviewResponse getOverview(String username) {
+        log.info("Getting overview for username: {}", username);
 
-        Profile profile = getProfile(profileId);
+        Profile profile = getProfile(username);
 
         return profileMapper.mapProfileToOverviewResponse(profile);
     }
 
     @Override
-    public final WorkEducationResponse getWorkEducation(String profileId) {
-        log.info("Getting work education for profileId: {}", profileId);
+    public final WorkEducationResponse getWorkEducation(String username) {
+        log.info("Getting work education for username: {}", username);
 
-        Profile profile = getProfile(profileId);
+        Profile profile = getProfile(username);
 
         return profileMapper.mapProfileToWorkEducationResponse(profile);
     }
 
     @Override
-    public final LocationsResponse getLocations(String profileId) {
-        log.info("Getting locations for profileId: {}", profileId);
+    public final LocationsResponse getLocations(String username) {
+        log.info("Getting locations for username: {}", username);
 
-        Profile profile = getProfile(profileId);
+        Profile profile = getProfile(username);
 
         return profileMapper.mapProfileToLocationsResponse(profile);
     }
 
     @Override
-    public final ContactInfoResponse getContactInfo(String profileId) {
-        log.info("Getting contact info for profileId: {}", profileId);
+    public final ContactInfoResponse getContactInfo(String username) {
+        log.info("Getting contact info for username: {}", username);
 
-        Profile profile = getProfile(profileId);
+        Profile profile = getProfile(username);
 
         return profileMapper.mapProfileToContactInfoResponse(profile);
     }
 
-    private Profile getProfile(String profileId) {
-        Profile profile = profileRepository.findByProfileId(profileId)
+    private Profile getProfile(String username) {
+        Profile profile = profileRepository.findByUsername(username)
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile found: {}", profile);

@@ -1,4 +1,9 @@
-@if (option.data !== null && !option.isBeingEdited) {
+@if (!canEdit) {
+    <app-about-unfilled-option [icon]="option.icon"
+                               [subLabel]="option.subLabel">
+    </app-about-unfilled-option>
+
+} @else if (option.data !== null && !option.isBeingEdited) {
     <app-about-option [icon]="option.icon"
                       [label]="option.label"
                       (edit)="editData()"
@@ -6,7 +11,7 @@
                       [subLabel]="option.subLabel"
                       [option]="option.data">
     </app-about-option>
-} @else if (option.data === null && !option.isBeingEdited && !canEdit) {
+} @else if (option.data === null && !option.isBeingEdited) {
     <div>
         <button aria-label="Add button"
                 color="primary"
@@ -16,7 +21,7 @@
             {{ option.nullLabel }}
         </button>
     </div>
-} @else if (canEdit) {
+} @else if (option.isBeingEdited) {
     <div class="mt-3 mb-3">
         <mat-form-field class="w-full">
             <mat-label>{{ option.nullLabel }}</mat-label>

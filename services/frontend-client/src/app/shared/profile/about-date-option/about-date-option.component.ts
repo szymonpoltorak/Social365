@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AboutOption } from "@interfaces/profile/about/about-option.interface";
 import { AboutOptionComponent } from "@shared/profile/about-option/about-option.component";
 import { MatIcon } from "@angular/material/icon";
@@ -7,6 +7,8 @@ import { MatFormField, MatInputModule } from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import { MatDivider } from "@angular/material/divider";
+import { RoutingService } from "@services/profile/routing.service";
+import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-option/about-unfilled-option.component";
 
 @Component({
     selector: 'app-about-date-option',
@@ -21,14 +23,22 @@ import { MatDivider } from "@angular/material/divider";
         MatDatepickerInput,
         MatDatepicker,
         MatDatepickerToggle,
-        MatDivider
+        MatDivider,
+        AboutUnfilledOptionComponent
     ],
     templateUrl: './about-date-option.component.html',
     styleUrl: './about-date-option.component.scss'
 })
-export class AboutDateOptionComponent {
+export class AboutDateOptionComponent implements OnInit {
     @Input() option!: AboutOption;
-    @Input() canEdit!: boolean;
+    canEdit !: boolean;
+
+    constructor(private routingService: RoutingService) {
+    }
+
+    ngOnInit(): void {
+        this.canEdit = this.routingService.isCurrentUserAbleToEdit();
+    }
 
     editData(): void {
         this.option.isBeingEdited = true;

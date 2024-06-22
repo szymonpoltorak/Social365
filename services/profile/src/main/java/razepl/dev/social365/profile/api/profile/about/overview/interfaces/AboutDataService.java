@@ -7,12 +7,12 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducatio
 
 public interface AboutDataService {
 
-    OverviewResponse getOverview(String profileId);
+    OverviewResponse getOverview(String username);
 
-    WorkEducationResponse getWorkEducation(String profileId);
+    WorkEducationResponse getWorkEducation(String username);
 
-    LocationsResponse getLocations(String profileId);
+    LocationsResponse getLocations(String username);
 
-    ContactInfoResponse getContactInfo(String profileId);
+    ContactInfoResponse getContactInfo(String username);
 
 }

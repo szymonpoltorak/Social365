@@ -198,7 +198,7 @@ export class ProfilePostsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
-        const username: string = this.routingService.getCurrentUsernameForRoute(this.router.url.split("/"));
+        const username: string = this.routingService.getCurrentUsernameForRoute();
 
         this.fetchFriendsAndProfileInfo(username);
     }

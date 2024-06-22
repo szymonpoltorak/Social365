@@ -3,7 +3,11 @@
 
     @for (option of options; track option) {
         @if (option.subLabel === 'Relationship status') {
-            <app-about-select-option [option]="option" [selectEnum]="Relationship"></app-about-select-option>
+            <app-about-select-option [option]="option"
+                                     [selectEnum]="Relationship">
+            </app-about-select-option>
+        } @else if (option.label === 'Works at') {
+            <app-about-workplace [option]="option"></app-about-workplace>
         } @else {
             <app-about-typical-option [option]="option"></app-about-typical-option>
         }

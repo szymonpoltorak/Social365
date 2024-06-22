@@ -48,7 +48,7 @@ export class AboutContactComponent implements OnInit {
         label: "",
         subLabel: "Mobile",
         data: null,
-        icon: "mobile",
+        icon: "phone",
         nullLabel: "Add a Mobile Number",
         isBeingEdited: false,
         formControl: new FormControl<string>("")

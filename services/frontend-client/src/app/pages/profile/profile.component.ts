@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             })
 
         this.activeRoute = this.routingService
-            .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
+            .getCurrentActivatedRouteOptionWithUrl(this.router.url.split("/"), this.options);
 
         this.router
             .events
@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 const newEvent: NavigationEnd = event as NavigationEnd;
                 const url: string[] = newEvent.url.split("/");
 
-                this.activeRoute = this.routingService.getCurrentActivatedRouteOption(url, this.options);
+                this.activeRoute = this.routingService.getCurrentActivatedRouteOptionWithUrl(url, this.options);
             });
     }
 
