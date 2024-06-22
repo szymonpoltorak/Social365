@@ -5,8 +5,18 @@
 
     <div class="flex justify-center">
         <div class="grid r-l:grid-cols-6 r-md:grid-cols-5 r-xl:grid-cols-7 r-xxl:grid-cols-8 r-sl:grid-cols-3 r-sm:grid-cols-2 r-s:grid-cols-1 gap-6 mb-24">
-            @for (friend of friendRequests; track friend) {
-                <app-friend-request [friendElement]="friend"></app-friend-request>
+            @if (friendRequests.content.length === 0) {
+                <div class="col-span-6 r-md:col-span-5 r-xl:col-span-7 r-xxl:col-span-8 r-sl:col-span-3 r-sm:col-span-2 r-s:col-span-1">
+                    <div class="flex justify-center items-center h-96">
+                        <div class="text-lg font-bold">
+                            No friend requests
+                        </div>
+                    </div>
+                </div>
+            } @else {
+                @for (friend of friendRequests.content; track friend) {
+                    <app-friend-request [friendElement]="friend"></app-friend-request>
+                }
             }
         </div>
     </div>
