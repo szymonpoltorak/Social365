@@ -13,6 +13,7 @@ import { WorkPlaceRequest } from "@interfaces/profile/about/workplace-request.in
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AboutExperienceService } from "@api/profile/about/about-experience.service";
 
 @Component({
     selector: 'app-about-workplace',
@@ -42,6 +43,7 @@ export class AboutWorkplaceComponent implements OnInit {
 
     constructor(private routingService: RoutingService,
                 private matSnackBar: MatSnackBar,
+                private aboutExperienceService: AboutExperienceService,
                 private localStorage: LocalStorageService) {
     }
 
@@ -62,12 +64,13 @@ export class AboutWorkplaceComponent implements OnInit {
         this.workplaceFormControl = new FormControl<string>(data[1]);
     }
 
-    editData(): void {
-        this.option.isBeingEdited = true;
-    }
-
     deleteAboutDate(): void {
-
+        this.aboutExperienceService
+            .deleteProfileWorkPlace(this.localStorage.getUserProfileIdFromStorage())
+            .subscribe(() => {
+                this.option.data = null;
+                this.option.isBeingEdited = false;
+            });
     }
 
     updateWorkplace(): void {
@@ -79,13 +82,44 @@ export class AboutWorkplaceComponent implements OnInit {
 
             return;
         }
+        if (`${position} at ${workplace}` === this.option.data!.label) {
+            this.matSnackBar.open("No changes were found", "Close");
+
+            return;
+        }
+        this.updateWorkplaceData(position, workplace, this.getPrivacyLevel());
+    }
+
+    updatePrivacyLevel(event: PrivacyLevel): void {
+        if (this.option.data === null) {
+            return;
+        }
+        const data: string[] = this.option.data.label.split(" at ");
+        const position: string = data[0];
+        const workplace: string = data[1];
+
+        this.updateWorkplaceData(position, workplace, event);
+    }
+
+    private updateWorkplaceData(position: string, workplace: string, privacyLevel: PrivacyLevel): void {
         const workplaceRequest: WorkPlaceRequest = {
             position: position,
             workplace: workplace,
             profileId: this.localStorage.getUserProfileIdFromStorage(),
-            privacyLevel: PrivacyLevel.ONLY_ME
+            privacyLevel: privacyLevel
         };
-        console.log(workplaceRequest);
-        this.option.isBeingEdited = false;
+        this.aboutExperienceService
+            .updateProfileWorkPlace(workplaceRequest)
+            .subscribe(() => {
+                this.option.data = {
+                    label: `${position} at ${workplace}`,
+                    privacyLevel: privacyLevel
+                }
+                this.option.isBeingEdited = false;
+            });
+    }
+
+    private getPrivacyLevel(): PrivacyLevel {
+        return this.option.data === null ? PrivacyLevel.ONLY_ME : this.option.data.privacyLevel;
     }
 }

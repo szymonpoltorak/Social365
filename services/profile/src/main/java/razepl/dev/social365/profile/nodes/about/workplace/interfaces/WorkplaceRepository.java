@@ -19,12 +19,4 @@ public interface WorkplaceRepository extends Neo4jRepository<Workplace, String> 
             """)
     Optional<Workplace> findWorkplaceByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
-    @Query("""
-            MATCH (w:Workplace {workplaceId: $workplaceId})
-            MATCH (p:Profile {profileId: $profileId})
-            CREATE (p)-[:WORKS_AT]->(w)
-            """)
-    void createWorkplaceHasRelationship(@Param(Params.WORKPLACE_ID) String workplaceId,
-                                        @Param(Params.PROFILE_ID) String profileId);
-
 }

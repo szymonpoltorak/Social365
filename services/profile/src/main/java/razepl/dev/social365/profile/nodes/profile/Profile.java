@@ -63,7 +63,7 @@ public class Profile {
     @Relationship(type = "BORN_ON", direction = Relationship.Direction.OUTGOING)
     private BirthDate birthDate;
 
-    @Relationship(type = "WORKS_AS", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "WORKS_AT", direction = Relationship.Direction.OUTGOING)
     private Workplace workplace;
 
     @Relationship(type = "IS", direction = Relationship.Direction.OUTGOING)
@@ -90,4 +90,5 @@ public class Profile {
     final String getFullName() {
         return String.format("%s %s", firstName, lastName);
     }
+
 }

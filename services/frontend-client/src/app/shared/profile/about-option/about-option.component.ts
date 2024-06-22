@@ -26,4 +26,12 @@ export class AboutOptionComponent {
     protected readonly PrivacyLevel = PrivacyLevel;
     @Output() readonly edit: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly delete: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly changePrivacyLevel: EventEmitter<PrivacyLevel> = new EventEmitter<PrivacyLevel>();
+
+    changePrivacyLevelEmitter(privacyLevel: PrivacyLevel): void {
+        if (privacyLevel === this.option.privacyLevel) {
+            return;
+        }
+        this.changePrivacyLevel.emit(privacyLevel);
+    }
 }

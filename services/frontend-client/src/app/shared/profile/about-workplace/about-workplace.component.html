@@ -6,7 +6,8 @@
 } @else if (option.data !== null && !option.isBeingEdited) {
     <app-about-option [icon]="option.icon"
                       [label]="option.label"
-                      (edit)="editData()"
+                      (edit)="option.isBeingEdited = true"
+                      (changePrivacyLevel)="updatePrivacyLevel($event)"
                       (delete)="deleteAboutDate()"
                       [subLabel]="option.subLabel"
                       [option]="option.data">

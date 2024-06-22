@@ -40,12 +40,12 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
         log.info("Profile for work place update: {}", profile);
 
-        Optional<Workplace> workplaceOptional = workplaceRepository.findWorkplaceByProfileId(profile.getProfileId());
+        Workplace workplace = profile.getWorkplace();
 
-        if (workplaceOptional.isEmpty()) {
+        if (workplace == null) {
             log.info("Workplace does not exist creating new one.");
 
-            Workplace workplace = Workplace
+            workplace = Workplace
                     .builder()
                     .workplaceName(workPlaceRequest.workplace())
                     .position(workPlaceRequest.position())
@@ -54,14 +54,10 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
             workplace = workplaceRepository.save(workplace);
 
-            workplaceRepository.createWorkplaceHasRelationship(workplace.getWorkplaceId(), profile.getProfileId());
-
             log.info("Created workplace: {}", workplace);
 
         } else {
             log.info("Workplace found updating it.");
-
-            Workplace workplace = workplaceOptional.get();
 
             workplace.setWorkplaceName(workPlaceRequest.workplace());
             workplace.setPosition(workPlaceRequest.position());
@@ -71,6 +67,12 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
 
             log.info("Updated workplace: {}", workplace);
         }
+        profile.setWorkplace(workplace);
+
+        profile = profileRepository.save(profile);
+
+        log.info("Updated profile: {}", profile);
+
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 

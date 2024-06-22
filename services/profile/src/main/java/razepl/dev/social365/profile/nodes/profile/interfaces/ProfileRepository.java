@@ -21,7 +21,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query("""
             MATCH (p:Profile)
             WHERE p.profileId = $profileId
-            MATCH(p)-[r:HAS|BORN_ON|WORKS_AS|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]->(e)
+            MATCH (p)-[r:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(e)
             RETURN p, collect(r) as rel, collect(e) as nodes
             """)
     Optional<Profile> findByProfileId(@Param(Params.PROFILE_ID) String profileId);
@@ -36,8 +36,8 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query("""
             MATCH (p:Profile)-[r:HAS]->(e:Email)
             WHERE e.emailValue = $username
-            MATCH(p)-[r:HAS|BORN_ON|WORKS_AS|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]->(t)
-            RETURN p, collect(r) as rel, collect(t) as nodes
+            MATCH (p)-[r1:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(t)
+            RETURN p, collect(r1) as rel, collect(t) as nodes
             """)
     Optional<Profile> findByUsername(@Param(Params.USERNAME) String username);
 
