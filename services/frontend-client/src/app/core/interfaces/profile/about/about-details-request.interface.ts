@@ -1,9 +1,5 @@
-import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
-import { DetailsType } from "@enums/api/profile/about/details-type.enum";
+import { AboutDataEmail } from "@interfaces/profile/about/about-data-email.interface";
 
-export interface AboutDetailsRequest {
-    profileId: string;
-    privacyLevel: PrivacyLevel;
+export interface AboutDetailsRequest extends AboutDataEmail {
     detailsValue: string;
-    detailsType: DetailsType;
 }

@@ -1,8 +1,6 @@
-import { Gender } from "@enums/profile/gender.enum";
-import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
+import { AboutDataEmail } from "@interfaces/profile/about/about-data-email.interface";
+import { GenderType } from "@enums/api/profile/about/gender-type.enum";
 
-export interface GenderRequest {
-    profileId: string;
-    gender: Gender;
-    privacyLevel: PrivacyLevel;
+export interface GenderRequest extends AboutDataEmail {
+    gender: GenderType;
 }

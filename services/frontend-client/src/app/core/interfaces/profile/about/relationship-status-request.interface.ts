@@ -1,8 +1,6 @@
-import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
-import { Relationship } from "@enums/profile/relationship.enum";
+import { AboutDataEmail } from "@interfaces/profile/about/about-data-email.interface";
+import { RelationshipType } from "@enums/api/profile/about/relationship-type.enum";
 
-export interface RelationshipStatusRequest {
-    profileId: string;
-    relationshipStatus: Relationship;
-    privacyLevel: PrivacyLevel;
+export interface RelationshipStatusRequest extends AboutDataEmail {
+    relationshipStatus: RelationshipType;
 }

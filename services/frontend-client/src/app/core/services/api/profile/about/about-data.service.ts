@@ -23,26 +23,26 @@ export class AboutDataService {
         }).pipe(take(1));
     }
 
-    getWorkEducation(profileId: string): Observable<WorkEducation> {
+    getWorkEducation(username: string): Observable<WorkEducation> {
         return this.http.get<WorkEducation>(AboutDataMappings.WORK_EDUCATION_MAPPING, {
             params: {
-                profileId: profileId
+                username: username
             }
         }).pipe(take(1));
     }
 
-    getLocations(profileId: string): Observable<Locations> {
+    getLocations(username: string): Observable<Locations> {
         return this.http.get<Locations>(AboutDataMappings.LOCATIONS_MAPPING, {
             params: {
-                profileId: profileId
+                username: username
             }
         }).pipe(take(1));
     }
 
-    getContactInfo(profileId: string): Observable<ContactInfo> {
+    getContactInfo(username: string): Observable<ContactInfo> {
         return this.http.get<ContactInfo>(AboutDataMappings.CONTACT_INFO_MAPPING, {
             params: {
-                profileId: profileId
+                username: username
             }
         }).pipe(take(1));
     }

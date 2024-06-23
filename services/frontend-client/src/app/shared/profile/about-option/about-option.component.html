@@ -48,9 +48,11 @@
             Edit
         </button>
 
-        <button aria-label="Delete" (click)="delete.emit()" mat-menu-item>
-            <mat-icon>delete</mat-icon>
-            Delete
-        </button>
+        @if (canDelete) {
+            <button aria-label="Delete" (click)="delete.emit()" mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                Delete
+            </button>
+        }
     </mat-menu>
 </div>

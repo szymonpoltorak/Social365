@@ -5,4 +5,8 @@ public enum DetailsType {
     HIGH_SCHOOL,
     CURRENT_CITY,
     HOMETOWN,
+    RELATIONSHIP_STATUS,
+    MAIL,
+    PHONE,
+    BIRTHDAY
 }

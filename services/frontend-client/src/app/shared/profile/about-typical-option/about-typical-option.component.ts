@@ -9,6 +9,11 @@ import { MatDivider } from "@angular/material/divider";
 import { MatButton } from "@angular/material/button";
 import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-option/about-unfilled-option.component";
 import { RoutingService } from "@services/profile/routing.service";
+import { AboutApiHelperService } from "@api/profile/about/about-api-helper.service";
+import { Either } from "@core/types/feed/either.type";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { DetailsType } from "@enums/profile/details-type.enum";
+import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 
 @Component({
     selector: 'app-about-typical-option',
@@ -29,21 +34,73 @@ import { RoutingService } from "@services/profile/routing.service";
     styleUrl: './about-typical-option.component.scss'
 })
 export class AboutTypicalOptionComponent implements OnInit {
-    @Input() option !: AboutOption;
-    canEdit !: boolean;
 
-    constructor(private routingService: RoutingService) {
+    protected readonly DetailsType = DetailsType;
+    @Input() option !: AboutOption;
+    canEdit: boolean = false;
+
+    constructor(private routingService: RoutingService,
+                private snackBar: MatSnackBar,
+                private aboutApiHelperService: AboutApiHelperService) {
     }
 
     ngOnInit(): void {
         this.canEdit = this.routingService.isCurrentUserAbleToEdit();
     }
 
-    editData(): void {
-        this.option.isBeingEdited = true;
+    deleteAboutDate(): void {
+        if (this.option.formControl.value === null) {
+            return;
+        }
+        this.aboutApiHelperService
+            .deleteAboutOption(this.option.type)
+            .subscribe(() => {
+                this.option.data = null;
+                this.option.isBeingEdited = false;
+
+                this.snackBar.open("Successfully deleted", "Close");
+            });
     }
 
-    deleteAboutDate(): void {
+    submitData(): void {
+        if (this.option.formControl.value === null) {
+            this.snackBar.open("Please enter a valid value", "Close");
 
+            return;
+        }
+        const detailsValue: Either<string, Date> = this.option.formControl.value;
+        const request: any = this.aboutApiHelperService
+            .mapAboutOptionToAboutOptionRequest(detailsValue, this.option);
+
+        this.aboutApiHelperService
+            .updateAboutOption(request)
+            .subscribe(() => {
+                this.option.data = {
+                    label: detailsValue as string,
+                    privacyLevel: request.privacyLevel
+                }
+                this.option.isBeingEdited = false;
+
+                this.snackBar.open("Successfully updated", "Close");
+            });
+    }
+
+    updatePrivacyLevel(event: PrivacyLevel): void {
+        if (this.option.data === null) {
+            return;
+        }
+        const request: any = this.aboutApiHelperService
+            .mapAboutOptionToAboutOptionRequest(this.option.data.label, this.option);
+
+        request.privacyLevel = event;
+
+        this.aboutApiHelperService
+            .updateAboutOption(request)
+            .subscribe(() => {
+                this.option.data!.privacyLevel = request.privacyLevel;
+                this.option.isBeingEdited = false;
+
+                this.snackBar.open("Successfully updated", "Close");
+            });
     }
 }

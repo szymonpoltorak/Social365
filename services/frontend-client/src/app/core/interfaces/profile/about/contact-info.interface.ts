@@ -4,5 +4,5 @@ export interface ContactInfo {
     mobile: AboutOptionData;
     email: AboutOptionData;
     gender: AboutOptionData;
-    birthday: AboutOptionData;
+    birthDate: AboutOptionData;
 }

@@ -1,7 +1,5 @@
-import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
+import { AboutDataEmail } from "@interfaces/profile/about/about-data-email.interface";
 
-export interface DateOfBirthRequest {
-    profileId: string;
+export interface DateOfBirthRequest extends AboutDataEmail {
     dateOfBirth: Date;
-    privacyLevel: PrivacyLevel;
 }
