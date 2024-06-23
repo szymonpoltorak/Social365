@@ -10,14 +10,6 @@
                        aria-label="Search Social365"
                        [formControl]="searchSocialControl"
                        placeholder="Your friend name">
-
-                <button mat-mini-fab
-                        aria-label="Search"
-                        matTooltip="Search"
-                        color="primary"
-                        type="submit">
-                    <mat-icon>search</mat-icon>
-                </button>
             </div>
 
             <div class="max-f-xs:hidden">
@@ -40,7 +32,7 @@
 
     <mat-card-content>
         <div class="grid feed-sm:grid-cols-3 max-feed-sm:grid-cols-2 max-r-s:grid-cols-1">
-            @for (friend of friends; track friend) {
+            @for (friend of friends.content; track friend) {
                 <app-friend-profile [friend]="friend"></app-friend-profile>
             }
         </div>

@@ -13,7 +13,7 @@ import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { filter, Subject, takeUntil } from "rxjs";
-import { RouteDetectionService } from "@services/profile/route-detection.service";
+import { RoutingService } from "@services/profile/routing.service";
 
 @Component({
     selector: 'app-profile-about',
@@ -47,30 +47,21 @@ export class ProfileAboutComponent implements OnInit, OnDestroy {
     protected selectedOption !: RouteOption;
     private routerDestroy$: Subject<void> = new Subject<void>();
 
-    constructor(private router: Router,
-                private routeDetectionService: RouteDetectionService) {
+    constructor(private routingService: RoutingService) {
     }
 
     ngOnInit(): void {
-        this.selectedOption = this.routeDetectionService
-            .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
+        this.selectedOption = this.routingService.getCurrentActivatedRouteOption(this.options);
 
-        this.router
-            .events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                takeUntil(this.routerDestroy$)
-            )
-            .subscribe(event => {
-                const newEvent: NavigationEnd = event as NavigationEnd;
-                const url: string[] = newEvent.url.split("/");
-
-                this.selectedOption = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
+        this.routingService
+            .getUrlSegmentsOnNavigationEnd()
+            .pipe(takeUntil(this.routerDestroy$))
+            .subscribe((url: string[]) => {
+                this.selectedOption = this.routingService.getCurrentActivatedRouteOptionWithUrl(url, this.options);
             });
     }
 
     ngOnDestroy(): void {
-        this.routerDestroy$.next();
         this.routerDestroy$.complete();
     }
 

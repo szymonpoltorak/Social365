@@ -4,3 +4,4 @@ export enum Relationship {
     IN_A_RELATIONSHIP = "In a relationship",
     SINGLE = "Single",
 }
+

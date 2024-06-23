@@ -2,5 +2,6 @@ export interface FriendFeedOption {
     profileId: string;
     fullName: string;
     isOnline: boolean;
-    imageLink: string;
+    username: string;
+    profilePictureUrl: string;
 }

@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
@@ -25,6 +27,8 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -50,6 +54,8 @@ public class ProfileServiceImpl implements ProfileService {
 
         profile = profileRepository.save(profile);
 
+        log.info("Profile updated: {}", profile);
+
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
@@ -61,9 +67,44 @@ public class ProfileServiceImpl implements ProfileService {
 
         Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
 
-        log.info("Found {} birthdays", birthdayDataPage.getTotalElements());
+        log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
         return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
+    }
+
+    @Override
+    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
+        log.info("Getting profiles search by pattern: '{}', with pageable : {}", pattern, pageable);
+
+        Page<Profile> profiles = profileRepository
+                .findAllByPatternWithDetails(pattern.toLowerCase(Locale.ROOT), pageable);
+
+        log.info("Found {} search profiles by pattern", profiles.getNumberOfElements());
+
+        return profiles.map(profileMapper::mapProfileToProfileSearchResponse);
+    }
+
+    @Override
+    public final Page<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
+        log.info("Getting profiles by pattern: '{}', with pageable : {}", pattern, pageable);
+
+        Page<Profile> profiles = profileRepository.findAllByPattern(pattern.toLowerCase(Locale.ROOT), pageable);
+
+        log.info("Found {} profiles", profiles.getNumberOfElements());
+
+        return profiles.map(profileMapper::mapProfileToProfileQueryResponse);
+    }
+
+    @Override
+    public final ProfileResponse getBasicProfileInfoByUsername(String username) {
+        log.info("Getting basic profile info for user with username: {}", username);
+
+        Profile profile = profileRepository.findByUsername(username)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Profile found : {}", profile);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
     }
 
     @Override
@@ -99,16 +140,13 @@ public class ProfileServiceImpl implements ProfileService {
                 .builder()
                 .userId(profileRequest.userId())
                 .email(email)
+                .birthDate(birthDate)
+                .isOnline(true)
                 .firstName(profileRequest.firstName())
                 .lastName(profileRequest.lastName())
-                .birthDate(birthDate)
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
                 .build();
         Profile savedProfile = profileRepository.save(profile);
-
-        mailRepository.createEmailHasRelation(email.getMailId(), savedProfile.getProfileId());
-
-        birthDateRepository.createBornOnRelation(birthDate.getBirthDateId(), savedProfile.getProfileId());
 
         log.info("Saved profile: {}", savedProfile);
 

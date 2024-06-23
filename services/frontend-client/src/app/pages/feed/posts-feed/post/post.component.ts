@@ -77,6 +77,7 @@ export class PostComponent implements OnInit {
                     profileId: "1",
                     fullName: "John Doe",
                     subtitle: "Software Developer",
+                    bio: "I am a simple man",
                     username: "shiba@gmail.com",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },
@@ -91,6 +92,7 @@ export class PostComponent implements OnInit {
                     profileId: "1",
                     fullName: "Jacek Kowalski",
                     subtitle: "Business Analyst",
+                    bio: "I am a simple man",
                     username: "shiba@gmail.com",
                     profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
                 },

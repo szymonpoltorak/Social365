@@ -1,10 +1,8 @@
 include:
     -   path:
-            - ./services/config-server/compose.dev.yml
+            - ./services/config-server/compose.yml
     -   path:
             - ./services/frontend-client/compose.dev.yml
-    #    -   path:
-    #            - ./services/authorization/compose.dev.yml
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:

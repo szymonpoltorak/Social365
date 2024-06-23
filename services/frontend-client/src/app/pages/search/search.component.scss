@@ -1,0 +1,8 @@
+.user-photo {
+    max-width: 82px;
+    max-height: 82px;
+    min-width: 82px;
+    min-height: 82px;
+
+    @apply rounded-full hover:cursor-pointer;
+}

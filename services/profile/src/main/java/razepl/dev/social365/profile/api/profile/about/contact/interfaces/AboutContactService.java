@@ -8,8 +8,8 @@ public interface AboutContactService {
 
     ProfileRequest updateProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest);
 
-    ProfileRequest updateProfileEmailPrivacyLevel(String profileId, PrivacyLevel privacyLevel);
+    ProfileRequest updateProfileEmailPrivacyLevel(String username, PrivacyLevel privacyLevel);
 
-    ProfileRequest deleteProfilePhoneNumber(String profileId);
+    ProfileRequest deleteProfilePhoneNumber(String username);
 
 }

@@ -7,7 +7,6 @@ import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutCo
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
@@ -17,8 +16,6 @@ import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,12 +36,12 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating phone number: {}", profile);
 
-        Optional<Mobile> mobileOptional = mobileRepository.findByProfileId(phoneNumberRequest.profileId());
+        Mobile mobile = profile.getPhoneNumber();
 
-        if (mobileOptional.isEmpty()) {
+        if (mobile == null) {
             log.info("Mobile not found for updating, creating new one");
 
-            Mobile mobile = Mobile
+            mobile = Mobile
                     .builder()
                     .phoneNumber(phoneNumberRequest.detailsValue())
                     .privacyLevel(phoneNumberRequest.privacyLevel())
@@ -52,14 +49,10 @@ public class AboutContactServiceImpl implements AboutContactService {
 
             mobile = mobileRepository.save(mobile);
 
-            mobileRepository.createMobileHasRelationship(mobile.getMobileId(), profile.getProfileId());
-
             log.info("Created mobile: {}", mobile);
 
         } else {
             log.info("Mobile found for updating, updating existing one");
-
-            Mobile mobile = mobileOptional.get();
 
             mobile.setPhoneNumber(phoneNumberRequest.detailsValue());
             mobile.setPrivacyLevel(phoneNumberRequest.privacyLevel());
@@ -68,6 +61,10 @@ public class AboutContactServiceImpl implements AboutContactService {
 
             log.info("Updated mobile: {}", mobile);
         }
+        profile.setPhoneNumber(mobile);
+
+        profile = profileRepository.save(profile);
+
         return profileMapper.mapProfileToProfileRequest(profile);
     }
 
@@ -80,8 +77,7 @@ public class AboutContactServiceImpl implements AboutContactService {
 
         log.info("Profile for updating email privacy level: {}", profile);
 
-        Email email = emailRepository.findByProfileId(profileId)
-                .orElseThrow(ProfileDetailsNotFoundException::new);
+        Email email = profile.getEmail();
 
         log.info("Email for updating: {}", email);
 

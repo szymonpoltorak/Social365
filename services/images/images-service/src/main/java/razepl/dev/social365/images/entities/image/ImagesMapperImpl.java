@@ -11,6 +11,8 @@ import razepl.dev.social365.images.entities.image.post.PostImage;
 @Component
 public class ImagesMapperImpl implements ImagesMapper {
 
+    private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
+
     @Override
     public final ImageResponse toImageResponse(Image image) {
         if (image == null) {
@@ -20,7 +22,7 @@ public class ImagesMapperImpl implements ImagesMapper {
                 .builder()
                 .imageId(image.getImageId())
                 .username(image.getUsername())
-                .imagePath(image.getImagePath())
+                .imagePath(getNginxImagePath(image.getImagePath()))
                 .build();
     }
 
@@ -33,7 +35,7 @@ public class ImagesMapperImpl implements ImagesMapper {
                 .builder()
                 .imageId(postImage.getImageId())
                 .postId(postImage.getPostId())
-                .imagePath(postImage.getImagePath())
+                .imagePath(getNginxImagePath(postImage.getImagePath()))
                 .username(postImage.getUsername())
                 .build();
     }
@@ -48,8 +50,12 @@ public class ImagesMapperImpl implements ImagesMapper {
                 .commentId(savedImage.getCommentId())
                 .imageId(savedImage.getImageId())
                 .username(savedImage.getUsername())
-                .imagePath(savedImage.getImagePath())
+                .imagePath(getNginxImagePath(savedImage.getImagePath()))
                 .build();
+    }
+
+    private String getNginxImagePath(String imagePath) {
+        return imagePath.replace(IMAGE_VOLUME_PATH, "/images");
     }
 
 }

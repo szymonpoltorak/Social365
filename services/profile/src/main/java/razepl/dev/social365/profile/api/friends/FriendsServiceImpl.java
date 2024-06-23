@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
+import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
@@ -21,6 +22,8 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
+import java.util.Locale;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,13 +36,32 @@ public class FriendsServiceImpl implements FriendsService {
 
     @Override
     public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
-        log.info("Getting friends for profile with id: {}", profileId);
+        log.info("Getting friends for profile with id: {} with pageable : {}", profileId, pageable);
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileId(profileId, pageable);
 
-        log.info("Found {} friends for profile with id: {}", friends.getTotalElements(), profileId);
+        return mapFriendDataPageToFriendResponse(friends, profileId);
+    }
 
-        return friends.map(profileMapper::mapFriendDataToFriendResponse);
+    @Override
+    public final Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, Pageable pageable) {
+        log.info("Getting friends for profile with id: {} with pattern: {} and pageable : {}", profileId, pattern, pageable);
+
+        Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(profileId,
+                pattern.toLowerCase(Locale.ROOT), pageable);
+
+        return mapFriendDataPageToFriendResponse(friends, profileId);
+    }
+
+    @Override
+    public final Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
+        log.info("Getting friends feed options for profileId: {} with pageable : {}", profileId, pageable);
+
+        Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(profileId, pageable);
+
+        log.info("Found online friends for feed : {}, for profileId: {}", friends.getNumberOfElements(), profileId);
+
+        return friends.map(profileMapper::mapProfileToFriendFeedResponse);
     }
 
     @Override
@@ -49,7 +71,7 @@ public class FriendsServiceImpl implements FriendsService {
         Page<FriendSuggestion> friendRequests = profileRepository
                 .findFriendRequestsByProfileId(profileId, pageable);
 
-        log.info("Found {} friend requests for profile with id: {}", friendRequests.getTotalElements(), profileId);
+        log.info("Found {} friend requests for profile with id: {}", friendRequests.getNumberOfElements(), profileId);
 
         return friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
@@ -60,7 +82,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(profileId, pageable);
 
-        log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getTotalElements(), profileId);
+        log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getNumberOfElements(), profileId);
 
         return friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
@@ -77,12 +99,10 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Removing friend...");
 
         profileRepository.deleteFriendshipRelationship(profileId, friendId);
-        profileRepository.deleteFriendshipRelationship(friendId, profileId);
 
         log.info("Removing follow relation...");
 
         profileRepository.deleteFollowsRelation(profileId, friendId);
-        profileRepository.deleteFollowsRelation(friendId, profileId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -99,7 +119,6 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Adding friendship relation...");
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
-        profileRepository.createFriendsWithRelation(friendId, profileId);
 
         log.info("Adding follow relation...");
 
@@ -117,7 +136,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
 
-        log.info("Found {} friends ids for profile with id: {}", friendsIds.getTotalElements(), profileId);
+        log.info("Found {} friends ids for profile with id: {}", friendsIds.getNumberOfElements(), profileId);
 
         return friendsIds;
     }
@@ -204,6 +223,12 @@ public class FriendsServiceImpl implements FriendsService {
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
+    }
+
+    private Page<FriendResponse> mapFriendDataPageToFriendResponse(Page<FriendData> friends, String profileId) {
+        log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
+
+        return friends.map(profileMapper::mapFriendDataToFriendResponse);
     }
 
     private Profile getProfileAndCheckFriendExistence(String profileId, String friendId) {

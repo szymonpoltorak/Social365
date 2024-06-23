@@ -9,10 +9,8 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
-import razepl.dev.social365.profile.nodes.profile.Profile;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -35,9 +33,6 @@ public class BirthDate {
 
     @Version
     private long version;
-
-    @Relationship(type = "BORN_ON", direction = Relationship.Direction.INCOMING)
-    private Profile profile;
 
     public final int getAge() {
         return Period.between(LocalDate.parse(dateOfBirth), LocalDate.now()).getYears();

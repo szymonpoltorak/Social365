@@ -12,6 +12,8 @@ public final class FriendMappings {
 
     public static final String ADD_FRIEND = "/addFriend";
 
+    public static final String GET_FOLLOWED_IDS = "/getFollowedIds";
+
     public static final String GET_FRIENDS_ON_PAGE = "/getFriends";
 
     public static final String ADD_PROFILE_TO_FOLLOWERS = "/addProfileToFollowers";
@@ -23,6 +25,10 @@ public final class FriendMappings {
     public static final String ACCEPT_FRIEND_REQUEST = "/acceptFriendRequest";
 
     public static final String DECLINE_FRIEND_REQUEST = "/declineFriendRequest";
+
+    public static final String GET_FRIENDS_FEED_OPTIONS = "/getFriendsFeedOptions";
+
+    public static final String GET_FRIENDS_BY_PATTERN = "/getFriendsByPattern";
 
     private FriendMappings() {
     }

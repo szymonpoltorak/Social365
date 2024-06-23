@@ -18,11 +18,31 @@ import java.util.Optional;
 @Repository
 public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 
-    @Query("MATCH (p:Profile) WHERE p.profileId = $profileId RETURN p")
+    @Query("""
+            MATCH (p:Profile)
+            WHERE p.profileId = $profileId
+            MATCH (p)-[r:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(e)
+            RETURN p, collect(r) as rel, collect(e) as nodes
+            """)
     Optional<Profile> findByProfileId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
-            MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
+            MATCH (e:Email)
+            WHERE e.emailValue = $username
+            RETURN COUNT(e) > 0
+            """)
+    boolean existsByUsername(@Param(Params.USERNAME) String username);
+
+    @Query("""
+            MATCH (p:Profile)-[r:HAS]->(e:Email)
+            WHERE e.emailValue = $username
+            MATCH (p)-[r1:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(t)
+            RETURN p, collect(r1) as rel, collect(t) as nodes
+            """)
+    Optional<Profile> findByUsername(@Param(Params.USERNAME) String username);
+
+    @Query("""
+            MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId and f.profileId = $friendId
             RETURN COUNT(f) > 0
             """)
@@ -86,21 +106,20 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                                            @Param(Params.FRIEND_ID) String friendId);
 
     @Query("""
-            MATCH(p:Profile)-[fr:FOLLOWS]-(f:Profile)
-            WHERE p.profileId = $profileId and f.profileId = toFollow
+            MATCH(p:Profile)-[fr:FOLLOWS]->(f:Profile)
+            WHERE p.profileId = $profileId and f.profileId = $toFollow
             DELETE fr
             """)
     void deleteFollowsRelation(@Param(Params.PROFILE_ID) String profileId,
                                @Param(Params.TO_FOLLOW_ID) String toFollowId);
 
-    //TODO: Review the queries below
     @Query(
             value = """
-                    MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
                     WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
-                    OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
-                    RETURN f, COUNT(f1) as mutualFriendsCount, isFollowed
+                    MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
+                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
@@ -109,8 +128,43 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     RETURN COUNT(f)
                     """
     )
-    Page<FriendData> findFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId,
-                                            Pageable pageable);
+    Page<FriendData> findFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId
+                        and (toLower(f.firstName) contains $pattern OR toLower(f.lastName) contains $pattern)
+                    WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
+                    MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
+                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)
+                    WHERE p.profileId = $profileId
+                    RETURN COUNT(f)
+                    """
+    )
+    Page<FriendData> findFriendsByProfileIdAndPattern(@Param(Params.PROFILE_ID)String profileId,
+                                                      @Param(Params.PATTERN)String pattern,
+                                                      Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId and p.isOnline = true
+                    MATCH (f)-[r:HAS]->(e:Email)
+                    RETURN f, collect(r) as rel, collect(e) as nodes
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
+                    WHERE p.profileId = $profileId and p.isOnline = true
+                    RETURN COUNT(f)
+                    """
+    )
+    Page<Profile> findOnlineFriendsByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
 
     @Query(
             value = """
@@ -131,8 +185,8 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             value = """
                     MATCH (f:Profile)-[:WANTS_TO_BE_FRIEND_WITH]->(p:Profile)
                     WHERE p.profileId = $profileId
-                    OPTIONAL MATCH (p)-[:FRIENDS_WITH]->(f1:Profile)<-[:FRIENDS_WITH]-(f)
-                    RETURN f, COUNT(f1) as mutualFriendsCount
+                    MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
+                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
@@ -146,10 +200,10 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 
     @Query(
             value = """
-                    MATCH (p1:Profile)-[:FRIENDS_WITH]->(f:Profile)<-[:FRIENDS_WITH]-(p:Profile)
-                    WHERE NOT (p)<-[:FRIENDS_WITH]-(p1:Profile) AND p.profileId = $profileId
-                    RETURN p1, COUNT(f) as mutualFriendsCount
-                    ORDER BY mutualFriends DESC
+                    MATCH (p1:Profile)-[:FRIENDS_WITH]-(f:Profile)-[:FRIENDS_WITH]-(p:Profile)
+                    WHERE NOT (p)-[:FRIENDS_WITH]-(p1) AND p.profileId = $profileId
+                    RETURN DISTINCT p1 as profile, COUNT(DISTINCT f) as mutualFriendsCount
+                    ORDER BY mutualFriendsCount DESC
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
@@ -175,31 +229,34 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             """)
     int getFriendsCount(@Param(Params.PROFILE_ID) String profileId);
 
-    @Query("""
-            MATCH (p:Profile)-[:WORKS_AS]->(w:Workplace)
-            WHERE p.profileId = $profileId
-            RETURN w
-            """)
-    Workplace getWorkplaceByProfileId(@Param(Params.PROFILE_ID) String profileId);
+    @Query(
+            value = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    RETURN p
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    RETURN COUNT(p)
+                    """
+    )
+    Page<Profile> findAllByPattern(@Param(Params.PATTERN) String pattern, Pageable pageable);
 
-    @Query("""
-            MATCH (p:Profile)-[:STUDIED_AT]->(a:AboutDetails)
-            WHERE p.profileId = $profileId
-            RETURN a
-            """)
-    AboutDetails getCollegeByProfileId(@Param(Params.PROFILE_ID) String profileId);
-
-    @Query("""
-            MATCH (p:Profile)-[:WENT_TO]->(a:AboutDetails)
-            WHERE p.profileId = $profileId
-            RETURN a
-            """)
-    AboutDetails getHighSchoolByProfileId(@Param(Params.PROFILE_ID) String profileId);
-
-    @Query("""
-            MATCH (e:Email)
-            WHERE e.emailValue = $username
-            RETURN COUNT(e) > 0
-            """)
-    boolean existsByUsername(@Param(Params.USERNAME) String username);
+    @Query(
+            value = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    MATCH (p)-[r:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(e)
+                    RETURN p, collect(r) as rel, collect(e) as nodes
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    RETURN COUNT(p)
+                    """
+    )
+    Page<Profile> findAllByPatternWithDetails(@Param(Params.PATTERN) String pattern, Pageable pageable);
 }

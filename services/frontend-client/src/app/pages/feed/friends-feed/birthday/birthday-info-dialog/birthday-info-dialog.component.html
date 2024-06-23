@@ -1,0 +1,23 @@
+<div class="p-3 w-96 max-h-[50rem] overflow-y-auto">
+    <div class="text-xl mb-2">Birthdays</div>
+
+    @for (birthdayInfo of page.content; track birthdayInfo) {
+        <app-birthday-info [birthdayInfo]="birthdayInfo"></app-birthday-info>
+    }
+
+    @if (!page.last) {
+        <button mat-button class="birthday-button mb-3"
+                (click)="showMoreBirthdays()"
+                aria-label="Show more">
+            <mat-icon>expand_more</mat-icon>
+            Show more
+        </button>
+    }
+
+    <div class="w-full flex justify-end">
+        <button mat-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+            Close
+        </button>
+    </div>
+</div>

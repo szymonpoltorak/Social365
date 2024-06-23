@@ -1,7 +1,13 @@
-@if (option.data !== null && !option.isBeingEdited) {
+@if (!canEdit) {
+    <app-about-unfilled-option [icon]="option.icon"
+                               [subLabel]="option.subLabel">
+    </app-about-unfilled-option>
+
+} @else if (option.data !== null && !option.isBeingEdited) {
     <app-about-option [icon]="option.icon"
                       [label]="option.label"
-                      (edit)="editData()"
+                      (edit)="option.isBeingEdited = true;"
+                      (changePrivacyLevel)="updatePrivacyLevel($event)"
                       (delete)="deleteAboutDate()"
                       [subLabel]="option.subLabel"
                       [option]="option.data">
@@ -39,7 +45,9 @@
                 Cancel
             </button>
 
-            <button mat-raised-button color="primary">
+            <button mat-raised-button
+                    (click)="submitData()"
+                    color="primary">
                 <mat-icon>done</mat-icon>
 
                 Submit

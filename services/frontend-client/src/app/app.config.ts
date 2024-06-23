@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideNativeDateAdapter } from "@angular/material/core";
+import { provideHttpClient } from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -14,6 +15,7 @@ export const appConfig: ApplicationConfig = {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
         }),
-        provideNativeDateAdapter()
+        provideNativeDateAdapter(),
+        provideHttpClient()
     ]
 };

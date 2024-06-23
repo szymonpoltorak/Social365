@@ -3,5 +3,6 @@ export interface Profile {
     fullName: string;
     username: string;
     subtitle: string;
+    bio: string;
     profilePictureUrl: string;
 }

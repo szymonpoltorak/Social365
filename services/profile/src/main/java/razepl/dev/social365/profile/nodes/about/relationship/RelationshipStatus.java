@@ -9,8 +9,8 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
-import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 import razepl.dev.social365.profile.nodes.about.relationship.enums.RelationshipStatusType;
+import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @Data
 @Builder

@@ -18,7 +18,7 @@ services:
         hostname: ${PROFILE_SERVICE_HOSTNAME}
         build:
             context: .
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile
         env_file:
             -   path: "../.env"
                 required: true

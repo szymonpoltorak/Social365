@@ -41,3 +41,9 @@ spring:
                     uri: http://${PROFILE_SERVICE_HOSTNAME}:${PROFILE_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/profile/**
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"

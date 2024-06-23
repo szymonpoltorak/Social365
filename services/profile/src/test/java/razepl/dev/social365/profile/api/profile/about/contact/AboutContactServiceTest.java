@@ -146,8 +146,6 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
         when(emailRepository.save(email))
                 .thenReturn(email);
-        when(emailRepository.findByProfileId(profileId))
-                .thenReturn(Optional.of(email));
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 

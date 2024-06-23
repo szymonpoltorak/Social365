@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
-import { ProfileInfo } from "@interfaces/feed/profile-info.interface";
 import { MatCardModule } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
@@ -13,7 +12,8 @@ import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
-import { RouteDetectionService } from "@services/profile/route-detection.service";
+import { RoutingService } from "@services/profile/routing.service";
+import { ProfileService } from "@api/profile/profile.service";
 
 @Component({
     selector: 'app-profile',
@@ -35,19 +35,7 @@ import { RouteDetectionService } from "@services/profile/route-detection.service
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo: ProfileInfo = {
-        profileId: "1",
-        fullName: "John Doe",
-        username: "john@gmail.com",
-        subtitle: "Web developer at Google",
-        description: "I am a simple man with big ambitions. " +
-            "I love to code and I am passionate about web development. " +
-            "I am a team player and I am always looking for new challenges.",
-        postCount: 256,
-        numberOfFriends: 1025,
-        numberOfFollowers: 300,
-        profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg"
-    };
+    protected profileInfo !: Profile;
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
         { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
@@ -57,19 +45,33 @@ export class ProfileComponent implements OnInit, OnDestroy {
     protected activeRoute: TabOption = this.options[0];
     protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
+    private activateRouteDestroy$: Subject<void> = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private localStorage: LocalStorageService,
-                private routeDetectionService: RouteDetectionService,
+    constructor(private localStorage: LocalStorageService,
+                private routingService: RoutingService,
+                private profileService: ProfileService,
+                private activatedRoute: ActivatedRoute,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        this.username = this.activatedRoute.snapshot.params['username'];
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
-        this.activeRoute = this.routeDetectionService
-            .getCurrentActivatedRouteOption(this.router.url.split("/"), this.options);
+        this.activatedRoute
+            .paramMap
+            .pipe(takeUntil(this.activateRouteDestroy$))
+            .subscribe((params) => {
+                this.username = params.get("username") as string;
+
+                this.profileService
+                    .getBasicProfileInfoByUsername(this.username)
+                    .subscribe((profile: Profile) => {
+                        this.profileInfo = profile;
+                    });
+            })
+
+        this.activeRoute = this.routingService
+            .getCurrentActivatedRouteOptionWithUrl(this.router.url.split("/"), this.options);
 
         this.router
             .events
@@ -81,12 +83,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 const newEvent: NavigationEnd = event as NavigationEnd;
                 const url: string[] = newEvent.url.split("/");
 
-                this.activeRoute = this.routeDetectionService.getCurrentActivatedRouteOption(url, this.options);
+                this.activeRoute = this.routingService.getCurrentActivatedRouteOptionWithUrl(url, this.options);
             });
     }
 
     ngOnDestroy(): void {
-        this.routerDestroy$.next();
         this.routerDestroy$.complete();
+        this.activateRouteDestroy$.complete();
     }
 }

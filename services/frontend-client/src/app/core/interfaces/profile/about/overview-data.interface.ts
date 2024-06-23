@@ -3,8 +3,8 @@ import { AboutOptionData } from "@interfaces/profile/about/about-option-data.int
 
 export interface OverviewData {
     workplace : Optional<AboutOptionData>;
-    school : Optional<AboutOptionData>;
+    highSchool : Optional<AboutOptionData>;
     currentCity : Optional<AboutOptionData>;
-    hometown : Optional<AboutOptionData>;
-    relationship : Optional<AboutOptionData>;
+    homeTown : Optional<AboutOptionData>;
+    relationshipStatus : Optional<AboutOptionData>;
 }

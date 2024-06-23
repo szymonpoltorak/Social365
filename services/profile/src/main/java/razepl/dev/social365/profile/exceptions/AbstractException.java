@@ -1,7 +1,6 @@
 package razepl.dev.social365.profile.exceptions;
 
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serial;
 

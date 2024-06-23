@@ -22,24 +22,19 @@ public interface BirthDateRepository extends Neo4jRepository<BirthDate, String> 
 
     @Query(
             value = """
-                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)-[:BORN_ON]->(b:BirthDate)
-                    WHERE p.profileId = $profileId and date().day = date(b.dateOfBirth).day and date().month = date(b.dateOfBirth).month
-                    RETURN f as friend, b as birthDate
+                    match (b:DateOfBirth)<-[:BORN_ON]-(f:Profile)-[:FRIENDS_WITH]-(p:Profile)
+                    where p.profileId = $profileId
+                        and date().day = date(b.dateOfBirth).day and date().month = date(b.dateOfBirth).month
+                    return distinct b as birthDate, f.profileId as friendId
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
-                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)-[:BORN_ON]->(b:BirthDate)
-                    WHERE p.profileId = $profileId and date().day = date(b.dateOfBirth).day and date().month = date(b.dateOfBirth).month
-                    RETURN count(b)
+                    match (b:DateOfBirth)<-[:BORN_ON]-(f:Profile)-[:FRIENDS_WITH]-(p:Profile)
+                    where p.profileId = $profileId
+                        and date().day = date(b.dateOfBirth).day and date().month = date(b.dateOfBirth).month
+                    return count(b)
                     """
     )
     Page<BirthdayData> findTodayBirthdaysByProfileId(@Param(Params.PROFILE_ID) String profileId, Pageable pageable);
 
-    @Query("""
-            MATCH (p:Profile {profileId: $profileId})
-            MATCH (b:BirthDate {birthDateId: $birthDateId})
-            CREATE (p)-[:BORN_ON]->(b)
-            """)
-    void createBornOnRelation(@Param(Params.PROFILE_ID) String profileId,
-                              @Param(Params.BIRTHDATE_ID) String birthDateId);
 }

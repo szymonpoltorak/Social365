@@ -2,19 +2,23 @@ package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.constants.Params;
+import razepl.dev.social365.profile.api.profile.constants.ProfileMappings;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
@@ -34,13 +38,35 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
+    @GetMapping(value = ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING)
+    public final Page<ProfileSearchResponse> getProfilesSeachByPattern(@Param(Params.PATTERN) String pattern,
+                                                                       @Param(Params.PAGE_NUMBER) int pageNumber,
+                                                                       @Param(Params.PAGE_SIZE) int pageSize) {
+        return profileService.getProfilesSearchByPattern(pattern, PageRequest.of(pageNumber, pageSize));
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING)
+    public final Page<ProfileQueryResponse> getProfilesByPattern(@Param(Params.PATTERN) String pattern,
+                                                                 @Param(Params.PAGE_NUMBER) int pageNumber,
+                                                                 @Param(Params.PAGE_SIZE) int pageSize) {
+        return profileService.getProfilesByPattern(pattern, PageRequest.of(pageNumber, pageSize));
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING)
+    public final ProfileResponse getBasicProfileInfoByUsername(@RequestParam(Params.USERNAME) String username) {
+        return profileService.getBasicProfileInfoByUsername(username);
+    }
+
+    @Override
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
     public final ProfileSummaryResponse getProfileSummary(@RequestParam(Params.PROFILE_ID) String profileId) {
         return profileService.getProfileSummary(profileId);
     }
 
     @Override
-    @PostMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
+    @PutMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
     public final ProfileRequest updateProfileBio(@RequestParam(Params.PROFILE_ID) String profileId,
                                                  @RequestParam(Params.BIO) String bio) {
         return profileService.updateProfileBio(profileId, bio);

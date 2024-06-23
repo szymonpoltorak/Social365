@@ -1,11 +1,11 @@
 <div class="flex flex-col items-center h-fit max-h-full overflow-y-auto m-4 sticky top-26">
-    <mat-card class="p-3 w-full h-full">
+    <mat-card class="container">
         <app-birthday [birthdayInfos]="birthdayInfos"></app-birthday>
 
         <div class="flex flex-col">
             <h1 class="text-xl mb-2">Friends</h1>
 
-            @for (friend of friends | async; track friend) {
+            @for (friend of (friends | async)?.content; track friend) {
                 <app-friend-feed-option [feedOption]="friend"></app-friend-feed-option>
             }
         </div>
@@ -17,7 +17,7 @@
         <div class="flex flex-col">
             <h1 class="text-xl mb-2">Group Chats</h1>
 
-            @for (chat of chats | async; track chat) {
+            @for (chat of groupChats | async; track chat) {
                 <app-friend-feed-option [feedOption]="chat"></app-friend-feed-option>
             }
 
