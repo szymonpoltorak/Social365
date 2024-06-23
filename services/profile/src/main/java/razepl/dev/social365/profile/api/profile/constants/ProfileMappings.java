@@ -20,6 +20,8 @@ public final class ProfileMappings {
 
     public static final String GET_PROFILES_BY_PATTERN_MAPPING = "/profilesByPattern";
 
+    public static final String GET_PROFILES_SEARCH_BY_PATTERN_MAPPING = "/profilesSearchByPattern";
+
     private ProfileMappings() {
     }
 

@@ -12,6 +12,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
@@ -69,6 +70,18 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
         return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
+    }
+
+    @Override
+    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
+        log.info("Getting profiles search by pattern: '{}', with pageable : {}", pattern, pageable);
+
+        Page<Profile> profiles = profileRepository
+                .findAllByPatternWithDetails(pattern.toLowerCase(Locale.ROOT), pageable);
+
+        log.info("Found {} search profiles by pattern", profiles.getNumberOfElements());
+
+        return profiles.map(profileMapper::mapProfileToProfileSearchResponse);
     }
 
     @Override

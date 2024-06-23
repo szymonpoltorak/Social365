@@ -32,4 +32,7 @@ export enum RouterPaths {
     REGISTER_PATH = "auth/register",
     REGISTER_PATH_DIRECT = "/auth/register",
 
+    SEARCH_PATH = "search",
+    SEARCH_PATH_DIRECT = "/search",
+
 }

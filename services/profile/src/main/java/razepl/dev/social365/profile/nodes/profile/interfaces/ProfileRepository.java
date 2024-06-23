@@ -243,4 +243,20 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     """
     )
     Page<Profile> findAllByPattern(@Param(Params.PATTERN) String pattern, Pageable pageable);
+
+    @Query(
+            value = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    MATCH (p)-[r:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(e)
+                    RETURN p, collect(r) as rel, collect(e) as nodes
+                    SKIP $skip LIMIT $limit
+                    """,
+            countQuery = """
+                    MATCH (p:Profile)
+                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    RETURN COUNT(p)
+                    """
+    )
+    Page<Profile> findAllByPatternWithDetails(@Param(Params.PATTERN) String pattern, Pageable pageable);
 }

@@ -15,6 +15,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
@@ -49,4 +50,6 @@ public interface ProfileMapper {
     FriendFeedResponse mapProfileToFriendFeedResponse(Profile profile);
 
     ProfileQueryResponse mapProfileToProfileQueryResponse(Profile profile);
+
+    ProfileSearchResponse mapProfileToProfileSearchResponse(Profile profile);
 }

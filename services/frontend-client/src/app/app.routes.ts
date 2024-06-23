@@ -1,4 +1,4 @@
-import { Routes }      from '@angular/router';
+import { Routes } from '@angular/router';
 import { RouterPaths } from "@enums/router-paths.enum";
 
 export const routes: Routes = [
@@ -87,6 +87,11 @@ export const routes: Routes = [
                     .then(m => m.FriendSuggestionsComponent)
             }
         ]
+    },
+    {
+        path: RouterPaths.SEARCH_PATH,
+        loadComponent: () => import("./pages/search/search.component")
+            .then(m => m.SearchComponent)
     },
     {
         path: RouterPaths.CURRENT_PATH,

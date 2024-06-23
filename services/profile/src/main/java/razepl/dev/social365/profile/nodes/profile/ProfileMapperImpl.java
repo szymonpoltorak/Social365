@@ -18,6 +18,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.clients.images.ImagesServiceClient;
 import razepl.dev.social365.profile.clients.images.data.ImageResponse;
@@ -256,6 +257,17 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profileId(profile.getProfileId())
                 .profilePictureUrl(getProfilePicturePath(profile))
                 .fullName(profile.getFullName())
+                .build();
+    }
+
+    @Override
+    public final ProfileSearchResponse mapProfileToProfileSearchResponse(Profile profile) {
+        return ProfileSearchResponse
+                .builder()
+                .profileId(profile.getProfileId())
+                .profilePictureUrl(getProfilePicturePath(profile))
+                .fullName(profile.getFullName())
+                .subtitle(getSubtitle(profile))
                 .build();
     }
 

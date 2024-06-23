@@ -6,7 +6,7 @@ import { MatInput } from "@angular/material/input";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { debounceTime, distinctUntilChanged, EMPTY, Observable, of, startWith, switchMap } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -38,7 +38,8 @@ import { Page } from "@interfaces/utils/page.interface";
         MatMenuTrigger,
         MatTabsModule,
         MatBadge,
-        AvatarPhotoComponent
+        AvatarPhotoComponent,
+        FormsModule
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -74,5 +75,13 @@ export class ToolbarComponent implements OnInit {
             return EMPTY;
         }
         return this.profileService.getProfilesByPattern(pattern, this.FIRST_PAGE, this.PAGE_SIZE);
+    }
+
+    navigateToSearch(): void {
+        this.router.navigate([RouterPaths.SEARCH_PATH_DIRECT], {
+            queryParams: {
+                pattern: this.searchSocialControl.value
+            }
+        });
     }
 }

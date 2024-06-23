@@ -13,5 +13,7 @@ export enum ProfileMappings {
 
     GET_TODAY_BIRTHDAYS_MAPPING = PROFILE_API_MAPPING + "/todayBirthdays",
 
-    GET_PROFILES_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesByPattern"
+    GET_PROFILES_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesByPattern",
+
+    GET_PROFILES_SEARCH_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesSearchByPattern"
 }

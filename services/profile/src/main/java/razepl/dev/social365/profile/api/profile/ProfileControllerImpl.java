@@ -18,6 +18,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
@@ -34,6 +35,14 @@ public class ProfileControllerImpl implements ProfileController {
     public final Page<BirthdayInfoResponse> getTodayBirthdays(@Param(Params.PROFILE_ID) String profileId,
                                                               @Param(Params.PAGE_NUMBER) int pageNumber) {
         return profileService.getTodayBirthdays(profileId, pageNumber);
+    }
+
+    @Override
+    @GetMapping(value = ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING)
+    public final Page<ProfileSearchResponse> getProfilesSeachByPattern(@Param(Params.PATTERN) String pattern,
+                                                                       @Param(Params.PAGE_NUMBER) int pageNumber,
+                                                                       @Param(Params.PAGE_SIZE) int pageSize) {
+        return profileService.getProfilesSearchByPattern(pattern, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override

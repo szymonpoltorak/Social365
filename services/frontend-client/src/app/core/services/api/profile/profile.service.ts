@@ -8,6 +8,7 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { Page } from "@interfaces/utils/page.interface";
 import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
+import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -65,6 +66,16 @@ export class ProfileService {
         return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING, {
             params: {
                 username: username
+            }
+        }).pipe(take(1));
+    }
+
+    getProfilesSearchByPattern(pattern: string, pageNumber: number, pageSize: number): Observable<Page<ProfileSearch>> {
+        return this.http.get<Page<ProfileSearch>>(ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING, {
+            params: {
+                pattern: pattern,
+                pageNumber: pageNumber,
+                pageSize: pageSize
             }
         }).pipe(take(1));
     }
