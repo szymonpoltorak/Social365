@@ -61,7 +61,7 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    @PutMapping(value = PostMappings.UPDATE_SHARES_COUNT)
+    @PutMapping(value = PostMappings.SHARE_POST)
     public final PostData sharePost(@RequestParam(Params.PROFILE_ID) String profileId,
                                     @RequestParam(Params.POST_ID) String postId,
                                     @RequestParam(Params.CONTENT) String content) {

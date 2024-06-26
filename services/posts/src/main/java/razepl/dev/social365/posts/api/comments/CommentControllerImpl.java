@@ -26,6 +26,7 @@ public class CommentControllerImpl implements CommentController {
     private final CommentService commentService;
 
     @Override
+    @GetMapping(value = CommentMappings.GET_REPLIES_FOR_COMMENT)
     public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
                                                                      @RequestParam(Params.PROFILE_ID) String profileId,
                                                                      @RequestParam(Params.PAGE_SIZE) int pageSize,
