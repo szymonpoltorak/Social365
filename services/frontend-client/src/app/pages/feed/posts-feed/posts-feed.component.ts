@@ -25,6 +25,7 @@ import { Optional } from "@core/types/profile/optional.type";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { Page } from "@interfaces/utils/page.interface";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
+import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 
 
 @Component({
@@ -60,6 +61,7 @@ import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 export class PostsFeedComponent implements OnInit {
 
     @Input() presentedProfileId !: string;
+    @Input() postsUrl !: PostMappings;
     private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
     private pagingState: Optional<string> = null;
@@ -78,7 +80,7 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.postService
-            .getPostsOnPage(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState)
+            .getPostsFromUrl(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 this.posts = posts;
             });
@@ -96,7 +98,8 @@ export class PostsFeedComponent implements OnInit {
             return;
         }
         this.postService
-            .getPostsOnPage(this.presentedProfileId,  this.posts.friendsPageNumber + 1, this.PAGE_SIZE, this.posts.pagingState)
+            .getPostsFromUrl(this.presentedProfileId,  this.posts.friendsPageNumber + 1,
+                this.PAGE_SIZE, this.posts.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 const oldContent: Either<Post, SharedPost>[] = this.posts.data;
 

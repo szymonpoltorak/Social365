@@ -21,6 +21,12 @@ public interface PostRepository extends CassandraRepository<Post, UUID> {
             """)
     Slice<Post> findAllByFollowedUserIdsOrProfileId(@Param(Params.FOLLOWED_IDS) List<String> followedIds, Pageable pageable);
 
+    @Query("""
+            select * from posts
+            where author_id = :authorId ALLOW FILTERING
+            """)
+    Slice<Post> findAllByAuthorId(@Param(Params.AUTHOR_ID) String authorId, Pageable pageable);
+
     @Query("select count(*) from posts where author_id = :profileId")
     int countAllByAuthorId(@Param(Params.PROFILE_ID) String profileId);
 

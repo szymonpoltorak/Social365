@@ -18,4 +18,6 @@ export enum PostMappings {
     DELETE_POST = POST_MAPPING + "/deletePost",
 
     GET_USERS_POST_COUNT = POST_MAPPING + "/usersPostCount",
+
+    GET_USERS_POSTS = POST_MAPPING + "/usersPosts"
 }

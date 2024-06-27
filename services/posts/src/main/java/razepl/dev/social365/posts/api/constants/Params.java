@@ -22,6 +22,8 @@ public final class Params {
 
     public static final String PAGE_NUMBER = "pageNumber";
 
+    public static final String AUTHOR_ID = "authorId";
+
     private Params() {
     }
 }

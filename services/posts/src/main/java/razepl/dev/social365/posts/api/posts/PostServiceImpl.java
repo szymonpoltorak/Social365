@@ -37,6 +37,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+    private static final int NOT_NEEDED = -1;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final ProfileService profileService;
@@ -81,6 +82,19 @@ public class PostServiceImpl implements PostService {
             }
             currentFriendPage++;
         }
+    }
+
+    @Override
+    public final CassandraPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo) {
+        log.info("Getting user posts with id: {}, using page info : {}", profileId, pageInfo);
+
+        Pageable pageable = pageInfo.toPageable();
+
+        Slice<Post> posts = postRepository.findAllByAuthorId(profileId, pageable);
+
+        log.info("Found total posts : {}", posts.getNumberOfElements());
+
+        return createCassandraPage(getNextPageable(posts), posts.getContent(), profileId, NOT_NEEDED);
     }
 
     private PostsCassandraPage<PostData> createCassandraPage(Pageable nextPageable, Collection<Post> result,

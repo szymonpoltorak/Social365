@@ -18,7 +18,18 @@ export class PostService {
 
     getPostsOnPage(profileId: string, friendsPageNumber: number,
                    pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<Either<Post, SharedPost>>> {
-        return this.http.get<CassandraPage<Either<Post, SharedPost>>>(PostMappings.GET_POSTS_ON_PAGE, {
+        return this.getPostsFromUrl(profileId, friendsPageNumber, pageSize, pagingState, PostMappings.GET_POSTS_ON_PAGE);
+    }
+
+    getUsersPosts(profileId: string, friendsPageNumber: number,
+                  pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<Either<Post, SharedPost>>> {
+        return this.getPostsFromUrl(profileId, friendsPageNumber, pageSize, pagingState, PostMappings.GET_USERS_POSTS);
+    }
+
+    getPostsFromUrl(profileId: string, friendsPageNumber: number,
+                            pageSize: number, pagingState: Optional<string>,
+                            url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
+        return this.http.get<CassandraPage<Either<Post, SharedPost>>>(url, {
             params: this.getHttpParams(profileId, friendsPageNumber, pageSize, pagingState)
         }).pipe(
             take(1),
@@ -104,29 +115,17 @@ export class PostService {
 
     private getHttpParams(profileId: string, friendsPageNumber: number,
                           pageSize: number, pagingState: Optional<string>): HttpParams {
-        let param;
-
-        console.log(pagingState);
-
         if (pagingState === null) {
-            param = new HttpParams()
+            return new HttpParams()
                 .set('profileId', profileId)
                 .set('friendsPageNumber', friendsPageNumber)
                 .set('pageSize', pageSize);
-
-            console.log(param);
-
-            return param;
         }
-        param = new HttpParams()
+        return new HttpParams()
             .set('profileId', profileId)
             .set('friendsPageNumber', friendsPageNumber)
             .set('pageSize', pageSize)
             .set('pagingState', pagingState as string);
-
-        console.log(param);
-
-        return param;
     }
 
 }

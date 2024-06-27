@@ -39,6 +39,15 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
+    @GetMapping(value = PostMappings.GET_USERS_POSTS)
+    public final CassandraPage<PostData> getUsersPosts(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                       @RequestParam(Params.FRIENDS_PAGE_NUMBER) int friendsPageNumber,
+                                                       @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                       @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+        return postService.getUsersPosts(profileId, PageInfo.of(friendsPageNumber, pageSize, pagingState));
+    }
+
+    @Override
     @PutMapping(value = PostMappings.UPDATE_LIKE_POST_COUNT)
     public final PostData updateLikePostCount(@RequestParam(Params.PROFILE_ID) String profileId,
                                               @RequestParam(Params.POST_ID) String postId) {

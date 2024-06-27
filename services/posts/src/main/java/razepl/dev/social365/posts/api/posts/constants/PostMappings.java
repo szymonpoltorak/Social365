@@ -22,6 +22,9 @@ public final class PostMappings {
 
     public static final String GET_USERS_POST_COUNT = "/usersPostCount";
 
+    public static final String GET_USERS_POSTS = "/usersPosts";
+
     private PostMappings() {
     }
+
 }

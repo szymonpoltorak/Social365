@@ -5,6 +5,7 @@
         <app-profile-feed class="max-feed-md:hidden"></app-profile-feed>
 
         <app-posts-feed [presentedProfileId]="currentUser.profileId"
+                        [postsUrl]="PostMappings.GET_POSTS_ON_PAGE"
                         class="feed-sm:m-4 max-feed-sm:mt-2">
         </app-posts-feed>
 

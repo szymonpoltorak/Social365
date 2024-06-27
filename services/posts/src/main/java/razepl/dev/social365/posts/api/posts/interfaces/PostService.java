@@ -9,6 +9,8 @@ public interface PostService {
 
     CassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo);
 
+    CassandraPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo);
+
     PostData updateLikePostCount(String profileId, String postId);
 
     PostData updateNotificationStatus(String profileId, String postId);

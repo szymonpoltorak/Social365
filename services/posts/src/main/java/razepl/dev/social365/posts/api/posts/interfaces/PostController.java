@@ -8,6 +8,8 @@ public interface PostController {
 
     CassandraPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize, String pagingState);
 
+    CassandraPage<PostData> getUsersPosts(String profileId, int pageNumber, int pageSize, String pagingState);
+
     PostData updateLikePostCount(String profileId, String postId);
 
     PostData updateNotificationStatus(String profileId, String postId);

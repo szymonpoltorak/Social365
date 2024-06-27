@@ -22,6 +22,7 @@ import { Observable } from "rxjs";
 import { Page } from "@interfaces/utils/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { RoutingService } from '@core/services/profile/routing.service';
+import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 
 @Component({
     selector: 'app-profile-posts',
@@ -241,4 +242,6 @@ export class ProfilePostsComponent implements OnInit {
                     .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
             });
     }
+
+    protected readonly PostMappings = PostMappings;
 }

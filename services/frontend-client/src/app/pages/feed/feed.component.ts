@@ -5,6 +5,7 @@ import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component"
 import { FriendsFeedComponent } from "@pages/feed/friends-feed/friends-feed.component";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
+import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 
 @Component({
     selector: 'app-feed',
@@ -29,4 +30,5 @@ export class FeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
+    protected readonly PostMappings = PostMappings;
 }

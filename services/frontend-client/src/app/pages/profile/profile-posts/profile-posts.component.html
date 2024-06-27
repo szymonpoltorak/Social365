@@ -96,5 +96,9 @@
         </div>
     </div>
 
-    <app-posts-feed [presentedProfileId]="presentedProfile.profileId"></app-posts-feed>
+    @if (presentedProfile !== undefined) {
+        <app-posts-feed [postsUrl]="PostMappings.GET_USERS_POSTS"
+                        [presentedProfileId]="presentedProfile.profileId">
+        </app-posts-feed>
+    }
 </div>
