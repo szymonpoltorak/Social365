@@ -11,18 +11,18 @@ public interface PostService {
 
     CassandraPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo);
 
-    PostData updateLikePostCount(String profileId, String postId);
+    PostData updateLikePostCount(String profileId, String postId, String creationDateTime);
 
-    PostData updateNotificationStatus(String profileId, String postId);
+    PostData updateNotificationStatus(String profileId, String postId, String creationDateTime);
 
-    PostData updateBookmarkStatus(String profileId, String postId);
+    PostData updateBookmarkStatus(String profileId, String postId, String creationDateTime);
 
-    PostData sharePost(String profileId, String postId, String content);
+    PostData sharePost(String profileId, String postId, String content, String creationDateTime);
 
     PostData createPost(String profileId, String content, boolean hasAttachments);
 
-    PostData editPost(String profileId, String postId, String content);
+    PostData editPost(String profileId, String postId, String content, String creationDateTime);
 
-    PostData deletePost(String profileId, String postId);
+    PostData deletePost(String profileId, String postId, String creationDateTime);
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { DatePipe } from "@angular/common";
 import { MatCardSubtitle, MatCardTitle } from "@angular/material/card";
@@ -28,9 +28,14 @@ import { Post } from "@interfaces/feed/post.interface";
     templateUrl: './post-header.component.html',
     styleUrl: './post-header.component.scss'
 })
-export class PostHeaderComponent {
+export class PostHeaderComponent implements OnInit {
     @Input() post !: Post;
     @Input() username !: string;
     @Input() isSharedPost: boolean = false;
+    creationDateTime !: Date;
+
+    ngOnInit(): void {
+        this.creationDateTime = new Date(this.post.creationDateTime);
+    }
 
 }

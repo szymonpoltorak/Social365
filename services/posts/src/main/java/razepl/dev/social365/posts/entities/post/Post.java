@@ -9,7 +9,6 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,12 +53,44 @@ public class Post {
         return key.getAuthorId();
     }
 
-    public final LocalDateTime getCreationDateTime() {
+    public final String getCreationDateTime() {
         return key.getCreationDateTime();
     }
 
     public final boolean isSharedPost() {
         return originalPostId != null;
+    }
+
+    public final void addUserLikedId(String profileId) {
+        if (userLikedIds == null) {
+            userLikedIds = Set.of(profileId);
+        } else {
+            userLikedIds.add(profileId);
+        }
+    }
+
+    public final void addUserSharedId(String profileId) {
+        if (userSharedIds == null) {
+            userSharedIds = Set.of(profileId);
+        } else {
+            userSharedIds.add(profileId);
+        }
+    }
+
+    public final void addUserNotificationId(String profileId) {
+        if (userNotificationIds == null) {
+            userNotificationIds = Set.of(profileId);
+        } else {
+            userNotificationIds.add(profileId);
+        }
+    }
+
+    public final void addBookmarkedUserId(String profileId) {
+        if (bookmarkedUserIds == null) {
+            bookmarkedUserIds = Set.of(profileId);
+        } else {
+            bookmarkedUserIds.add(profileId);
+        }
     }
 
     public final int getLikesCount() {

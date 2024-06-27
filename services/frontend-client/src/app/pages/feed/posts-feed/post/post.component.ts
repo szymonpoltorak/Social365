@@ -25,6 +25,7 @@ import {
 } from "@pages/feed/posts-feed/create-share-post-dialog/create-share-post-dialog.component";
 import { NgOptimizedImage } from "@angular/common";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
+import { PostService } from "@api/posts-comments/post.service";
 
 @Component({
     selector: 'app-post',
@@ -60,9 +61,10 @@ export class PostComponent implements OnInit {
     post !: Post;
     comments: PostComment[] = [];
     protected areCommentsVisible: boolean = false;
-    protected user !: Profile;
+    protected currentUser !: Profile;
 
     constructor(private localStorage: LocalStorageService,
+                private postService: PostService,
                 public dialog: MatDialog) {
     }
 
@@ -99,13 +101,17 @@ export class PostComponent implements OnInit {
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserProfileFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {
-        this.post.isPostLiked = !this.post.isPostLiked;
+        this.postService
+            .updateLikePostCount(this.currentUser.profileId, this.post.postId, this.post.creationDateTime)
+            .subscribe(() => {
+                this.post.isPostLiked = !this.post.isPostLiked;
 
-        this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
+                this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
+            });
     }
 
     getCommentsForPost(): void {
@@ -117,6 +123,10 @@ export class PostComponent implements OnInit {
             minHeight: '100px',
             minWidth: '320px',
         });
-        createDialog.afterClosed().pipe(take(1)).subscribe();
+
+        createDialog
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe();
     }
 }

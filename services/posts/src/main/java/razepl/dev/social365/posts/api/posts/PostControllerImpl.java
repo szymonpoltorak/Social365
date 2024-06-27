@@ -50,30 +50,34 @@ public class PostControllerImpl implements PostController {
     @Override
     @PutMapping(value = PostMappings.UPDATE_LIKE_POST_COUNT)
     public final PostData updateLikePostCount(@RequestParam(Params.PROFILE_ID) String profileId,
+                                              @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
                                               @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateLikePostCount(profileId, postId);
+        return postService.updateLikePostCount(profileId, postId, creationDateTime);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_NOTIFICATION_STATUS)
     public final PostData updateNotificationStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                   @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
                                                    @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateNotificationStatus(profileId, postId);
+        return postService.updateNotificationStatus(profileId, postId, creationDateTime);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_BOOKMARK_STATUS)
     public final PostData updateBookmarkStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+                                               @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
                                                @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateBookmarkStatus(profileId, postId);
+        return postService.updateBookmarkStatus(profileId, postId, creationDateTime);
     }
 
     @Override
     @PutMapping(value = PostMappings.SHARE_POST)
     public final PostData sharePost(@RequestParam(Params.PROFILE_ID) String profileId,
                                     @RequestParam(Params.POST_ID) String postId,
+                                    @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
                                     @RequestParam(Params.CONTENT) String content) {
-        return postService.sharePost(profileId, postId, content);
+        return postService.sharePost(profileId, postId, content, creationDateTime);
     }
 
     @Override
@@ -88,14 +92,16 @@ public class PostControllerImpl implements PostController {
     @PutMapping(value = PostMappings.EDIT_POST)
     public final PostData editPost(@RequestParam(Params.PROFILE_ID) String profileId,
                                    @RequestParam(Params.POST_ID) String postId,
+                                   @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
                                    @RequestParam(Params.CONTENT) String content) {
-        return postService.editPost(profileId, postId, content);
+        return postService.editPost(profileId, postId, content, creationDateTime);
     }
 
     @Override
     @DeleteMapping(value = PostMappings.DELETE_POST)
     public final PostData deletePost(@RequestParam(Params.PROFILE_ID) String profileId,
-                                         @RequestParam(Params.POST_ID) String postId) {
-        return postService.deletePost(profileId, postId);
+                                     @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
+                                     @RequestParam(Params.POST_ID) String postId) {
+        return postService.deletePost(profileId, postId, creationDateTime);
     }
 }

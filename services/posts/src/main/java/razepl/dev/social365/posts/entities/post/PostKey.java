@@ -8,7 +8,6 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -26,7 +25,7 @@ public class PostKey {
             type = PrimaryKeyType.CLUSTERED,
             ordering = Ordering.DESCENDING
     )
-    private LocalDateTime creationDateTime;
+    private String creationDateTime;
 
     @PrimaryKeyColumn(
             name = "post_id",

@@ -1,5 +1,5 @@
 <mat-card class="mb-4">
-    <app-post-header [post]="post" [username]="user.username"></app-post-header>
+    <app-post-header [post]="post" [username]="currentUser.username"></app-post-header>
 
     <mat-card-content class="mb-3">
         <p class="text-justify font-light">
@@ -59,7 +59,7 @@
     </mat-card-actions>
 
     @if (areCommentsVisible) {
-        <app-comment-create [user]="user"></app-comment-create>
+        <app-comment-create [user]="currentUser"></app-comment-create>
 
         @for (comment of comments; track comment) {
             <app-comment [comment]="comment"></app-comment>

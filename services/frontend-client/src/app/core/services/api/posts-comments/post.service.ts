@@ -33,53 +33,57 @@ export class PostService {
             params: this.getHttpParams(profileId, friendsPageNumber, pageSize, pagingState)
         }).pipe(
             take(1),
-            map((page: CassandraPage<Either<Post, SharedPost>>) => {
-                page.data.map(post => {
-                    if (post instanceof SharedPost) {
-                        post.sharingPost.creationDateTime = new Date(post.sharingPost.creationDateTime);
-                        post.sharedPost.creationDateTime = new Date(post.sharedPost.creationDateTime);
-                    } else {
-                        post.creationDateTime = new Date(post.creationDateTime);
-                    }
-                    return post;
-                })
-                return page;
-            })
+            // map((page: CassandraPage<Either<Post, SharedPost>>) => {
+            //     page.data.map(post => {
+            //         if (post instanceof SharedPost) {
+            //             post.sharingPost.creationDateTime = new Date(post.sharingPost.creationDateTime);
+            //             post.sharedPost.creationDateTime = new Date(post.sharedPost.creationDateTime);
+            //         } else {
+            //             post.creationDateTime = new Date(post.creationDateTime);
+            //         }
+            //         return post;
+            //     })
+            //     return page;
+            // })
         );
     }
 
-    updateLikePostCount(profileId: string, postId: string): Observable<Post> {
+    updateLikePostCount(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_LIKE_POST_COUNT, {}, {
             params: {
                 profileId: profileId,
-                postId: postId
+                postId: postId,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }
 
-    updateNotificationStatus(profileId: string, postId: string): Observable<Post> {
+    updateNotificationStatus(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_NOTIFICATION_STATUS, {}, {
             params: {
                 profileId: profileId,
-                postId: postId
+                postId: postId,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }
 
-    updateBookmarkStatus(profileId: string, postId: string): Observable<Post> {
+    updateBookmarkStatus(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_BOOKMARK_STATUS, {}, {
             params: {
                 profileId: profileId,
-                postId: postId
+                postId: postId,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }
 
-    sharePost(profileId: string, postId: string): Observable<SharedPost> {
+    sharePost(profileId: string, postId: string, creationDateTime: string): Observable<SharedPost> {
         return this.http.put<SharedPost>(PostMappings.SHARE_POST, {}, {
             params: {
                 profileId: profileId,
-                postId: postId
+                postId: postId,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }
@@ -94,21 +98,23 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    editPost(profileId: string, postId: string, content: string): Observable<Post> {
+    editPost(profileId: string, postId: string, content: string, creationDateTime: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.EDIT_POST, {}, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                content: content
+                content: content,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }
 
-    deletePost(profileId: string, postId: string): Observable<Post> {
+    deletePost(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
         return this.http.delete<Post>(PostMappings.DELETE_POST, {
             params: {
                 profileId: profileId,
-                postId: postId
+                postId: postId,
+                creationDateTime: creationDateTime
             }
         }).pipe(take(1));
     }

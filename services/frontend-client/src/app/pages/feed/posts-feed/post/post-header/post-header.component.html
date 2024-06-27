@@ -11,8 +11,8 @@
 
                     <div [matTooltipPosition]="'above'"
                          class="text-sm font-extralight hover:cursor-pointer"
-                         matTooltip="{{ post.creationDateTime | date: 'medium' }}">
-                        {{ post.creationDateTime | postAge }}
+                         matTooltip="{{ creationDateTime | date: 'medium' }}">
+                        {{ creationDateTime | postAge }}
                     </div>
                 </div>
             </mat-card-title>
