@@ -20,6 +20,8 @@ public final class Params {
 
     public static final String PAGING_STATE = "pagingState";
 
+    public static final String PAGE_NUMBER = "pageNumber";
+
     private Params() {
     }
 }

@@ -58,9 +58,8 @@ import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-v
 export class PostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
     post !: Post;
-
-    protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
+    protected areCommentsVisible: boolean = false;
     protected user !: Profile;
 
     constructor(private localStorage: LocalStorageService,

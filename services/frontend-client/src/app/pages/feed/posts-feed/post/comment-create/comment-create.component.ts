@@ -33,7 +33,6 @@ import { Optional } from "@core/types/profile/optional.type";
     styleUrl: './comment-create.component.scss'
 })
 export class CommentCreateComponent {
-    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
     @Input() user !: Profile;
     isOpened: boolean = false;
     allowedFileTypes: string[] = [
@@ -41,6 +40,7 @@ export class CommentCreateComponent {
         'image/png',
     ];
     attachedImage: Optional<AttachImage> = null;
+    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
 
     constructor(private snackBar: MatSnackBar) {
     }
@@ -74,7 +74,7 @@ export class CommentCreateComponent {
         console.log(this.attachedImage);
     }
 
-    handleRemovesFile(): void{
+    handleRemovesFile(): void {
         this.attachedImage = null;
         this.snackBar.open(`Successfully removed 1 images!`, 'Close', {
             duration: 2000

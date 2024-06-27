@@ -32,8 +32,8 @@ import { MatIcon } from "@angular/material/icon";
     styleUrl: './create-share-post-dialog.component.scss'
 })
 export class CreateSharePostDialogComponent implements OnInit {
-    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
     currentUser !: Profile;
+    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
 
     constructor(private localStorage: LocalStorageService) {
     }

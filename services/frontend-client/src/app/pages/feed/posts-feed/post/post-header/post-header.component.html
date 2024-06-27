@@ -9,9 +9,9 @@
 
                     <div class="bg-white rounded-full w-1 h-1"></div>
 
-                    <div matTooltip="{{ post.creationDateTime | date: 'medium' }}"
-                         [matTooltipPosition]="'above'"
-                         class="text-sm font-extralight hover:cursor-pointer">
+                    <div [matTooltipPosition]="'above'"
+                         class="text-sm font-extralight hover:cursor-pointer"
+                         matTooltip="{{ post.creationDateTime | date: 'medium' }}">
                         {{ post.creationDateTime | postAge }}
                     </div>
                 </div>
@@ -42,8 +42,8 @@
             </button>
         }
 
-        <button mat-menu-item aria-label="settings"
-                (click)="post.isBookmarked = !post.isBookmarked">
+        <button (click)="post.isBookmarked = !post.isBookmarked" aria-label="settings"
+                mat-menu-item>
             @if (post.isBookmarked) {
                 <mat-icon>bookmark</mat-icon>
             } @else {
@@ -53,8 +53,8 @@
             <span>Bookmark</span>
         </button>
 
-        <button mat-menu-item aria-label="logout"
-                (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
+        <button (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn" aria-label="logout"
+                mat-menu-item>
             @if (post.areNotificationTurnedOn) {
                 <div class="flex items-center">
                     <mat-icon>notifications_active</mat-icon>

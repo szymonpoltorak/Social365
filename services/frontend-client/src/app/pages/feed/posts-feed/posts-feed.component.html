@@ -7,15 +7,15 @@
                 <mat-form-field class="w-full">
                     <mat-label>What's on your mind ?</mat-label>
 
-                    <textarea matInput [cdkTextareaAutosize]="true"
+                    <textarea #postContent [cdkTextareaAutosize]="true"
                               [formControl]="contentControl"
-                              #postContent maxlength="300"
+                              matInput maxlength="300"
                               placeholder="I am thinking about...">
                     </textarea>
 
-                    <button mat-icon-button color="basic" matSuffix
-                            (click)="isOpened = !isOpened"
-                            aria-label="Add Feeling" type="button">
+                    <button (click)="isOpened = !isOpened" aria-label="Add Feeling" color="basic"
+                            mat-icon-button
+                            matSuffix type="button">
                         <mat-icon>mood</mat-icon>
                     </button>
 
@@ -39,28 +39,28 @@
             <mat-divider class="divider"></mat-divider>
 
             <div class="flex items-center justify-evenly">
-                <button mat-button color="basic"
-                        (click)="isAttachingImagesOpened = !isAttachingImagesOpened"
-                        aria-label="Attach Image" type="button">
+                <button (click)="isAttachingImagesOpened = !isAttachingImagesOpened" aria-label="Attach Image"
+                        color="basic"
+                        mat-button type="button">
                     <mat-icon>image</mat-icon>
                     Image
                 </button>
 
-                <button mat-raised-button color="primary"
-                        [disabled]="postContent.value.length === 0 && attachedImagesLength === 0"
-                        aria-label="New Post" type="submit">
+                <button [disabled]="postContent.value.length === 0 && attachedImagesLength === 0" aria-label="New Post"
+                        color="primary"
+                        mat-raised-button type="submit">
                     <mat-icon>send</mat-icon>
                     Post
                 </button>
             </div>
         </mat-card>
 
-        <app-drop-image [isAttachingImagesOpened]="isAttachingImagesOpened"
-                        (attachedImagesLength)="attachedImagesLength = $event">
+        <app-drop-image (attachedImagesLength)="attachedImagesLength = $event"
+                        [isAttachingImagesOpened]="isAttachingImagesOpened">
         </app-drop-image>
     </form>
 
-    @for (post of posts; track post) {
+    @for (post of posts.data; track post) {
         @if (isPost(post)) {
             <app-post [post]="post"></app-post>
         } @else {

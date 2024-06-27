@@ -1,31 +1,31 @@
 <div class="flex items-center justify-between m-2 p-3 border border-divider rounded-xl">
     <div class="flex items-center gap-3">
         <img [src]="friend.profilePictureUrl"
-             class="rounded-xl w-24 h-24"
-             alt="Friends Profile Photo">
+             alt="Friends Profile Photo"
+             class="rounded-xl w-24 h-24">
 
         <div class="flex flex-col">
             <div>{{ friend.fullName }}</div>
 
-            <div matTooltip="Click to show mutual friends"
-                 class="text-xs font-extralight hover:cursor-pointer hover:underline text-gray-400">
+            <div class="text-xs font-extralight hover:cursor-pointer hover:underline text-gray-400"
+                 matTooltip="Click to show mutual friends">
                 {{ friend.numOfMutualFriends }} mutual friends
             </div>
         </div>
     </div>
 
-    <button class="center" mat-icon-button aria-label="More" [matMenuTriggerFor]="menu">
+    <button [matMenuTriggerFor]="menu" aria-label="More" class="center" mat-icon-button>
         <mat-icon>more_vert</mat-icon>
     </button>
 
     <mat-menu #menu xPosition="before">
-        <button mat-menu-item aria-label="UnFollow">
+        <button aria-label="UnFollow" mat-menu-item>
             <mat-icon>remove_circle_outline</mat-icon>
 
             <span>Unfollow</span>
         </button>
 
-        <button mat-menu-item aria-label="UnFriend">
+        <button aria-label="UnFriend" mat-menu-item>
             <mat-icon>person_remove</mat-icon>
 
             <span>Unfriend</span>

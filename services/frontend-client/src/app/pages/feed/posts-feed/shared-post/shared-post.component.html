@@ -8,7 +8,7 @@
     </mat-card-content>
 
     <div class="border-solid border-1 m-2 rounded-2xl">
-        <app-post-header [post]="post.sharedPost" [username]="user.username" [isSharedPost]="true"></app-post-header>
+        <app-post-header [isSharedPost]="true" [post]="post.sharedPost" [username]="user.username"></app-post-header>
 
         <mat-card-content class="mb-3">
             <p class="text-justify font-light">
@@ -44,9 +44,9 @@
     <mat-divider class="divider"></mat-divider>
 
     <mat-card-actions class="flex justify-between">
-        <button mat-button aria-label="Like"
-                [color]="post.sharingPost.isPostLiked ? 'primary': 'basic'"
-                type="button" (click)="likePost()">
+        <button (click)="likePost()" [color]="post.sharingPost.isPostLiked ? 'primary': 'basic'"
+                aria-label="Like"
+                mat-button type="button">
             @if (post.sharingPost.isPostLiked) {
                 <mat-icon>thumb_up</mat-icon>
             } @else {
@@ -55,13 +55,13 @@
             LIKE
         </button>
 
-        <button mat-button aria-label="Comments" type="button" (click)="getCommentsForPost()">
+        <button (click)="getCommentsForPost()" aria-label="Comments" mat-button type="button">
             <mat-icon>comment</mat-icon>
             COMMENT
         </button>
 
-        <button mat-button aria-label="Share"
-                (click)="sharePost()"
+        <button (click)="sharePost()" aria-label="Share"
+                mat-button
                 type="button">
             <mat-icon>share</mat-icon>
             SHARE

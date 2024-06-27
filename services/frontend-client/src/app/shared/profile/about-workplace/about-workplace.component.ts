@@ -82,7 +82,7 @@ export class AboutWorkplaceComponent implements OnInit {
 
             return;
         }
-        if (`${position} at ${workplace}` === this.option.data!.label) {
+        if (`${ position } at ${ workplace }` === this.option.data!.label) {
             this.matSnackBar.open("No changes were found", "Close");
 
             return;
@@ -112,7 +112,7 @@ export class AboutWorkplaceComponent implements OnInit {
             .updateProfileWorkPlace(workplaceRequest)
             .subscribe(() => {
                 this.option.data = {
-                    label: `${position} at ${workplace}`,
+                    label: `${ position } at ${ workplace }`,
                     privacyLevel: privacyLevel
                 }
                 this.option.isBeingEdited = false;

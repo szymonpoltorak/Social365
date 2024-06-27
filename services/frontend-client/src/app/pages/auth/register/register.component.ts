@@ -35,9 +35,9 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
     styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
-    private readonly PASSWORD_PATTERN: string = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[:\\?\\.@!#:\\-_=+ ])[a-zA-Z0-9:\\?\\.@!#:\\-_=+ ]{8,32}$";
     registerForm !: FormGroup;
     passwordsGroup !: FormGroup;
+    private readonly PASSWORD_PATTERN: string = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[:\\?\\.@!#:\\-_=+ ])[a-zA-Z0-9:\\?\\.@!#:\\-_=+ ]{8,32}$";
 
     constructor(private formBuilder: FormBuilder) {
     }

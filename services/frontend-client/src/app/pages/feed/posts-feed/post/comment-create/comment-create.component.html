@@ -8,27 +8,27 @@
             <div class="relative w-full">
                 <input
                     #fileInput
-                    type="file"
                     (change)="handleChange($event)"
-                    [multiple]="false"
                     [accept]="allowedFileTypes"
-                    class="hidden"/>
+                    [multiple]="false"
+                    class="hidden"
+                    type="file"/>
 
                 <mat-form-field class="w-full">
                     <mat-label class="max-feed-sm:font-extralight">Tell me more</mat-label>
 
-                    <textarea #comment maxlength="300" type="text"
-                              [formControl]="contentControl"
-                              [cdkTextareaAutosize]="true"
-                              matInput placeholder="I think...">
+                    <textarea #comment [cdkTextareaAutosize]="true" [formControl]="contentControl"
+                              matInput
+                              maxlength="300"
+                              placeholder="I think..." type="text">
                     </textarea>
 
-                    <button mat-icon-button matSuffix (click)="this.isOpened = !this.isOpened;">
+                    <button (click)="this.isOpened = !this.isOpened;" mat-icon-button matSuffix>
                         <mat-icon>mood</mat-icon>
                     </button>
 
-                    <button mat-icon-button matSuffix
-                            (click)="fileInput.click()">
+                    <button (click)="fileInput.click()" mat-icon-button
+                            matSuffix>
                         <mat-icon>image</mat-icon>
                     </button>
 

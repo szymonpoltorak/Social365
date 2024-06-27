@@ -12,14 +12,14 @@
     </div>
 
     <div class="flex justify-center flex-col md:m-8 max-md:m-4 max-md:items-center max-w-[35em]">
-        <form class="bg-secondary p-5 rounded-2xl" [formGroup]="loginForm" (ngSubmit)="submitForm()">
+        <form (ngSubmit)="submitForm()" [formGroup]="loginForm" class="bg-secondary p-5 rounded-2xl">
             <div class="text-4xl font-bold mb-3">Login</div>
 
             <mat-form-field class="w-full">
                 <mat-label>Email</mat-label>
 
-                <input matInput
-                       formControlName="email"
+                <input formControlName="email"
+                       matInput
                        placeholder="example@mail.com" required>
 
                 <mat-error *ngIf="loginForm.controls['email'].hasError('required')">
@@ -34,8 +34,8 @@
             <mat-form-field class="w-full">
                 <mat-label>Password</mat-label>
 
-                <input matInput
-                       formControlName="password"
+                <input formControlName="password"
+                       matInput
                        placeholder="My really hard password" required>
 
                 <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
@@ -59,7 +59,7 @@
                     Register
                 </button>
 
-                <button mat-fab extended color="primary" type="submit">
+                <button color="primary" extended mat-fab type="submit">
                     <mat-icon>login</mat-icon>
                     Login
                 </button>

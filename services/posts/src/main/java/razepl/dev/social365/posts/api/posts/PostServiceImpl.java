@@ -21,6 +21,7 @@ import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
@@ -43,7 +44,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
-    public PostsCassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
+    public CassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
         log.info("Getting posts for profile with id: {}, using page info : {}", profileId, pageInfo);
 
         int currentFriendPage = pageInfo.friendPageNumber();
@@ -58,7 +59,7 @@ public class PostServiceImpl implements PostService {
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
-                return createCassandraPage((CassandraPageRequest) pageable, result, profileId, currentFriendPage);
+                return createCassandraPage(pageable, result, profileId, currentFriendPage);
             }
             Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
@@ -71,21 +72,22 @@ public class PostServiceImpl implements PostService {
             if (resultSize >= pageSize) {
                 log.info("Found enough posts returning result of size: {}", resultSize);
 
-                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
+                return createCassandraPage(getNextPageable(posts), result, profileId, currentFriendPage);
             }
             if (!friendsPage.hasNext()) {
                 log.info("There are no more friends to fetch posts from returning result of size: {}", resultSize);
 
-                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
+                return createCassandraPage(getNextPageable(posts), result, profileId, currentFriendPage);
             }
             currentFriendPage++;
         }
     }
 
-    private PostsCassandraPage<PostData> createCassandraPage(CassandraPageRequest pageable, Collection<Post> result,
+    private PostsCassandraPage<PostData> createCassandraPage(Pageable nextPageable, Collection<Post> result,
                                                              String profileId, int currentFriendsPage) {
         log.info("Found posts returning result...");
 
+        CassandraPageRequest pageable = (CassandraPageRequest) nextPageable;
         PagingState pagingState = PagingState.newInstance(pageable.getPagingState());
 
         List<PostData> content = result
@@ -100,6 +102,10 @@ public class PostServiceImpl implements PostService {
 
         return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),
                 pageable.hasNext(), PagingState.encode(pagingState));
+    }
+
+    private <T> Pageable getNextPageable(Slice<T> data) {
+        return data.hasNext() ? data.nextPageable() : data.getPageable();
     }
 
     @Override
@@ -248,7 +254,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostResponse deletePost(String profileId, String postId) {
+    public PostData deletePost(String profileId, String postId) {
         log.info("Deleting post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId);

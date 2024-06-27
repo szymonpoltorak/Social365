@@ -3,21 +3,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DropImageComponent } from './drop-image.component';
 
 describe('DropImageComponent', () => {
-  let component: DropImageComponent;
-  let fixture: ComponentFixture<DropImageComponent>;
+    let component: DropImageComponent;
+    let fixture: ComponentFixture<DropImageComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DropImageComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(DropImageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [DropImageComponent]
+        })
+            .compileComponents();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+        fixture = TestBed.createComponent(DropImageComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

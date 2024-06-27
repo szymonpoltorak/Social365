@@ -1,13 +1,12 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
-import razepl.dev.social365.posts.api.posts.data.PostResponse;
-import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 public interface PostController {
 
     int getUsersPostCount(String profileId);
 
-    PostsCassandraPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize, String pagingState);
+    CassandraPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize, String pagingState);
 
     PostData updateLikePostCount(String profileId, String postId);
 
@@ -21,7 +20,6 @@ public interface PostController {
 
     PostData editPost(String profileId, String postId, String content);
 
-    PostResponse deletePost(String profileId, String postId);
-
+    PostData deletePost(String profileId, String postId);
 
 }

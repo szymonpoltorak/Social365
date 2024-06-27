@@ -4,7 +4,7 @@
             <mat-card-header class="flex items-center justify-between mb-2">
                 <mat-card-title>Bio</mat-card-title>
 
-                @if (profileInfo.profileId === currentUser.profileId) {
+                @if (presentedProfile.profileId === currentUser.profileId) {
                     <button mat-icon-button
                             (click)="isEditing = !isEditing"
                             aria-label="edit bio">
@@ -14,8 +14,8 @@
             </mat-card-header>
 
             <mat-card-content>
-                @if (!isEditing || profileInfo.profileId !== currentUser.profileId) {
-                    <span class="text-justify">{{ profileInfo.bio === null ? "" : profileInfo.bio }}</span>
+                @if (!isEditing || presentedProfile.profileId !== currentUser.profileId) {
+                    <span class="text-justify">{{ presentedProfile.bio === null ? "" : presentedProfile.bio }}</span>
                 } @else {
                     <mat-form-field class="w-full">
                         <textarea matInput
@@ -41,10 +41,10 @@
                 <mat-card-header class="mb-2 flex items-center justify-between">
                     <mat-card-title>Photos</mat-card-title>
 
-                    <button mat-button
-                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profileInfo.username, RouterPaths.PROFILE_PHOTOS])"
+                    <button (click)="router.navigate([RouterPaths.PROFILE_DIRECT, presentedProfile.username, RouterPaths.PROFILE_PHOTOS])"
+                            aria-label="edit bio"
                             color="primary"
-                            aria-label="edit bio">
+                            mat-button>
                         See more photos
                     </button>
                 </mat-card-header>
@@ -68,10 +68,10 @@
                 <mat-card-header class="mb-2 flex items-center justify-between">
                     <mat-card-title>Friends</mat-card-title>
 
-                    <button mat-button
-                            (click)="router.navigate([RouterPaths.PROFILE_DIRECT, profileInfo.username, RouterPaths.FRIENDS_PATH])"
+                    <button (click)="router.navigate([RouterPaths.PROFILE_DIRECT, presentedProfile.username, RouterPaths.FRIENDS_PATH])"
+                            aria-label="edit bio"
                             color="primary"
-                            aria-label="edit bio">
+                            mat-button>
                         See more friends
                     </button>
                 </mat-card-header>
@@ -96,5 +96,5 @@
         </div>
     </div>
 
-    <app-posts-feed [posts]="posts"></app-posts-feed>
+    <app-posts-feed [presentedProfileId]="presentedProfile.profileId"></app-posts-feed>
 </div>

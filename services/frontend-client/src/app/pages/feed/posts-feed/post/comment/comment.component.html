@@ -9,8 +9,8 @@
                 <div class="flex justify-between">
                     <div class="font-semibold">{{ comment.author.fullName }}</div>
 
-                    <span matTooltip="{{ comment.creationDateTime | date: 'medium' }}"
-                          class="text-xs font-extralight hover:cursor-pointer">
+                    <span class="text-xs font-extralight hover:cursor-pointer"
+                          matTooltip="{{ comment.creationDateTime | date: 'medium' }}">
                         {{ comment.creationDateTime | postAge }}
                     </span>
                 </div>
@@ -20,24 +20,24 @@
         </div>
 
         <div class="flex m-1 gap-3 items-center ml-14">
-            <div matRipple
-                 (click)="onLikeComment()"
+            <div (click)="onLikeComment()"
                  (keydown.enter)="onLikeComment()"
-                 tabindex="0"
                  [ngClass]="{
                             'text-primary': comment.isLiked,
                             'hover:bg-mat-primary-hover': comment.isLiked,
                             'hover:bg-mat-hover': !comment.isLiked
                      }"
-                 class="mini-button text-primary">
+                 class="mini-button text-primary"
+                 matRipple
+                 tabindex="0">
                 <span class="mr-1">{{ comment.commentLikesCount }}</span> LIKE
             </div>
 
-            <div matRipple
-                 tabindex="0"
+            <div (click)="isMakingReply = !isMakingReply"
                  (keydown.enter)="isMakingReply = !isMakingReply"
-                 (click)="isMakingReply = !isMakingReply"
-                 class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover">
+                 class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover"
+                 matRipple
+                 tabindex="0">
                 REPLY
             </div>
         </div>

@@ -17,10 +17,10 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 })
 export class FriendSuggestionsComponent implements OnInit {
 
-    private readonly FIRST_PAGE: number = 0;
-    private readonly PAGE_SIZE: number = 20;
     protected friendSuggestions !: Page<FriendElement>;
     protected currentUser !: Profile;
+    private readonly FIRST_PAGE: number = 0;
+    private readonly PAGE_SIZE: number = 20;
 
     constructor(private friendsService: FriendsService,
                 private localStorageService: LocalStorageService,) {

@@ -18,9 +18,9 @@
             <mat-form-field class="w-full">
                 <mat-label>What's on your mind ?</mat-label>
 
-                <textarea matInput [cdkTextareaAutosize]="true"
+                <textarea #postContent [cdkTextareaAutosize]="true"
                           [formControl]="contentControl"
-                          #postContent maxlength="300"
+                          matInput maxlength="300"
                           placeholder="I am thinking about...">
                 </textarea>
 
@@ -39,7 +39,7 @@
                 Close
             </button>
 
-            <button mat-raised-button mat-dialog-close color="primary">
+            <button color="primary" mat-dialog-close mat-raised-button>
                 <mat-icon>send</mat-icon>
                 Share
             </button>
