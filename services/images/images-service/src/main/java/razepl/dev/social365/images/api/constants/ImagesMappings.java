@@ -20,6 +20,8 @@ public final class ImagesMappings {
 
     public static final String GET_COMMENT_IMAGE_MAPPING = "/getCommentImage";
 
+    public static final String GET_USER_UPLOADED_IMAGES_MAPPING = "/getUserUploadedImages";
+
     private ImagesMappings() {
     }
 }

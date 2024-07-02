@@ -146,7 +146,7 @@ public class PostServiceImpl implements PostService {
                         .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .build()
                 )
-                .content(content)
+                .content(content == null ? "" : content)
                 .hasAttachments(hasAttachments)
                 .build();
 

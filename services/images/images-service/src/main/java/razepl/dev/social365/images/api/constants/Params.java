@@ -10,6 +10,10 @@ public final class Params {
 
     public static final String COMMENT_ID = "commentId";
 
+    public static final String PAGE_NUMBER = "pageNumber";
+
+    public static final String PAGE_SIZE = "pageSize";
+
     private Params() {
     }
 

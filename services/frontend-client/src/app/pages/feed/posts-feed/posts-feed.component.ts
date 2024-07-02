@@ -88,6 +88,8 @@ export class PostsFeedComponent implements OnInit {
             .getPostsFromUrl(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 this.posts = posts;
+
+                window.scrollTo(0, 0);
             });
     }
 

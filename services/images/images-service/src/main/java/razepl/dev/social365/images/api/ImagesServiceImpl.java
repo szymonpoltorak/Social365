@@ -2,6 +2,8 @@ package razepl.dev.social365.images.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
@@ -52,6 +54,17 @@ public class ImagesServiceImpl implements ImagesService {
         saveFile(imagePath, image);
 
         return imagesMapper.toImageResponse(savedImage);
+    }
+
+    @Override
+    public final Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
+        log.info("Getting user uploaded images for user: {}", username);
+
+        Page<PostImage> postImages = postImagesRepository.findPostImagesByUsername(username, pageable);
+
+        log.info("User uploaded images found: {}", postImages.getNumberOfElements());
+
+        return postImages.map(imagesMapper::toPostImageResponse);
     }
 
     @Override

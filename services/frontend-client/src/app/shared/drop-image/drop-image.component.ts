@@ -52,7 +52,7 @@ export class DropImageComponent {
         }
 
         for (const file of files) {
-            if (this.shouldContinue(file)) {
+            if (!this.shouldContinue(file)) {
                 continue;
             }
             this.attachedImages.push({

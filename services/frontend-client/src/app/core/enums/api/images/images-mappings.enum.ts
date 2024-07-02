@@ -18,4 +18,6 @@ export enum ImagesMappings {
 
     GET_COMMENT_IMAGE_MAPPING = IMAGES_MAPPING + "/getCommentImage",
 
+    GET_USER_UPLOADED_IMAGES_MAPPING = IMAGES_MAPPING + "/getUserUploadedImages"
+
 }

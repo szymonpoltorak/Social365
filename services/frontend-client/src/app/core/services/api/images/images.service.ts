@@ -3,6 +3,8 @@ import { HttpClient } from "@angular/common/http";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { ImagesMappings } from "@enums/api/images/images-mappings.enum";
 import { Observable, take } from "rxjs";
+import { PostImage } from "@interfaces/images/post-image.interface";
+import { Page } from "@interfaces/utils/page.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -70,11 +72,27 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
+    getUserUploadedImages(username: string, pageNumber: number, pageSize: number): Observable<Page<PostImage>> {
+        return this.http.get<Page<PostImage>>(ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING, {
+            params: {
+                username: username,
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        }).pipe(take(1));
+    }
+
     deleteImage(imageId: number): Observable<void> {
         return this.http.delete<void>(ImagesMappings.DELETE_IMAGE_MAPPING, {
             params: {
                 imageId: imageId
             }
+        }).pipe(take(1));
+    }
+
+    downloadImage(imagePath: string): Observable<any> {
+        return this.http.get(imagePath, {
+            responseType: 'blob'
         }).pipe(take(1));
     }
 
