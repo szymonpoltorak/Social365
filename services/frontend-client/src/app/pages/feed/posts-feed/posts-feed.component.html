@@ -1,5 +1,5 @@
 <div class="flex flex-col h-fit w-full overflow-y-auto">
-    <form class="max-feed-sm:mt-3 mb-3">
+    <form class="max-feed-sm:mt-3 mb-3" (ngSubmit)="createNewPost()">
         <mat-card class="feed-sm:p-3 max-feed-sm:p-1">
             <div class="flex items-center gap-5 mb-4 relative">
                 <app-avatar-photo [imageLink]="currentUser.profilePictureUrl"></app-avatar-photo>

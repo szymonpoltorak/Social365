@@ -30,7 +30,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -56,13 +55,15 @@ public class PostServiceImpl implements PostService {
 
         while (true) {
             Page<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
-            List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, currentFriendPage).toList());
+            List<String> friendsIds = new ArrayList<>(friendsPage.toList());
 
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
                 return createCassandraPage(pageable, result, profileId, currentFriendPage);
             }
+            friendsIds.add(profileId);
+
             Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
             log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
@@ -248,10 +249,6 @@ public class PostServiceImpl implements PostService {
                 .content(content)
                 .originalPostId(post.getPostId())
                 .hasAttachments(false)
-                .userLikedIds(Set.of())
-                .userSharedIds(Set.of())
-                .userNotificationIds(Set.of())
-                .bookmarkedUserIds(Set.of())
                 .build();
 
         post.sharePostByProfile(profileId);

@@ -18,7 +18,11 @@ public class FileManagementServiceImpl implements FileManagementService {
     public final void saveFile(String filePath, MultipartFile file) {
         try {
             File out = new File(filePath);
+            File parentDir = out.getParentFile();
 
+            if (!parentDir.exists() && !parentDir.mkdirs()) {
+                throw new IOException("Failed to create directory: " + parentDir.getAbsolutePath());
+            }
             file.transferTo(out);
         } catch (IOException exception) {
             log.error(exception.getLocalizedMessage());

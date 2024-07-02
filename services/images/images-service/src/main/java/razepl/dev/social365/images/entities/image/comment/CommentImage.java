@@ -36,7 +36,6 @@ public class CommentImage {
     @Column(nullable = false)
     private String username;
 
-    @Column(unique = true, nullable = false)
     private String commentId;
 
     @Column(unique = true, nullable = false)

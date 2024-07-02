@@ -9,6 +9,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,34 +64,30 @@ public class Post {
 
     public final void addUserLikedId(String profileId) {
         if (userLikedIds == null) {
-            userLikedIds = Set.of(profileId);
-        } else {
-            userLikedIds.add(profileId);
+            userLikedIds = new HashSet<>();
         }
+        userLikedIds.add(profileId);
     }
 
     public final void addUserSharedId(String profileId) {
         if (userSharedIds == null) {
-            userSharedIds = Set.of(profileId);
-        } else {
-            userSharedIds.add(profileId);
+            userSharedIds = new HashSet<>();
         }
+        userSharedIds.add(profileId);
     }
 
     public final void addUserNotificationId(String profileId) {
         if (userNotificationIds == null) {
-            userNotificationIds = Set.of(profileId);
-        } else {
-            userNotificationIds.add(profileId);
+            userNotificationIds = new HashSet<>();
         }
+        userNotificationIds.add(profileId);
     }
 
     public final void addBookmarkedUserId(String profileId) {
         if (bookmarkedUserIds == null) {
-            bookmarkedUserIds = Set.of(profileId);
-        } else {
-            bookmarkedUserIds.add(profileId);
+            bookmarkedUserIds = new HashSet<>();
         }
+        bookmarkedUserIds.add(profileId);
     }
 
     public final int getLikesCount() {

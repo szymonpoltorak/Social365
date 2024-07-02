@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { PostsFeedComponent } from "@pages/feed/posts-feed/posts-feed.component";
-import { Post } from "@interfaces/feed/post.interface";
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -10,8 +9,6 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
-import { Either } from "@core/types/feed/either.type";
-import { SharedPost } from "@interfaces/feed/shared-post.interface";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { ProfileService } from "@api/profile/profile.service";
 import { Profile } from "@interfaces/feed/profile.interface";

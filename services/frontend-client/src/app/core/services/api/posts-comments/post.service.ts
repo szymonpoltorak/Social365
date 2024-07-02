@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, take } from "rxjs";
+import { Observable, take } from "rxjs";
 import { Post } from "@interfaces/feed/post.interface";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
@@ -27,25 +27,11 @@ export class PostService {
     }
 
     getPostsFromUrl(profileId: string, friendsPageNumber: number,
-                            pageSize: number, pagingState: Optional<string>,
-                            url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
+                    pageSize: number, pagingState: Optional<string>,
+                    url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
         return this.http.get<CassandraPage<Either<Post, SharedPost>>>(url, {
             params: this.getHttpParams(profileId, friendsPageNumber, pageSize, pagingState)
-        }).pipe(
-            take(1),
-            // map((page: CassandraPage<Either<Post, SharedPost>>) => {
-            //     page.data.map(post => {
-            //         if (post instanceof SharedPost) {
-            //             post.sharingPost.creationDateTime = new Date(post.sharingPost.creationDateTime);
-            //             post.sharedPost.creationDateTime = new Date(post.sharedPost.creationDateTime);
-            //         } else {
-            //             post.creationDateTime = new Date(post.creationDateTime);
-            //         }
-            //         return post;
-            //     })
-            //     return page;
-            // })
-        );
+        }).pipe(take(1));
     }
 
     updateLikePostCount(profileId: string, postId: string, creationDateTime: string): Observable<Post> {

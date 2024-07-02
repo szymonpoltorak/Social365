@@ -49,7 +49,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toImageResponse(savedImage);
     }
@@ -71,7 +71,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Comment image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toCommentResponse(savedImage);
     }
@@ -93,7 +93,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Post image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toPostImageResponse(savedImage);
     }
@@ -138,14 +138,15 @@ public class ImagesServiceImpl implements ImagesService {
         log.info("Updating image with imageId: {}", imageId);
 
         Image imageEntity = getImageFromRepository(imageId);
+        String imagePath = imageEntity.getImagePath();
 
-        log.info("Deleting old image: {}", imageEntity.getImagePath());
+        log.info("Deleting old image: {}", imagePath);
 
-        fileManagementService.deleteFile(imageEntity.getImagePath());
+        fileManagementService.deleteFile(imagePath);
 
-        log.info("Saving new image: {}", imageEntity.getImagePath());
+        log.info("Saving new image: {}", imagePath);
 
-        fileManagementService.saveFile(imageEntity.getImagePath(), image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toImageResponse(imageEntity);
     }
@@ -161,6 +162,12 @@ public class ImagesServiceImpl implements ImagesService {
         fileManagementService.deleteFile(image.getImagePath());
 
         return imagesMapper.toImageResponse(image);
+    }
+
+    private void saveFile(String imagePath, MultipartFile image) {
+        fileManagementService.saveFile(imagePath, image);
+
+        log.info("Image has been saved to file system.");
     }
 
     private Image getImageFromRepository(long imageId) {
