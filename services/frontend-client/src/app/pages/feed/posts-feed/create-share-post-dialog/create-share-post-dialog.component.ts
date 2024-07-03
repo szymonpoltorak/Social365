@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -32,13 +32,20 @@ import { MatIcon } from "@angular/material/icon";
     styleUrl: './create-share-post-dialog.component.scss'
 })
 export class CreateSharePostDialogComponent implements OnInit {
-    currentUser !: Profile;
+
+    protected currentUser !: Profile;
     protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
 
-    constructor(private localStorage: LocalStorageService) {
+
+    constructor(private localStorage: LocalStorageService,
+                private dialogRef: MatDialogRef<CreateSharePostDialogComponent>) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
+    }
+
+    closeDialog(): void {
+        this.dialogRef.close(this.contentControl.value || "");
     }
 }

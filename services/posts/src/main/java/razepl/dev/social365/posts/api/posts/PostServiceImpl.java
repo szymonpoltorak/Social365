@@ -15,6 +15,7 @@ import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.PostKey;
+import razepl.dev.social365.posts.entities.post.data.SharingPostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
@@ -137,15 +138,11 @@ public class PostServiceImpl implements PostService {
 
         postValidator.validatePostContent(content);
 
+        String creationDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
         Post post = Post
                 .builder()
-                .key(PostKey
-                        .builder()
-                        .authorId(profileId)
-                        .postId(UUID.randomUUID())
-                        .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                        .build()
-                )
+                .key(PostKey.of(profileId, creationDateTime, UUID.randomUUID()))
                 .content(content == null ? "" : content)
                 .hasAttachments(hasAttachments)
                 .build();
@@ -236,18 +233,14 @@ public class PostServiceImpl implements PostService {
         log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
 
         Post post = getPostFromRepository(postId, creationDateTime);
+        String shareCreationDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         Post sharedPost = Post
                 .builder()
-                .key(PostKey
-                        .builder()
-                        .authorId(profileId)
-                        .postId(UUID.randomUUID())
-                        .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                        .build()
-                )
+                .key(PostKey.of(profileId, shareCreationDateTime, UUID.randomUUID()))
                 .content(content)
                 .originalPostId(post.getPostId())
+                .originalPostCreationDateTime(post.getCreationDateTime())
                 .hasAttachments(false)
                 .build();
 
@@ -259,9 +252,9 @@ public class PostServiceImpl implements PostService {
 
         Post savedSharedPost = postRepository.save(sharedPost);
 
-        log.info("Post with id: {} shared for profile with id: {}", savedSharedPost.getPostId(), profileId);
+        log.info("Saved shared post : {}", savedSharedPost);
 
-        return postMapper.toPostResponse(savedPost, profileId);
+        return postMapper.toSharedPostResponse(savedSharedPost, savedPost, profileId);
     }
 
     @Override
@@ -274,9 +267,9 @@ public class PostServiceImpl implements PostService {
         if (!post.getAuthorId().equals(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
-        log.info("Deleting post with id: {}", post.getPostId());
+        log.info("Deleting post with id: {}", post.getKey());
 
-        postRepository.deleteById(post.getPostId());
+        postRepository.deleteByPostId(post.getPostId(), post.getCreationDateTime(), post.getAuthorId());
 
         log.info("Deleting all comments connected with post with id: {}", post.getPostId());
 

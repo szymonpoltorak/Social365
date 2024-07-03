@@ -62,9 +62,15 @@
 
     @for (post of posts.data; track post) {
         @if (isPost(post)) {
-            <app-post [post]="post"></app-post>
+            <app-post [post]="post"
+                      (deletePostEvent)="deletePost($event)"
+                      (sharePostEvent)="sharePost($event)">
+            </app-post>
         } @else {
-            <app-shared-post [post]="post"></app-shared-post>
+            <app-shared-post [post]="post"
+                             (deletePostEvent)="deletePost($event)"
+                             (sharePostEvent)="sharePost($event)">
+            </app-shared-post>
         }
     }
 </div>

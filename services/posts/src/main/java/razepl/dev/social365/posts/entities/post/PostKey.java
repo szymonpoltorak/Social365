@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @PrimaryKeyClass
-public class PostKey {
+public final class PostKey {
 
     @PrimaryKeyColumn(name = "author_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String authorId;

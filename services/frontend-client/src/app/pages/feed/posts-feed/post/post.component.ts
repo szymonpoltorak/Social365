@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardImage } from "@angular/material/card";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -26,6 +26,7 @@ import {
 import { NgOptimizedImage } from "@angular/common";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 import { PostService } from "@api/posts-comments/post.service";
+import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
 
 @Component({
     selector: 'app-post',
@@ -59,9 +60,11 @@ import { PostService } from "@api/posts-comments/post.service";
 export class PostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
     post !: Post;
-    comments: PostComment[] = [];
+    protected comments: PostComment[] = [];
     protected areCommentsVisible: boolean = false;
     protected currentUser !: Profile;
+    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
+    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
@@ -127,6 +130,13 @@ export class PostComponent implements OnInit {
         createDialog
             .afterClosed()
             .pipe(take(1))
-            .subscribe();
+            .subscribe((content: string) => {
+                console.log(content);
+
+                this.sharePostEvent.emit({
+                    post: this.post,
+                    content: content
+                });
+            });
     }
 }

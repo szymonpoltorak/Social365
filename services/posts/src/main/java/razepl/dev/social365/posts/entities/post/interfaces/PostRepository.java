@@ -34,4 +34,10 @@ public interface PostRepository extends CassandraRepository<Post, UUID> {
     @Query("select * from posts where post_id = :postId and creation_date_time = :creationDateTime ALLOW FILTERING")
     Optional<Post> findByPostId(@Param(Params.POST_ID) UUID postId,
                                 @Param(Params.CREATION_DATE_TIME) String creationDateTime);
+
+    @Query("""
+            delete from posts
+            where post_id = :postId and creation_date_time = :creationDateTime and author_id = :authorId
+            """)
+    void deleteByPostId(UUID postId, String creationDateTime, String authorId);
 }

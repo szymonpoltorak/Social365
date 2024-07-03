@@ -27,6 +27,7 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ImagesService } from "@api/images/images.service";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
 
 
 @Component({
@@ -153,4 +154,30 @@ export class PostsFeedComponent implements OnInit {
                 this.contentControl.setValue("");
             });
     }
+
+    sharePost(event: SharePostData): void {
+        this.postService
+            .sharePost(this.currentUser.profileId, event.post.postId, event.post.creationDateTime, event.content)
+            .subscribe((sharedPost: SharedPost) => {
+                this.posts.data.unshift(sharedPost);
+
+                this.snackbar.open("Successfully shared post!", "Close",{
+                    duration: 2000,
+                });
+            });
+
+    }
+
+    deletePost(event: Post): void {
+        this.postService
+            .deletePost(this.currentUser.profileId, event.postId, event.creationDateTime)
+            .subscribe(() => {
+                this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
+
+                this.snackbar.open("Successfully deleted post!", "Close",{
+                    duration: 2000,
+                });
+            });
+    }
+
 }

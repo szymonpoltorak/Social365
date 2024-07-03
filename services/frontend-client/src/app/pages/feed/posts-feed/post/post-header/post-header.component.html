@@ -29,7 +29,9 @@
 
     <mat-menu #postOptions="matMenu" xPosition="before">
         @if (post.author.username === username) {
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="deletePostEvent.emit()"
+                    aria-label="settings">
                 <mat-icon>delete</mat-icon>
 
                 <span>Delete Post</span>

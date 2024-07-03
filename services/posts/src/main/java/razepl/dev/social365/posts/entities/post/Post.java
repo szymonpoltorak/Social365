@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
+import razepl.dev.social365.posts.entities.post.data.SharingPostKey;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,9 @@ public class Post {
     @Column(value = "original_post_id")
     private UUID originalPostId;
 
+    @Column(value = "original_post_creation_date_time")
+    private String originalPostCreationDateTime;
+
     @Column(value = "user_notification_ids")
     private Set<String> userNotificationIds;
 
@@ -50,6 +55,10 @@ public class Post {
         return key.getPostId();
     }
 
+    public final SharingPostKey getSharingPostKey() {
+        return SharingPostKey.of(originalPostCreationDateTime, originalPostId);
+    }
+
     public final String getAuthorId() {
         return key.getAuthorId();
     }
@@ -59,7 +68,7 @@ public class Post {
     }
 
     public final boolean isSharedPost() {
-        return originalPostId != null;
+        return originalPostId != null && originalPostCreationDateTime != null;
     }
 
     public final void addUserLikedId(String profileId) {
@@ -67,13 +76,6 @@ public class Post {
             userLikedIds = new HashSet<>();
         }
         userLikedIds.add(profileId);
-    }
-
-    public final void addUserSharedId(String profileId) {
-        if (userSharedIds == null) {
-            userSharedIds = new HashSet<>();
-        }
-        userSharedIds.add(profileId);
     }
 
     public final void addUserNotificationId(String profileId) {
@@ -88,6 +90,13 @@ public class Post {
             bookmarkedUserIds = new HashSet<>();
         }
         bookmarkedUserIds.add(profileId);
+    }
+
+    public final void sharePostByProfile(String profileId) {
+        if (userSharedIds == null) {
+            userSharedIds = new HashSet<>();
+        }
+        userSharedIds.add(profileId);
     }
 
     public final int getLikesCount() {
@@ -116,7 +125,4 @@ public class Post {
         return userLikedIds != null && userLikedIds.contains(profileId);
     }
 
-    public final void sharePostByProfile(String profileId) {
-        userSharedIds.add(profileId);
-    }
 }

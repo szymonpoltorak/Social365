@@ -64,12 +64,13 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    sharePost(profileId: string, postId: string, creationDateTime: string): Observable<SharedPost> {
+    sharePost(profileId: string, postId: string, creationDateTime: string, content: string): Observable<SharedPost> {
         return this.http.put<SharedPost>(PostMappings.SHARE_POST, {}, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                creationDateTime: creationDateTime
+                creationDateTime: creationDateTime,
+                content: content
             }
         }).pipe(take(1));
     }

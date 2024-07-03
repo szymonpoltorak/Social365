@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { DatePipe } from "@angular/common";
 import { MatCardSubtitle, MatCardTitle } from "@angular/material/card";
@@ -32,6 +32,7 @@ export class PostHeaderComponent implements OnInit {
     @Input() post !: Post;
     @Input() username !: string;
     @Input() isSharedPost: boolean = false;
+    @Output() deletePostEvent: EventEmitter<void> = new EventEmitter<void>();
     creationDateTime !: Date;
 
     ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
 import { Either } from "@core/types/feed/either.type";
 import { Post } from "@interfaces/feed/post.interface";
@@ -18,6 +18,7 @@ import {
 import { take } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
+import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
 
 @Component({
     selector: 'app-shared-post',
@@ -44,6 +45,8 @@ export class SharedPostComponent implements OnInit {
     comments: PostComment[] = [];
     protected areCommentsVisible: boolean = false;
     protected user !: Profile;
+    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
+    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
                 public dialog: MatDialog) {
@@ -98,10 +101,18 @@ export class SharedPostComponent implements OnInit {
 
     sharePost(): void {
         const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
-            minHeight: '200px',
+            minHeight: '100px',
             minWidth: '320px',
         });
 
-        createDialog.afterClosed().pipe(take(1)).subscribe();
+        createDialog
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe((content: string) => {
+                this.sharePostEvent.emit({
+                    post: this.post.sharedPost,
+                    content: content
+                });
+            });
     }
 }
