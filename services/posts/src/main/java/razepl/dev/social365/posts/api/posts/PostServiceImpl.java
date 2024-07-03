@@ -15,7 +15,6 @@ import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.PostKey;
-import razepl.dev.social365.posts.entities.post.data.SharingPostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
@@ -109,12 +108,7 @@ public class PostServiceImpl implements PostService {
 
         List<PostData> content = result
                 .parallelStream()
-                .map(post -> {
-                    if (post.isSharedPost()) {
-                        return postMapper.toSharedPostResponse(post, profileId);
-                    }
-                    return postMapper.toPostResponse(post, profileId);
-                })
+                .map(post -> postMapper.toPostData(post, profileId))
                 .toList();
 
         return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),

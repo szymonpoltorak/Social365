@@ -1,0 +1,66 @@
+<div class="flex flex-col justify-between h-full w-full p-3 relative overflow-y-hidden">
+    <div class="flex items-center gap-5 mb-4">
+        <app-avatar-photo [imageLink]="currentUser.profilePictureUrl"></app-avatar-photo>
+
+        <mat-form-field class="w-full h-64">
+            <mat-label>What's on your mind ?</mat-label>
+
+            <textarea #postContent [cdkTextareaAutosize]="true"
+                      [formControl]="contentControl"
+                      matInput maxlength="300"
+                      placeholder="I am thinking about...">
+                    </textarea>
+
+            <button (click)="isOpened = !isOpened" aria-label="Add Feeling" color="basic"
+                    mat-icon-button
+                    matSuffix type="button">
+                <mat-icon>mood</mat-icon>
+            </button>
+
+            @if (!data.isSharedPost) {
+                <button (click)="isAttachingImagesOpened = !isAttachingImagesOpened" aria-label="Attach Image"
+                        color="basic"
+                        mat-icon-button
+                        matSuffix type="button">
+                    <mat-icon>image</mat-icon>
+                </button>
+            }
+
+            <mat-hint align="end">{{ postContent.value.length }} / 300</mat-hint>
+        </mat-form-field>
+
+        @if (isOpened) {
+            <emoji-mart
+                    class="picker"
+                    color="#0df4e2"
+                    set="twitter"
+                    title="Pick your emoji…"
+                    emoji="point_up"
+                    [sheetSize]="16"
+                    [isNative]="true"
+                    (emojiSelect)="emojiSelected($event)"
+                    [darkMode]="true">
+            </emoji-mart>
+        }
+    </div>
+
+    @if (!data.isSharedPost && data.post !== undefined) {
+        <app-drop-image (attachedImagesLength)="attachedImagesLength = $event"
+                        [imageUrls]="data.post.imageUrls"
+                        [isAttachingImagesOpened]="isAttachingImagesOpened">
+        </app-drop-image>
+    }
+
+    <div [ngClass]="{'mt-48': 'data.isSharedPost || data.post.imageUrls.length === 0'}">
+        <div class="flex w-full justify-between">
+            <button mat-button mat-dialog-close>
+                Close
+            </button>
+
+            <button color="primary" (click)="closeDialog()" mat-raised-button>
+                <mat-icon>send</mat-icon>
+                Submit
+            </button>
+        </div>
+    </div>
+</div>

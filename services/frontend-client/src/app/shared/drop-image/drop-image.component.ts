@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatCard } from "@angular/material/card";
@@ -17,7 +17,7 @@ import { MatIcon } from "@angular/material/icon";
     templateUrl: './drop-image.component.html',
     styleUrl: './drop-image.component.scss'
 })
-export class DropImageComponent {
+export class DropImageComponent implements OnInit {
 
     @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
     @Input() isAttachingImagesOpened: boolean = false;
@@ -28,8 +28,21 @@ export class DropImageComponent {
         'image/png',
     ];
     protected attachedImages: AttachImage[] = [];
+    @Input() imageUrls!: string[];
 
     constructor(private snackBar: MatSnackBar) {
+    }
+
+    ngOnInit(): void {
+        if (this.imageUrls === undefined) {
+            return;
+        }
+        this.attachedImages = this.imageUrls.map((imageUrl: string) => {
+            return {
+                fileUrl: imageUrl,
+                file: new File([], ""),
+            };
+        });
     }
 
     onFormSubmit(): AttachImage[] {

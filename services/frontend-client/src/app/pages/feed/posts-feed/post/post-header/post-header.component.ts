@@ -8,6 +8,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatTooltip } from "@angular/material/tooltip";
 import { PostAgePipe } from "@core/pipes/post-age.pipe";
 import { Post } from "@interfaces/feed/post.interface";
+import { MatDialog } from "@angular/material/dialog";
+import { PostEditDialogComponent } from "@pages/feed/posts-feed/post-edit-dialog/post-edit-dialog.component";
 
 @Component({
     selector: 'app-post-header',
@@ -35,8 +37,21 @@ export class PostHeaderComponent implements OnInit {
     @Output() deletePostEvent: EventEmitter<void> = new EventEmitter<void>();
     creationDateTime !: Date;
 
+    constructor(public dialog: MatDialog) {
+    }
+
     ngOnInit(): void {
         this.creationDateTime = new Date(this.post.creationDateTime);
     }
 
+    editPost(): void {
+        const dialogRef = this.dialog.open(PostEditDialogComponent, {
+            minHeight: '430px',
+            width: '530px',
+            data: {
+                post: this.post,
+                isSharedPost: this.isSharedPost
+            }
+        });
+    }
 }

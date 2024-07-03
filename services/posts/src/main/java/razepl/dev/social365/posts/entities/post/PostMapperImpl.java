@@ -79,6 +79,14 @@ public class PostMapperImpl implements PostMapper {
     }
 
     @Override
+    public final PostData toPostData(Post post, String profileId) {
+        if (post.isSharedPost()) {
+            return toSharedPostResponse(post, profileId);
+        }
+        return toPostResponse(post, profileId);
+    }
+
+    @Override
     public final PostData toSharedPostResponse(Post sharingPost, String profileId) {
         SharingPostKey originalPostKey = sharingPost.getSharingPostKey();
         Post sharedPost = postRepository.findByPostId(originalPostKey.postId(), originalPostKey.creationDateTime())

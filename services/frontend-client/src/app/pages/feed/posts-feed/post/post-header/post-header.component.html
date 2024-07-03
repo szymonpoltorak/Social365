@@ -37,7 +37,9 @@
                 <span>Delete Post</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="editPost()"
+                    aria-label="settings">
                 <mat-icon>edit</mat-icon>
 
                 <span>Edit</span>
