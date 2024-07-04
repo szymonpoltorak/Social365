@@ -52,7 +52,7 @@
         </app-drop-image>
     }
 
-    <div [ngClass]="{'mt-48': isOpened}">
+    <div [ngClass]="{'mt-48': isOpened && data.post.imageUrls.length !== 0, 'mt-96': isOpened && data.post.imageUrls.length === 0}">
         <div class="flex w-full justify-between">
             <button mat-button mat-dialog-close>
                 Close
