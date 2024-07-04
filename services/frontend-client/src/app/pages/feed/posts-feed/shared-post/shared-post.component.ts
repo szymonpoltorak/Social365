@@ -19,6 +19,9 @@ import { take } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
+import { PostService } from "@api/posts-comments/post.service";
+import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 
 @Component({
     selector: 'app-shared-post',
@@ -44,11 +47,12 @@ export class SharedPostComponent implements OnInit {
     post !: SharedPost;
     comments: PostComment[] = [];
     protected areCommentsVisible: boolean = false;
-    protected user !: Profile;
+    protected currentUser !: Profile;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
+                private postService: PostService,
                 public dialog: MatDialog) {
     }
 
@@ -85,7 +89,7 @@ export class SharedPostComponent implements OnInit {
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserProfileFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {
@@ -103,6 +107,7 @@ export class SharedPostComponent implements OnInit {
         const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
             minHeight: '100px',
             minWidth: '320px',
+            exitAnimationDuration: 100,
         });
 
         createDialog
@@ -115,4 +120,21 @@ export class SharedPostComponent implements OnInit {
                 });
             });
     }
+
+    editPost(event: EditDialogOutput): void {
+        const request: EditPostRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.sharingPost.postId,
+            content: event.content,
+            hasAttachments: false,
+            creationDateTime: this.post.sharingPost.creationDateTime
+        }
+
+        this.postService
+            .editPost(request)
+            .subscribe(() => {
+                this.post.sharingPost.content = event.content;
+            });
+    }
+
 }

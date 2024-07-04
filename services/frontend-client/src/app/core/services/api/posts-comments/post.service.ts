@@ -7,6 +7,7 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { Optional } from "@core/types/profile/optional.type";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
+import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -85,15 +86,8 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    editPost(profileId: string, postId: string, content: string, creationDateTime: string): Observable<Post> {
-        return this.http.put<Post>(PostMappings.EDIT_POST, {}, {
-            params: {
-                profileId: profileId,
-                postId: postId,
-                content: content,
-                creationDateTime: creationDateTime
-            }
-        }).pipe(take(1));
+    editPost(request: EditPostRequest): Observable<Post> {
+        return this.http.put<Post>(PostMappings.EDIT_POST, request).pipe(take(1));
     }
 
     deletePost(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
@@ -108,17 +102,15 @@ export class PostService {
 
     private getHttpParams(profileId: string, friendsPageNumber: number,
                           pageSize: number, pagingState: Optional<string>): HttpParams {
-        if (pagingState === null) {
-            return new HttpParams()
-                .set('profileId', profileId)
-                .set('friendsPageNumber', friendsPageNumber)
-                .set('pageSize', pageSize);
+        const params: HttpParams = new HttpParams();
+
+        if (pagingState !== null) {
+            params.set('pagingState', pagingState as string);
         }
-        return new HttpParams()
+        return params
             .set('profileId', profileId)
             .set('friendsPageNumber', friendsPageNumber)
-            .set('pageSize', pageSize)
-            .set('pagingState', pagingState as string);
+            .set('pageSize', pageSize);
     }
 
 }

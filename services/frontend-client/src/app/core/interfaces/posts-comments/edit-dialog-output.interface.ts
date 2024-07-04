@@ -1,6 +1,8 @@
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
+
 export interface EditDialogOutput {
-    newUrls: string[];
+    newUrls: AttachImage[];
     content: string;
     deletedImages: string[];
-    addedImages: File[];
+    addedImages: AttachImage[];
 }

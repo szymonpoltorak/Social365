@@ -27,6 +27,10 @@ import { NgOptimizedImage } from "@angular/common";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 import { PostService } from "@api/posts-comments/post.service";
 import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
+import { ImagesService } from "@api/images/images.service";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 
 @Component({
     selector: 'app-post',
@@ -68,6 +72,7 @@ export class PostComponent implements OnInit {
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
+                private imagesService: ImagesService,
                 public dialog: MatDialog) {
     }
 
@@ -125,6 +130,7 @@ export class PostComponent implements OnInit {
         const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
             minHeight: '100px',
             minWidth: '320px',
+            exitAnimationDuration: 100,
         });
 
         createDialog
@@ -137,6 +143,37 @@ export class PostComponent implements OnInit {
                     post: this.post,
                     content: content
                 });
+            });
+    }
+
+    editPost(event: EditDialogOutput): void {
+        const hasAttachments: boolean = event.newUrls.length > 0;
+        const request: EditPostRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.postId,
+            content: event.content,
+            hasAttachments: hasAttachments,
+            creationDateTime: this.post.creationDateTime
+        }
+
+        event.deletedImages.forEach((url: string) => {
+            this.imagesService
+                .deleteImageByUrl(url)
+                .subscribe();
+        });
+
+        event.addedImages.forEach((image: AttachImage) => {
+            this.imagesService
+                .uploadPostImage(this.currentUser.username, image, this.post.postId)
+                .subscribe();
+        });
+
+        this.postService
+            .editPost(request)
+            .subscribe(() => {
+                this.post.content = event.content;
+
+                this.post.imageUrls = event.newUrls.map((image: AttachImage) => image.fileUrl);
             });
     }
 }

@@ -1,6 +1,7 @@
 <mat-card class="mb-4">
     <app-post-header [post]="post"
                      (deletePostEvent)="deletePostEvent.emit(post)"
+                     (editPostEvent)="editPost($event)"
                      [username]="currentUser.username">
     </app-post-header>
 

@@ -29,4 +29,6 @@ public interface ImagesService {
 
     ImageResponse deleteImage(long imageId);
 
+    ImageResponse deleteImageByImageUrl(String imageUrl);
+
 }

@@ -147,7 +147,4 @@ export class PostsFeedComponent implements OnInit {
         });
     }
 
-    editPost($event: Post) {
-
-    }
 }

@@ -90,6 +90,14 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
+    deleteImageByUrl(imageUrl: string): Observable<void> {
+        return this.http.delete<void>(ImagesMappings.DELETE_IMAGE_BY_URL_MAPPING, {
+            params: {
+                imageUrl: imageUrl
+            }
+        }).pipe(take(1));
+    }
+
     downloadImage(imagePath: string): Observable<any> {
         return this.http.get(imagePath, {
             responseType: 'blob'

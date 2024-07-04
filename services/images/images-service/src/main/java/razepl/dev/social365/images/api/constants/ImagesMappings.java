@@ -22,6 +22,8 @@ public final class ImagesMappings {
 
     public static final String GET_USER_UPLOADED_IMAGES_MAPPING = "/getUserUploadedImages";
 
+    public static final String DELETE_IMAGE_BY_URL_MAPPING = "/deleteImageByUrl";
+
     private ImagesMappings() {
     }
 }

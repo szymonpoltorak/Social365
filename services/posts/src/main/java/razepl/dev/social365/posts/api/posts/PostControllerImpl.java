@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.api.posts.constants.PostMappings;
+import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
@@ -90,11 +92,8 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @PutMapping(value = PostMappings.EDIT_POST)
-    public final PostData editPost(@RequestParam(Params.PROFILE_ID) String profileId,
-                                   @RequestParam(Params.POST_ID) String postId,
-                                   @RequestParam(Params.CREATION_DATE_TIME) String creationDateTime,
-                                   @RequestParam(Params.CONTENT) String content) {
-        return postService.editPost(profileId, postId, content, creationDateTime);
+    public final PostData editPost(@RequestBody EditPostRequest editPostRequest) {
+        return postService.editPost(editPostRequest);
     }
 
     @Override

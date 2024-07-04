@@ -95,4 +95,10 @@ public class ImagesControllerImpl implements ImagesController {
     public final ImageResponse deleteImage(@RequestParam(Params.IMAGE_ID) long imageId) {
         return imagesService.deleteImage(imageId);
     }
+
+    @Override
+    @DeleteMapping(value = ImagesMappings.DELETE_IMAGE_BY_URL_MAPPING)
+    public final ImageResponse deleteImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl) {
+        return imagesService.deleteImageByImageUrl(imageUrl);
+    }
 }

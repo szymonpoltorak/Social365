@@ -10,6 +10,8 @@ import { PostAgePipe } from "@core/pipes/post-age.pipe";
 import { Post } from "@interfaces/feed/post.interface";
 import { MatDialog } from "@angular/material/dialog";
 import { PostEditDialogComponent } from "@pages/feed/posts-feed/post-edit-dialog/post-edit-dialog.component";
+import { take } from "rxjs";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
 
 @Component({
     selector: 'app-post-header',
@@ -35,6 +37,7 @@ export class PostHeaderComponent implements OnInit {
     @Input() username !: string;
     @Input() isSharedPost: boolean = false;
     @Output() deletePostEvent: EventEmitter<void> = new EventEmitter<void>();
+    @Output() editPostEvent: EventEmitter<EditDialogOutput> = new EventEmitter<EditDialogOutput>();
     creationDateTime !: Date;
 
     constructor(public dialog: MatDialog) {
@@ -46,12 +49,20 @@ export class PostHeaderComponent implements OnInit {
 
     editPost(): void {
         const dialogRef = this.dialog.open(PostEditDialogComponent, {
-            minHeight: '430px',
+            minHeight: '300px',
             width: '530px',
             data: {
                 post: this.post,
                 isSharedPost: this.isSharedPost
-            }
+            },
+            exitAnimationDuration: 100
         });
+
+        dialogRef
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe((result: EditDialogOutput) => {
+                this.editPostEvent.emit(result);
+            });
     }
 }

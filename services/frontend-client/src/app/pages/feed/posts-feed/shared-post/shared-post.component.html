@@ -1,7 +1,8 @@
 <mat-card class="mb-4">
     <app-post-header [post]="post.sharingPost"
                      (deletePostEvent)="deletePostEvent.emit(post.sharingPost)"
-                     [username]="user.username">
+                     (editPostEvent)="editPost($event)"
+                     [username]="currentUser.username">
     </app-post-header>
 
     <mat-card-content class="mb-3">
@@ -11,7 +12,7 @@
     </mat-card-content>
 
     <div class="border-solid border-1 m-2 rounded-2xl p-1">
-        <app-post-header [isSharedPost]="true" [post]="post.sharedPost" [username]="user.username"></app-post-header>
+        <app-post-header [isSharedPost]="true" [post]="post.sharedPost" [username]="currentUser.username"></app-post-header>
 
         <mat-card-content class="mb-3">
             <p class="text-justify font-light">
@@ -72,7 +73,7 @@
     </mat-card-actions>
 
     @if (areCommentsVisible) {
-        <app-comment-create [user]="user"></app-comment-create>
+        <app-comment-create [user]="currentUser"></app-comment-create>
 
         @for (comment of comments; track comment) {
             <app-comment [comment]="comment"></app-comment>

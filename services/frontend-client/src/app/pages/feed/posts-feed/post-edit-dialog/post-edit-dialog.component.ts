@@ -1,6 +1,12 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatButton, MatIconButton } from "@angular/material/button";
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogRef } from "@angular/material/dialog";
+import {
+    MAT_DIALOG_DATA,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogRef
+} from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { PostCreateHeaderComponent } from "@pages/feed/posts-feed/post-create-header/post-create-header.component";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
@@ -18,7 +24,7 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 import { EditDialogData } from "@interfaces/posts-comments/edit-dialog-data.interface";
 import { NgClass } from "@angular/common";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
-import { Post } from "@interfaces/feed/post.interface";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
 
 @Component({
     selector: 'app-post-edit-dialog',
@@ -42,7 +48,8 @@ import { Post } from "@interfaces/feed/post.interface";
         PickerComponent,
         ReactiveFormsModule,
         DropImageComponent,
-        NgClass
+        NgClass,
+        MatDialogContent
     ],
     templateUrl: './post-edit-dialog.component.html',
     styleUrl: './post-edit-dialog.component.scss'
@@ -79,12 +86,17 @@ export class PostEditDialogComponent implements OnInit {
 
     closeDialog(): void {
         const newUrls: AttachImage[] = this.dropImageComponent.onFormSubmit();
-        //TODO: Proper filtering to get added, deleted and existing images
-        // const deleteUrls: string[] = this.data.post.imageUrls.filter((file: string) => !newUrls.includes(file));
-        // const deleteImages: string[] = newUrls.filter((file: AttachImage) => );
-        // const addedImages: AttachImage[] = newUrls.filter((file: AttachImage) => !this.data.post.imageUrls.includes(file.fileUrl));
+        const newUrlsString: string[] = newUrls.map((file: AttachImage) => file.fileUrl);
+        const deletedImages: string[] = this.data.post.imageUrls.filter((url: string) => !newUrlsString.includes(url));
+        const addedImages: AttachImage[] = newUrls.filter((file: AttachImage) => !this.data.post.imageUrls.includes(file.fileUrl));
+        const output: EditDialogOutput = {
+            newUrls: newUrls,
+            deletedImages: deletedImages,
+            addedImages: addedImages,
+            content: this.contentControl.value || ""
+        };
 
-        this.dialogRef.close();
+        this.dialogRef.close(output);
     }
 
 }

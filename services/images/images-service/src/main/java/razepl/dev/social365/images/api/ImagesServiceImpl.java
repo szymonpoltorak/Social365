@@ -177,6 +177,22 @@ public class ImagesServiceImpl implements ImagesService {
         return imagesMapper.toImageResponse(image);
     }
 
+    @Override
+    public final ImageResponse deleteImageByImageUrl(String imageUrl) {
+        log.info("Deleting image with imageUrl: {}", imageUrl);
+
+        Image image = imagesRepository.findImageByImagePath(imageUrl)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Image found by url: {}", image);
+
+        imagesRepository.delete(image);
+
+        fileManagementService.deleteFile(image.getImagePath());
+
+        return imagesMapper.toImageResponse(image);
+    }
+
     private void saveFile(String imagePath, MultipartFile image) {
         fileManagementService.saveFile(imagePath, image);
 

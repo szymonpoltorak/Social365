@@ -10,3 +10,7 @@
         transform: scale(1);
     }
 }
+
+.container {
+    @apply flex flex-col justify-between h-full w-full p-3 relative;
+}

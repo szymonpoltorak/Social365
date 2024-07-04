@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
@@ -84,6 +85,13 @@ class PostServiceTest {
                 .content(content)
                 .build();
         PostResponse postResponse = PostResponse.builder().build();
+        EditPostRequest editPostRequest = EditPostRequest
+                .builder()
+                .profileId(profileId)
+                .postId(postId)
+                .content(content)
+                .creationDateTime(post.getCreationDateTime())
+                .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
@@ -92,7 +100,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostData result = postService.editPost(profileId, postId, content, post.getCreationDateTime());
+        PostData result = postService.editPost(editPostRequest);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -108,11 +116,18 @@ class PostServiceTest {
                 .key(PostKey.builder().authorId("differentId").creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
                 .build();
+        EditPostRequest editPostRequest = EditPostRequest
+                .builder()
+                .profileId(profileId)
+                .postId(postId)
+                .content(content)
+                .creationDateTime(post.getCreationDateTime())
+                .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(profileId, postId, content, post.getCreationDateTime()));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(editPostRequest));
     }
 
     @Test

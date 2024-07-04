@@ -1,8 +1,8 @@
-<div class="flex flex-col justify-between h-full w-full p-3 relative overflow-y-hidden">
+<mat-dialog-content class="container">
     <div class="flex items-center gap-5 mb-4">
         <app-avatar-photo [imageLink]="currentUser.profilePictureUrl"></app-avatar-photo>
 
-        <mat-form-field class="w-full h-64">
+        <mat-form-field class="w-full">
             <mat-label>What's on your mind ?</mat-label>
 
             <textarea #postContent [cdkTextareaAutosize]="true"
@@ -47,11 +47,12 @@
     @if (!data.isSharedPost && data.post !== undefined) {
         <app-drop-image (attachedImagesLength)="attachedImagesLength = $event"
                         [imageUrls]="data.post.imageUrls"
+                        class="mb-3"
                         [isAttachingImagesOpened]="isAttachingImagesOpened">
         </app-drop-image>
     }
 
-    <div [ngClass]="{'mt-48': 'data.isSharedPost || data.post.imageUrls.length === 0'}">
+    <div [ngClass]="{'mt-48': isOpened}">
         <div class="flex w-full justify-between">
             <button mat-button mat-dialog-close>
                 Close
@@ -63,4 +64,5 @@
             </button>
         </div>
     </div>
-</div>
+</mat-dialog-content>
+

@@ -28,4 +28,6 @@ public interface ImagesController {
 
     ImageResponse deleteImage(long imageId);
 
+    ImageResponse deleteImageByImageUrl(String imageUrl);
+
 }

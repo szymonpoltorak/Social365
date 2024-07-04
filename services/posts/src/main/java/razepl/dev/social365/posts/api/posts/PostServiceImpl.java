@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
@@ -149,17 +150,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData editPost(String profileId, String postId, String content, String creationDateTime) {
-        log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
+    public PostData editPost(EditPostRequest editPostRequest) {
+        log.info("Editing post with request: {}", editPostRequest);
+
+        String profileId = editPostRequest.profileId();
+        String content = editPostRequest.content();
 
         postValidator.validatePostContent(content);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(editPostRequest.postId(), editPostRequest.creationDateTime());
 
         if (!post.getAuthorId().equals(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
         post.setContent(content);
+        post.setHasAttachments(editPostRequest.hasAttachments());
 
         Post savedPost = postRepository.save(post);
 
