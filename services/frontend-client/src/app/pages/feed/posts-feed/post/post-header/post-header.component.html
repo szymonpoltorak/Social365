@@ -9,10 +9,10 @@
 
                     <div class="bg-white rounded-full w-1 h-1"></div>
 
-                    <div matTooltip="{{ post.creationDateTime | date: 'medium' }}"
-                         [matTooltipPosition]="'above'"
-                         class="text-sm font-extralight hover:cursor-pointer">
-                        {{ post.creationDateTime | postAge }}
+                    <div [matTooltipPosition]="'above'"
+                         class="text-sm font-extralight hover:cursor-pointer"
+                         matTooltip="{{ creationDateTime | date: 'medium' }}">
+                        {{ creationDateTime | postAge }}
                     </div>
                 </div>
             </mat-card-title>
@@ -29,21 +29,25 @@
 
     <mat-menu #postOptions="matMenu" xPosition="before">
         @if (post.author.username === username) {
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="deletePostEvent.emit()"
+                    aria-label="settings">
                 <mat-icon>delete</mat-icon>
 
                 <span>Delete Post</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
+            <button mat-menu-item
+                    (click)="editPost()"
+                    aria-label="settings">
                 <mat-icon>edit</mat-icon>
 
                 <span>Edit</span>
             </button>
         }
 
-        <button mat-menu-item aria-label="settings"
-                (click)="post.isBookmarked = !post.isBookmarked">
+        <button (click)="post.isBookmarked = !post.isBookmarked" aria-label="settings"
+                mat-menu-item>
             @if (post.isBookmarked) {
                 <mat-icon>bookmark</mat-icon>
             } @else {
@@ -53,8 +57,8 @@
             <span>Bookmark</span>
         </button>
 
-        <button mat-menu-item aria-label="logout"
-                (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn">
+        <button (click)="post.areNotificationTurnedOn = !post.areNotificationTurnedOn" aria-label="logout"
+                mat-menu-item>
             @if (post.areNotificationTurnedOn) {
                 <div class="flex items-center">
                     <mat-icon>notifications_active</mat-icon>

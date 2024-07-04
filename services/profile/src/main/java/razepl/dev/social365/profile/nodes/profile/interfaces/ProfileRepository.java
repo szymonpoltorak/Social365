@@ -134,7 +134,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             value = """
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
-                        and (toLower(f.firstName) contains $pattern OR toLower(f.lastName) contains $pattern)
+                        and (toLower(f.firstName) contains $pattern or toLower(f.lastName) contains $pattern)
                     WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
                     MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
                     RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
@@ -232,13 +232,13 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query(
             value = """
                     MATCH (p:Profile)
-                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    WHERE (toLower(p.firstName) + " " + toLower(p.lastName)) contains $pattern
                     RETURN p
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
                     MATCH (p:Profile)
-                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    WHERE (toLower(p.firstName) + " " + toLower(p.lastName)) contains $pattern
                     RETURN COUNT(p)
                     """
     )
@@ -247,7 +247,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     @Query(
             value = """
                     MATCH (p:Profile)
-                    WHERE toLower(p.firstName) contains $pattern OR toLower(p.lastName) contains $pattern
+                    WHERE (toLower(p.firstName) + " " + toLower(p.lastName)) contains $pattern
                     MATCH (p)-[r:HAS|BORN_ON|WORKS_AT|IS|STUDIED_AT|WENT_TO|LIVES_IN|FROM]-(e)
                     RETURN p, collect(r) as rel, collect(e) as nodes
                     SKIP $skip LIMIT $limit
@@ -259,4 +259,5 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     """
     )
     Page<Profile> findAllByPatternWithDetails(@Param(Params.PATTERN) String pattern, Pageable pageable);
+
 }

@@ -12,14 +12,14 @@
     </div>
 
     <div class="flex justify-center flex-col md:m-8 max-md:m-4 max-md:items-center max-w-[35em]">
-        <form class="bg-secondary p-5 rounded-2xl" [formGroup]="registerForm" (ngSubmit)="submitForm()">
+        <form (ngSubmit)="submitForm()" [formGroup]="registerForm" class="bg-secondary p-5 rounded-2xl">
             <div class="text-4xl font-bold mb-3">Create account</div>
 
             <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
                 <mat-label>Email</mat-label>
 
-                <input matInput
-                       formControlName="email"
+                <input formControlName="email"
+                       matInput
                        placeholder="example@mail.com" required>
 
                 <mat-error *ngIf="registerForm.controls['email'].hasError('required')">
@@ -35,8 +35,8 @@
                 <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
                     <mat-label>Password</mat-label>
 
-                    <input matInput
-                           formControlName="password"
+                    <input formControlName="password"
+                           matInput
                            placeholder="My really hard password" required>
 
                     <mat-error *ngIf="passwordsGroup.controls['password'].hasError('required')">
@@ -51,17 +51,19 @@
                         Password must be at most <strong>32 characters</strong>
                     </mat-error>
 
-                    <mat-error class="text-justify" *ngIf="passwordsGroup.controls['password'].hasError('pattern')">
-                        Password must contain at least one <strong>uppercase letter</strong>, one <strong>lowercase letter</strong>,
-                        one <strong>number</strong> and one <strong>special character</strong> and between <strong>8 and 32 characters</strong>.
+                    <mat-error *ngIf="passwordsGroup.controls['password'].hasError('pattern')" class="text-justify">
+                        Password must contain at least one <strong>uppercase letter</strong>, one <strong>lowercase
+                        letter</strong>,
+                        one <strong>number</strong> and one <strong>special character</strong> and between <strong>8 and
+                        32 characters</strong>.
                     </mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
                     <mat-label>Repeat Password</mat-label>
 
-                    <input matInput
-                           formControlName="confirmPassword"
+                    <input formControlName="confirmPassword"
+                           matInput
                            placeholder="My really hard password" required>
 
                     <mat-error *ngIf="passwordsGroup.controls['confirmPassword'].hasError('required')">
@@ -85,15 +87,15 @@
             <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
                 <mat-label>Enter your date of birth</mat-label>
 
-                <input matInput
-                       placeholder="12/12/1999"
-                       maxlength="10"
+                <input [matDatepicker]="datepicker"
                        formControlName="dateOfBirth"
-                       [matDatepicker]="datepicker" required>
+                       matInput
+                       maxlength="10"
+                       placeholder="12/12/1999" required>
 
                 <mat-hint align="end">MM/DD/YYYY</mat-hint>
 
-                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
 
                 <mat-datepicker #datepicker></mat-datepicker>
 
@@ -118,7 +120,7 @@
                     Return
                 </button>
 
-                <button mat-fab extended color="primary" type="submit">
+                <button color="primary" extended mat-fab type="submit">
                     <mat-icon>login</mat-icon>
                     Register
                 </button>

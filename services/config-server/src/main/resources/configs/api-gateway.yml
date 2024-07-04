@@ -14,7 +14,7 @@ eureka:
         serviceUrl:
             defaultZone: ${EUREKA_SERVER_URI}
 
-        register-with-eureka: true
+        register-with-eureka: false
 
         fetch-registry: true
 
@@ -41,6 +41,11 @@ spring:
                     uri: http://${PROFILE_SERVICE_HOSTNAME}:${PROFILE_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/profile/**
+
+                -   id: ${POSTS_SERVICE_HOSTNAME}
+                    uri: http://${POSTS_SERVICE_HOSTNAME}:${POSTS_SERVICE_PORT}
+                    predicates:
+                        - Path=/api/v1/posts/**
 
 management:
     endpoints:

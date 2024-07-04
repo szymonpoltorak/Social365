@@ -4,26 +4,26 @@
 
         <div class="flex r-s:gap-3 max-r-s:gap-1 items-center">
             <div class="flex items-center bg-tertiary mm:p-1.5 rounded-xl">
-                <input matInput
-                       type="text"
-                       class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
+                <input [formControl]="searchSocialControl"
                        aria-label="Search Social365"
-                       [formControl]="searchSocialControl"
-                       placeholder="Your friend name">
+                       class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
+                       matInput
+                       placeholder="Your friend name"
+                       type="text">
             </div>
 
             <div class="max-f-xs:hidden">
-                <button mat-button color="primary"
-                        routerLink="/friends/requests"
-                        aria-label="Friend Requests">
+                <button aria-label="Friend Requests" color="primary"
+                        mat-button
+                        routerLink="/friends/requests">
                     <span class="max-r-s:hidden">Friend</span> Requests
                 </button>
             </div>
 
             <div class="max-f-s:hidden">
-                <button mat-button color="primary"
-                        routerLink="/friends/suggestions"
-                        aria-label="Find Friends">
+                <button aria-label="Find Friends" color="primary"
+                        mat-button
+                        routerLink="/friends/suggestions">
                     Find <span class="max-r-s:hidden">friends</span>
                 </button>
             </div>

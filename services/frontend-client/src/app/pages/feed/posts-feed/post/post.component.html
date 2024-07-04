@@ -1,5 +1,9 @@
 <mat-card class="mb-4">
-    <app-post-header [post]="post" [username]="user.username"></app-post-header>
+    <app-post-header [post]="post"
+                     (deletePostEvent)="deletePostEvent.emit(post)"
+                     (editPostEvent)="editPost($event)"
+                     [username]="currentUser.username">
+    </app-post-header>
 
     <mat-card-content class="mb-3">
         <p class="text-justify font-light">
@@ -7,7 +11,7 @@
         </p>
     </mat-card-content>
 
-    @if (post.imageUrls != undefined && post.imageUrls.length !== 0) {
+    @if (post.imageUrls !== undefined && post.imageUrls.length !== 0) {
         <app-post-image-viewer [imageUrls]="post.imageUrls"></app-post-image-viewer>
     }
 
@@ -34,9 +38,9 @@
     <mat-divider class="divider"></mat-divider>
 
     <mat-card-actions class="flex justify-between">
-        <button mat-button aria-label="Like"
-                [color]="post.isPostLiked ? 'primary': 'basic'"
-                type="button" (click)="likePost()">
+        <button (click)="likePost()" [color]="post.isPostLiked ? 'primary': 'basic'"
+                aria-label="Like"
+                mat-button type="button">
             @if (post.isPostLiked) {
                 <mat-icon>thumb_up</mat-icon>
             } @else {
@@ -45,13 +49,13 @@
             LIKE
         </button>
 
-        <button mat-button aria-label="Comments" type="button" (click)="getCommentsForPost()">
+        <button (click)="getCommentsForPost()" aria-label="Comments" mat-button type="button">
             <mat-icon>comment</mat-icon>
             COMMENT
         </button>
 
-        <button mat-button aria-label="Share"
-                (click)="sharePost()"
+        <button (click)="sharePost()" aria-label="Share"
+                mat-button
                 type="button">
             <mat-icon>share</mat-icon>
             SHARE
@@ -59,7 +63,7 @@
     </mat-card-actions>
 
     @if (areCommentsVisible) {
-        <app-comment-create [user]="user"></app-comment-create>
+        <app-comment-create [user]="currentUser"></app-comment-create>
 
         @for (comment of comments; track comment) {
             <app-comment [comment]="comment"></app-comment>

@@ -8,20 +8,16 @@ import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 public class PostValidatorImpl implements PostValidator {
 
     private static final int MAX_POST_CONTENT_LENGTH = 1000;
-    private static final int MIN_POST_CONTENT_LENGTH = 3;
 
     @Override
     public final void validatePostContent(String content) {
-        if (content == null || content.isEmpty() || content.isBlank()) {
-            throw new InvalidPostContentException("Post content cannot be empty");
+        if (content == null) {
+            return;
         }
         int contentLength = content.length();
 
         if (contentLength > MAX_POST_CONTENT_LENGTH) {
             throw new InvalidPostContentException("Post content needs to be shorter than 1000 characters!");
-        }
-        if (contentLength < MIN_POST_CONTENT_LENGTH) {
-            throw new InvalidPostContentException("Post content needs to be longer than 3 characters!");
         }
     }
 }

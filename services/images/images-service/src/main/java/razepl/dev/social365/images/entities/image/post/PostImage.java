@@ -36,7 +36,6 @@ public class PostImage {
     @Column(nullable = false)
     private String username;
 
-    @Column(unique = true, nullable = false)
     private String postId;
 
     @Column(unique = true, nullable = false)

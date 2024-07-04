@@ -14,15 +14,15 @@ import java.util.UUID;
 @Repository
 public interface CommentRepository extends CassandraRepository<Comment, UUID> {
 
-    @Query("select count(*) from comments where post_id = :objectId ALLOW FILTERING")
+    @Query("select count(*) from comments where post_id = :postId ALLOW FILTERING")
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
 
-    @Query("delete from comments where post_id = :objectId")
-    void deleteAllByPostId(UUID postId);
+    @Query("delete from comments where post_id = :postId")
+    void deleteAllByPostId(@Param(Params.POST_ID)UUID postId);
 
-    @Query("select * from comments where post_id = :objectId")
-    Slice<Comment> findAllByPostId(String postId, Pageable pageable);
+    @Query("select * from comments where post_id = :postId")
+    Slice<Comment> findAllByPostId(@Param(Params.POST_ID)String postId, Pageable pageable);
 
     @Query("select * from comments where reply_to_comment_id = :commentId")
-    Slice<Comment> findAllReplyCommentsByCommentId(UUID commentId, Pageable pageable);
+    Slice<Comment> findAllReplyCommentsByCommentId(@Param(Params.COMMENT_ID)UUID commentId, Pageable pageable);
 }

@@ -8,25 +8,25 @@
 
         <h1 class="font-extralight mb-6">Don't wait just join us!</h1>
 
-        <button class="mb-5 home-page-button"
-                (click)="router.navigate([RouterPaths.LOGIN_PATH_DIRECT])"
-                mat-fab extended color="primary">
+        <button (click)="router.navigate([RouterPaths.LOGIN_PATH_DIRECT])"
+                class="mb-5 home-page-button"
+                color="primary" extended mat-fab>
             <mat-icon>login</mat-icon>
             Login
         </button>
 
-        <button class="mb-3 home-page-button"
-                (click)="router.navigate([RouterPaths.REGISTER_PATH_DIRECT])"
-                mat-fab extended color="primary">
+        <button (click)="router.navigate([RouterPaths.REGISTER_PATH_DIRECT])"
+                class="mb-3 home-page-button"
+                color="primary" extended mat-fab>
             <mat-icon>app_registration</mat-icon>
             Register
         </button>
 
         <p class="font-extralight text-xs">
             By signing up, you agree to the
-            <span matTooltip="Check terms of service policy" class="link">Terms of Service</span>
-            and <span matTooltip="Check privacy policy" class="link">Privacy Policy</span>,
-            including <span matTooltip="Check cookie use policy" class="link">Cookie Use</span>.
+            <span class="link" matTooltip="Check terms of service policy">Terms of Service</span>
+            and <span class="link" matTooltip="Check privacy policy">Privacy Policy</span>,
+            including <span class="link" matTooltip="Check cookie use policy">Cookie Use</span>.
         </p>
     </div>
 </div>

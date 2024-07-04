@@ -1,6 +1,6 @@
-<div matRipple class="mat-button-ripple"
-     (click)="changeSelectionStatus()"
-     routerLink="{{ option.route }}"
-     [ngClass]="{'option-selected': isSelected}">
+<div (click)="changeSelectionStatus()" [ngClass]="{'option-selected': isSelected}"
+     class="mat-button-ripple"
+     matRipple
+     routerLink="{{ option.route }}">
     {{ option.label }}
 </div>

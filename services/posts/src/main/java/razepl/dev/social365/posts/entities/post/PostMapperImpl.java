@@ -12,6 +12,7 @@ import razepl.dev.social365.posts.clients.images.data.PostImage;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
+import razepl.dev.social365.posts.entities.post.data.SharingPostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
@@ -78,10 +79,24 @@ public class PostMapperImpl implements PostMapper {
     }
 
     @Override
+    public final PostData toPostData(Post post, String profileId) {
+        if (post.isSharedPost()) {
+            return toSharedPostResponse(post, profileId);
+        }
+        return toPostResponse(post, profileId);
+    }
+
+    @Override
     public final PostData toSharedPostResponse(Post sharingPost, String profileId) {
-        Post sharedPost = postRepository.findById(sharingPost.getOriginalPostId())
+        SharingPostKey originalPostKey = sharingPost.getSharingPostKey();
+        Post sharedPost = postRepository.findByPostId(originalPostKey.postId(), originalPostKey.creationDateTime())
                 .orElseThrow(() -> new PostDoesNotExistException(sharingPost.getOriginalPostId().toString()));
 
+        return toSharedPostResponse(sharingPost, sharedPost, profileId);
+    }
+
+    @Override
+    public final PostData toSharedPostResponse(Post sharingPost, Post sharedPost, String profileId) {
         return SharedPostResponse
                 .builder()
                 .sharingPost(toPostResponse(sharingPost, profileId))

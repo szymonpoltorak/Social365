@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
 import { Either } from "@core/types/feed/either.type";
 import { Post } from "@interfaces/feed/post.interface";
@@ -18,6 +18,10 @@ import {
 import { take } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
+import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
+import { PostService } from "@api/posts-comments/post.service";
+import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 
 @Component({
     selector: 'app-shared-post',
@@ -41,12 +45,14 @@ import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-v
 export class SharedPostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>) => value as SharedPost })
     post !: SharedPost;
-
-    protected areCommentsVisible: boolean = false;
     comments: PostComment[] = [];
-    protected user !: Profile;
+    protected areCommentsVisible: boolean = false;
+    protected currentUser !: Profile;
+    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
+    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
+                private postService: PostService,
                 public dialog: MatDialog) {
     }
 
@@ -83,7 +89,7 @@ export class SharedPostComponent implements OnInit {
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserProfileFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {
@@ -99,10 +105,36 @@ export class SharedPostComponent implements OnInit {
 
     sharePost(): void {
         const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
-            minHeight: '200px',
+            minHeight: '100px',
             minWidth: '320px',
+            exitAnimationDuration: 100,
         });
 
-        createDialog.afterClosed().pipe(take(1)).subscribe();
+        createDialog
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe((content: string) => {
+                this.sharePostEvent.emit({
+                    post: this.post.sharedPost,
+                    content: content
+                });
+            });
     }
+
+    editPost(event: EditDialogOutput): void {
+        const request: EditPostRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.sharingPost.postId,
+            content: event.content,
+            hasAttachments: false,
+            creationDateTime: this.post.sharingPost.creationDateTime
+        }
+
+        this.postService
+            .editPost(request)
+            .subscribe(() => {
+                this.post.sharingPost.content = event.content;
+            });
+    }
+
 }

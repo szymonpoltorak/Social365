@@ -10,7 +10,7 @@
     </div>
 
     <div class="flex">
-        <button class="center" mat-icon-button aria-label="Privacy" [matMenuTriggerFor]="privacy">
+        <button [matMenuTriggerFor]="privacy" aria-label="Privacy" class="center" mat-icon-button>
             @if (option.privacyLevel === PrivacyLevel.PUBLIC) {
                 <mat-icon>public</mat-icon>
             } @else if (option.privacyLevel === PrivacyLevel.FRIENDS) {
@@ -20,30 +20,30 @@
             }
         </button>
 
-        <button class="center" mat-icon-button aria-label="Settings" [matMenuTriggerFor]="settings">
+        <button [matMenuTriggerFor]="settings" aria-label="Settings" class="center" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
 
     <mat-menu #privacy xPosition="before">
-        <button aria-label="Public" mat-menu-item (click)="changePrivacyLevelEmitter(PrivacyLevel.PUBLIC)">
+        <button (click)="changePrivacyLevelEmitter(PrivacyLevel.PUBLIC)" aria-label="Public" mat-menu-item>
             <mat-icon>public</mat-icon>
             Public
         </button>
 
-        <button aria-label="Friends" mat-menu-item (click)="changePrivacyLevelEmitter(PrivacyLevel.FRIENDS)">
+        <button (click)="changePrivacyLevelEmitter(PrivacyLevel.FRIENDS)" aria-label="Friends" mat-menu-item>
             <mat-icon>people</mat-icon>
             Friends
         </button>
 
-        <button aria-label="Only me" mat-menu-item (click)="changePrivacyLevelEmitter(PrivacyLevel.ONLY_ME)">
+        <button (click)="changePrivacyLevelEmitter(PrivacyLevel.ONLY_ME)" aria-label="Only me" mat-menu-item>
             <mat-icon>lock</mat-icon>
             Only me
         </button>
     </mat-menu>
 
     <mat-menu #settings xPosition="before">
-        <button aria-label="Edit" (click)="edit.emit()" mat-menu-item>
+        <button (click)="edit.emit()" aria-label="Edit" mat-menu-item>
             <mat-icon>edit</mat-icon>
             Edit
         </button>

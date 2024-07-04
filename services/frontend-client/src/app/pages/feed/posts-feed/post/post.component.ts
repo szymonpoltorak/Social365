@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardImage } from "@angular/material/card";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -25,6 +25,12 @@ import {
 } from "@pages/feed/posts-feed/create-share-post-dialog/create-share-post-dialog.component";
 import { NgOptimizedImage } from "@angular/common";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
+import { PostService } from "@api/posts-comments/post.service";
+import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
+import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
+import { ImagesService } from "@api/images/images.service";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 
 @Component({
     selector: 'app-post',
@@ -58,12 +64,15 @@ import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-v
 export class PostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
     post !: Post;
-
+    protected comments: PostComment[] = [];
     protected areCommentsVisible: boolean = false;
-    comments: PostComment[] = [];
-    protected user !: Profile;
+    protected currentUser !: Profile;
+    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
+    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
+                private postService: PostService,
+                private imagesService: ImagesService,
                 public dialog: MatDialog) {
     }
 
@@ -100,13 +109,17 @@ export class PostComponent implements OnInit {
                 isLiked: true
             }
         ];
-        this.user = this.localStorage.getUserProfileFromStorage();
+        this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
     likePost(): void {
-        this.post.isPostLiked = !this.post.isPostLiked;
+        this.postService
+            .updateLikePostCount(this.currentUser.profileId, this.post.postId, this.post.creationDateTime)
+            .subscribe(() => {
+                this.post.isPostLiked = !this.post.isPostLiked;
 
-        this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
+                this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
+            });
     }
 
     getCommentsForPost(): void {
@@ -117,7 +130,50 @@ export class PostComponent implements OnInit {
         const createDialog = this.dialog.open(CreateSharePostDialogComponent, {
             minHeight: '100px',
             minWidth: '320px',
+            exitAnimationDuration: 100,
         });
-        createDialog.afterClosed().pipe(take(1)).subscribe();
+
+        createDialog
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe((content: string) => {
+                console.log(content);
+
+                this.sharePostEvent.emit({
+                    post: this.post,
+                    content: content
+                });
+            });
+    }
+
+    editPost(event: EditDialogOutput): void {
+        const hasAttachments: boolean = event.newUrls.length > 0;
+        const request: EditPostRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.postId,
+            content: event.content,
+            hasAttachments: hasAttachments,
+            creationDateTime: this.post.creationDateTime
+        }
+
+        event.deletedImages.forEach((url: string) => {
+            this.imagesService
+                .deleteImageByUrl(url)
+                .subscribe();
+        });
+
+        event.addedImages.forEach((image: AttachImage) => {
+            this.imagesService
+                .uploadPostImage(this.currentUser.username, image, this.post.postId)
+                .subscribe();
+        });
+
+        this.postService
+            .editPost(request)
+            .subscribe(() => {
+                this.post.content = event.content;
+
+                this.post.imageUrls = event.newUrls.map((image: AttachImage) => image.fileUrl);
+            });
     }
 }

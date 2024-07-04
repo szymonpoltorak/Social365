@@ -1,5 +1,6 @@
 package razepl.dev.social365.images.api.interfaces;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
@@ -8,7 +9,10 @@ import razepl.dev.social365.images.api.data.PostImageResponse;
 import java.util.List;
 
 public interface ImagesController {
+
     ImageResponse uploadImage(String username, MultipartFile image);
+
+    Page<PostImageResponse> getUserUploadedImages(String username, int page, int pageSize);
 
     CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image);
 
@@ -23,4 +27,7 @@ public interface ImagesController {
     ImageResponse updateImage(long imageId, MultipartFile image);
 
     ImageResponse deleteImage(long imageId);
+
+    ImageResponse deleteImageByImageUrl(String imageUrl);
+
 }

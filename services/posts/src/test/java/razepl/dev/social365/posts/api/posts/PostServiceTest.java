@@ -5,12 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.cassandra.core.query.CassandraPageRequest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.SliceImpl;
-import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
-import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
@@ -23,14 +18,12 @@ import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,7 +58,7 @@ class PostServiceTest {
         String content = "content";
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId(profileId).creationDateTime(LocalDateTime.now()).build())
+                .key(PostKey.builder().authorId(profileId).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
                 .build();
         PostResponse postResponse = PostResponse.builder().build();
@@ -88,10 +81,17 @@ class PostServiceTest {
         String content = "content";
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId(profileId).creationDateTime(LocalDateTime.now()).build())
+                .key(PostKey.builder().authorId(profileId).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
                 .build();
         PostResponse postResponse = PostResponse.builder().build();
+        EditPostRequest editPostRequest = EditPostRequest
+                .builder()
+                .profileId(profileId)
+                .postId(postId)
+                .content(content)
+                .creationDateTime(post.getCreationDateTime())
+                .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
@@ -100,7 +100,7 @@ class PostServiceTest {
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostData result = postService.editPost(profileId, postId, content);
+        PostData result = postService.editPost(editPostRequest);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -113,14 +113,21 @@ class PostServiceTest {
         String content = "content";
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId("differentId").creationDateTime(LocalDateTime.now()).build())
+                .key(PostKey.builder().authorId("differentId").creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
+                .build();
+        EditPostRequest editPostRequest = EditPostRequest
+                .builder()
+                .profileId(profileId)
+                .postId(postId)
+                .content(content)
+                .creationDateTime(post.getCreationDateTime())
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(profileId, postId, content));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(editPostRequest));
     }
 
     @Test
@@ -129,14 +136,14 @@ class PostServiceTest {
         String postId = UUID.randomUUID().toString();
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId(profileId).postId(UUID.fromString(postId)).creationDateTime(LocalDateTime.now()).build())
+                .key(PostKey.builder().authorId(profileId).postId(UUID.fromString(postId)).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content("content")
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
 
-        postService.deletePost(profileId, postId);
+        postService.deletePost(profileId, postId, post.getCreationDateTime());
 
         verify(postRepository).deleteById(UUID.fromString(postId));
     }
@@ -147,13 +154,13 @@ class PostServiceTest {
         String postId = UUID.randomUUID().toString();
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId("id").postId(UUID.fromString(postId)).creationDateTime(LocalDateTime.now()).build())
+                .key(PostKey.builder().authorId("id").postId(UUID.fromString(postId)).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content("content")
                 .build();
 
         when(postRepository.findById(UUID.fromString(postId)))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, String.valueOf(LocalDateTime.now())));
     }
 }

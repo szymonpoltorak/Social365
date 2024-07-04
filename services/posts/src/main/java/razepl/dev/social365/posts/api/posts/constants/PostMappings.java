@@ -12,7 +12,7 @@ public final class PostMappings {
 
     public static final String UPDATE_BOOKMARK_STATUS = "/updateBookmarkStatus";
 
-    public static final String UPDATE_SHARES_COUNT = "/updateSharesCount";
+    public static final String SHARE_POST = "/updateSharesCount";
 
     public static final String CREATE_POST = "/createPost";
 
@@ -22,6 +22,9 @@ public final class PostMappings {
 
     public static final String GET_USERS_POST_COUNT = "/usersPostCount";
 
+    public static final String GET_USERS_POSTS = "/usersPosts";
+
     private PostMappings() {
     }
+
 }

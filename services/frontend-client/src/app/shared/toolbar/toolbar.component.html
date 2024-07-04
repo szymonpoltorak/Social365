@@ -5,27 +5,27 @@
         Social<span class="text-primary">365</span>
     </h1>
 
-    <form class="ml:ml-5 max-sm:ml-1" (ngSubmit)="navigateToSearch()">
+    <form (ngSubmit)="navigateToSearch()" class="ml:ml-5 max-sm:ml-1">
         <div class="flex items-center bg-tertiary mm:p-1.5 rounded-xl">
-            <input matInput
-                   type="text"
-                   class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
-                   aria-label="Search Social365"
-                   [formControl]="searchSocialControl"
+            <input [formControl]="searchSocialControl"
                    [matAutocomplete]="auto"
-                   placeholder="Users full name">
+                   aria-label="Search Social365"
+                   class="sm:ml-2 bg-tertiary p-1.5 rounded-md focus:outline-none lm:w-full ll:w-80 max-sm:text-xs max-sm:w-18"
+                   matInput
+                   placeholder="Users full name"
+                   type="text">
 
-            <button mat-mini-fab
+            <button (click)="navigateToSearch()"
                     aria-label="Search"
-                    matTooltip="Search"
                     color="primary"
-                    (click)="navigateToSearch()"
+                    mat-mini-fab
+                    matTooltip="Search"
                     type="submit">
                 <mat-icon>search</mat-icon>
             </button>
         </div>
 
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
             @for (option of (filteredOptions$ | async)?.content; track option) {
                 <mat-option [value]="option.fullName">
                     <div class="flex items-center gap-2 text-xs">
@@ -41,81 +41,81 @@
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
     <div class="flex gap-5">
-        <button mat-mini-fab
+        <button aria-label="Messages"
                 class="toolbar-button"
-                aria-label="Messages"
+                color="primary"
+                mat-mini-fab
                 matBadge="{{ newMessages }}"
-                matBadgeHidden="{{ newMessages === 0 }}"
                 matBadgeColor="warn"
-                color="primary">
+                matBadgeHidden="{{ newMessages === 0 }}">
             <mat-icon>message</mat-icon>
         </button>
 
-        <button mat-mini-fab
+        <button aria-label="Notifications"
                 class="toolbar-button"
-                aria-label="Notifications"
+                color="primary"
+                mat-mini-fab
                 matBadge="{{ newNotifications }}"
-                matBadgeHidden="{{ newNotifications === 0 }}"
                 matBadgeColor="warn"
-                color="primary">
+                matBadgeHidden="{{ newNotifications === 0 }}">
             <mat-icon>notifications</mat-icon>
         </button>
 
-        <button mat-mini-fab
+        <button [matMenuTriggerFor]="menu"
                 aria-label="Menu"
-                [matMenuTriggerFor]="menu"
-                color="primary">
+                color="primary"
+                mat-mini-fab>
             <mat-icon>menu</mat-icon>
         </button>
 
         <mat-menu #menu="matMenu">
-            <button mat-menu-item
-                    (click)="router.navigate([RouterPaths.PROFILE_DIRECT, user.username, RouterPaths.PROFILE_POSTS])"
-                    aria-label="settings">
+            <button (click)="router.navigate([RouterPaths.PROFILE_DIRECT, user.username, RouterPaths.PROFILE_POSTS])"
+                    aria-label="settings"
+                    mat-menu-item>
                 <mat-icon>account_circle</mat-icon>
 
                 <span>Profile</span>
             </button>
 
             <div class="sm:hidden">
-                <button mat-menu-item aria-label="settings">
+                <button aria-label="settings" mat-menu-item>
                     <mat-icon>message</mat-icon>
 
                     <span>Messages</span>
                 </button>
             </div>
 
-            <button mat-menu-item
-                    (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_SUGGESTIONS])"
-                    aria-label="settings">
+            <button (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_SUGGESTIONS])"
+                    aria-label="settings"
+                    mat-menu-item>
                 <mat-icon>people</mat-icon>
 
                 <span>Friend Suggestions</span>
             </button>
 
             <div class="sm:hidden">
-                <button mat-menu-item aria-label="settings">
+                <button aria-label="settings" mat-menu-item>
                     <mat-icon>notifications</mat-icon>
 
                     <span>Notifications</span>
                 </button>
             </div>
 
-            <button mat-menu-item
-                    (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_REQUESTS])"
-                    aria-label="settings">
+            <button (click)="router.navigate([RouterPaths.FRIENDS_DIRECT, RouterPaths.FRIEND_REQUESTS])"
+                    aria-label="settings"
+                    mat-menu-item>
                 <mat-icon>people</mat-icon>
 
                 <span>Friend Requests</span>
             </button>
 
-            <button mat-menu-item aria-label="settings">
+            <button aria-label="settings" mat-menu-item>
                 <mat-icon>settings</mat-icon>
 
                 <span>Settings</span>
             </button>
 
-            <button mat-menu-item aria-label="logout">
+            <button aria-label="logout" mat-menu-item>
                 <mat-icon>logout</mat-icon>
 
                 <span>Logout</span>

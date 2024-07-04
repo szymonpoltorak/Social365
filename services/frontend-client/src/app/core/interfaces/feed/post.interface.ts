@@ -2,10 +2,10 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { PostStatistics } from "@interfaces/feed/post-statistics.interface";
 
 export interface Post {
-    postId: number;
+    postId: string;
     areNotificationTurnedOn: boolean;
     isBookmarked: boolean;
-    creationDateTime: Date;
+    creationDateTime: string;
     content: string;
     statistics: PostStatistics;
     isPostLiked: boolean;

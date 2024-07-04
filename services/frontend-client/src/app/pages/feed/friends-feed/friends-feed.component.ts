@@ -31,8 +31,6 @@ import { FriendsService } from '@core/services/api/profile/friends.service';
 })
 export class FriendsFeedComponent implements OnInit {
     protected birthdayInfos !: Page<BirthdayInfo>;
-    private pageNumber: number = 0;
-    private friendsPageSize: number = 5;
     protected friends !: Observable<Page<FriendFeedOption>>;
     protected groupChats: Observable<FriendFeedOption[]> = of([
         {
@@ -57,6 +55,8 @@ export class FriendsFeedComponent implements OnInit {
             profilePictureUrl: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         }
     ]);
+    private pageNumber: number = 0;
+    private friendsPageSize: number = 5;
 
     constructor(private profileService: ProfileService,
                 private friendsService: FriendsService,

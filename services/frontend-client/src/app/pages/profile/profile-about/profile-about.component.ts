@@ -65,7 +65,7 @@ export class ProfileAboutComponent implements OnInit, OnDestroy {
         this.routerDestroy$.complete();
     }
 
-    handleSelectionChange(event: MatChipSelectionChange, option: RouteOption) : void{
+    handleSelectionChange(event: MatChipSelectionChange, option: RouteOption): void {
         if (this.selectedOption === option && !event.selected) {
             event.source.selected = true;
         } else {

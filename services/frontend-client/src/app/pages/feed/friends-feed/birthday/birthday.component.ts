@@ -37,7 +37,8 @@ export class BirthdayComponent {
 
     showInfosDialog(): void {
         this.dialog.open(BirthdayInfoDialogComponent, {
-            data: this.birthdayInfos
+            data: this.birthdayInfos,
+            exitAnimationDuration: 100,
         });
     }
 }

@@ -23,7 +23,7 @@ export class PostAgePipe implements PipeTransform {
 
         for (let i: number = 0; i < differences.length; i++) {
             if (differences[i] > 0) {
-                return `${differences[i]} ${units[i]}`;
+                return `${ differences[i] } ${ units[i] }`;
             }
         }
         return "now";

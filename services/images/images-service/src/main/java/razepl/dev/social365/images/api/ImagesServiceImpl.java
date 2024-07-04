@@ -2,6 +2,8 @@ package razepl.dev.social365.images.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
@@ -49,9 +51,20 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toImageResponse(savedImage);
+    }
+
+    @Override
+    public final Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
+        log.info("Getting user uploaded images for user: {}", username);
+
+        Page<PostImage> postImages = postImagesRepository.findPostImagesByUsername(username, pageable);
+
+        log.info("User uploaded images found: {}", postImages.getNumberOfElements());
+
+        return postImages.map(imagesMapper::toPostImageResponse);
     }
 
     @Override
@@ -71,7 +84,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Comment image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toCommentResponse(savedImage);
     }
@@ -93,7 +106,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Post image saved: {}", savedImage);
 
-        fileManagementService.saveFile(imagePath, image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toPostImageResponse(savedImage);
     }
@@ -138,14 +151,15 @@ public class ImagesServiceImpl implements ImagesService {
         log.info("Updating image with imageId: {}", imageId);
 
         Image imageEntity = getImageFromRepository(imageId);
+        String imagePath = imageEntity.getImagePath();
 
-        log.info("Deleting old image: {}", imageEntity.getImagePath());
+        log.info("Deleting old image: {}", imagePath);
 
-        fileManagementService.deleteFile(imageEntity.getImagePath());
+        fileManagementService.deleteFile(imagePath);
 
-        log.info("Saving new image: {}", imageEntity.getImagePath());
+        log.info("Saving new image: {}", imagePath);
 
-        fileManagementService.saveFile(imageEntity.getImagePath(), image);
+        saveFile(imagePath, image);
 
         return imagesMapper.toImageResponse(imageEntity);
     }
@@ -161,6 +175,28 @@ public class ImagesServiceImpl implements ImagesService {
         fileManagementService.deleteFile(image.getImagePath());
 
         return imagesMapper.toImageResponse(image);
+    }
+
+    @Override
+    public final ImageResponse deleteImageByImageUrl(String imageUrl) {
+        log.info("Deleting image with imageUrl: {}", imageUrl);
+
+        Image image = imagesRepository.findImageByImagePath(imageUrl)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Image found by url: {}", image);
+
+        imagesRepository.delete(image);
+
+        fileManagementService.deleteFile(image.getImagePath());
+
+        return imagesMapper.toImageResponse(image);
+    }
+
+    private void saveFile(String imagePath, MultipartFile image) {
+        fileManagementService.saveFile(imagePath, image);
+
+        log.info("Image has been saved to file system.");
     }
 
     private Image getImageFromRepository(long imageId) {

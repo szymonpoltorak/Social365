@@ -50,8 +50,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
                 private profileService: ProfileService,
-                private activatedRoute: ActivatedRoute,
-                private router: Router) {
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit(): void {
@@ -70,19 +69,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     });
             })
 
-        this.activeRoute = this.routingService
-            .getCurrentActivatedRouteOptionWithUrl(this.router.url.split("/"), this.options);
+        this.activeRoute = this.routingService.getCurrentActivatedRouteOption(this.options);
 
-        this.router
-            .events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                takeUntil(this.routerDestroy$)
-            )
-            .subscribe(event => {
-                const newEvent: NavigationEnd = event as NavigationEnd;
-                const url: string[] = newEvent.url.split("/");
-
+        this.routingService
+            .getUrlSegmentsOnNavigationEnd()
+            .pipe(takeUntil(this.routerDestroy$))
+            .subscribe((url: string[]) => {
                 this.activeRoute = this.routingService.getCurrentActivatedRouteOptionWithUrl(url, this.options);
             });
     }

@@ -7,8 +7,8 @@
         <div class="flex items-center sm:gap-3 max-sm:gap-1 justify-evenly">
             <div class="flex items-center gap-5">
                 <div class="h-16 sm:w-36 max-sm:w-32 relative">
-                    <img class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card"
-                         src="{{ profileInfo.profilePictureUrl }}" alt="Profile Picture">
+                    <img alt="Profile Picture"
+                         class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card" src="{{ profileInfo.profilePictureUrl }}">
                 </div>
 
                 <div>
@@ -52,7 +52,7 @@
         </div>
 
         <div>
-            <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+            <nav [tabPanel]="tabPanel" mat-tab-nav-bar>
                 @for (option of options; track option) {
                     <span class="w-36" mat-tab-link
                           [routerLink]="option.route"

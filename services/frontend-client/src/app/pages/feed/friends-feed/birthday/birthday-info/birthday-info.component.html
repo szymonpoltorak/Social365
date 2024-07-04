@@ -1,7 +1,7 @@
 <div class="flex justify-start gap-3 w-full mb-2 p-2 rounded-md items-center">
-    <app-avatar-photo class="hover:cursor-pointer"
-                      (click)="router.navigate([RouterPaths.PROFILE_DIRECT, birthdayInfo.profile.username, RouterPaths.PROFILE_POSTS])"
-                      [imageLink]="birthdayInfo.profile.profilePictureUrl">
+    <app-avatar-photo (click)="router.navigate([RouterPaths.PROFILE_DIRECT, birthdayInfo.profile.username, RouterPaths.PROFILE_POSTS])"
+                      [imageLink]="birthdayInfo.profile.profilePictureUrl"
+                      class="hover:cursor-pointer">
     </app-avatar-photo>
 
     <div class="flex flex-col w-full">
@@ -12,7 +12,7 @@
         </div>
 
         <div>
-            <button mat-button color="basic">
+            <button color="basic" mat-button>
                 <mat-icon>message</mat-icon>
                 Send a message!
             </button>

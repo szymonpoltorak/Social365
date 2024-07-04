@@ -15,7 +15,7 @@
     </mat-card-content>
 
     <div class="flex flex-col m-4">
-        <button mat-raised-button class="mb-3" color="primary">
+        <button class="mb-3" color="primary" mat-raised-button>
             @if (isFriendRequest) {
                 Accept
             } @else {
@@ -23,7 +23,7 @@
             }
         </button>
 
-        <button mat-raised-button color="accent">
+        <button color="accent" mat-raised-button>
             @if (isFriendRequest) {
                 Decline
             } @else {

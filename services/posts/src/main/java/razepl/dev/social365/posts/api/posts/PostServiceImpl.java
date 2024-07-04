@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
@@ -21,14 +22,15 @@ import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -36,6 +38,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+    private static final int NOT_NEEDED = -1;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final ProfileService profileService;
@@ -43,7 +46,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     @Override
-    public PostsCassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
+    public CassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
         log.info("Getting posts for profile with id: {}, using page info : {}", profileId, pageInfo);
 
         int currentFriendPage = pageInfo.friendPageNumber();
@@ -53,13 +56,15 @@ public class PostServiceImpl implements PostService {
 
         while (true) {
             Page<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
-            List<String> friendsIds = new ArrayList<>(profileService.getFriendsIds(profileId, currentFriendPage).toList());
+            List<String> friendsIds = new ArrayList<>(friendsPage.toList());
 
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
-                return createCassandraPage((CassandraPageRequest) pageable, result, profileId, currentFriendPage);
+                return createCassandraPage(pageable, result, profileId, currentFriendPage);
             }
+            friendsIds.add(profileId);
+
             Slice<Post> posts = postRepository.findAllByFollowedUserIdsOrProfileId(friendsIds, pageable);
 
             log.info("Found {} posts for profile with id: {}", posts.getNumberOfElements(), profileId);
@@ -71,35 +76,48 @@ public class PostServiceImpl implements PostService {
             if (resultSize >= pageSize) {
                 log.info("Found enough posts returning result of size: {}", resultSize);
 
-                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
+                return createCassandraPage(getNextPageable(posts), result, profileId, currentFriendPage);
             }
             if (!friendsPage.hasNext()) {
                 log.info("There are no more friends to fetch posts from returning result of size: {}", resultSize);
 
-                return createCassandraPage((CassandraPageRequest) posts.nextPageable(), result, profileId, currentFriendPage);
+                return createCassandraPage(getNextPageable(posts), result, profileId, currentFriendPage);
             }
             currentFriendPage++;
         }
     }
 
-    private PostsCassandraPage<PostData> createCassandraPage(CassandraPageRequest pageable, Collection<Post> result,
+    @Override
+    public final CassandraPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo) {
+        log.info("Getting user posts with id: {}, using page info : {}", profileId, pageInfo);
+
+        Pageable pageable = pageInfo.toPageable();
+
+        Slice<Post> posts = postRepository.findAllByAuthorId(profileId, pageable);
+
+        log.info("Found total posts : {}", posts.getNumberOfElements());
+
+        return createCassandraPage(getNextPageable(posts), posts.getContent(), profileId, NOT_NEEDED);
+    }
+
+    private PostsCassandraPage<PostData> createCassandraPage(Pageable nextPageable, Collection<Post> result,
                                                              String profileId, int currentFriendsPage) {
         log.info("Found posts returning result...");
 
+        CassandraPageRequest pageable = (CassandraPageRequest) nextPageable;
         PagingState pagingState = PagingState.newInstance(pageable.getPagingState());
 
         List<PostData> content = result
                 .parallelStream()
-                .map(post -> {
-                    if (post.isSharedPost()) {
-                        return postMapper.toSharedPostResponse(post, profileId);
-                    }
-                    return postMapper.toPostResponse(post, profileId);
-                })
+                .map(post -> postMapper.toPostData(post, profileId))
                 .toList();
 
         return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),
                 pageable.hasNext(), PagingState.encode(pagingState));
+    }
+
+    private <T> Pageable getNextPageable(Slice<T> data) {
+        return data.hasNext() ? data.nextPageable() : data.getPageable();
     }
 
     @Override
@@ -115,16 +133,12 @@ public class PostServiceImpl implements PostService {
 
         postValidator.validatePostContent(content);
 
+        String creationDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
         Post post = Post
                 .builder()
-                .key(PostKey
-                        .builder()
-                        .authorId(profileId)
-                        .postId(UUID.randomUUID())
-                        .creationDateTime(LocalDateTime.now())
-                        .build()
-                )
-                .content(content)
+                .key(PostKey.of(profileId, creationDateTime, UUID.randomUUID()))
+                .content(content == null ? "" : content)
                 .hasAttachments(hasAttachments)
                 .build();
 
@@ -136,17 +150,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData editPost(String profileId, String postId, String content) {
-        log.info("Editing post with id: {} for profileId: {}, with content: {}", postId, profileId, content);
+    public PostData editPost(EditPostRequest editPostRequest) {
+        log.info("Editing post with request: {}", editPostRequest);
+
+        String profileId = editPostRequest.profileId();
+        String content = editPostRequest.content();
 
         postValidator.validatePostContent(content);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(editPostRequest.postId(), editPostRequest.creationDateTime());
 
         if (!post.getAuthorId().equals(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
         post.setContent(content);
+        post.setHasAttachments(editPostRequest.hasAttachments());
 
         Post savedPost = postRepository.save(post);
 
@@ -156,15 +174,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateLikePostCount(String profileId, String postId) {
+    public PostData updateLikePostCount(String profileId, String postId, String creationDateTime) {
         log.info("Updating like count for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(postId, creationDateTime);
 
         if (post.isLikedBy(profileId)) {
             post.getUserLikedIds().remove(profileId);
         } else {
-            post.getUserLikedIds().add(profileId);
+            post.addUserLikedId(profileId);
         }
         Post savedPost = postRepository.save(post);
 
@@ -174,15 +192,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateNotificationStatus(String profileId, String postId) {
+    public PostData updateNotificationStatus(String profileId, String postId, String creationDateTime) {
         log.info("Updating notification status for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(postId, creationDateTime);
 
         if (post.areNotificationsTurnedOnBy(profileId)) {
             post.getUserNotificationIds().remove(profileId);
         } else {
-            post.getUserNotificationIds().add(profileId);
+            post.addUserNotificationId(profileId);
         }
         Post savedPost = postRepository.save(post);
 
@@ -192,15 +210,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateBookmarkStatus(String profileId, String postId) {
+    public PostData updateBookmarkStatus(String profileId, String postId, String creationDateTime) {
         log.info("Updating bookmark status for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(postId, creationDateTime);
 
         if (post.isBookmarkedBy(profileId)) {
             post.getBookmarkedUserIds().remove(profileId);
         } else {
-            post.getBookmarkedUserIds().add(profileId);
+            post.addBookmarkedUserId(profileId);
         }
         Post savedPost = postRepository.save(post);
 
@@ -210,27 +228,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData sharePost(String profileId, String postId, String content) {
+    public PostData sharePost(String profileId, String postId, String content, String creationDateTime) {
         log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(postId, creationDateTime);
+        String shareCreationDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         Post sharedPost = Post
                 .builder()
-                .key(PostKey
-                        .builder()
-                        .authorId(profileId)
-                        .postId(UUID.randomUUID())
-                        .creationDateTime(LocalDateTime.now())
-                        .build()
-                )
+                .key(PostKey.of(profileId, shareCreationDateTime, UUID.randomUUID()))
                 .content(content)
                 .originalPostId(post.getPostId())
+                .originalPostCreationDateTime(post.getCreationDateTime())
                 .hasAttachments(false)
-                .userLikedIds(Set.of())
-                .userSharedIds(Set.of())
-                .userNotificationIds(Set.of())
-                .bookmarkedUserIds(Set.of())
                 .build();
 
         post.sharePostByProfile(profileId);
@@ -241,24 +251,24 @@ public class PostServiceImpl implements PostService {
 
         Post savedSharedPost = postRepository.save(sharedPost);
 
-        log.info("Post with id: {} shared for profile with id: {}", savedSharedPost.getPostId(), profileId);
+        log.info("Saved shared post : {}", savedSharedPost);
 
-        return postMapper.toPostResponse(savedPost, profileId);
+        return postMapper.toSharedPostResponse(savedSharedPost, savedPost, profileId);
     }
 
     @Override
     @Transactional
-    public PostResponse deletePost(String profileId, String postId) {
+    public PostData deletePost(String profileId, String postId, String creationDateTime) {
         log.info("Deleting post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId);
+        Post post = getPostFromRepository(postId, creationDateTime);
 
         if (!post.getAuthorId().equals(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
-        log.info("Deleting post with id: {}", post.getPostId());
+        log.info("Deleting post with id: {}", post.getKey());
 
-        postRepository.deleteById(post.getPostId());
+        postRepository.deleteByPostId(post.getPostId(), post.getCreationDateTime(), post.getAuthorId());
 
         log.info("Deleting all comments connected with post with id: {}", post.getPostId());
 
@@ -267,8 +277,8 @@ public class PostServiceImpl implements PostService {
         return PostResponse.builder().build();
     }
 
-    private Post getPostFromRepository(String postId) {
-        Post post = postRepository.findById(UUID.fromString(postId))
+    private Post getPostFromRepository(String postId, String creationDateTime) {
+        Post post = postRepository.findByPostId(UUID.fromString(postId), creationDateTime)
                 .orElseThrow(() -> new PostDoesNotExistException(postId));
 
         log.info("Found post with id: {}", post);
