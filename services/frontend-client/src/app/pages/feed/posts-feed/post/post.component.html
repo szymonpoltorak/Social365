@@ -65,7 +65,7 @@
     @if (areCommentsVisible) {
         <app-comment-create [user]="currentUser"></app-comment-create>
 
-        @for (comment of comments; track comment) {
+        @for (comment of comments.data; track comment) {
             <app-comment [comment]="comment"></app-comment>
         }
 

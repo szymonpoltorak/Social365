@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
 
         Pageable pageable = pageInfo.toPageable();
 
-        Slice<Comment> comments = commentRepository.findAllReplyCommentsByCommentId(UUID.fromString(commentId), pageable);
+        Slice<Comment> comments = commentRepository.findAllRepliesByCommentId(UUID.fromString(commentId), pageable);
 
         log.info("Found {} replies for comment with id: {}", comments.getSize(), commentId);
 
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
         Pageable pageable = pageInfo.toPageable();
 
-        Slice<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
+        Slice<Comment> comments = commentRepository.findAllByPostId(UUID.fromString(postId), pageable);
 
         log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
@@ -80,10 +80,6 @@ public class CommentServiceImpl implements CommentService {
 
         commentValidator.validateCommentRequest(commentRequest);
 
-        String replyToCommentId = commentRequest.replyToCommentId();
-
-        log.info("Replying comment id: {}", replyToCommentId);
-
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -93,7 +89,6 @@ public class CommentServiceImpl implements CommentService {
                         .build()
                 )
                 .hasAttachments(commentRequest.hasAttachment())
-                .replyToCommentId(replyToCommentId != null ? UUID.fromString(replyToCommentId) : null)
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
                 .creationDateTime(LocalDateTime.now())

@@ -31,6 +31,8 @@ import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.
 import { ImagesService } from "@api/images/images.service";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
+import { CommentService } from "@api/posts-comments/comment.service";
+import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 
 @Component({
     selector: 'app-post',
@@ -62,10 +64,12 @@ import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.in
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
+
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
     post !: Post;
-    protected comments: PostComment[] = [];
+    protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
+    private readonly PAGE_SIZE: number = 5;
     protected currentUser !: Profile;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
@@ -73,42 +77,11 @@ export class PostComponent implements OnInit {
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
                 private imagesService: ImagesService,
+                private commentService: CommentService,
                 public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
-        this.comments = [
-            {
-                commentId: "1",
-                commentLikesCount: 5,
-                content: "This is a great post!",
-                author: {
-                    profileId: "1",
-                    fullName: "John Doe",
-                    subtitle: "Software Developer",
-                    bio: "I am a simple man",
-                    username: "shiba@gmail.com",
-                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-                },
-                creationDateTime: new Date(),
-                isLiked: false
-            },
-            {
-                commentId: "2",
-                commentLikesCount: 15,
-                content: "I love this post! Especially the part about the new Angular version!",
-                author: {
-                    profileId: "1",
-                    fullName: "Jacek Kowalski",
-                    subtitle: "Business Analyst",
-                    bio: "I am a simple man",
-                    username: "shiba@gmail.com",
-                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-                },
-                creationDateTime: new Date("2021-01-01T12:00:00"),
-                isLiked: true
-            }
-        ];
         this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
@@ -123,7 +96,18 @@ export class PostComponent implements OnInit {
     }
 
     getCommentsForPost(): void {
-        this.areCommentsVisible = !this.areCommentsVisible;
+        if (this.areCommentsVisible) {
+            this.areCommentsVisible = !this.areCommentsVisible;
+
+            return;
+        }
+        this.commentService
+            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.areCommentsVisible = !this.areCommentsVisible;
+
+                this.comments = comments;
+            });
     }
 
     sharePost(): void {

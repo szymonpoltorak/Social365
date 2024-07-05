@@ -61,4 +61,5 @@ public class CommentControllerImpl implements CommentController {
                                                @RequestParam(Params.PROFILE_ID) String profileId) {
         return commentService.deleteComment(commentId, profileId);
     }
+
 }

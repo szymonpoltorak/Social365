@@ -31,14 +31,14 @@ public class Comment {
     @Column(value = "has_attachments")
     private boolean hasAttachments;
 
-    @Column(value = "reply_to_comment_id")
-    private UUID replyToCommentId;
-
     @Column(value = "creation_date_time")
     private LocalDateTime creationDateTime;
 
     @Column(value = "user_liked_ids")
     private Set<String> userLikedIds;
+
+    @Column(value = "has_replies")
+    private boolean hasReplies;
 
     @Version
     private long version;

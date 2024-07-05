@@ -10,6 +10,8 @@ import { Profile } from '@interfaces/feed/profile.interface';
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatButton } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
+import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
+import { CommentService } from "@api/posts-comments/comment.service";
 
 @Component({
     selector: 'app-comment',
@@ -29,24 +31,36 @@ import { MatIconModule } from "@angular/material/icon";
     styleUrl: './comment.component.scss'
 })
 export class CommentComponent implements OnInit {
+
+    private readonly PAGE_SIZE: number = 3;
     @Input() comment!: PostComment;
-    // TODO: remove this when the backend is ready
-    @Input() isReply: boolean = false;
     @Input() replyLevel: number = 3;
-    replyComments: PostComment[] = [];
+    replyComments !: CassandraPage<PostComment>;
     currentUser !: Profile;
     isMakingReply: boolean = false;
+    areRepliesVisible: boolean = false;
 
-    constructor(private localStorage: LocalStorageService) {
+    constructor(private localStorage: LocalStorageService,
+                private commentService: CommentService) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
-        this.replyComments.push(this.comment);
     }
 
     onLikeComment(): void {
         this.comment.isLiked = !this.comment.isLiked;
+
         this.comment.commentLikesCount = this.comment.isLiked ? this.comment.commentLikesCount + 1 : this.comment.commentLikesCount - 1;
+    }
+
+    loadReplies(): void {
+        this.areRepliesVisible = true;
+
+        this.commentService
+            .getRepliesForComment(this.comment.commentId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .subscribe((replies: CassandraPage<PostComment>) => {
+                this.replyComments = replies;
+            });
     }
 }

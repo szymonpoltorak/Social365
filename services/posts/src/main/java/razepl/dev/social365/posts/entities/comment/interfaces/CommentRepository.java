@@ -18,11 +18,12 @@ public interface CommentRepository extends CassandraRepository<Comment, UUID> {
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
 
     @Query("delete from comments where post_id = :postId")
-    void deleteAllByPostId(@Param(Params.POST_ID)UUID postId);
+    void deleteAllByPostId(@Param(Params.POST_ID) UUID postId);
 
     @Query("select * from comments where post_id = :postId")
-    Slice<Comment> findAllByPostId(@Param(Params.POST_ID)String postId, Pageable pageable);
+    Slice<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId, Pageable pageable);
 
-    @Query("select * from comments where reply_to_comment_id = :commentId")
-    Slice<Comment> findAllReplyCommentsByCommentId(@Param(Params.COMMENT_ID)UUID commentId, Pageable pageable);
+    @Query("select * from comments where reply_to_comment_id = :commentId ALLOW FILTERING")
+    Slice<Comment> findAllRepliesByCommentId(@Param(Params.COMMENT_ID) UUID commentId, Pageable pageable);
+
 }
