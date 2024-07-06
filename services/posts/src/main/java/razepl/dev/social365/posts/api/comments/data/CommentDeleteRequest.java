@@ -4,5 +4,5 @@ import lombok.Builder;
 import razepl.dev.social365.posts.entities.post.data.CommentKeyResponse;
 
 @Builder
-public record CommentRequest(CommentKeyResponse commentKey, String profileId, String content, boolean hasAttachment) {
+public record CommentDeleteRequest(CommentKeyResponse commentKey, String profileId) {
 }

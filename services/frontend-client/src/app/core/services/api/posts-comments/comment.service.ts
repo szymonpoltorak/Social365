@@ -6,6 +6,8 @@ import { PostComment } from "@interfaces/feed/post-comment.interface";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { Optional } from "@core/types/profile/optional.type";
+import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
+import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +31,7 @@ export class CommentService {
         });
     }
 
-    addCommentToPost(commentRequest: CommentRequest): Observable<PostComment> {
+    addCommentToPost(commentRequest: CommentAddRequest): Observable<PostComment> {
         return this.http.post<PostComment>(CommentMappings.ADD_COMMENT_TO_POST, commentRequest);
     }
 
@@ -37,12 +39,9 @@ export class CommentService {
         return this.http.put<PostComment>(CommentMappings.EDIT_COMMENT, commentRequest);
     }
 
-    deleteComment(commentId: string, profileId: string): Observable<PostComment> {
+    deleteComment(commentRequest: CommentDeleteRequest): Observable<PostComment> {
         return this.http.delete<PostComment>(CommentMappings.DELETE_COMMENT, {
-            params: {
-                commentId: commentId,
-                profileId: profileId
-            }
+            body: commentRequest
         });
     }
 

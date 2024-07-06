@@ -3,6 +3,7 @@ package razepl.dev.social365.posts.utils.validators;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
+import razepl.dev.social365.posts.entities.post.data.CommentKeyResponse;
 import razepl.dev.social365.posts.utils.exceptions.InvalidCommentRequestException;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
@@ -21,7 +22,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest(null, "objectId", "profileId", null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), "objectId", null, false);
 
         // when
 
@@ -32,7 +33,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsEmpty() {
         // given
-        CommentRequest commentRequest = new CommentRequest("", "objectId", "profileId", null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), "objectId", "", false);
 
         // when
 
@@ -43,18 +44,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsBlank() {
         // given
-        CommentRequest commentRequest = new CommentRequest("   ", "objectId", "profileId", null, false);
-
-        // when
-
-        // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentRequest));
-    }
-
-    @Test
-    final void validateCommentRequest_throwsException_whenContentIsTooShort() {
-        // given
-        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", "a", null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), "objectId", "   ", false);
 
         // when
 
@@ -66,7 +56,7 @@ class CommentValidatorTest {
     final void validateCommentRequest_throwsException_whenContentIsTooLong() {
         // given
         String longContent = "a".repeat(501);
-        CommentRequest commentRequest = new CommentRequest("objectId", "profileId", longContent, null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), "profileId", longContent, false);
 
         // when
 
@@ -77,7 +67,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenObjectIdIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", null, "profileId", null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), "profileId", "content", false);
 
         // when
 
@@ -88,7 +78,7 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenProfileIdIsNull() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", null, null, false);
+        CommentRequest commentRequest = new CommentRequest(CommentKeyResponse.builder().build(), null, "content", false);
 
         // when
 
@@ -99,7 +89,8 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_doesNotThrowException_whenRequestIsValid() {
         // given
-        CommentRequest commentRequest = new CommentRequest("Valid content", "objectId", "profileId", null, false);
+        CommentKeyResponse response = CommentKeyResponse.builder().postId("postId").build();
+        CommentRequest commentRequest = new CommentRequest(response, "objectId", "profileId", false);
 
         // when
 

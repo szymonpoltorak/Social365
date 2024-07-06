@@ -20,4 +20,5 @@ public class PostValidatorImpl implements PostValidator {
             throw new InvalidPostContentException("Post content needs to be shorter than 1000 characters!");
         }
     }
+
 }

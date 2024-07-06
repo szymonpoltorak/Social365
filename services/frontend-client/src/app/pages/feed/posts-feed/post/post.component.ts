@@ -65,14 +65,13 @@ import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 })
 export class PostComponent implements OnInit {
 
-    @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
-    post !: Post;
+    @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post }) post !: Post;
+    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
+    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
     protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
     private readonly PAGE_SIZE: number = 5;
     protected currentUser !: Profile;
-    @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
-    @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,

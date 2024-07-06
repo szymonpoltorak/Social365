@@ -9,7 +9,6 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,9 +29,6 @@ public class Comment {
 
     @Column(value = "has_attachments")
     private boolean hasAttachments;
-
-    @Column(value = "creation_date_time")
-    private LocalDateTime creationDateTime;
 
     @Column(value = "user_liked_ids")
     private Set<String> userLikedIds;

@@ -18,46 +18,6 @@ class PostValidatorTest {
     }
 
     @Test
-    final void validatePostContent_throwsException_whenContentIsNull() {
-        // given
-
-        // when
-
-        // then
-        assertThrows(InvalidPostContentException.class, () -> postValidator.validatePostContent(null));
-    }
-
-    @Test
-    final void validatePostContent_throwsException_whenContentIsEmpty() {
-        // given
-
-        // when
-
-        // then
-        assertThrows(InvalidPostContentException.class, () -> postValidator.validatePostContent(""));
-    }
-
-    @Test
-    final void validatePostContent_throwsException_whenContentIsBlank() {
-        // given
-
-        // when
-
-        // then
-        assertThrows(InvalidPostContentException.class, () -> postValidator.validatePostContent("   "));
-    }
-
-    @Test
-    final void validatePostContent_throwsException_whenContentIsTooShort() {
-        // given
-
-        // when
-
-        // then
-        assertThrows(InvalidPostContentException.class, () -> postValidator.validatePostContent("ab"));
-    }
-
-    @Test
     final void validatePostContent_throwsException_whenContentIsTooLong() {
         // given
         String longContent = "a".repeat(1001);

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
+import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
@@ -45,7 +47,7 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @PostMapping(value = CommentMappings.ADD_COMMENT_TO_POST)
-    public final CommentResponse addCommentToPost(@RequestBody CommentRequest commentRequest) {
+    public final CommentResponse addCommentToPost(@RequestBody CommentAddRequest commentRequest) {
         return commentService.addCommentToPost(commentRequest);
     }
 
@@ -57,9 +59,8 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
-    public final CommentResponse deleteComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                               @RequestParam(Params.PROFILE_ID) String profileId) {
-        return commentService.deleteComment(commentId, profileId);
+    public final CommentResponse deleteComment(@RequestBody CommentDeleteRequest commentRequest) {
+        return commentService.deleteComment(commentRequest);
     }
 
 }

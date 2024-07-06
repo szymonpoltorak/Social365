@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService {
 
         Post post = Post
                 .builder()
-                .key(PostKey.of(profileId, creationDateTime, UUID.randomUUID()))
+                .key(PostKey.of(profileId, UUID.randomUUID(), creationDateTime))
                 .content(content == null ? "" : content)
                 .hasAttachments(hasAttachments)
                 .build();
@@ -236,7 +236,7 @@ public class PostServiceImpl implements PostService {
 
         Post sharedPost = Post
                 .builder()
-                .key(PostKey.of(profileId, shareCreationDateTime, UUID.randomUUID()))
+                .key(PostKey.of(profileId, UUID.randomUUID(), shareCreationDateTime))
                 .content(content)
                 .originalPostId(post.getPostId())
                 .originalPostCreationDateTime(post.getCreationDateTime())

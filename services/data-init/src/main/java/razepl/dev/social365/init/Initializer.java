@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.init.clients.posts.comments.constants.CommentRequest;
+import razepl.dev.social365.init.clients.posts.comments.constants.CommentAddRequest;
 import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
 import razepl.dev.social365.init.clients.profile.ProfileService;
 import razepl.dev.social365.init.clients.profile.data.ProfileRequest;
@@ -81,15 +81,14 @@ public class Initializer implements CommandLineRunner {
 
             for (int i = 0; i < commentContents.size(); i++) {
                 String commentContent = commentContents.get(random.nextInt(commentContents.size()));
-                CommentRequest commentRequest = CommentRequest
+                CommentAddRequest commentAddRequest = CommentAddRequest
                         .builder()
                         .profileId(profile.profileId())
-                        .objectId(postResponse.postId())
+                        .postId(postResponse.postId())
                         .content(commentContent)
-                        .replyToCommentId(null)
                         .hasAttachment(false)
                         .build();
-                postCommentsService.addCommentToPost(commentRequest);
+                postCommentsService.addCommentToPost(commentAddRequest);
             }
         });
 

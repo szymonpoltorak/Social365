@@ -23,7 +23,7 @@ public class CommentValidatorImpl implements CommentValidator {
         if (contentLength > MAX_COMMENT_LENGTH) {
             throw new InvalidCommentRequestException("Comment content cannot be longer than 500 characters!");
         }
-        String objectId = commentRequest.objectId();
+        String objectId = commentRequest.commentKey().postId();
 
         if (objectId == null || objectId.isEmpty() || objectId.isBlank()) {
             throw new InvalidCommentRequestException("Comment object id cannot be null!");

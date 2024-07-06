@@ -6,6 +6,8 @@ import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
@@ -22,6 +24,7 @@ import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
 
     @Override
+    //TODO: Fix replies to be a separate table
     public final CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
         log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
 
@@ -74,24 +78,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse addCommentToPost(CommentRequest commentRequest) {
-        log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.objectId(),
+    public final CommentResponse addCommentToPost(CommentAddRequest commentRequest) {
+        log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.postId(),
                 commentRequest.profileId());
-
-        commentValidator.validateCommentRequest(commentRequest);
 
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
                         .builder()
                         .commentId(UUID.randomUUID())
-                        .postId(UUID.fromString(commentRequest.objectId()))
+                        .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .postId(UUID.fromString(commentRequest.postId()))
                         .build()
                 )
                 .hasAttachments(commentRequest.hasAttachment())
                 .authorId(commentRequest.profileId())
                 .content(commentRequest.content())
-                .creationDateTime(LocalDateTime.now())
+                .hasReplies(false)
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
@@ -103,12 +106,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public final CommentResponse editComment(CommentRequest commentRequest) {
-        log.info("Editing comment with id: {}, with content: {}", commentRequest.objectId(),
+        log.info("Editing comment with id: {}, with content: {}", commentRequest.commentKey(),
                 commentRequest.content());
 
         commentValidator.validateCommentRequest(commentRequest);
 
-        Comment comment = getCommentFromRepository(commentRequest.objectId());
+        CommentKey commentKey = commentMapper.toCommentKey(commentRequest.commentKey());
+        Comment comment = getCommentFromRepository(commentKey);
 
         if (!commentRequest.profileId().equals(comment.getAuthorId())) {
             throw new UserIsNotAuthorException(commentRequest.profileId());
@@ -123,26 +127,28 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse deleteComment(String commentId, String profileId) {
-        log.info("Deleting comment with id: {}", commentId);
+    public final CommentResponse deleteComment(CommentDeleteRequest commentRequest) {
+        log.info("Deleting comment with id: {}", commentRequest.commentKey());
 
-        Comment comment = getCommentFromRepository(commentId);
+        CommentKey commentKey = commentMapper.toCommentKey(commentRequest.commentKey());
+        Comment comment = getCommentFromRepository(commentKey);
+        String profileId = commentRequest.profileId();
 
         if (!profileId.equals(comment.getAuthorId())) {
             throw new UserIsNotAuthorException(profileId);
         }
         log.info("Deleting comment...");
 
-        commentRepository.deleteById(UUID.fromString(commentId));
+        commentRepository.deleteCommentByKey(commentKey);
 
         return CommentResponse.builder().build();
     }
 
-    private Comment getCommentFromRepository(String commentId) {
-        Comment comment = commentRepository.findById(UUID.fromString(commentId))
-                .orElseThrow(() -> new CommentDoesNotExistException(commentId));
+    private Comment getCommentFromRepository(CommentKey key) {
+        Comment comment = commentRepository.findCommentByKey(key)
+                .orElseThrow(() -> new CommentDoesNotExistException(key));
 
-        log.info("Found comment with id: {}", comment.getCommentId());
+        log.info("Found comment with id: {}", comment.getKey());
 
         return comment;
     }

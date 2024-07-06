@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import razepl.dev.social365.init.clients.posts.comments.constants.CommentRequest;
+import razepl.dev.social365.init.clients.posts.comments.constants.CommentAddRequest;
 import razepl.dev.social365.init.clients.posts.comments.constants.CommentResponse;
 import razepl.dev.social365.init.clients.posts.comments.constants.PostCommentsMappings;
 import razepl.dev.social365.init.clients.posts.comments.constants.PostParams;
@@ -23,6 +23,6 @@ public interface PostCommentsService {
                             @RequestParam(PostParams.HAS_ATTACHMENTS) boolean hasAttachments);
 
     @PostMapping(value = PostCommentsMappings.ADD_COMMENT_TO_POST)
-    CommentResponse addCommentToPost(@RequestBody CommentRequest commentRequest);
+    CommentResponse addCommentToPost(@RequestBody CommentAddRequest commentAddRequest);
 
 }

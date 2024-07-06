@@ -8,6 +8,9 @@ import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
+import razepl.dev.social365.posts.entities.post.data.CommentKeyResponse;
+
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -37,12 +40,31 @@ public class CommentMapperImpl implements CommentMapper {
         return CommentResponse
                 .builder()
                 .isLiked(comment.isLikedBy(profileId))
-                .commentId(comment.getCommentId().toString())
+                .commentKey(toCommentKeyResponse(comment.getKey()))
                 .commentLikesCount(comment.getLikesCount())
                 .content(comment.getContent())
-                .creationDateTime(comment.getCreationDateTime())
                 .imageUrl(imageUrl)
                 .author(author)
                 .build();
     }
+
+    @Override
+    public final CommentKey toCommentKey(CommentKeyResponse commentKeyResponse) {
+        return CommentKey
+                .builder()
+                .commentId(UUID.fromString(commentKeyResponse.commentId()))
+                .postId(UUID.fromString(commentKeyResponse.postId()))
+                .creationDateTime(commentKeyResponse.creationDateTime())
+                .build();
+    }
+
+    private CommentKeyResponse toCommentKeyResponse(CommentKey commentKey) {
+        return CommentKeyResponse
+                .builder()
+                .commentId(commentKey.getCommentId().toString())
+                .postId(commentKey.getPostId().toString())
+                .creationDateTime(commentKey.getCreationDateTime())
+                .build();
+    }
+
 }

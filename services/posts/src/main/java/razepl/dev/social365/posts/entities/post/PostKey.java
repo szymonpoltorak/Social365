@@ -20,19 +20,18 @@ public final class PostKey {
     private String authorId;
 
     @PrimaryKeyColumn(
-            name = "creation_date_time",
+            name = "post_id",
             ordinal = 1,
+            type = PrimaryKeyType.PARTITIONED
+    )
+    private UUID postId;
+
+    @PrimaryKeyColumn(
+            name = "creation_date_time",
+            ordinal = 2,
             type = PrimaryKeyType.CLUSTERED,
             ordering = Ordering.DESCENDING
     )
     private String creationDateTime;
-
-    @PrimaryKeyColumn(
-            name = "post_id",
-            ordinal = 2,
-            type = PrimaryKeyType.CLUSTERED,
-            ordering = Ordering.ASCENDING
-    )
-    private UUID postId;
 
 }
