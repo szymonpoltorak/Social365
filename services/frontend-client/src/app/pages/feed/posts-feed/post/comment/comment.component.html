@@ -10,8 +10,8 @@
                     <div class="font-semibold">{{ comment.author.fullName }}</div>
 
                     <span class="text-xs font-extralight hover:cursor-pointer"
-                          matTooltip="{{ comment.creationDateTime | date: 'medium' }}">
-                        {{ comment.creationDateTime | postAge }}
+                          matTooltip="{{ comment.commentKey.creationDateTime | date: 'medium' }}">
+                        {{ comment.commentKey.creationDateTime | postAge }}
                     </span>
                 </div>
 

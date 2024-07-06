@@ -58,7 +58,7 @@ export class CommentComponent implements OnInit {
         this.areRepliesVisible = true;
 
         this.commentService
-            .getRepliesForComment(this.comment.commentId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .getRepliesForComment(this.comment.commentKey.commentId, this.currentUser.profileId, this.PAGE_SIZE, null)
             .subscribe((replies: CassandraPage<PostComment>) => {
                 this.replyComments = replies;
             });
