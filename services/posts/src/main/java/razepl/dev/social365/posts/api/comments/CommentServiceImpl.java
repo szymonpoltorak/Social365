@@ -3,7 +3,6 @@ package razepl.dev.social365.posts.api.comments;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
@@ -15,6 +14,8 @@ import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
+import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
+import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -34,44 +36,36 @@ import java.util.UUID;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final ReplyCommentRepository replyCommentRepository;
     private final CommentMapper commentMapper;
     private final CommentValidator commentValidator;
 
     @Override
-    //TODO: Fix replies to be a separate table
     public final CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
         log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
 
-        Pageable pageable = pageInfo.toPageable();
-
-        Slice<Comment> comments = commentRepository.findAllRepliesByCommentId(UUID.fromString(commentId), pageable);
+        Slice<ReplyComment> comments = replyCommentRepository.findAllRepliesByCommentId(UUID.fromString(commentId), pageInfo.toPageable());
 
         log.info("Found {} replies for comment with id: {}", comments.getSize(), commentId);
 
-        return mapToCassandraPage(comments, profileId);
+        return mapToCassandraPage(comments, replyComment -> commentMapper.toCommentResponse(replyComment, profileId));
     }
 
     @Override
     public final CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageInfo);
 
-        Pageable pageable = pageInfo.toPageable();
-
-        Slice<Comment> comments = commentRepository.findAllByPostId(UUID.fromString(postId), pageable);
+        Slice<Comment> comments = commentRepository.findAllByPostId(UUID.fromString(postId), pageInfo.toPageable());
 
         log.info("Found {} comments for post with id: {}", comments.getSize(), postId);
 
-        return mapToCassandraPage(comments, profileId);
+        return mapToCassandraPage(comments, comment -> commentMapper.toCommentResponse(comment, profileId));
     }
 
-    private CassandraPage<CommentResponse> mapToCassandraPage(Slice<Comment> comments, String profileId) {
-        List<CommentResponse> data = comments
-                .stream()
-                .map(comment -> commentMapper.toCommentResponse(comment, profileId))
-                .toList();
+    private <T> CassandraPage<CommentResponse> mapToCassandraPage(Slice<T> comments, Function<T, CommentResponse> mapper) {
+        List<CommentResponse> data = comments.stream().map(mapper).toList();
 
         CassandraPageRequest nextPageable = (CassandraPageRequest) comments.nextPageable();
-
         PagingState pagingState = PagingState.newInstance(nextPageable.getPagingState());
 
         return new CommentsCassandraPage<>(data, nextPageable.getPageSize(), nextPageable.hasNext(), pagingState);
@@ -114,7 +108,7 @@ public class CommentServiceImpl implements CommentService {
         CommentKey commentKey = commentMapper.toCommentKey(commentRequest.commentKey());
         Comment comment = getCommentFromRepository(commentKey);
 
-        if (!commentRequest.profileId().equals(comment.getAuthorId())) {
+        if (!comment.isAuthor(commentRequest.profileId())) {
             throw new UserIsNotAuthorException(commentRequest.profileId());
         }
         comment.setContent(commentRequest.content());
@@ -134,7 +128,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentFromRepository(commentKey);
         String profileId = commentRequest.profileId();
 
-        if (!profileId.equals(comment.getAuthorId())) {
+        if (!comment.isAuthor(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
         log.info("Deleting comment...");

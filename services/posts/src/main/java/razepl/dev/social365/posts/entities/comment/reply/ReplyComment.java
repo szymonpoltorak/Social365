@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.entities.comment;
+package razepl.dev.social365.posts.entities.comment.reply;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +13,14 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
-@Table(value = "comments")
+@Table(value = "reply_comments")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
+public class ReplyComment {
 
     @PrimaryKey
-    private CommentKey key;
+    private ReplyCommentKey key;
 
     @Column(value = "author_id")
     private String authorId;
@@ -40,15 +40,11 @@ public class Comment {
     private long version;
 
     public final UUID getCommentId() {
-        return key.getCommentId();
+        return key.getReplyToCommentId();
     }
 
-    public final UUID getPostId() {
-        return key.getPostId();
-    }
-
-    public final boolean isAuthor(String profileId) {
-        return authorId.equals(profileId);
+    public final UUID getReplyCommentId() {
+        return key.getReplyCommentId();
     }
 
     public final boolean isLikedBy(String profileId) {
@@ -58,4 +54,5 @@ public class Comment {
     public final int getLikesCount() {
         return userLikedIds != null ? userLikedIds.size() : 0;
     }
+
 }

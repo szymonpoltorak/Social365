@@ -76,6 +76,9 @@ public class Initializer implements CommandLineRunner {
         List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
 
         profiles.forEach(profile -> {
+            if (profile.profileId().isEmpty()) {
+                return;
+            }
             String postContent = postContents.get(random.nextInt(postContents.size()));
             PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
 

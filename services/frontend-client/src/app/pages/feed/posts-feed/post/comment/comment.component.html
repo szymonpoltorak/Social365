@@ -56,9 +56,11 @@
             }
         }
 
-        <button mat-button (click)="loadReplies()" class="mb-3">
-            <mat-icon>expand_more</mat-icon>
-            Load replies
-        </button>
+        @if (comment.hasReplies) {
+            <button mat-button (click)="loadReplies()" class="mb-3">
+                <mat-icon>expand_more</mat-icon>
+                Load replies
+            </button>
+        }
     </div>
 </div>

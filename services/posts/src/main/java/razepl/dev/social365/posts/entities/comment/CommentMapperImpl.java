@@ -8,7 +8,10 @@ import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
-import razepl.dev.social365.posts.entities.post.data.CommentKeyResponse;
+import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
+import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
+import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 
 import java.util.UUID;
 
@@ -44,7 +47,36 @@ public class CommentMapperImpl implements CommentMapper {
                 .commentLikesCount(comment.getLikesCount())
                 .content(comment.getContent())
                 .imageUrl(imageUrl)
+                .hasReplies(comment.isHasReplies())
                 .author(author)
+                .build();
+    }
+
+    @Override
+    public final CommentResponse toCommentResponse(ReplyComment comment, String profileId) {
+        Profile author = profileService.getProfileDetails(comment.getAuthorId());
+
+        String imageUrl = comment.isHasAttachments() ? imageService
+                .getCommentImage(comment.getCommentId().toString()).imagePath() : "";
+
+        return CommentResponse
+                .builder()
+                .isLiked(comment.isLikedBy(profileId))
+                .commentKey(toReplyKeyResponse(comment.getKey()))
+                .commentLikesCount(comment.getLikesCount())
+                .content(comment.getContent())
+                .imageUrl(imageUrl)
+                .author(author)
+                .hasReplies(comment.isHasReplies())
+                .build();
+    }
+
+    private ReplyKeyResponse toReplyKeyResponse(ReplyCommentKey key) {
+        return ReplyKeyResponse
+                .builder()
+                .replyCommentId(key.getReplyCommentId().toString())
+                .replyToCommentId(key.getReplyToCommentId().toString())
+                .creationDateTime(key.getCreationDateTime())
                 .build();
     }
 

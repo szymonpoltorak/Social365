@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CommentRepository extends CassandraRepository<Comment, UUID> {
+public interface CommentRepository extends CassandraRepository<Comment, CommentKey> {
 
     @Query("select count(*) from comments where post_id = :postId ALLOW FILTERING")
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
@@ -24,9 +24,6 @@ public interface CommentRepository extends CassandraRepository<Comment, UUID> {
 
     @Query("select * from comments where post_id = :postId ALLOW FILTERING")
     Slice<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId, Pageable pageable);
-
-    @Query("select * from comments where reply_to_comment_id = :commentId ALLOW FILTERING")
-    Slice<Comment> findAllRepliesByCommentId(@Param(Params.COMMENT_ID) UUID commentId, Pageable pageable);
 
     @Query("select * from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :creationDateTime")
     Optional<Comment> findCommentById(@Param(Params.POST_ID) UUID postId,

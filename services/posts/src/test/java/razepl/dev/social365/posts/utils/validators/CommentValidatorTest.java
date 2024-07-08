@@ -3,7 +3,7 @@ package razepl.dev.social365.posts.utils.validators;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import razepl.dev.social365.posts.api.comments.data.CommentRequest;
-import razepl.dev.social365.posts.entities.post.data.CommentKeyResponse;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.utils.exceptions.InvalidCommentRequestException;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 

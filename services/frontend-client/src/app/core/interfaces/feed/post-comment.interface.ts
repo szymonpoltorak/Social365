@@ -6,5 +6,6 @@ export interface PostComment {
     commentLikesCount: number;
     content: string;
     author: Profile;
+    hasReplies: boolean;
     isLiked: boolean;
 }

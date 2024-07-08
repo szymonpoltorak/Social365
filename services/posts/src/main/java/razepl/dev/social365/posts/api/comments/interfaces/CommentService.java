@@ -9,9 +9,11 @@ import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 public interface CommentService {
 
-    CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo);
+    CassandraPage<CommentResponse> getRepliesForComment(String commentId,
+                                                                          String profileId, PageInfo pageInfo);
 
-    CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo);
+    CassandraPage<CommentResponse> getCommentsForPost(String postId,
+                                                                          String profileId, PageInfo pageInfo);
 
     CommentResponse addCommentToPost(CommentAddRequest commentRequest);
 

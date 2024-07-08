@@ -160,7 +160,7 @@ public class PostServiceImpl implements PostService {
 
         Post post = getPostFromRepository(editPostRequest.postId(), editPostRequest.creationDateTime());
 
-        if (!post.getAuthorId().equals(profileId)) {
+        if (!post.isAuthorId(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
         post.setContent(content);
@@ -263,7 +263,7 @@ public class PostServiceImpl implements PostService {
 
         Post post = getPostFromRepository(postId, creationDateTime);
 
-        if (!post.getAuthorId().equals(profileId)) {
+        if (!post.isAuthorId(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
         log.info("Deleting post with id: {}", post.getKey());
