@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
@@ -83,7 +83,7 @@ class CommentServiceTest {
                 .postId(postId.toString())
                 .commentId(commentId.toString())
                 .build();
-        CommentRequest commentRequest = new CommentRequest(commentKey, "profileId", "content", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "profileId", "content", false);
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -92,7 +92,7 @@ class CommentServiceTest {
                         .postId(postId)
                         .build()
                 )
-                .authorId(commentRequest.profileId())
+                .authorId(commentEditRequest.profileId())
                 .content("old content")
                 .build();
         CommentResponse commentResponse = CommentResponse.builder().build();
@@ -103,10 +103,10 @@ class CommentServiceTest {
                 .thenReturn(Optional.of(comment));
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
-        when(commentMapper.toCommentResponse(any(Comment.class), eq(commentRequest.profileId())))
+        when(commentMapper.toCommentResponse(any(Comment.class), eq(commentEditRequest.profileId())))
                 .thenReturn(commentResponse);
 
-        CommentResponse result = commentService.editComment(commentRequest);
+        CommentResponse result = commentService.editComment(commentEditRequest);
 
         assertEquals(commentResponse, result);
 
@@ -122,7 +122,7 @@ class CommentServiceTest {
                 .postId(postId.toString())
                 .commentId(commentId.toString())
                 .build();
-        CommentRequest commentRequest = new CommentRequest(commentKey, "profileId", "content", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "profileId", "content", false);
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -140,7 +140,7 @@ class CommentServiceTest {
         when(commentRepository.findCommentByKey(comment.getKey()))
                 .thenReturn(Optional.of(comment));
 
-        assertThrows(UserIsNotAuthorException.class, () -> commentService.editComment(commentRequest));
+        assertThrows(UserIsNotAuthorException.class, () -> commentService.editComment(commentEditRequest));
     }
 
     @Test

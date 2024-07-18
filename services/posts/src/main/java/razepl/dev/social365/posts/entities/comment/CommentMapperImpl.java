@@ -90,6 +90,16 @@ public class CommentMapperImpl implements CommentMapper {
                 .build();
     }
 
+    @Override
+    public final ReplyCommentKey toCommenyReplyKey(ReplyKeyResponse replyKeyResponse) {
+        return ReplyCommentKey
+                .builder()
+                .replyToCommentId(UUID.fromString(replyKeyResponse.replyToCommentId()))
+                .replyCommentId(UUID.fromString(replyKeyResponse.replyCommentId()))
+                .creationDateTime(replyKeyResponse.creationDateTime())
+                .build();
+    }
+
     private CommentKeyResponse toCommentKeyResponse(CommentKey commentKey) {
         return CommentKeyResponse
                 .builder()

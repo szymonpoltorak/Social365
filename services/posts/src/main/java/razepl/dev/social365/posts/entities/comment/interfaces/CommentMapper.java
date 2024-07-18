@@ -5,6 +5,8 @@ import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
+import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
+import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 
 public interface CommentMapper {
 
@@ -13,5 +15,7 @@ public interface CommentMapper {
     CommentResponse toCommentResponse(ReplyComment comment, String profileId);
 
     CommentKey toCommentKey(CommentKeyResponse commentKeyResponse);
+
+    ReplyCommentKey toCommenyReplyKey(ReplyKeyResponse replyKeyResponse);
 
 }

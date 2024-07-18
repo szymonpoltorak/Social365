@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
@@ -26,15 +26,6 @@ import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 public class CommentControllerImpl implements CommentController {
 
     private final CommentService commentService;
-
-    @Override
-    @GetMapping(value = CommentMappings.GET_REPLIES_FOR_COMMENT)
-    public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                                                     @RequestParam(Params.PROFILE_ID) String profileId,
-                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize,
-                                                                     @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return commentService.getRepliesForComment(commentId, profileId, PageInfo.of(pageSize, pagingState));
-    }
 
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
@@ -53,8 +44,8 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @PutMapping(value = CommentMappings.EDIT_COMMENT)
-    public final CommentResponse editComment(@RequestBody CommentRequest commentRequest) {
-        return commentService.editComment(commentRequest);
+    public final CommentResponse editComment(@RequestBody CommentEditRequest commentEditRequest) {
+        return commentService.editComment(commentEditRequest);
     }
 
     @Override

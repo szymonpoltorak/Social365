@@ -26,6 +26,8 @@ public final class Params {
 
     public static final String CREATION_DATE_TIME = "creationDateTime";
 
+    public static final String REPLY_ID = "replyId";
+
     private Params() {
     }
 }
