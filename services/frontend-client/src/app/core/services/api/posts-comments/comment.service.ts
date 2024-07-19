@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { CommentMappings } from "@enums/api/posts-comments/comment-mappings.enum";
 import { Observable } from "rxjs";
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
+import { LikeCommentRequest } from "@interfaces/posts-comments/like-comment-request.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -15,13 +16,6 @@ import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-
 export class CommentService {
 
     constructor(private http: HttpClient) {
-    }
-
-    getRepliesForComment(commentId: string, profileId: string,
-                         pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<PostComment>> {
-        return this.http.get<CassandraPage<PostComment>>(CommentMappings.GET_REPLIES_FOR_COMMENT, {
-            params: this.getCommentParams(profileId, commentId, pageSize, pagingState)
-        });
     }
 
     getCommentsForPost(postId: string, profileId: string,
@@ -45,17 +39,8 @@ export class CommentService {
         });
     }
 
-    private getCommentParams(profileId: string, commentId: string,
-                             pageSize: number, pagingState: Optional<string>): HttpParams {
-        const params: HttpParams = new HttpParams();
-
-        if (pagingState !== null) {
-            params.set('pagingState', pagingState as string);
-        }
-        return params
-            .set('profileId', profileId)
-            .set('commentId', commentId)
-            .set('pageSize', pageSize);
+    updateLikeCommentCount(likeCommentRequest: LikeCommentRequest): Observable<PostComment> {
+        return this.http.put<PostComment>(CommentMappings.UPDATE_LIKE_COMMENT_COUNT, likeCommentRequest);
     }
 
     private getPostParams(profileId: string, postId: string,

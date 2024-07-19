@@ -4,6 +4,7 @@ import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 public interface CommentController {
@@ -15,5 +16,7 @@ public interface CommentController {
     CommentResponse editComment(CommentEditRequest commentEditRequest);
 
     CommentResponse deleteComment(CommentDeleteRequest commentRequest);
+
+    CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest);
 
 }

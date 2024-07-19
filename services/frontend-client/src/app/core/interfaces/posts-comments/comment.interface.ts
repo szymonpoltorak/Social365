@@ -1,8 +1,6 @@
 import { Profile } from "@interfaces/feed/profile.interface";
-import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
 
-export interface PostComment {
-    commentKey: CommentKey;
+export interface Comment {
     commentLikesCount: number;
     content: string;
     author: Profile;

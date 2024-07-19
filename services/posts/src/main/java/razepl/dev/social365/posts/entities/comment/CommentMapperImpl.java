@@ -91,7 +91,7 @@ public class CommentMapperImpl implements CommentMapper {
     }
 
     @Override
-    public final ReplyCommentKey toCommenyReplyKey(ReplyKeyResponse replyKeyResponse) {
+    public final ReplyCommentKey toCommentReplyKey(ReplyKeyResponse replyKeyResponse) {
         return ReplyCommentKey
                 .builder()
                 .replyToCommentId(UUID.fromString(replyKeyResponse.replyToCommentId()))

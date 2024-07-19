@@ -4,7 +4,7 @@ import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { Post } from "@interfaces/feed/post.interface";
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CommentComponent } from "@pages/feed/posts-feed/post/comment/comment.component";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";

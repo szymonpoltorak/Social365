@@ -14,6 +14,7 @@ import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
@@ -52,6 +53,12 @@ public class CommentControllerImpl implements CommentController {
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
     public final CommentResponse deleteComment(@RequestBody CommentDeleteRequest commentRequest) {
         return commentService.deleteComment(commentRequest);
+    }
+
+    @Override
+    @PutMapping(value = CommentMappings.UPDATE_LIKE_COMMENT_COUNT)
+    public final CommentResponse updateLikeCommentCount(@RequestBody LikeCommentRequest likeCommentRequest) {
+        return commentService.updateLikeCommentCount(likeCommentRequest);
     }
 
 }

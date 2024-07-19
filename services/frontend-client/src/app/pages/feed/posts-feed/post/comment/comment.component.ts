@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { PostAgePipe } from "@core/pipes/post-age.pipe";
 import { MatRipple } from "@angular/material/core";
@@ -12,6 +12,11 @@ import { MatButton } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentService } from "@api/posts-comments/comment.service";
+import { RepliesService } from "@api/posts-comments/replies.service";
+import { ReplyComment } from "@interfaces/posts-comments/reply-comment.interface";
+import { Either } from "@core/types/feed/either.type";
+import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
+import { ReplyKey } from "@interfaces/posts-comments/reply-key.interface";
 
 @Component({
     selector: 'app-comment',
@@ -33,19 +38,22 @@ import { CommentService } from "@api/posts-comments/comment.service";
 export class CommentComponent implements OnInit {
 
     private readonly PAGE_SIZE: number = 3;
-    @Input() comment!: PostComment;
+    @Input() comment!: Either<PostComment, ReplyComment>;
     @Input() replyLevel: number = 3;
-    replyComments !: CassandraPage<PostComment>;
+    replyComments !: CassandraPage<ReplyComment>;
     currentUser !: Profile;
     isMakingReply: boolean = false;
     areRepliesVisible: boolean = false;
+    creationDateTime !: Date;
 
     constructor(private localStorage: LocalStorageService,
+                private repliesService: RepliesService,
                 private commentService: CommentService) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
+        this.creationDateTime = new Date(this.comment.commentKey.creationDateTime);
     }
 
     onLikeComment(): void {
@@ -57,10 +65,17 @@ export class CommentComponent implements OnInit {
     loadReplies(): void {
         this.areRepliesVisible = true;
 
-        this.commentService
-            .getRepliesForComment(this.comment.commentKey.commentId, this.currentUser.profileId, this.PAGE_SIZE, null)
-            .subscribe((replies: CassandraPage<PostComment>) => {
+        this.repliesService
+            .getRepliesForComment(this.getProperCommentId(), this.currentUser.profileId, this.PAGE_SIZE, null)
+            .subscribe((replies: CassandraPage<ReplyComment>) => {
                 this.replyComments = replies;
             });
+    }
+
+    private getProperCommentId(): string {
+        if ((this.comment.commentKey as CommentKey).commentId !== undefined) {
+            return (this.comment.commentKey as CommentKey).commentId;
+        }
+        return (this.comment.commentKey as ReplyKey).replyCommentId;
     }
 }

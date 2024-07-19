@@ -9,7 +9,7 @@ import { MatCard, MatCardActions, MatCardContent, MatCardImage } from "@angular/
 import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
 import { PostHeaderComponent } from "@pages/feed/posts-feed/post/post-header/post-header.component";
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import {

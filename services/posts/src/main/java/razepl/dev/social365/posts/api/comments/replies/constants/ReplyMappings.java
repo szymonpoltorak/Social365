@@ -12,6 +12,8 @@ public final class ReplyMappings {
 
     public static final String DELETE_REPLY = "/delete";
 
+    public static final String UPDATE_LIKE_REPLY_COUNT = "/updateLikeCount";
+
     private ReplyMappings() {
     }
 

@@ -8,6 +8,7 @@ import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
@@ -110,6 +111,26 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteCommentByKey(commentKey);
 
         return CommentResponse.builder().build();
+    }
+
+    @Override
+    public final CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest) {
+        log.info("Updating like count for comment with id: {}", likeCommentRequest.commentKey());
+
+        CommentKey commentKey = commentMapper.toCommentKey(likeCommentRequest.commentKey());
+
+        Comment comment = getCommentFromRepository(commentKey);
+
+        if (comment.isLikedBy(likeCommentRequest.profileId())) {
+            comment.getUserLikedIds().remove(likeCommentRequest.profileId());
+        } else {
+            comment.addUserLikedId(likeCommentRequest.profileId());
+        }
+        Comment savedComment = commentRepository.save(comment);
+
+        log.info("Updated like count for comment with id: {}", savedComment.getCommentId());
+
+        return commentMapper.toCommentResponse(savedComment, likeCommentRequest.profileId());
     }
 
     private Comment getCommentFromRepository(CommentKey key) {

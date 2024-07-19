@@ -16,6 +16,6 @@ public interface CommentMapper {
 
     CommentKey toCommentKey(CommentKeyResponse commentKeyResponse);
 
-    ReplyCommentKey toCommenyReplyKey(ReplyKeyResponse replyKeyResponse);
+    ReplyCommentKey toCommentReplyKey(ReplyKeyResponse replyKeyResponse);
 
 }

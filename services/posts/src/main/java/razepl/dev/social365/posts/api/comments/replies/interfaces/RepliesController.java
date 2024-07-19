@@ -1,6 +1,7 @@
 package razepl.dev.social365.posts.api.comments.replies.interfaces;
 
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.replies.data.LikeReplyRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyDeleteRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
@@ -15,5 +16,7 @@ public interface RepliesController {
     CommentResponse editReplyComment(ReplyEditRequest commentRequest);
 
     CommentResponse deleteReplyComment(ReplyDeleteRequest commentRequest);
+
+    CommentResponse updateLikeCommentCount(LikeReplyRequest likeCommentRequest);
 
 }

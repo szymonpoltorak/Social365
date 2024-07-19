@@ -9,6 +9,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -55,4 +56,14 @@ public class ReplyComment {
         return userLikedIds != null ? userLikedIds.size() : 0;
     }
 
+    public void addUserLikedId(String profileId) {
+        if (userLikedIds == null) {
+            userLikedIds = new HashSet<>();
+        }
+        userLikedIds.add(profileId);
+    }
+
+    public boolean isAuthor(String profileId) {
+        return false;
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.replies.constants.ReplyMappings;
+import razepl.dev.social365.posts.api.comments.replies.data.LikeReplyRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyDeleteRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
@@ -51,6 +52,12 @@ public class RepliesControllerImpl implements RepliesController {
     @PutMapping(value = ReplyMappings.DELETE_REPLY)
     public final CommentResponse deleteReplyComment(@RequestBody ReplyDeleteRequest commentRequest) {
         return repliesService.deleteReplyComment(commentRequest);
+    }
+
+    @Override
+    @PutMapping(value = ReplyMappings.UPDATE_LIKE_REPLY_COUNT)
+    public final CommentResponse updateLikeCommentCount(@RequestBody LikeReplyRequest likeCommentRequest) {
+        return repliesService.updateLikeCommentCount(likeCommentRequest);
     }
 
 }

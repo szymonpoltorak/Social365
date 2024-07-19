@@ -12,7 +12,7 @@ public final class CommentMappings {
 
     public static final String DELETE_COMMENT = "/deleteComment";
 
-    public static final String GET_REPLIES_FOR_COMMENT = "/getRepliesForComment";
+    public static final String UPDATE_LIKE_COMMENT_COUNT = "/updateLikeCommentCount";
 
     private CommentMappings() {
     }
