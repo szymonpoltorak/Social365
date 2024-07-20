@@ -31,7 +31,7 @@ public interface PagingState {
 
     static Optional<PagingState> fromString(String base64String) {
         try {
-            if (base64String == null) {
+            if (base64String == null || base64String.isEmpty()) {
                 return Optional.empty();
             }
             ObjectMapper objectMapper = new ObjectMapper();

@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Added comment with id: {}", savedComment.getCommentId());
 
-        return commentMapper.toCommentResponse(savedComment, commentRequest.profileId());
+        return commentMapper.toCommentResponseNoImage(savedComment, commentRequest.profileId());
     }
 
     @Override
@@ -130,7 +130,7 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Updated like count for comment with id: {}", savedComment.getCommentId());
 
-        return commentMapper.toCommentResponse(savedComment, likeCommentRequest.profileId());
+        return CommentResponse.builder().build();
     }
 
     private Comment getCommentFromRepository(CommentKey key) {

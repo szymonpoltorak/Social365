@@ -50,8 +50,11 @@
             </div>
 
             @if (comment.value.length !== 0 || attachedImage !== null) {
-                <div>
-                    <button mat-button color="primary" type="button">
+                <div class="mb-3">
+                    <button mat-button
+                            (click)="emitCommitCreatedEvent()"
+                            color="primary"
+                            type="button">
                         <mat-icon>send</mat-icon>
                         Comment
                     </button>

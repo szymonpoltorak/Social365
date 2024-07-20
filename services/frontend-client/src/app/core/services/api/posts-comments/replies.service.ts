@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Optional } from "@core/types/profile/optional.type";
-import { Observable } from "rxjs";
+import { Observable, take } from "rxjs";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { RepliesMappings } from "@enums/api/posts-comments/replies-mappings.enum";
@@ -22,23 +22,23 @@ export class RepliesService {
                          pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<ReplyComment>> {
         return this.http.get<CassandraPage<ReplyComment>>(RepliesMappings.GET_REPLIES_FOR_COMMENT, {
             params: this.getCommentParams(profileId, commentId, pageSize, pagingState)
-        });
+        }).pipe(take(1));
     }
 
     addReplyToComment(replyAddRequest: ReplyAddRequest): Observable<ReplyComment> {
-        return this.http.post<ReplyComment>(RepliesMappings.ADD_REPLY_TO_COMMENT, replyAddRequest);
+        return this.http.post<ReplyComment>(RepliesMappings.ADD_REPLY_TO_COMMENT, replyAddRequest).pipe(take(1));
     }
 
     editReplyComment(replyEditRequest: ReplyEditRequest): Observable<ReplyComment> {
-        return this.http.put<ReplyComment>(RepliesMappings.EDIT_REPLY, replyEditRequest);
+        return this.http.put<ReplyComment>(RepliesMappings.EDIT_REPLY, replyEditRequest).pipe(take(1));
     }
 
     deleteReplyComment(replyDeleteRequest: ReplyDeleteRequest): Observable<ReplyComment> {
-        return this.http.post<ReplyComment>(RepliesMappings.DELETE_REPLY, replyDeleteRequest);
+        return this.http.post<ReplyComment>(RepliesMappings.DELETE_REPLY, replyDeleteRequest).pipe(take(1));
     }
 
     updateLikeCommentCount(likeCommentRequest: LikeReplyRequest): Observable<ReplyComment> {
-        return this.http.put<ReplyComment>(RepliesMappings.UPDATE_LIKE_REPLY_COUNT, likeCommentRequest);
+        return this.http.put<ReplyComment>(RepliesMappings.UPDATE_LIKE_REPLY_COUNT, likeCommentRequest).pipe(take(1));
     }
 
     private getCommentParams(profileId: string, commentId: string,

@@ -33,6 +33,8 @@ import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 import { CommentService } from "@api/posts-comments/comment.service";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
+import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
+import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 
 @Component({
     selector: 'app-post',
@@ -103,6 +105,7 @@ export class PostComponent implements OnInit {
         this.commentService
             .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
+                console.log(comments);
                 this.areCommentsVisible = !this.areCommentsVisible;
 
                 this.comments = comments;
@@ -157,6 +160,40 @@ export class PostComponent implements OnInit {
                 this.post.content = event.content;
 
                 this.post.imageUrls = event.newUrls.map((image: AttachImage) => image.fileUrl);
+            });
+    }
+
+    createComment(event: CommentCreateData): void {
+        const request: CommentAddRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.postId,
+            hasAttachment: event.attachedImage !== null,
+            content: event.content
+        };
+        const image: AttachImage = event.attachedImage as AttachImage;
+
+        this.commentService
+            .addCommentToPost(request)
+            .subscribe((comment: PostComment) => {
+                if (request.hasAttachment) {
+                    this.imagesService
+                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .subscribe();
+
+                    comment.imageUrl = image.fileUrl;
+                }
+                this.comments.data.unshift(comment);
+            });
+    }
+
+    loadMoreComments(): void {
+        console.log(this.comments.pagingState);
+
+        this.commentService
+            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.comments.pagingState = comments.pagingState;
+                this.comments.data.push(...comments.data);
             });
     }
 }

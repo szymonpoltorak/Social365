@@ -35,6 +35,7 @@ public class CommentMapperImpl implements CommentMapper {
 
             return null;
         }
+        log.info("Mapping comment to response: {}", comment);
         Profile author = profileService.getProfileDetails(comment.getAuthorId());
 
         String imageUrl = comment.isHasAttachments() ? imageService
@@ -47,6 +48,22 @@ public class CommentMapperImpl implements CommentMapper {
                 .commentLikesCount(comment.getLikesCount())
                 .content(comment.getContent())
                 .imageUrl(imageUrl)
+                .hasReplies(comment.isHasReplies())
+                .author(author)
+                .build();
+    }
+
+    @Override
+    public final CommentResponse toCommentResponseNoImage(Comment comment, String profileId) {
+        Profile author = profileService.getProfileDetails(comment.getAuthorId());
+
+        return CommentResponse
+                .builder()
+                .isLiked(comment.isLikedBy(profileId))
+                .commentKey(toCommentKeyResponse(comment.getKey()))
+                .commentLikesCount(comment.getLikesCount())
+                .content(comment.getContent())
+                .imageUrl("")
                 .hasReplies(comment.isHasReplies())
                 .author(author)
                 .build();

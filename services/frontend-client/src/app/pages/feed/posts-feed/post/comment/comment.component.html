@@ -19,6 +19,10 @@
             </div>
         </div>
 
+        @if (comment.imageUrl !== "") {
+            <app-post-image-viewer [imageUrls]="[comment.imageUrl]"></app-post-image-viewer>
+        }
+
         <div class="flex m-1 gap-3 items-center ml-14">
             <div (click)="onLikeComment()"
                  (keydown.enter)="onLikeComment()"
@@ -45,7 +49,7 @@
 
     @if (isMakingReply) {
         <div [ngClass]="{ 'ml-3': replyLevel - 1 > 0 }">
-            <app-comment-create [user]="currentUser"></app-comment-create>
+            <app-comment-create (commentCreated)="createReplyComment($event)" [user]="currentUser"></app-comment-create>
         </div>
     }
 

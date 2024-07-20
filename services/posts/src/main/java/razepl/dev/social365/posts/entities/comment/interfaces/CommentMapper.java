@@ -12,6 +12,8 @@ public interface CommentMapper {
 
     CommentResponse toCommentResponse(Comment comment, String profileId);
 
+    CommentResponse toCommentResponseNoImage(Comment comment, String profileId);
+
     CommentResponse toCommentResponse(ReplyComment comment, String profileId);
 
     CommentKey toCommentKey(CommentKeyResponse commentKeyResponse);

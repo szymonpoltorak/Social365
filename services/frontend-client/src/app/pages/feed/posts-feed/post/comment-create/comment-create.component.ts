@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -13,6 +13,7 @@ import { DropImageComponent } from "@shared/drop-image/drop-image.component";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Optional } from "@core/types/profile/optional.type";
+import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 
 @Component({
     selector: 'app-comment-create',
@@ -34,6 +35,7 @@ import { Optional } from "@core/types/profile/optional.type";
 })
 export class CommentCreateComponent {
     @Input() user !: Profile;
+    @Output() commentCreated: EventEmitter<CommentCreateData> = new EventEmitter<CommentCreateData>();
     isOpened: boolean = false;
     allowedFileTypes: string[] = [
         'image/jpeg',
@@ -79,5 +81,16 @@ export class CommentCreateComponent {
         this.snackBar.open(`Successfully removed 1 images!`, 'Close', {
             duration: 2000
         });
+    }
+
+    emitCommitCreatedEvent(): void {
+        const data: CommentCreateData = {
+            content: this.contentControl.value || "",
+            attachedImage: this.attachedImage
+        };
+        this.contentControl.reset();
+        this.attachedImage = null;
+
+        this.commentCreated.emit(data);
     }
 }
