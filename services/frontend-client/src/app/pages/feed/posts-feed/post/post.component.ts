@@ -35,6 +35,7 @@ import { CommentService } from "@api/posts-comments/comment.service";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
+import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 
 @Component({
     selector: 'app-post',
@@ -105,7 +106,6 @@ export class PostComponent implements OnInit {
         this.commentService
             .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
-                console.log(comments);
                 this.areCommentsVisible = !this.areCommentsVisible;
 
                 this.comments = comments;
@@ -123,8 +123,6 @@ export class PostComponent implements OnInit {
             .afterClosed()
             .pipe(take(1))
             .subscribe((content: string) => {
-                console.log(content);
-
                 this.sharePostEvent.emit({
                     post: this.post,
                     content: content
@@ -144,7 +142,7 @@ export class PostComponent implements OnInit {
 
         event.deletedImages.forEach((url: string) => {
             this.imagesService
-                .deleteImageByUrl(url)
+                .deletePostImageByUrl(url)
                 .subscribe();
         });
 
@@ -187,13 +185,22 @@ export class PostComponent implements OnInit {
     }
 
     loadMoreComments(): void {
-        console.log(this.comments.pagingState);
-
         this.commentService
             .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.comments.pagingState = comments.pagingState;
+                this.comments.friendsPageNumber = comments.friendsPageNumber;
+                this.comments.hasNextPage = comments.hasNextPage;
                 this.comments.data.push(...comments.data);
+            });
+    }
+
+    deleteComment(event: CommentDeleteRequest): void {
+        this.commentService
+            .deleteComment(event)
+            .subscribe(() => {
+                this.comments.data = this.comments.data
+                    .filter((comment: PostComment) => comment.commentKey.commentId !== event.commentKey.commentId);
             });
     }
 }

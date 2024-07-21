@@ -29,4 +29,7 @@ public interface ReplyCommentRepository extends CassandraRepository<ReplyComment
         return findReplyById(key.getReplyToCommentId(), key.getReplyCommentId(), key.getCreationDateTime());
     }
 
+    @Query("delete from reply_comments where reply_to_comment_id = :commentId")
+    void deleteAllByCommentId(@Param(Params.COMMENT_ID) UUID commentId);
+
 }

@@ -31,4 +31,10 @@ public interface ImagesService {
 
     ImageResponse deleteImageByImageUrl(String imageUrl);
 
+    PostImageResponse deletePostImageByImageUrl(String imageUrl);
+
+    CommentImageResponse deleteCommentImageById(String commentId);
+
+    List<PostImageResponse> deleteImagesByPostId(String postId);
+
 }

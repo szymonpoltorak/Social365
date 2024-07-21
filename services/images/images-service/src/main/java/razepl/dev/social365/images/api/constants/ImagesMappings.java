@@ -24,6 +24,12 @@ public final class ImagesMappings {
 
     public static final String DELETE_IMAGE_BY_URL_MAPPING = "/deleteImageByUrl";
 
+    public static final String DELETE_POST_IMAGE_BY_URL_MAPPING = "/deletePostImageByUrl";
+
+    public static final String DELETE_COMMENT_IMAGE_BY_ID_MAPPING = "/deleteCommentImageById";
+
+    public static final String DELETE_IMAGES_BY_POST_ID_MAPPING = "/deleteImagesByPostId";
+
     private ImagesMappings() {
     }
 }

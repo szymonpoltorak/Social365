@@ -4,7 +4,7 @@ import { CommentMappings } from "@enums/api/posts-comments/comment-mappings.enum
 import { Observable, take } from "rxjs";
 import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
-import { CommentRequest } from "@interfaces/posts-comments/comment-request.interface";
+import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
@@ -29,7 +29,7 @@ export class CommentService {
         return this.http.post<PostComment>(CommentMappings.ADD_COMMENT_TO_POST, commentRequest).pipe(take(1));
     }
 
-    editComment(commentRequest: CommentRequest): Observable<PostComment> {
+    editComment(commentRequest: CommentEditRequest): Observable<PostComment> {
         return this.http.put<PostComment>(CommentMappings.EDIT_COMMENT, commentRequest).pipe(take(1));
     }
 
@@ -47,22 +47,14 @@ export class CommentService {
                           pageSize: number, pagingState: Optional<string>): HttpParams {
         const params: HttpParams = new HttpParams();
 
-        console.log(pagingState);
-
         if (pagingState !== null) {
-            console.log("CHUJ");
-
             params.set('pagingState', pagingState);
         }
-        const param =  params
+        return params
             .set('profileId', profileId)
             .set('pagingState', pagingState || "")
             .set('postId', postId)
             .set('pageSize', pageSize);
-
-        console.log(param);
-
-        return param;
     }
 
 }

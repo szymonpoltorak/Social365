@@ -50,7 +50,7 @@
             </div>
 
             @if (comment.value.length !== 0 || attachedImage !== null) {
-                <div class="mb-3">
+                <div class="flex items-center justify-between mb-3">
                     <button mat-button
                             (click)="emitCommitCreatedEvent()"
                             color="primary"
@@ -58,6 +58,16 @@
                         <mat-icon>send</mat-icon>
                         Comment
                     </button>
+
+                    @if (comment !== undefined) {
+                        <button mat-button
+                                (click)="commentCreated.emit(undefined)"
+                                color="warn"
+                                type="button">
+                            <mat-icon>cancel</mat-icon>
+                            Cancel
+                        </button>
+                    }
                 </div>
             }
         </div>
@@ -67,7 +77,7 @@
         <div class="flex justify-center items-center relative min-w-full h-fit overflow-x-scroll">
             <img alt="Users image"
                  class="w-full h-48"
-                 src="{{ attachedImage.fileUrl }}">
+                 [src]="attachedImage.fileUrl">
 
             <button class="delete-button"
                     (click)="handleRemovesFile()"

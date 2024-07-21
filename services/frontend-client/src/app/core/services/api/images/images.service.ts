@@ -98,6 +98,22 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
+    deleteCommentImage(commentId: string): Observable<void> {
+        return this.http.delete<void>(ImagesMappings.DELETE_COMMENT_IMAGE_BY_ID_MAPPING, {
+            params: {
+                commentId: commentId
+            }
+        }).pipe(take(1));
+    }
+
+    deletePostImageByUrl(imageUrl: string): Observable<void> {
+        return this.http.delete<void>(ImagesMappings.DELETE_POST_IMAGE_BY_URL_MAPPING, {
+            params: {
+                imageUrl: imageUrl
+            }
+        }).pipe(take(1));
+    }
+
     downloadImage(imagePath: string): Observable<any> {
         return this.http.get(imagePath, {
             responseType: 'blob'

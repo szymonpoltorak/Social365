@@ -20,6 +20,12 @@ export enum ImagesMappings {
 
     GET_USER_UPLOADED_IMAGES_MAPPING = IMAGES_MAPPING + "/getUserUploadedImages",
 
-    DELETE_IMAGE_BY_URL_MAPPING = IMAGES_MAPPING + "/deleteImageByUrl"
+    DELETE_IMAGE_BY_URL_MAPPING = IMAGES_MAPPING + "/deleteImageByUrl",
+
+    DELETE_POST_IMAGE_BY_URL_MAPPING = "/deletePostImageByUrl",
+
+    DELETE_COMMENT_IMAGE_BY_ID_MAPPING = "/deleteCommentImageById",
+
+    DELETE_IMAGES_BY_POST_ID_MAPPING = "/deleteImagesByPostId",
 
 }

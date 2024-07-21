@@ -30,4 +30,10 @@ public interface ImagesController {
 
     ImageResponse deleteImageByImageUrl(String imageUrl);
 
+    PostImageResponse deletePostImageByImageUrl(String imageUrl);
+
+    CommentImageResponse deleteCommentImageById(String commentId);
+
+    List<PostImageResponse> deleteImagesByPostId(String postId);
+
 }

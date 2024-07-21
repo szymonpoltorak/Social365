@@ -10,6 +10,7 @@ import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +25,9 @@ public interface CommentRepository extends CassandraRepository<Comment, CommentK
 
     @Query("select * from comments where post_id = :postId ALLOW FILTERING")
     Slice<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId, Pageable pageable);
+
+    @Query("select * from comments where post_id = :postId ALLOW FILTERING")
+    List<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId);
 
     @Query("select * from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :creationDateTime")
     Optional<Comment> findCommentById(@Param(Params.POST_ID) UUID postId,

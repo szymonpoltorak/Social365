@@ -29,7 +29,7 @@ public interface PostRepository extends CassandraRepository<Post, PostKey> {
             """)
     Slice<Post> findAllByAuthorId(@Param(Params.AUTHOR_ID) String authorId, Pageable pageable);
 
-    @Query("select count(*) from posts where author_id = :profileId")
+    @Query("select count(*) from posts where author_id = :profileId ALLOW FILTERING")
     int countAllByAuthorId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("select * from posts where post_id = :postId and creation_date_time = :creationDateTime ALLOW FILTERING")

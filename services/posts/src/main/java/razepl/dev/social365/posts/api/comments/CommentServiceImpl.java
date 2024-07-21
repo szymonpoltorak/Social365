@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
+import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
@@ -34,9 +36,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final CommentValidator commentValidator;
+    private final ReplyCommentRepository replyCommentRepository;
+    private final ImageService imageService;
 
     @Override
-    public final CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
+    public CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageInfo);
 
         Slice<Comment> comments = commentRepository.findAllByPostId(UUID.fromString(postId), pageInfo.toPageable());
@@ -47,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse addCommentToPost(CommentAddRequest commentRequest) {
+    public CommentResponse addCommentToPost(CommentAddRequest commentRequest) {
         log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.postId(),
                 commentRequest.profileId());
 
@@ -74,9 +78,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse editComment(CommentEditRequest commentEditRequest) {
-        log.info("Editing comment with id: {}, with content: {}", commentEditRequest.commentKey(),
-                commentEditRequest.content());
+    public CommentResponse editComment(CommentEditRequest commentEditRequest) {
+        log.info("Editing comment with data: {}", commentEditRequest);
 
         commentValidator.validateCommentRequest(commentEditRequest);
 
@@ -88,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
         }
         comment.setContent(commentEditRequest.content());
 
-        log.info("Saving edited comment with id: {}", comment.getCommentId());
+        log.info("Saving edited comment: {}", comment);
 
         Comment savedComment = commentRepository.save(comment);
 
@@ -96,7 +99,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse deleteComment(CommentDeleteRequest commentRequest) {
+    @Transactional
+    public CommentResponse deleteComment(CommentDeleteRequest commentRequest) {
         log.info("Deleting comment with id: {}", commentRequest.commentKey());
 
         CommentKey commentKey = commentMapper.toCommentKey(commentRequest.commentKey());
@@ -106,6 +110,12 @@ public class CommentServiceImpl implements CommentService {
         if (!comment.isAuthor(profileId)) {
             throw new UserIsNotAuthorException(profileId);
         }
+        log.info("Deleting replies for comment with id: {}", comment.getCommentId());
+
+        replyCommentRepository.deleteAllByCommentId(comment.getCommentId());
+
+        imageService.deleteCommentImageById(comment.getCommentId().toString());
+
         log.info("Deleting comment...");
 
         commentRepository.deleteCommentByKey(commentKey);
@@ -114,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public final CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest) {
+    public CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest) {
         log.info("Updating like count for comment with id: {}", likeCommentRequest.commentKey());
 
         CommentKey commentKey = commentMapper.toCommentKey(likeCommentRequest.commentKey());

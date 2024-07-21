@@ -101,4 +101,22 @@ public class ImagesControllerImpl implements ImagesController {
     public final ImageResponse deleteImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl) {
         return imagesService.deleteImageByImageUrl(imageUrl);
     }
+
+    @Override
+    @DeleteMapping(value = ImagesMappings.DELETE_POST_IMAGE_BY_URL_MAPPING)
+    public final PostImageResponse deletePostImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl) {
+        return imagesService.deletePostImageByImageUrl(imageUrl);
+    }
+
+    @Override
+    @DeleteMapping(value = ImagesMappings.DELETE_COMMENT_IMAGE_BY_ID_MAPPING)
+    public final CommentImageResponse deleteCommentImageById(@RequestParam(Params.COMMENT_ID) String commentId) {
+        return imagesService.deleteCommentImageById(commentId);
+    }
+
+    @Override
+    @DeleteMapping(value = ImagesMappings.DELETE_IMAGES_BY_POST_ID_MAPPING)
+    public final List<PostImageResponse> deleteImagesByPostId(@RequestParam(Params.POST_ID) String postId) {
+        return imagesService.deleteImagesByPostId(postId);
+    }
 }

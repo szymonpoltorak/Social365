@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
@@ -21,6 +22,8 @@ import razepl.dev.social365.images.entities.image.post.interfaces.PostImagesRepo
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -28,8 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImagesServiceImpl implements ImagesService {
 
-    private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
-    private static final String IMAGE_NOT_FOUND = "Image not found";
+    private static String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
+    private static String IMAGE_NOT_FOUND = "Image not found";
     private final ImagesRepository imagesRepository;
     private final FileManagementService fileManagementService;
     private final ImagesMapper imagesMapper;
@@ -37,10 +40,11 @@ public class ImagesServiceImpl implements ImagesService {
     private final CommentImageRepository commentImageRepository;
 
     @Override
-    public final ImageResponse uploadImage(String username, MultipartFile image) {
+    public ImageResponse uploadImage(String username, MultipartFile image) {
         log.info("Uploading image for user: {}", username);
 
-        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, image.getOriginalFilename()).toString();
+        String newFilename = String.format("%s_%s", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), image.getOriginalFilename());
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, newFilename).toString();
 
         Image imageEntity = Image
                 .builder()
@@ -57,7 +61,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
+    public Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
         log.info("Getting user uploaded images for user: {}", username);
 
         Page<PostImage> postImages = postImagesRepository.findPostImagesByUsername(username, pageable);
@@ -68,10 +72,11 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image) {
+    public CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image) {
         log.info("Uploading comment image for user: {}", username);
 
-        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, image.getOriginalFilename()).toString();
+        String newFilename = String.format("%s_%s", commentId, image.getOriginalFilename());
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, newFilename).toString();
 
         CommentImage imageEntity = CommentImage
                 .builder()
@@ -90,10 +95,11 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final PostImageResponse uploadPostImage(String postId, String username, MultipartFile image) {
+    public PostImageResponse uploadPostImage(String postId, String username, MultipartFile image) {
         log.info("Uploading post image for user: {}", username);
 
-        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, image.getOriginalFilename()).toString();
+        String newFilename = String.format("%s_%s", postId, image.getOriginalFilename());
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, newFilename).toString();
 
         PostImage imageEntity = PostImage
                 .builder()
@@ -112,7 +118,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final CommentImageResponse getCommentImage(String commentId) {
+    public CommentImageResponse getCommentImage(String commentId) {
         log.info("Getting comment image for commentId: {}", commentId);
 
         CommentImage commentImage = commentImageRepository.findCommentImageByCommentId(commentId)
@@ -124,7 +130,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final List<PostImageResponse> getPostImages(String postId) {
+    public List<PostImageResponse> getPostImages(String postId) {
         log.info("Getting post images for postId: {}", postId);
 
         List<PostImage> postImages = postImagesRepository.findPostImagesByPostId(postId);
@@ -138,7 +144,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final ImageResponse getImagePath(long imageId) {
+    public ImageResponse getImagePath(long imageId) {
         log.info("Getting image path for imageId: {}", imageId);
 
         Image image = getImageFromRepository(imageId);
@@ -147,7 +153,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final ImageResponse updateImage(long imageId, MultipartFile image) {
+    public ImageResponse updateImage(long imageId, MultipartFile image) {
         log.info("Updating image with imageId: {}", imageId);
 
         Image imageEntity = getImageFromRepository(imageId);
@@ -165,7 +171,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final ImageResponse deleteImage(long imageId) {
+    public ImageResponse deleteImage(long imageId) {
         log.info("Deleting image with imageId: {}", imageId);
 
         Image image = getImageFromRepository(imageId);
@@ -178,7 +184,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final ImageResponse deleteImageByImageUrl(String imageUrl) {
+    public ImageResponse deleteImageByImageUrl(String imageUrl) {
         log.info("Deleting image with imageUrl: {}", imageUrl);
 
         Image image = imagesRepository.findImageByImagePath(imageUrl)
@@ -190,7 +196,68 @@ public class ImagesServiceImpl implements ImagesService {
 
         fileManagementService.deleteFile(image.getImagePath());
 
+        log.info("Image deleted");
+
         return imagesMapper.toImageResponse(image);
+    }
+
+    @Override
+    public PostImageResponse deletePostImageByImageUrl(String imageUrl) {
+        log.info("Deleting post image with imageUrl: {}", imageUrl);
+
+        PostImage postImage = postImagesRepository.findPostImageByImagePath(imageUrl)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Post image found by url: {}", postImage);
+
+        postImagesRepository.delete(postImage);
+
+        fileManagementService.deleteFile(postImage.getImagePath());
+
+        log.info("Post image deleted");
+
+        return imagesMapper.toPostImageResponse(postImage);
+    }
+
+    @Override
+    public CommentImageResponse deleteCommentImageById(String commentId) {
+        log.info("Deleting comment image with commentId: {}", commentId);
+
+        CommentImage commentImage = commentImageRepository.findCommentImageByCommentId(commentId)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Comment image found: {}", commentImage);
+
+        commentImageRepository.delete(commentImage);
+
+        fileManagementService.deleteFile(commentImage.getImagePath());
+
+        log.info("Comment image deleted");
+
+        return imagesMapper.toCommentResponse(commentImage);
+    }
+
+    @Override
+    @Transactional
+    public List<PostImageResponse> deleteImagesByPostId(String postId) {
+        log.info("Deleting post images with postId: {}", postId);
+
+        List<PostImage> postImages = postImagesRepository.findPostImagesByPostId(postId);
+
+        log.info("Deleting images from database...");
+
+        postImagesRepository.deleteAllByPostId(postId);
+
+        log.info("Deleting images from filesystem...");
+
+        postImages.forEach(postImage -> fileManagementService.deleteFile(postImage.getImagePath()));
+
+        log.info("Post images deleted");
+
+        return postImages
+                .stream()
+                .map(imagesMapper::toPostImageResponse)
+                .toList();
     }
 
     private void saveFile(String imagePath, MultipartFile image) {

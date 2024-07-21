@@ -105,7 +105,7 @@ export class PostService {
         const params: HttpParams = new HttpParams();
 
         if (pagingState !== null) {
-            params.set('pagingState', pagingState as string);
+            params.set('pagingState', pagingState || "");
         }
         return params
             .set('profileId', profileId)

@@ -42,8 +42,6 @@ export class ProfilePhotosComponent implements OnInit {
         this.imagesService
             .getUserUploadedImages(this.currentUsername, this.FIRST_PAGE, this.PAGE_SIZE)
             .subscribe((images: Page<PostImage>) => {
-                console.log(images);
-
                 this.photos = images;
 
                 window.scrollTo(0, 0);

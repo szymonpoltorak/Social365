@@ -20,7 +20,7 @@ public record CommentsCassandraPage<T>(List<T> data, int pageSize, boolean hasNe
         CassandraPageRequest nextPageable = (CassandraPageRequest) getNextPageable(comments);
         PagingState pagingState = PagingState.newInstance(nextPageable.getPagingState());
 
-        return new CommentsCassandraPage<>(data, nextPageable.getPageSize(), nextPageable.hasNext(), PagingState.encode(pagingState));
+        return new CommentsCassandraPage<>(data, nextPageable.getPageSize(), comments.hasNext(), PagingState.encode(pagingState));
     }
 
     private static  <T> Pageable getNextPageable(Slice<T> data) {

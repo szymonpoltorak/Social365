@@ -10,6 +10,7 @@ import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyDeleteRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesService;
+import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
@@ -31,6 +32,7 @@ public class RepliesServiceImpl implements RepliesService {
 
     private final ReplyCommentRepository replyCommentRepository;
     private final CommentMapper commentMapper;
+    private final ImageService imageService;
 
     @Override
     public final CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
@@ -98,7 +100,13 @@ public class RepliesServiceImpl implements RepliesService {
         if (!replyComment.isAuthor(commentRequest.profileId())) {
             throw new UserIsNotAuthorException(commentRequest.profileId());
         }
+        log.info("Deleting reply : {}", replyComment);
+
         replyCommentRepository.delete(replyComment);
+
+        log.info("Deleting image for comment...");
+
+        imageService.deleteCommentImageById(replyComment.getKey().getReplyCommentId().toString());
 
         log.info("Deleted reply : {}", replyComment);
 
