@@ -50,7 +50,8 @@ export class ProfileFeedComponent implements OnInit {
                     username: this.profile.username,
                     subtitle: this.profile.subtitle,
                     bio: this.profile.bio,
-                    profilePictureUrl: this.profile.profilePictureUrl
+                    profilePictureUrl: this.profile.profilePictureUrl,
+                    profileBannerUrl: this.profile.profileBannerUrl || ""
                 });
             });
     }

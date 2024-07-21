@@ -8,13 +8,15 @@ import { MatIcon } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TabOption } from "@interfaces/profile/tab-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
-import { MatButton, MatMiniFabButton } from "@angular/material/button";
+import { MatButton, MatIconButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
 
 @Component({
     selector: 'app-profile',
@@ -30,7 +32,8 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
         RouterLink,
         MatButton,
         MatMiniFabButton,
-        MatProgressSpinner
+        MatProgressSpinner,
+        MatIconButton
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'
@@ -44,6 +47,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         { label: 'Friends', icon: 'people', route: RouterPaths.FRIENDS_PATH },
         { label: 'Photos', icon: 'image', route: RouterPaths.PROFILE_PHOTOS }
     ];
+    protected allowedFileTypes: string[] = [
+        'image/jpeg',
+        'image/png',
+    ];
     protected activeRoute: TabOption = this.options[0];
     protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
@@ -52,6 +59,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
                 private profileService: ProfileService,
+                private snackBar: MatSnackBar,
                 private activatedRoute: ActivatedRoute) {
     }
 
@@ -68,6 +76,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     .getBasicProfileInfoByUsername(this.username)
                     .subscribe((profile: Profile) => {
                         this.profileInfo = profile;
+
+                        //TODO: add banner url to get from backend
+                        this.profileInfo.profileBannerUrl = "";
                     });
             })
 
@@ -84,5 +95,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routerDestroy$.complete();
         this.activateRouteDestroy$.complete();
+    }
+
+    handleChange(event: any) {
+        const file: File = event.target.files[0] as File;
+
+        if (this.allowedFileTypes.indexOf(file.type) === -1) {
+            this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close', {
+                duration: 2000,
+            });
+
+            return;
+        }
+        const banner: AttachImage = {
+            fileUrl: URL.createObjectURL(file),
+            file: file,
+        };
+
+        console.log(banner);
+
+        this.snackBar.open(`Successfully attached 1 images!`, 'Close', {
+            duration: 2000
+        });
     }
 }

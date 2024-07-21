@@ -5,4 +5,5 @@ export interface Profile {
     subtitle: string;
     bio: string;
     profilePictureUrl: string;
+    profileBannerUrl: string;
 }
