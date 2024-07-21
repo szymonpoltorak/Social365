@@ -26,6 +26,7 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
 import { PostCreateHeaderComponent } from "@pages/feed/posts-feed/post-create-header/post-create-header.component";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 
 @Component({
@@ -55,7 +56,8 @@ import { PostCreateHeaderComponent } from "@pages/feed/posts-feed/post-create-he
         MatSuffix,
         DropImageComponent,
         FormsModule,
-        PostCreateHeaderComponent
+        PostCreateHeaderComponent,
+        MatProgressSpinner
     ],
     templateUrl: './posts-feed.component.html',
     styleUrl: './posts-feed.component.scss'

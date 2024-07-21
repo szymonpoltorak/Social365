@@ -2,12 +2,19 @@
     <mat-card-title>Details</mat-card-title>
 
     @for (option of options; track option) {
-        @if (option.type === AboutOptionType.RELATIONSHIP_STATUS) {
+        @if (option === undefined || option.data === undefined) {
+            <div class="w-full flex items-center justify-center h-96">
+                <mat-spinner></mat-spinner>
+            </div>
+
+        } @else if (option.type === AboutOptionType.RELATIONSHIP_STATUS) {
             <app-about-select-option [option]="option"
                                      [selectEnum]="Relationship">
             </app-about-select-option>
+
         } @else if (option.type === AboutOptionType.WORKPLACE) {
             <app-about-workplace [option]="option"></app-about-workplace>
+
         } @else {
             <app-about-typical-option [option]="option"></app-about-typical-option>
         }

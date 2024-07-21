@@ -46,7 +46,7 @@ import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 })
 export class SharedPostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>) => value as SharedPost })
-    protected post !: SharedPost;
+    post !: SharedPost;
     protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
     protected currentUser !: Profile;

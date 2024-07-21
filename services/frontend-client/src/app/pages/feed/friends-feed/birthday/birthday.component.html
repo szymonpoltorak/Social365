@@ -1,4 +1,9 @@
-@if (birthdayInfos.content.length !== 0) {
+@if (birthdayInfos === undefined) {
+    <div class="flex w-full items-center justify-center">
+        <mat-spinner></mat-spinner>
+    </div>
+
+} @else if (birthdayInfos.content.length !== 0) {
     <div>
         <h1 class="text-xl mb-2">Birthdays</h1>
 

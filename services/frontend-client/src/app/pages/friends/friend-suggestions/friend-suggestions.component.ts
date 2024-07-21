@@ -5,12 +5,14 @@ import { Page } from "@interfaces/utils/page.interface";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { FriendsService } from "@api/profile/friends.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-friend-suggestions',
     standalone: true,
     imports: [
-        FriendRequestComponent
+        FriendRequestComponent,
+        MatProgressSpinner
     ],
     templateUrl: './friend-suggestions.component.html',
     styleUrl: './friend-suggestions.component.scss'

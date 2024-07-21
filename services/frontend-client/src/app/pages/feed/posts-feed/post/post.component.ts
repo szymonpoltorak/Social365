@@ -36,6 +36,7 @@ import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
+import { MatProgressBar } from "@angular/material/progress-bar";
 
 @Component({
     selector: 'app-post',
@@ -61,7 +62,8 @@ import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-
         MatHint,
         CommentCreateComponent,
         NgOptimizedImage,
-        PostImageViewerComponent
+        PostImageViewerComponent,
+        MatProgressBar
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
@@ -71,9 +73,9 @@ export class PostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post }) post !: Post;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
+    private readonly PAGE_SIZE: number = 5;
     protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
-    private readonly PAGE_SIZE: number = 5;
     protected currentUser !: Profile;
 
     constructor(private localStorage: LocalStorageService,

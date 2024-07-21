@@ -12,13 +12,15 @@ import { RoutingService } from "@services/profile/routing.service";
 import { Locations } from "@interfaces/profile/about/locations.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-about-locations',
     standalone: true,
     imports: [
         MatCardTitle,
-        AboutTypicalOptionComponent
+        AboutTypicalOptionComponent,
+        MatProgressSpinner
     ],
     templateUrl: './about-locations.component.html',
     styleUrl: './about-locations.component.scss'

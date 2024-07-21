@@ -15,6 +15,7 @@ import { LocalStorageService } from '@core/services/utils/local-storage.service'
 import { Profile } from "@interfaces/feed/profile.interface";
 import { debounceTime, distinctUntilChanged, startWith, tap } from "rxjs";
 import { Optional } from "@core/types/profile/optional.type";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-profile-friends',
@@ -34,6 +35,7 @@ import { Optional } from "@core/types/profile/optional.type";
         ReactiveFormsModule,
         FriendProfileComponent,
         RouterLink,
+        MatProgressSpinner,
     ],
     templateUrl: './profile-friends.component.html',
     styleUrl: './profile-friends.component.scss'

@@ -17,6 +17,7 @@ import { RoutingService } from "@services/profile/routing.service";
 import { WorkEducation } from "@interfaces/profile/about/work-education.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-about-work-education',
@@ -34,7 +35,8 @@ import { AboutOptionData } from "@interfaces/profile/about/about-option-data.int
         MatOption,
         MatSelect,
         ReactiveFormsModule,
-        AboutTypicalOptionComponent
+        AboutTypicalOptionComponent,
+        MatProgressSpinner
     ],
     templateUrl: './about-work-education.component.html',
     styleUrl: './about-work-education.component.scss'

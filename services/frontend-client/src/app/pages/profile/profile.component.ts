@@ -14,6 +14,7 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { filter, Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-profile',
@@ -28,7 +29,8 @@ import { ProfileService } from "@api/profile/profile.service";
         RouterOutlet,
         RouterLink,
         MatButton,
-        MatMiniFabButton
+        MatMiniFabButton,
+        MatProgressSpinner
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'

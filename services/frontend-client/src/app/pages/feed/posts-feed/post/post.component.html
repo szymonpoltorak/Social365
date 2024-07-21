@@ -62,7 +62,10 @@
         </button>
     </mat-card-actions>
 
-    @if (areCommentsVisible) {
+    @if (areCommentsVisible && comments === undefined) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+    } @else if (areCommentsVisible) {
         <app-comment-create (commentCreated)="createComment($event)" [user]="currentUser"></app-comment-create>
 
         @for (comment of comments.data; track comment) {

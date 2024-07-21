@@ -7,18 +7,25 @@
         <div class="flex items-center sm:gap-3 max-sm:gap-1 justify-evenly">
             <div class="flex items-center gap-5">
                 <div class="h-16 sm:w-36 max-sm:w-32 relative">
-                    <img alt="Profile Picture"
-                         class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card" src="{{ profileInfo.profilePictureUrl }}">
+                    @if (profileInfo === undefined) {
+                        <mat-spinner></mat-spinner>
+                    } @else {
+                        <img alt="Profile Picture"
+                             class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card"
+                             [src]="profileInfo.profilePictureUrl">
+                    }
                 </div>
 
-                <div>
-                    <mat-card-title>{{ profileInfo.fullName }}</mat-card-title>
+                @if (profileInfo !== undefined) {
+                    <div>
+                        <mat-card-title>{{ profileInfo.fullName }}</mat-card-title>
 
-                    <mat-card-subtitle>{{ profileInfo.username }}</mat-card-subtitle>
-                </div>
+                        <mat-card-subtitle>{{ profileInfo.username }}</mat-card-subtitle>
+                    </div>
+                }
             </div>
 
-            @if (currentUser.username !== profileInfo.username) {
+            @if (profileInfo !== undefined && currentUser.username !== profileInfo.username) {
                 <div class="flex gap-3">
                     <button mat-raised-button>
                         <mat-icon>persons_tick</mat-icon>
@@ -30,7 +37,7 @@
                         Message
                     </button>
                 </div>
-            } @else {
+            } @else if (profileInfo !== undefined) {
                 <div class="max-sm:hidden">
                     <!--         TODO: add editing profiles background, profile photo           -->
                     <button mat-raised-button color="primary">

@@ -7,6 +7,7 @@ import { ImagesService } from "@api/images/images.service";
 import { RoutingService } from "@services/profile/routing.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { Page } from "@interfaces/utils/page.interface";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-profile-photos',
@@ -20,7 +21,8 @@ import { Page } from "@interfaces/utils/page.interface";
         MatIcon,
         MatMenu,
         MatMenuTrigger,
-        MatMenuItem
+        MatMenuItem,
+        MatProgressSpinner
     ],
     templateUrl: './profile-photos.component.html',
     styleUrl: './profile-photos.component.scss'

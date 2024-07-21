@@ -22,6 +22,7 @@ import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
 import { ContactInfo } from "@interfaces/profile/about/contact-info.interface";
 import { AboutEnumMapperService } from "@api/profile/about/about-enum-mapper.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-about-contact',
@@ -41,7 +42,8 @@ import { AboutEnumMapperService } from "@api/profile/about/about-enum-mapper.ser
         MatSelect,
         ReactiveFormsModule,
         AboutSelectOptionComponent,
-        AboutDateOptionComponent
+        AboutDateOptionComponent,
+        MatProgressSpinner
     ],
     templateUrl: './about-contact.component.html',
     styleUrl: './about-contact.component.scss'

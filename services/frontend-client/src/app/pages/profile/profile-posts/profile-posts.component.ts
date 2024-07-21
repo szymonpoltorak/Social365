@@ -20,6 +20,7 @@ import { Page } from "@interfaces/utils/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { RoutingService } from '@core/services/profile/routing.service';
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-profile-posts',
@@ -38,7 +39,8 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
         ReactiveFormsModule,
         MatButton,
         NgIf,
-        AsyncPipe
+        AsyncPipe,
+        MatProgressSpinner
     ],
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'

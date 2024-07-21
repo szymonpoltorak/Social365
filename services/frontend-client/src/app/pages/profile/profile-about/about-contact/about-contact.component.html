@@ -1,14 +1,41 @@
 <div class="flex flex-col gap-2">
     <mat-card-title>Contact info</mat-card-title>
 
-    <app-about-typical-option [option]="mobileOption"></app-about-typical-option>
+    @if (mobileOption === undefined || mobileOption.data === undefined) {
+        <div class="w-full flex items-center justify-center h-96">
+            <mat-spinner></mat-spinner>
+        </div>
 
-    <app-about-typical-option [option]="mailOption"></app-about-typical-option>
+    } @else {
+        <app-about-typical-option [option]="mobileOption"></app-about-typical-option>
+    }
+
+    @if (mailOption === undefined || mailOption.data === undefined) {
+        <div class="w-full flex items-center justify-center h-96">
+            <mat-spinner></mat-spinner>
+        </div>
+
+    } @else {
+        <app-about-typical-option [option]="mailOption"></app-about-typical-option>
+    }
 
     <mat-card-title>Basic info</mat-card-title>
 
-    <app-about-select-option [option]="genderOption"
-                             [selectEnum]="Gender"></app-about-select-option>
+    @if (genderOption === undefined || genderOption.data === undefined) {
+        <div class="w-full flex items-center justify-center h-96">
+            <mat-spinner></mat-spinner>
+        </div>
 
-    <app-about-date-option [option]="birthdateOption"></app-about-date-option>
+    } @else {
+        <app-about-select-option [option]="genderOption"
+                                 [selectEnum]="Gender"></app-about-select-option>
+    }
+    @if (birthdateOption === undefined || birthdateOption.data === undefined) {
+        <div class="w-full flex items-center justify-center h-96">
+            <mat-spinner></mat-spinner>
+        </div>
+
+    } @else {
+        <app-about-date-option [option]="birthdateOption"></app-about-date-option>
+    }
 </div>
