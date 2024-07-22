@@ -24,7 +24,7 @@ public interface ImagesController {
 
     ImageResponse getImagePath(long imageId);
 
-    ImageResponse updateImage(long imageId, MultipartFile image);
+    ImageResponse updateImage(String imageUrl, MultipartFile image);
 
     ImageResponse deleteImage(long imageId);
 

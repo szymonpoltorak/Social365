@@ -3,7 +3,6 @@ package razepl.dev.social365.profile.api.profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,27 +31,28 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING)
-    public final Page<BirthdayInfoResponse> getTodayBirthdays(@Param(Params.PROFILE_ID) String profileId,
-                                                              @Param(Params.PAGE_NUMBER) int pageNumber) {
+    public final Page<BirthdayInfoResponse> getTodayBirthdays(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                              @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
         return profileService.getTodayBirthdays(profileId, pageNumber);
     }
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING)
-    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(@Param(Params.PATTERN) String pattern,
-                                                                        @Param(Params.PAGE_NUMBER) int pageNumber,
-                                                                        @Param(Params.PAGE_SIZE) int pageSize) {
+    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(@RequestParam(Params.PATTERN) String pattern,
+                                                                        @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                        @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return profileService.getProfilesSearchByPattern(pattern, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING)
-    public final Page<ProfileQueryResponse> getProfilesByPattern(@Param(Params.PATTERN) String pattern,
-                                                                 @Param(Params.PAGE_NUMBER) int pageNumber,
-                                                                 @Param(Params.PAGE_SIZE) int pageSize) {
+    public final Page<ProfileQueryResponse> getProfilesByPattern(@RequestParam(Params.PATTERN) String pattern,
+                                                                 @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                 @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return profileService.getProfilesByPattern(pattern, PageRequest.of(pageNumber, pageSize));
     }
 
+    //TODO: add one parameter and add two return type isFriend and isFollowed
     @Override
     @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING)
     public final ProfileResponse getBasicProfileInfoByUsername(@RequestParam(Params.USERNAME) String username) {

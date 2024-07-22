@@ -3,4 +3,5 @@ export interface ProfileSearch {
     fullName: string;
     profilePictureUrl: string;
     subtitle: string;
+    username: string;
 }

@@ -9,6 +9,7 @@ import { Page } from "@interfaces/utils/page.interface";
 import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
+import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -62,10 +63,11 @@ export class ProfileService {
         }).pipe(take(1));
     }
 
-    getBasicProfileInfoByUsername(username: string): Observable<Profile> {
-        return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING, {
+    getBasicProfileInfoByUsername(username: string, currentUserId: string): Observable<ProfileBasicInfo> {
+        return this.http.get<ProfileBasicInfo>(ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING, {
             params: {
-                username: username
+                username: username,
+                currentUserId: currentUserId
             }
         }).pipe(take(1));
     }

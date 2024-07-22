@@ -153,19 +153,24 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public ImageResponse updateImage(long imageId, MultipartFile image) {
-        log.info("Updating image with imageId: {}", imageId);
+    public ImageResponse updateImage(String imageUrl, MultipartFile image) {
+        log.info("Updating image with imagePath: {}", imageUrl);
 
-        Image imageEntity = getImageFromRepository(imageId);
-        String imagePath = imageEntity.getImagePath();
+        Image imageEntity = imagesRepository.findImageByImagePath(imageUrl)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
 
-        log.info("Deleting old image: {}", imagePath);
+        log.info("Found image: {}", imageEntity);
 
-        fileManagementService.deleteFile(imagePath);
+        log.info("Deleting old image: {}", imageUrl);
 
-        log.info("Saving new image: {}", imagePath);
+        fileManagementService.deleteFile(imageUrl);
 
-        saveFile(imagePath, image);
+        String newFilePath = String
+                .format("%s_%s", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), image.getOriginalFilename());
+
+        log.info("Saving new image: {}", newFilePath);
+
+        saveFile(newFilePath, image);
 
         return imagesMapper.toImageResponse(imageEntity);
     }

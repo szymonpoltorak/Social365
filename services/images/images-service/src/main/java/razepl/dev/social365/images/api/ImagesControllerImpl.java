@@ -85,9 +85,9 @@ public class ImagesControllerImpl implements ImagesController {
 
     @Override
     @PutMapping(value = ImagesMappings.UPDATE_IMAGE_MAPPING)
-    public final ImageResponse updateImage(@RequestParam(Params.IMAGE_ID) long imageId,
+    public final ImageResponse updateImage(@RequestParam(Params.IMAGE_URL) String imageUrl,
                                            @RequestBody MultipartFile image) {
-        return imagesService.updateImage(imageId, image);
+        return imagesService.updateImage(imageUrl, image);
     }
 
     @Override

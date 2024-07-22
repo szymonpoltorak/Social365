@@ -1,28 +1,45 @@
 <app-toolbar></app-toolbar>
 
-<div class="mt-24 flex justify-center min-h-96">
+<article class="mt-24 flex justify-center min-h-96">
     <mat-card class="p-3 w-[50rem] mb-5">
         <mat-card-title>People</mat-card-title>
 
-        @for (profile of profiles.content; track profile) {
-            <div class="flex justify-between items-center mt-3">
-                <div class="flex items-center gap-3">
-                    <img class="user-photo" [src]="profile.profilePictureUrl" alt="profile picture">
-
-                    <div class="flex flex-col gap-1.5">
-                        <div>{{ profile.fullName }}</div>
-
-                        <div class="text-xs">{{ profile.subtitle }}</div>
-                    </div>
-                </div>
-
-                <button mat-button
-                        aria-label="Add friend"
-                        (click)="addFriend(profile.profileId)"
-                        color="primary">
-                    Add friend
-                </button>
+        @if (profiles === undefined) {
+            <div class="w-full min-h-96 flex justify-center items-center">
+                <mat-spinner></mat-spinner>
             </div>
+        } @else {
+            @for (profile of profiles.content; track profile) {
+                <section class="flex justify-between items-center mt-3">
+                    <div class="flex items-center gap-3">
+
+                        <img class="user-photo"
+                             [src]="profile.profilePictureUrl"
+                             (click)="routingService.navigateToProfileRoute(profile)"
+                             (keydown.enter)="routingService.navigateToProfileRoute(profile);"
+                             tabindex="0"
+                             alt="profile picture">
+
+                        <div class="flex flex-col gap-1.5">
+                            <div (click)="routingService.navigateToProfileRoute(profile);"
+                                 (keydown.enter)="routingService.navigateToProfileRoute(profile);"
+                                 tabindex="0"
+                                 class="hover:cursor-pointer hover:underline">
+                                {{ profile.fullName }}
+                            </div>
+
+                            <div class="text-xs">{{ profile.subtitle }}</div>
+                        </div>
+                    </div>
+
+                    <button mat-button
+                            aria-label="Add friend"
+                            (click)="addFriend(profile.profileId)"
+                            color="primary">
+                        Add friend
+                    </button>
+                </section>
+            }
         }
     </mat-card>
-</div>
+</article>

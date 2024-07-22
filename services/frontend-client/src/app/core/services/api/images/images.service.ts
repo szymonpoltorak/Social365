@@ -65,10 +65,10 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    updateImage(imageId: number, image: AttachImage): Observable<void> {
-        return this.http.put<void>(ImagesMappings.UPDATE_IMAGE_MAPPING, this.toFormData(image), {
+    updateImage(imageUrl: string, image: AttachImage): Observable<Image> {
+        return this.http.put<Image>(ImagesMappings.UPDATE_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                imageId: imageId
+                imageUrl: imageUrl
             }
         }).pipe(take(1));
     }

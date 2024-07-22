@@ -21,6 +21,7 @@ import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface"
 import { RoutingService } from '@core/services/profile/routing.service';
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
 
 @Component({
     selector: 'app-profile-posts',
@@ -46,7 +47,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
     styleUrl: './profile-posts.component.scss'
 })
 export class ProfilePostsComponent implements OnInit {
-    protected presentedProfile !: Profile;
+    protected presentedProfile !: ProfileBasicInfo;
     protected isEditing: boolean = false;
     protected bioControl !: FormControl<string | null>;
     protected readonly RouterPaths = RouterPaths;
@@ -119,8 +120,8 @@ export class ProfilePostsComponent implements OnInit {
 
     private fetchFriendsAndProfileInfo(username: string): void {
         this.profileService
-            .getBasicProfileInfoByUsername(username)
-            .subscribe((profile: Profile) => {
+            .getBasicProfileInfoByUsername(username, this.currentUser.profileId)
+            .subscribe((profile: ProfileBasicInfo) => {
                 this.presentedProfile = profile;
 
                 this.bioControl = new FormControl(this.presentedProfile.bio);

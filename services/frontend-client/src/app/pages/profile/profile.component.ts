@@ -20,6 +20,8 @@ import { FileService } from "@services/utils/file.service";
 import { Optional } from "@core/types/profile/optional.type";
 import { ImagesService } from "@api/images/images.service";
 import { Image } from "@interfaces/images/image.interface";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
 
 @Component({
     selector: 'app-profile',
@@ -36,14 +38,17 @@ import { Image } from "@interfaces/images/image.interface";
         MatButton,
         MatMiniFabButton,
         MatProgressSpinner,
-        MatIconButton
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo !: Profile;
+    protected profileInfo !: ProfileBasicInfo;
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
         { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
@@ -73,12 +78,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.username = params.get("username") as string;
 
                 this.profileService
-                    .getBasicProfileInfoByUsername(this.username)
-                    .subscribe((profile: Profile) => {
+                    .getBasicProfileInfoByUsername(this.username, this.currentUser.profileId)
+                    .subscribe((profile: ProfileBasicInfo) => {
                         this.profileInfo = profile;
-
-                        //TODO: add banner url to get from backend
-                        this.profileInfo.profileBannerUrl = "";
+                        this.profileInfo.isFriend = true;
+                        this.profileInfo.isFollowed = false;
                     });
             })
 
@@ -103,15 +107,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (profileBanner === null) {
             return;
         }
-        this.imageService
-            .uploadImage(this.profileInfo.username, profileBanner)
-            .subscribe((image: Image) => {
-                this.profileInfo.profileBannerUrl = image.imagePath;
+        if (this.profileInfo.profileBannerUrl === "") {
+            this.imageService
+                .uploadImage(this.profileInfo.username, profileBanner)
+                .subscribe((image: Image) => {
+                    this.profileInfo.profileBannerUrl = image.imagePath;
 
-                this.profileService
-                    .updateProfileBanner(this.profileInfo.username, image.imageId)
-                    .subscribe();
-            });
+                    this.profileService
+                        .updateProfileBanner(this.profileInfo.username, image.imageId)
+                        .subscribe();
+                });
+        } else {
+            this.imageService
+                .updateImage(this.profileInfo.profileBannerUrl, profileBanner)
+                .subscribe((image: Image) => {
+                    this.profileInfo.profileBannerUrl = image.imagePath;
+
+                    this.profileService
+                        .updateProfileBanner(this.profileInfo.username, image.imageId)
+                        .subscribe();
+                });
+        }
     }
 
     changeProfilePicture(event: any): void {
@@ -121,7 +137,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             return;
         }
         this.imageService
-            .uploadImage(this.profileInfo.username, profilePicture)
+            .updateImage(this.profileInfo.username, profilePicture)
             .subscribe((image: Image) => {
                 this.profileInfo.profileBannerUrl = image.imagePath;
 
