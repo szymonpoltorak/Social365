@@ -9,10 +9,10 @@ import {
 } from "@pages/profile/profile-about/about-work-education/about-work-education.component";
 import { AboutLocationsComponent } from "@pages/profile/profile-about/about-locations/about-locations.component";
 import { AboutContactComponent } from "@pages/profile/profile-about/about-contact/about-contact.component";
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { RouterLink, RouterOutlet } from "@angular/router";
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
-import { filter, Subject, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 
 @Component({

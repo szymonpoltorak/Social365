@@ -4,8 +4,8 @@
     <div class="feed-sm:grid feed-md:grid-cols-4 max-feed-md:grid-cols-2 feed-sm:m-4 h-fit">
         <app-profile-feed class="max-feed-md:hidden feed-md:col-span-1"></app-profile-feed>
 
-        <app-posts-feed [presentedProfileId]="currentUser.profileId"
-                        [postsUrl]="PostMappings.GET_POSTS_ON_PAGE"
+        <app-posts-feed [postsUrl]="PostMappings.GET_POSTS_ON_PAGE"
+                        [presentedProfileId]="currentUser.profileId"
                         class="feed-sm:m-4 max-feed-sm:mt-2 feed-md:col-span-2">
         </app-posts-feed>
 

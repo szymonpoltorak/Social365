@@ -5,7 +5,8 @@
         @if (profileInfo === undefined || profileInfo.profileBannerUrl === "") {
             <div class="bg-tertiary h-full w-full"></div>
 
-        } @else if (profileInfo.profileId === currentUser.profileId) {
+        }
+        @if (profileInfo.profileId === currentUser.profileId) {
             <div class="absolute right-5 top-3 bg-card rounded-full">
                 <input
                     #fileInput

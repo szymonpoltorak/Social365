@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { ActivatedRoute, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
@@ -11,7 +11,7 @@ import { RouterPaths } from "@enums/router-paths.enum";
 import { MatButton, MatIconButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
-import { filter, Subject, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";

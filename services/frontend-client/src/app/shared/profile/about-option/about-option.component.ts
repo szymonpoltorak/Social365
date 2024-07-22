@@ -24,10 +24,10 @@ export class AboutOptionComponent {
     @Input() icon !: string;
     @Input() subLabel !: string;
     @Input() canDelete: boolean = true;
-    protected readonly PrivacyLevel = PrivacyLevel;
     @Output() readonly edit: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly delete: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly changePrivacyLevel: EventEmitter<PrivacyLevel> = new EventEmitter<PrivacyLevel>();
+    protected readonly PrivacyLevel = PrivacyLevel;
 
     changePrivacyLevelEmitter(privacyLevel: PrivacyLevel): void {
         if (privacyLevel === this.option.privacyLevel) {

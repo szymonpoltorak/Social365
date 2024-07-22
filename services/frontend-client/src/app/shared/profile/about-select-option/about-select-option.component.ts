@@ -34,8 +34,8 @@ import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 export class AboutSelectOptionComponent implements OnInit {
     @Input() selectEnum !: NonNullable<unknown>;
     @Input() option !: AboutOption;
-    protected readonly Object = Object;
     canEdit !: boolean;
+    protected readonly Object = Object;
 
     constructor(private routingService: RoutingService,
                 private snackBar: MatSnackBar,

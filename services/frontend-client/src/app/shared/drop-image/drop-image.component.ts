@@ -22,13 +22,13 @@ export class DropImageComponent implements OnInit {
     @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
     @Input() isAttachingImagesOpened: boolean = false;
     @Output() attachedImagesLength: EventEmitter<number> = new EventEmitter<number>();
-    private readonly MAX_FILE_SIZE: number = 10485760;
+    @Input() imageUrls!: string[];
     protected allowedFileTypes: string[] = [
         'image/jpeg',
         'image/png',
     ];
     protected attachedImages: AttachImage[] = [];
-    @Input() imageUrls!: string[];
+    private readonly MAX_FILE_SIZE: number = 10485760;
 
     constructor(private snackBar: MatSnackBar) {
     }

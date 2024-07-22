@@ -73,10 +73,10 @@ export class PostComponent implements OnInit {
     @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post }) post !: Post;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
-    private readonly PAGE_SIZE: number = 5;
     protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
     protected currentUser !: Profile;
+    private readonly PAGE_SIZE: number = 5;
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,

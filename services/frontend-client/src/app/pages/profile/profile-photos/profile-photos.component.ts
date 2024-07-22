@@ -29,10 +29,10 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 })
 export class ProfilePhotosComponent implements OnInit {
 
-    private readonly FIRST_PAGE: number = 0;
-    private readonly PAGE_SIZE: number = 15;
     protected photos !: Page<PostImage>;
     protected currentUsername !: string;
+    private readonly FIRST_PAGE: number = 0;
+    private readonly PAGE_SIZE: number = 15;
 
     constructor(private imagesService: ImagesService,
                 private routingService: RoutingService) {

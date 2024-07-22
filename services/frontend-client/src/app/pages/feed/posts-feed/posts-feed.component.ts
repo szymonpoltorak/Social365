@@ -66,11 +66,11 @@ export class PostsFeedComponent implements OnInit {
 
     @Input() presentedProfileId !: string;
     @Input() postsUrl !: PostMappings;
+    protected posts !: CassandraPage<Either<Post, SharedPost>>;
+    protected currentUser !: Profile;
     private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
     private pagingState: Optional<string> = null;
-    protected posts !: CassandraPage<Either<Post, SharedPost>>;
-    protected currentUser !: Profile;
 
     constructor(private localStorage: LocalStorageService,
                 private snackbar: MatSnackBar,
@@ -101,7 +101,7 @@ export class PostsFeedComponent implements OnInit {
             return;
         }
         this.postService
-            .getPostsFromUrl(this.presentedProfileId,  this.posts.friendsPageNumber + 1,
+            .getPostsFromUrl(this.presentedProfileId, this.posts.friendsPageNumber + 1,
                 this.PAGE_SIZE, this.posts.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 const oldContent: Either<Post, SharedPost>[] = this.posts.data;
@@ -122,7 +122,7 @@ export class PostsFeedComponent implements OnInit {
             .subscribe((sharedPost: SharedPost) => {
                 this.posts.data.unshift(sharedPost);
 
-                this.snackbar.open("Successfully shared post!", "Close",{
+                this.snackbar.open("Successfully shared post!", "Close", {
                     duration: 2000,
                 });
             });
@@ -135,7 +135,7 @@ export class PostsFeedComponent implements OnInit {
             .subscribe(() => {
                 this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
 
-                this.snackbar.open("Successfully deleted post!", "Close",{
+                this.snackbar.open("Successfully deleted post!", "Close", {
                     duration: 2000,
                 });
             });
@@ -144,7 +144,7 @@ export class PostsFeedComponent implements OnInit {
     createdPost(event: Post): void {
         this.posts.data.unshift(event);
 
-        this.snackbar.open("Successfully created post!", "Close",{
+        this.snackbar.open("Successfully created post!", "Close", {
             duration: 2000,
         });
     }

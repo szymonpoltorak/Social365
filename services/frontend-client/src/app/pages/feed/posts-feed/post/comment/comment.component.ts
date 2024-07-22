@@ -54,7 +54,6 @@ import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.
 })
 export class CommentComponent implements OnInit {
 
-    private readonly PAGE_SIZE: number = 3;
     @Input() comment!: Either<PostComment, ReplyComment>;
     @Input() replyLevel: number = 3;
     @Output() commentDeleted: EventEmitter<CommentDeleteRequest> = new EventEmitter<CommentDeleteRequest>();
@@ -65,6 +64,7 @@ export class CommentComponent implements OnInit {
     areRepliesVisible: boolean = false;
     creationDateTime !: Date;
     isEditing: boolean = false;
+    private readonly PAGE_SIZE: number = 3;
 
     constructor(private localStorage: LocalStorageService,
                 private repliesService: RepliesService,
@@ -113,17 +113,6 @@ export class CommentComponent implements OnInit {
             .subscribe((replies: CassandraPage<ReplyComment>) => {
                 this.replyComments = replies;
             });
-    }
-
-    private getProperCommentId(): string {
-        if (this.isPostComment()) {
-            return (this.comment.commentKey as CommentKey).commentId;
-        }
-        return (this.comment.commentKey as ReplyKey).replyCommentId;
-    }
-
-    private isPostComment(): boolean {
-        return (this.comment.commentKey as CommentKey).commentId !== undefined;
     }
 
     createReplyComment(event: CommentCreateData): void {
@@ -197,6 +186,17 @@ export class CommentComponent implements OnInit {
             this.handleReplyCommentEdit(event);
         }
         this.isEditing = false;
+    }
+
+    private getProperCommentId(): string {
+        if (this.isPostComment()) {
+            return (this.comment.commentKey as CommentKey).commentId;
+        }
+        return (this.comment.commentKey as ReplyKey).replyCommentId;
+    }
+
+    private isPostComment(): boolean {
+        return (this.comment.commentKey as CommentKey).commentId !== undefined;
     }
 
     private handleCommentEdit(event: CommentCreateData): void {

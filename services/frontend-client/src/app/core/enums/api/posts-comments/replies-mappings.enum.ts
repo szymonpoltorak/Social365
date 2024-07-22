@@ -9,7 +9,7 @@ export enum RepliesMappings {
     EDIT_REPLY = REPLIES_MAPPING + "/edit",
 
     DELETE_REPLY = REPLIES_MAPPING + "/delete",
-    
+
     UPDATE_LIKE_REPLY_COUNT = REPLIES_MAPPING + "/updateLikeCount",
 
 }

@@ -46,7 +46,6 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
     styleUrl: './profile-posts.component.scss'
 })
 export class ProfilePostsComponent implements OnInit {
-    private readonly FIRST_PAGE: number = 0;
     protected presentedProfile !: Profile;
     protected isEditing: boolean = false;
     protected bioControl !: FormControl<string | null>;
@@ -59,6 +58,8 @@ export class ProfilePostsComponent implements OnInit {
     protected friends !: Observable<Page<FriendFeedOption>>;
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
+    protected readonly PostMappings = PostMappings;
+    private readonly FIRST_PAGE: number = 0;
 
     constructor(protected router: Router,
                 private routingService: RoutingService,
@@ -128,6 +129,4 @@ export class ProfilePostsComponent implements OnInit {
                     .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
             });
     }
-
-    protected readonly PostMappings = PostMappings;
 }
