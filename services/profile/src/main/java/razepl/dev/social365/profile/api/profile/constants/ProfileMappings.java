@@ -22,6 +22,10 @@ public final class ProfileMappings {
 
     public static final String GET_PROFILES_SEARCH_BY_PATTERN_MAPPING = "/profilesSearchByPattern";
 
+    public static final String UPDATE_PROFILE_PICTURE_MAPPING = "/updateProfilePicture";
+
+    public static final String UPDATE_PROFILE_BANNER_MAPPING = "/updateProfileBanner";
+
     private ProfileMappings() {
     }
 

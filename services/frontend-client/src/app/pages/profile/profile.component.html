@@ -5,13 +5,17 @@
         @if (profileInfo === undefined || profileInfo.profileBannerUrl === "") {
             <div class="bg-tertiary h-full w-full"></div>
 
+        } @else if (profileInfo.profileBannerUrl !== "") {
+            <img alt="Profile Banner"
+                 class="h-full w-full object-cover"
+                 [src]="profileInfo.profileBannerUrl">
         }
-        @if (profileInfo.profileId === currentUser.profileId) {
+        @if (profileInfo !== undefined && profileInfo.profileId === currentUser.profileId) {
             <div class="absolute right-5 top-3 bg-card rounded-full">
                 <input
                     #fileInput
-                    (change)="handleChange($event)"
-                    [accept]="allowedFileTypes"
+                    (change)="addBannerToProfile($event)"
+                    [accept]="fileService.allowedFileTypes"
                     [multiple]="false"
                     class="hidden"
                     type="file"/>
@@ -41,8 +45,8 @@
                         @if (profileInfo.profileId === currentUser.profileId) {
                             <input
                                 #profilePhotoInput
-                                (change)="handleChange($event)"
-                                [accept]="allowedFileTypes"
+                                (change)="changeProfilePicture($event)"
+                                [accept]="fileService.allowedFileTypes"
                                 [multiple]="false"
                                 class="hidden"
                                 type="file"/>

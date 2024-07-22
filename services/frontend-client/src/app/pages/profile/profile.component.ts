@@ -15,8 +15,11 @@ import { Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { FileService } from "@services/utils/file.service";
+import { Optional } from "@core/types/profile/optional.type";
+import { ImagesService } from "@api/images/images.service";
+import { Image } from "@interfaces/images/image.interface";
 
 @Component({
     selector: 'app-profile',
@@ -47,10 +50,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         { label: 'Friends', icon: 'people', route: RouterPaths.FRIENDS_PATH },
         { label: 'Photos', icon: 'image', route: RouterPaths.PROFILE_PHOTOS }
     ];
-    protected allowedFileTypes: string[] = [
-        'image/jpeg',
-        'image/png',
-    ];
     protected activeRoute: TabOption = this.options[0];
     protected currentUser !: Profile;
     private routerDestroy$: Subject<void> = new Subject<void>();
@@ -59,7 +58,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
                 private profileService: ProfileService,
-                private snackBar: MatSnackBar,
+                private imageService: ImagesService,
+                protected fileService: FileService,
                 private activatedRoute: ActivatedRoute) {
     }
 
@@ -97,25 +97,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.activateRouteDestroy$.complete();
     }
 
-    handleChange(event: any) {
-        const file: File = event.target.files[0] as File;
+    addBannerToProfile(event: any): void {
+        const profileBanner: Optional<AttachImage> = this.fileService.processAttachSingleFileEvent(event);
 
-        if (this.allowedFileTypes.indexOf(file.type) === -1) {
-            this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close', {
-                duration: 2000,
-            });
-
+        if (profileBanner === null) {
             return;
         }
-        const banner: AttachImage = {
-            fileUrl: URL.createObjectURL(file),
-            file: file,
-        };
+        this.imageService
+            .uploadImage(this.profileInfo.username, profileBanner)
+            .subscribe((image: Image) => {
+                this.profileInfo.profileBannerUrl = image.imagePath;
 
-        console.log(banner);
+                this.profileService
+                    .updateProfileBanner(this.profileInfo.username, image.imageId)
+                    .subscribe();
+            });
+    }
 
-        this.snackBar.open(`Successfully attached 1 images!`, 'Close', {
-            duration: 2000
-        });
+    changeProfilePicture(event: any): void {
+        const profilePicture: Optional<AttachImage> = this.fileService.processAttachSingleFileEvent(event);
+
+        if (profilePicture === null) {
+            return;
+        }
+        this.imageService
+            .uploadImage(this.profileInfo.username, profilePicture)
+            .subscribe((image: Image) => {
+                this.profileInfo.profileBannerUrl = image.imagePath;
+
+                this.profileService
+                    .updateProfilePicture(this.profileInfo.username, image.imageId)
+                    .subscribe();
+            });
     }
 }

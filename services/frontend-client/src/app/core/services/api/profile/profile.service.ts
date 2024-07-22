@@ -79,4 +79,23 @@ export class ProfileService {
             }
         }).pipe(take(1));
     }
+
+    updateProfilePicture(profileId: string, profilePictureId: number): Observable<ProfileRequest> {
+        return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_PICTURE_MAPPING, {}, {
+            params: {
+                profileId: profileId,
+                profilePictureId: profilePictureId
+            }
+        });
+    }
+
+    updateProfileBanner(profileId: string, profileBannerId: number): Observable<ProfileRequest> {
+        return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BANNER_MAPPING, {}, {
+            params: {
+                profileId: profileId,
+                profileBannerId: profileBannerId
+            }
+        });
+    }
+
 }

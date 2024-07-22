@@ -15,5 +15,10 @@ export enum ProfileMappings {
 
     GET_PROFILES_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesByPattern",
 
-    GET_PROFILES_SEARCH_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesSearchByPattern"
+    GET_PROFILES_SEARCH_BY_PATTERN_MAPPING = PROFILE_API_MAPPING + "/profilesSearchByPattern",
+
+    UPDATE_PROFILE_PICTURE_MAPPING = PROFILE_API_MAPPING + "/updateProfilePicture",
+
+    UPDATE_PROFILE_BANNER_MAPPING = PROFILE_API_MAPPING + "/updateProfileBanner",
+
 }

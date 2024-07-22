@@ -30,4 +30,8 @@ public interface ProfileService {
 
     ProfileRequest updateProfileBio(String profileId, String bio);
 
+    ProfileRequest updateProfilePicture(String profileId, long profilePictureId);
+
+    ProfileRequest updateProfileBanner(String profileId, long profileBannerId);
+
 }

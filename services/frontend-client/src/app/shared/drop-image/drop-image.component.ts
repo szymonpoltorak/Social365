@@ -1,9 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatCard } from "@angular/material/card";
 import { MatFabButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
+import { FileService } from "@services/utils/file.service";
+import { Optional } from "@core/types/profile/optional.type";
 
 @Component({
     selector: 'app-drop-image',
@@ -23,14 +24,9 @@ export class DropImageComponent implements OnInit {
     @Input() isAttachingImagesOpened: boolean = false;
     @Output() attachedImagesLength: EventEmitter<number> = new EventEmitter<number>();
     @Input() imageUrls!: string[];
-    protected allowedFileTypes: string[] = [
-        'image/jpeg',
-        'image/png',
-    ];
     protected attachedImages: AttachImage[] = [];
-    private readonly MAX_FILE_SIZE: number = 10485760;
 
-    constructor(private snackBar: MatSnackBar) {
+    constructor(protected fileService: FileService) {
     }
 
     ngOnInit(): void {
@@ -54,32 +50,15 @@ export class DropImageComponent implements OnInit {
     }
 
     handleChange(event: any): void {
-        const files: File[] = event.target.files as File[];
+        const attachedFiles: Optional<AttachImage[]> = this.fileService.processAttachFilesEvent(event);
 
-        if (files.length > 10) {
-            this.snackBar.open('You can only attach up to 10 images!', 'Close', {
-                duration: 2000,
-            });
-
+        if (attachedFiles === null) {
             return;
         }
+        this.attachedImages = attachedFiles;
 
-        for (const file of files) {
-            if (!this.shouldContinue(file)) {
-                continue;
-            }
-            this.attachedImages.push({
-                fileUrl: URL.createObjectURL(file),
-                file: file,
-            });
-        }
-
-        if (this.attachedImages.length > 0) {
-            this.snackBar.open(`Successfully attached ${ this.attachedImages.length } images!`, 'Close', {
-                duration: 2000,
-            });
-        }
         this.isAttachingImagesOpened = false;
+
         this.attachedImagesLength.emit(this.attachedImages.length);
     }
 
@@ -91,21 +70,4 @@ export class DropImageComponent implements OnInit {
         this.attachedImagesLength.emit(this.attachedImages.length);
     }
 
-    private shouldContinue(file: File): boolean {
-        if (this.allowedFileTypes.indexOf(file.type) === -1) {
-            this.snackBar.open(`Invalid file type for file named ${ file.name }`, 'Close', {
-                duration: 2000,
-            });
-
-            return false;
-        }
-        if (file.size > this.MAX_FILE_SIZE) {
-            this.snackBar.open(`File named ${ file.name } is too large. Max size is 10MB`, 'Close', {
-                duration: 2000,
-            });
-
-            return false;
-        }
-        return true;
-    }
 }

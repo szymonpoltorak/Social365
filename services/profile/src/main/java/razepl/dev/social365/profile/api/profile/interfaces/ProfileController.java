@@ -13,7 +13,7 @@ public interface ProfileController {
 
     Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber);
 
-    Page<ProfileSearchResponse> getProfilesSeachByPattern(String pattern, int pageNumber, int pageSize);
+    Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, int pageNumber, int pageSize);
 
     Page<ProfileQueryResponse> getProfilesByPattern(String pattern, int pageNumber, int pageSize);
 
@@ -28,5 +28,9 @@ public interface ProfileController {
     ProfileResponse getBasicProfileInfo(String profileId);
 
     ProfileRequest updateProfileBio(String profileId, String bio);
+
+    ProfileRequest updateProfilePicture(String profileId, long profilePictureId);
+
+    ProfileRequest updateProfileBanner(String profileId, long profileBannerId);
 
 }

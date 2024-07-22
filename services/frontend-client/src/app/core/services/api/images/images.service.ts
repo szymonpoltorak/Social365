@@ -5,6 +5,7 @@ import { ImagesMappings } from "@enums/api/images/images-mappings.enum";
 import { Observable, take } from "rxjs";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { Page } from "@interfaces/utils/page.interface";
+import { Image } from "@interfaces/images/image.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +33,8 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    uploadImage(username: string, image: AttachImage): Observable<void> {
-        return this.http.post<void>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
+    uploadImage(username: string, image: AttachImage): Observable<Image> {
+        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
             params: {
                 username: username
             }

@@ -39,9 +39,9 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING)
-    public final Page<ProfileSearchResponse> getProfilesSeachByPattern(@Param(Params.PATTERN) String pattern,
-                                                                       @Param(Params.PAGE_NUMBER) int pageNumber,
-                                                                       @Param(Params.PAGE_SIZE) int pageSize) {
+    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(@Param(Params.PATTERN) String pattern,
+                                                                        @Param(Params.PAGE_NUMBER) int pageNumber,
+                                                                        @Param(Params.PAGE_SIZE) int pageSize) {
         return profileService.getProfilesSearchByPattern(pattern, PageRequest.of(pageNumber, pageSize));
     }
 
@@ -70,6 +70,20 @@ public class ProfileControllerImpl implements ProfileController {
     public final ProfileRequest updateProfileBio(@RequestParam(Params.PROFILE_ID) String profileId,
                                                  @RequestParam(Params.BIO) String bio) {
         return profileService.updateProfileBio(profileId, bio);
+    }
+
+    @Override
+    @PutMapping(value = ProfileMappings.UPDATE_PROFILE_PICTURE_MAPPING)
+    public final ProfileRequest updateProfilePicture(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                     @RequestParam(Params.PROFILE_PICTURE_ID) long profilePictureId) {
+        return profileService.updateProfilePicture(profileId, profilePictureId);
+    }
+
+    @Override
+    @PutMapping(value = ProfileMappings.UPDATE_PROFILE_BANNER_MAPPING)
+    public final ProfileRequest updateProfileBanner(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                    @RequestParam(Params.PROFILE_BANNER_ID) long profileBannerId) {
+        return profileService.updateProfileBanner(profileId, profileBannerId);
     }
 
     @Override

@@ -31,8 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImagesServiceImpl implements ImagesService {
 
-    private static String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
-    private static String IMAGE_NOT_FOUND = "Image not found";
+    private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
+    private static final String IMAGE_NOT_FOUND = "Image not found";
     private final ImagesRepository imagesRepository;
     private final FileManagementService fileManagementService;
     private final ImagesMapper imagesMapper;
