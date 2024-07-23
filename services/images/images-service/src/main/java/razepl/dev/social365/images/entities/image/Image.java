@@ -32,7 +32,6 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long imageId;
 
-    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)

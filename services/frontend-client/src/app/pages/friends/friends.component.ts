@@ -25,12 +25,12 @@ import { RouterPaths } from "@enums/router-paths.enum";
     styleUrl: './friends.component.scss'
 })
 export class FriendsComponent implements OnInit, OnDestroy {
-    private routerDestroy$: Subject<void> = new Subject<void>();
+    selectedOption !: RouteOption;
     protected options: RouteOption[] = [
         { label: "Friend Requests", route: RouterPaths.FRIEND_REQUESTS },
         { label: "Friend Suggestions", route: RouterPaths.FRIEND_SUGGESTIONS }
     ];
-    selectedOption !: RouteOption;
+    private routerDestroy$: Subject<void> = new Subject<void>();
 
     constructor(private routingService: RoutingService) {
     }

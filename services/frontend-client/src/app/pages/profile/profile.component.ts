@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { ActivatedRoute, RouterLink, RouterOutlet } from "@angular/router";
 import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
@@ -8,12 +8,23 @@ import { MatIcon } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TabOption } from "@interfaces/profile/tab-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
-import { MatButton, MatMiniFabButton } from "@angular/material/button";
+import { MatButton, MatIconButton, MatMiniFabButton } from "@angular/material/button";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
-import { filter, Subject, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 import { RoutingService } from "@services/profile/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { FileService } from "@services/utils/file.service";
+import { Optional } from "@core/types/profile/optional.type";
+import { ImagesService } from "@api/images/images.service";
+import { Image } from "@interfaces/images/image.interface";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
+import { MatDialog } from "@angular/material/dialog";
+import { ImageDialogComponent } from "@shared/post-image-viewer/image-dialog/image-dialog.component";
+import { FriendsService } from "@api/profile/friends.service";
 
 @Component({
     selector: 'app-profile',
@@ -28,14 +39,19 @@ import { ProfileService } from "@api/profile/profile.service";
         RouterOutlet,
         RouterLink,
         MatButton,
-        MatMiniFabButton
+        MatMiniFabButton,
+        MatProgressSpinner,
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     protected username: string = '';
-    protected profileInfo !: Profile;
+    protected profileInfo !: ProfileBasicInfo;
     protected options: TabOption[] = [
         { label: 'Posts', icon: 'lists', route: RouterPaths.PROFILE_POSTS },
         { label: 'About', icon: 'info', route: RouterPaths.PROFILE_ABOUT_MAIN },
@@ -50,6 +66,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     constructor(private localStorage: LocalStorageService,
                 private routingService: RoutingService,
                 private profileService: ProfileService,
+                private imageService: ImagesService,
+                protected fileService: FileService,
+                private friendsService: FriendsService,
+                protected matDialog: MatDialog,
                 private activatedRoute: ActivatedRoute) {
     }
 
@@ -63,8 +83,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.username = params.get("username") as string;
 
                 this.profileService
-                    .getBasicProfileInfoByUsername(this.username)
-                    .subscribe((profile: Profile) => {
+                    .getBasicProfileInfoByUsername(this.username, this.currentUser.profileId)
+                    .subscribe((profile: ProfileBasicInfo) => {
                         this.profileInfo = profile;
                     });
             })
@@ -82,5 +102,102 @@ export class ProfileComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routerDestroy$.complete();
         this.activateRouteDestroy$.complete();
+    }
+
+    addBannerToProfile(event: any): void {
+        const profileBanner: Optional<AttachImage> = this.fileService.processAttachSingleFileEvent(event);
+
+        if (profileBanner === null) {
+            return;
+        }
+        if (this.profileInfo.profileBannerUrl === "") {
+            this.imageService
+                .uploadImage(this.profileInfo.username, profileBanner)
+                .subscribe((image: Image) => {
+                    this.profileInfo.profileBannerUrl = image.imagePath;
+
+                    this.profileService
+                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
+                        .subscribe();
+                });
+        } else {
+            this.imageService
+                .updateImage(this.profileInfo.profileBannerUrl, profileBanner)
+                .subscribe((image: Image) => {
+                    this.profileInfo.profileBannerUrl = image.imagePath;
+
+                    this.profileService
+                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
+                        .subscribe();
+                });
+        }
+    }
+
+    changeProfilePicture(event: any): void {
+        const profilePicture: Optional<AttachImage> = this.fileService.processAttachSingleFileEvent(event);
+
+        if (profilePicture === null) {
+            return;
+        }
+        this.imageService
+            .updateImage(this.profileInfo.username, profilePicture)
+            .subscribe((image: Image) => {
+                this.profileInfo.profileBannerUrl = image.imagePath;
+
+                this.profileService
+                    .updateProfilePicture(this.profileInfo.username, image.imageId)
+                    .subscribe();
+            });
+    }
+
+    showProfilePicture(): void {
+        this.matDialog.open(ImageDialogComponent, {
+            data: {
+                imageUrls: [this.profileInfo.profilePictureUrl],
+                imageIndex: 0
+            }
+        });
+    }
+
+    showProfileBanner(): void {
+        this.matDialog.open(ImageDialogComponent, {
+            data: {
+                imageUrls: [this.profileInfo.profileBannerUrl],
+                imageIndex: 0
+            }
+        });
+    }
+
+    deleteBanner(): void {
+        this.imageService
+            .deleteImageByUrl(this.profileInfo.profileBannerUrl)
+            .subscribe(() => {
+                this.profileInfo.profileBannerUrl = "";
+            });
+    }
+
+    unfollowUser(): void {
+        this.friendsService
+            .removeProfileFromFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFollowed = false;
+            });
+    }
+
+    followUser(): void {
+        this.friendsService
+            .addProfileToFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFollowed = true;
+            });
+    }
+
+    removeFriend(): void {
+        this.friendsService
+            .removeUserFromFriends(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFriend = false;
+                this.profileInfo.isFollowed = false;
+            });
     }
 }

@@ -5,6 +5,7 @@ import { ImagesMappings } from "@enums/api/images/images-mappings.enum";
 import { Observable, take } from "rxjs";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { Page } from "@interfaces/utils/page.interface";
+import { Image } from "@interfaces/images/image.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +33,8 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    uploadImage(username: string, image: AttachImage): Observable<void> {
-        return this.http.post<void>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
+    uploadImage(username: string, image: AttachImage): Observable<Image> {
+        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
             params: {
                 username: username
             }
@@ -64,10 +65,10 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    updateImage(imageId: number, image: AttachImage): Observable<void> {
-        return this.http.put<void>(ImagesMappings.UPDATE_IMAGE_MAPPING, this.toFormData(image), {
+    updateImage(imageUrl: string, image: AttachImage): Observable<Image> {
+        return this.http.put<Image>(ImagesMappings.UPDATE_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                imageId: imageId
+                imageUrl: imageUrl
             }
         }).pipe(take(1));
     }
@@ -92,6 +93,22 @@ export class ImagesService {
 
     deleteImageByUrl(imageUrl: string): Observable<void> {
         return this.http.delete<void>(ImagesMappings.DELETE_IMAGE_BY_URL_MAPPING, {
+            params: {
+                imageUrl: imageUrl
+            }
+        }).pipe(take(1));
+    }
+
+    deleteCommentImage(commentId: string): Observable<void> {
+        return this.http.delete<void>(ImagesMappings.DELETE_COMMENT_IMAGE_BY_ID_MAPPING, {
+            params: {
+                commentId: commentId
+            }
+        }).pipe(take(1));
+    }
+
+    deletePostImageByUrl(imageUrl: string): Observable<void> {
+        return this.http.delete<void>(ImagesMappings.DELETE_POST_IMAGE_BY_URL_MAPPING, {
             params: {
                 imageUrl: imageUrl
             }

@@ -12,6 +12,7 @@ import {
     BirthdayInfoDialogComponent
 } from "@pages/feed/friends-feed/birthday/birthday-info-dialog/birthday-info-dialog.component";
 import { BirthdayInfoComponent } from "@pages/feed/friends-feed/birthday/birthday-info/birthday-info.component";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-birthday',
@@ -22,6 +23,7 @@ import { BirthdayInfoComponent } from "@pages/feed/friends-feed/birthday/birthda
         MatDivider,
         AvatarPhotoComponent,
         BirthdayInfoComponent,
+        MatProgressSpinner,
     ],
     templateUrl: './birthday.component.html',
     styleUrl: './birthday.component.scss'

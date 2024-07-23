@@ -8,13 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.entities.post.Post;
+import razepl.dev.social365.posts.entities.post.PostKey;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PostRepository extends CassandraRepository<Post, UUID> {
+public interface PostRepository extends CassandraRepository<Post, PostKey> {
 
     @Query("""
             select * from posts
@@ -28,7 +29,7 @@ public interface PostRepository extends CassandraRepository<Post, UUID> {
             """)
     Slice<Post> findAllByAuthorId(@Param(Params.AUTHOR_ID) String authorId, Pageable pageable);
 
-    @Query("select count(*) from posts where author_id = :profileId")
+    @Query("select count(*) from posts where author_id = :profileId ALLOW FILTERING")
     int countAllByAuthorId(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("select * from posts where post_id = :postId and creation_date_time = :creationDateTime ALLOW FILTERING")
@@ -39,5 +40,7 @@ public interface PostRepository extends CassandraRepository<Post, UUID> {
             delete from posts
             where post_id = :postId and creation_date_time = :creationDateTime and author_id = :authorId
             """)
-    void deleteByPostId(UUID postId, String creationDateTime, String authorId);
+    void deleteByPostId(@Param(Params.POST_ID) UUID postId,
+                        @Param(Params.CREATION_DATE_TIME) String creationDateTime,
+                        @Param(Params.AUTHOR_ID) String authorId);
 }

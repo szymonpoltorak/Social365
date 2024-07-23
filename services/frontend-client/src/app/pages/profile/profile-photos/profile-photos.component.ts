@@ -7,6 +7,7 @@ import { ImagesService } from "@api/images/images.service";
 import { RoutingService } from "@services/profile/routing.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { Page } from "@interfaces/utils/page.interface";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-profile-photos',
@@ -20,17 +21,18 @@ import { Page } from "@interfaces/utils/page.interface";
         MatIcon,
         MatMenu,
         MatMenuTrigger,
-        MatMenuItem
+        MatMenuItem,
+        MatProgressSpinner
     ],
     templateUrl: './profile-photos.component.html',
     styleUrl: './profile-photos.component.scss'
 })
 export class ProfilePhotosComponent implements OnInit {
 
-    private readonly FIRST_PAGE: number = 0;
-    private readonly PAGE_SIZE: number = 15;
     protected photos !: Page<PostImage>;
     protected currentUsername !: string;
+    private readonly FIRST_PAGE: number = 0;
+    private readonly PAGE_SIZE: number = 15;
 
     constructor(private imagesService: ImagesService,
                 private routingService: RoutingService) {
@@ -42,8 +44,6 @@ export class ProfilePhotosComponent implements OnInit {
         this.imagesService
             .getUserUploadedImages(this.currentUsername, this.FIRST_PAGE, this.PAGE_SIZE)
             .subscribe((images: Page<PostImage>) => {
-                console.log(images);
-
                 this.photos = images;
 
                 window.scrollTo(0, 0);

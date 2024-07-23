@@ -1,7 +1,8 @@
-export interface CommentRequest {
-    objectId: string;
+import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
+
+export interface CommentEditRequest {
     profileId: string;
     content: string;
-    replyToCommentId: string;
-    hasAttachments: boolean;
+    hasAttachment: boolean;
+    commentKey: CommentKey;
 }

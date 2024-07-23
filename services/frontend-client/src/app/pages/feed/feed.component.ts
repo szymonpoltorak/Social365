@@ -22,6 +22,7 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 export class FeedComponent implements OnInit {
 
     protected currentUser !: Profile;
+    protected readonly PostMappings = PostMappings;
 
     constructor(private localStorage: LocalStorageService) {
     }
@@ -29,6 +30,4 @@ export class FeedComponent implements OnInit {
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
-
-    protected readonly PostMappings = PostMappings;
 }

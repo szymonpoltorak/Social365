@@ -1,64 +1,125 @@
-<div class="flex flex-col gap-3 ml-2 mr-2">
+<section class="flex flex-col gap-3 ml-2 mr-2">
     <div class="flex flex-col w-full">
-        <div class="flex items-center gap-3 w-full">
-            <div class="relative">
-                <app-avatar-photo [imageLink]="comment.author.profilePictureUrl"></app-avatar-photo>
-            </div>
-
-            <div class="bg-secondary rounded-xl p-3 w-full">
-                <div class="flex justify-between">
-                    <div class="font-semibold">{{ comment.author.fullName }}</div>
-
-                    <span class="text-xs font-extralight hover:cursor-pointer"
-                          matTooltip="{{ comment.creationDateTime | date: 'medium' }}">
-                        {{ comment.creationDateTime | postAge }}
-                    </span>
+        @if (!isEditing) {
+            <div class="flex items-center gap-3 w-full">
+                <div (click)="routingService.navigateToProfileRoute(comment.author)"
+                     (keydown.enter)="routingService.navigateToProfileRoute(comment.author)"
+                     tabindex="0"
+                     class="relative hover:cursor-pointer">
+                    <app-avatar-photo [imageLink]="comment.author.profilePictureUrl"></app-avatar-photo>
                 </div>
 
-                <div class="font-extralight w-full text-justify">{{ comment.content }}</div>
-            </div>
-        </div>
+                <div class="flex items-center w-full">
+                    <div class="bg-secondary rounded-xl p-3 w-full">
+                        <div class="flex justify-between">
+                            <div (click)="routingService.navigateToProfileRoute(comment.author)"
+                                 (keydown.enter)="routingService.navigateToProfileRoute(comment.author)"
+                                 tabindex="0"
+                                 class="font-semibold hover:cursor-pointer hover:underline">
+                                {{ comment.author.fullName }}
+                            </div>
 
-        <div class="flex m-1 gap-3 items-center ml-14">
-            <div (click)="onLikeComment()"
-                 (keydown.enter)="onLikeComment()"
-                 [ngClass]="{
-                            'text-primary': comment.isLiked,
-                            'hover:bg-mat-primary-hover': comment.isLiked,
-                            'hover:bg-mat-hover': !comment.isLiked
-                     }"
-                 class="mini-button text-primary"
-                 matRipple
-                 tabindex="0">
-                <span class="mr-1">{{ comment.commentLikesCount }}</span> LIKE
+                            <div class="text-xs font-extralight hover:cursor-pointer"
+                                 matTooltip="{{ comment.commentKey.creationDateTime | date: 'medium' }}">
+                                {{ creationDateTime | postAge }}
+                            </div>
+                        </div>
+
+                        <div class="font-extralight w-full text-justify">{{ comment.content }}</div>
+                    </div>
+
+                    @if (comment.author.profileId === currentUser.profileId) {
+                        <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="commentAuthorOptions">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+
+                        <mat-menu #commentAuthorOptions="matMenu" xPosition="before">
+                            <button mat-menu-item
+                                    (click)="isEditing = !isEditing"
+                                    aria-label="Edit your comment">
+                                <mat-icon>edit</mat-icon>
+
+                                <span>Edit</span>
+                            </button>
+
+                            <button mat-menu-item
+                                    (click)="deleteComment()"
+                                    aria-label="Delete your comment">
+                                <mat-icon>delete</mat-icon>
+
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    }
+                </div>
             </div>
 
-            <div (click)="isMakingReply = !isMakingReply"
-                 (keydown.enter)="isMakingReply = !isMakingReply"
-                 class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover"
-                 matRipple
-                 tabindex="0">
-                REPLY
+            @if (comment.imageUrl !== "") {
+                <div class="ml-10 mr-10 h-64">
+                    <app-post-image-viewer [imageUrls]="[comment.imageUrl]"></app-post-image-viewer>
+                </div>
+            }
+
+            <div class="flex m-1 gap-3 items-center ml-14">
+                <div (click)="onLikeComment()"
+                     (keydown.enter)="onLikeComment()"
+                     [ngClass]="{
+                    'text-primary': comment.isLiked,
+                    'hover:bg-mat-primary-hover': comment.isLiked,
+                    'hover:bg-mat-hover': !comment.isLiked
+                 }"
+                     class="mini-button text-primary"
+                     matRipple
+                     tabindex="0">
+                    <span class="mr-1">{{ comment.commentLikesCount }}</span> LIKE
+                </div>
+
+                <div (click)="isMakingReply = !isMakingReply"
+                     (keydown.enter)="isMakingReply = !isMakingReply"
+                     class="text-xs font-semibold hover:cursor-pointer p-1.5 rounded-md hover:bg-mat-hover"
+                     matRipple
+                     tabindex="0">
+                    REPLY
+                </div>
             </div>
-        </div>
+        } @else {
+            <app-comment-create (commentCreated)="editComment($event)"
+                                [user]="comment.author"
+                                [comment]="comment">
+            </app-comment-create>
+        }
     </div>
 
     @if (isMakingReply) {
         <div [ngClass]="{ 'ml-3': replyLevel - 1 > 0 }">
-            <app-comment-create [user]="currentUser"></app-comment-create>
+            <app-comment-create (commentCreated)="createReplyComment($event)" [user]="currentUser"></app-comment-create>
         </div>
     }
 
     <div [ngClass]="{ 'ml-12': replyLevel > 0 }">
-        @if (!isReply && replyComments.length > 0) {
-            @for (reply of replyComments; track reply) {
-                <app-comment [comment]="reply" [replyLevel]="replyLevel - 1" [isReply]="true"></app-comment>
+        @if (areRepliesVisible && replyComments !== undefined && replyComments.data.length > 0) {
+            @for (reply of replyComments.data; track reply) {
+                <app-comment (replyCommentDeleted)="deleteReplyComment($event)"
+                             [comment]="reply"
+                             [replyLevel]="replyLevel - 1">
+                </app-comment>
             }
+        }
 
-            <button mat-button class="mb-3">
+        @if (comment.hasReplies) {
+            <button mat-button (click)="loadReplies()" class="mb-3">
                 <mat-icon>expand_more</mat-icon>
-                Load more replies
+                Load replies
             </button>
         }
+
+        @if (replyComments !== undefined && replyComments.hasNextPage) {
+            <div class="m-2">
+                <button mat-button (click)="loadMoreReplies()">
+                    <mat-icon>expand_more</mat-icon>
+                    Load more replies
+                </button>
+            </div>
+        }
     </div>
-</div>
+</section>

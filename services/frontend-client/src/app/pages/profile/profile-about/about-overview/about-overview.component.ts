@@ -21,6 +21,7 @@ import { AboutWorkplaceComponent } from "@shared/profile/about-workplace/about-w
 import { DetailsType } from "@enums/profile/details-type.enum";
 import { OverviewData } from "@interfaces/profile/about/overview-data.interface";
 import { AboutEnumMapperService } from "@api/profile/about/about-enum-mapper.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-about-overview',
@@ -44,7 +45,8 @@ import { AboutEnumMapperService } from "@api/profile/about/about-enum-mapper.ser
         MatOption,
         AboutSelectOptionComponent,
         AboutTypicalOptionComponent,
-        AboutWorkplaceComponent
+        AboutWorkplaceComponent,
+        MatProgressSpinner
     ],
     templateUrl: './about-overview.component.html',
     styleUrl: './about-overview.component.scss'

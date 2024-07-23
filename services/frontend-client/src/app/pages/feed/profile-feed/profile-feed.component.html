@@ -8,8 +8,14 @@
                          alt="Profile Picture">
                 </div>
 
-                <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
+                @if (profile.profileBannerUrl === "") {
+                    <div class="rounded-xl bg-secondary h-24 w-full mb-8"></div>
 
+                } @else if (profile.profileBannerUrl !== "") {
+                    <img alt="Profile Banner"
+                         class="h-24 w-full mb-8 object-cover rounded-xl"
+                         [src]="profile.profileBannerUrl">
+                }
                 <mat-card-title>{{ profile.fullName }}</mat-card-title>
 
                 <mat-card-subtitle>{{ profile.subtitle === null ? '' : profile.subtitle }}</mat-card-subtitle>

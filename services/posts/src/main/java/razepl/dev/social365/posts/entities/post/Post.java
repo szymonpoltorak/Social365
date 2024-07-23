@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -57,6 +56,10 @@ public class Post {
 
     public final SharingPostKey getSharingPostKey() {
         return SharingPostKey.of(originalPostCreationDateTime, originalPostId);
+    }
+
+    public final boolean isAuthorId(String profileId) {
+        return key.getAuthorId().equals(profileId);
     }
 
     public final String getAuthorId() {

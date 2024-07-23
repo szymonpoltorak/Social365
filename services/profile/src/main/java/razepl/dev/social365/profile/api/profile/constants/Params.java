@@ -24,11 +24,15 @@ public final class Params {
 
     public static final String RELATIONSHIP_STATUS_ID = "relationshipStatusId";
 
-    public static final String WORKPLACE_ID = "workplaceId";
-
     public static final String PAGE_SIZE = "pageSize";
 
     public static final String PATTERN = "pattern";
+
+    public static final String PROFILE_PICTURE_ID = "profilePictureId";
+
+    public static final String PROFILE_BANNER_ID = "profileBannerId";
+    
+    public static final String CURRENT_USER_ID = "currentUserId";
 
     private Params() {
     }

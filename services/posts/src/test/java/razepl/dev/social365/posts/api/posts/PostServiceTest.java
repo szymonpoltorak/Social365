@@ -77,23 +77,23 @@ class PostServiceTest {
     @Test
     final void editPost_validatesAndUpdatesPost() {
         String profileId = "profileId";
-        String postId = UUID.randomUUID().toString();
+        UUID postId = UUID.randomUUID();
         String content = "content";
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId(profileId).creationDateTime(String.valueOf(LocalDateTime.now())).build())
+                .key(PostKey.builder().postId(postId).authorId(profileId).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
                 .build();
         PostResponse postResponse = PostResponse.builder().build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
                 .profileId(profileId)
-                .postId(postId)
+                .postId(postId.toString())
                 .content(content)
                 .creationDateTime(post.getCreationDateTime())
                 .build();
 
-        when(postRepository.findById(UUID.fromString(postId)))
+        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
                 .thenReturn(Optional.of(post));
         when(postRepository.save(any(Post.class)))
                 .thenReturn(post);
@@ -109,22 +109,22 @@ class PostServiceTest {
     @Test
     final void editPost_throwsException_whenUserIsNotAuthor() {
         String profileId = "profileId";
-        String postId = UUID.randomUUID().toString();
+        UUID postId = UUID.randomUUID();
         String content = "content";
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId("differentId").creationDateTime(String.valueOf(LocalDateTime.now())).build())
+                .key(PostKey.builder().postId(postId).authorId("differentId").creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content(content)
                 .build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
                 .profileId(profileId)
-                .postId(postId)
+                .postId(postId.toString())
                 .content(content)
                 .creationDateTime(post.getCreationDateTime())
                 .build();
 
-        when(postRepository.findById(UUID.fromString(postId)))
+        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
                 .thenReturn(Optional.of(post));
 
         assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(editPostRequest));
@@ -133,34 +133,40 @@ class PostServiceTest {
     @Test
     final void deletePost_deletesPostAndComments() {
         String profileId = "profileId";
-        String postId = UUID.randomUUID().toString();
+        UUID postId = UUID.randomUUID();
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId(profileId).postId(UUID.fromString(postId)).creationDateTime(String.valueOf(LocalDateTime.now())).build())
+                .key(PostKey.builder().authorId(profileId).postId(postId).creationDateTime(String.valueOf(LocalDateTime.now())).build())
                 .content("content")
                 .build();
 
-        when(postRepository.findById(UUID.fromString(postId)))
+        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
                 .thenReturn(Optional.of(post));
 
-        postService.deletePost(profileId, postId, post.getCreationDateTime());
+        postService.deletePost(profileId, postId.toString(), post.getCreationDateTime());
 
-        verify(postRepository).deleteById(UUID.fromString(postId));
+        verify(postRepository).deleteByPostId(postId, post.getCreationDateTime(), profileId);
     }
 
     @Test
     final void deletePost_throwsException_whenUserIsNotAuthor() {
         String profileId = "profileId";
         String postId = UUID.randomUUID().toString();
+        PostKey key = PostKey
+                .builder()
+                .authorId("id")
+                .postId(UUID.fromString(postId))
+                .creationDateTime(String.valueOf(LocalDateTime.now()))
+                .build();
         Post post = Post
                 .builder()
-                .key(PostKey.builder().authorId("id").postId(UUID.fromString(postId)).creationDateTime(String.valueOf(LocalDateTime.now())).build())
+                .key(key)
                 .content("content")
                 .build();
 
-        when(postRepository.findById(UUID.fromString(postId)))
+        when(postRepository.findByPostId(key.getPostId(), key.getCreationDateTime()))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, String.valueOf(LocalDateTime.now())));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, key.getCreationDateTime()));
     }
 }

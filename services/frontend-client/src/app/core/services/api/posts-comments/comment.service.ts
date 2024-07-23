@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { CommentMappings } from "@enums/api/posts-comments/comment-mappings.enum";
-import { Observable } from "rxjs";
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { Observable, take } from "rxjs";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
-import { CommentRequest } from "@interfaces/posts-comments/comment-request.interface";
+import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
+import { Optional } from "@core/types/profile/optional.type";
+import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
+import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
+import { LikeCommentRequest } from "@interfaces/posts-comments/like-comment-request.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -14,45 +18,43 @@ export class CommentService {
     constructor(private http: HttpClient) {
     }
 
-    getRepliesForComment(commentId: string, profileId: string,
-                         pageSize: number, pagingState: string): Observable<CassandraPage<PostComment>> {
-        return this.http.get<CassandraPage<PostComment>>(CommentMappings.GET_REPLIES_FOR_COMMENT, {
-            params: {
-                commentId: commentId,
-                profileId: profileId,
-                pageSize: pageSize,
-                pagingState: pagingState
-            }
-        });
-    }
-
     getCommentsForPost(postId: string, profileId: string,
-                       pageSize: number, pagingState: string): Observable<CassandraPage<PostComment>> {
+                       pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<PostComment>> {
         return this.http.get<CassandraPage<PostComment>>(CommentMappings.GET_COMMENTS_FOR_POST, {
-            params: {
-                postId: postId,
-                profileId: profileId,
-                pageSize: pageSize,
-                pagingState: pagingState
-            }
-        });
+            params: this.getPostParams(profileId, postId, pageSize, pagingState)
+        }).pipe(take(1));
     }
 
-    addCommentToPost(commentRequest: CommentRequest): Observable<PostComment> {
-        return this.http.post<PostComment>(CommentMappings.ADD_COMMENT_TO_POST, commentRequest);
+    addCommentToPost(commentRequest: CommentAddRequest): Observable<PostComment> {
+        return this.http.post<PostComment>(CommentMappings.ADD_COMMENT_TO_POST, commentRequest).pipe(take(1));
     }
 
-    editComment(commentRequest: CommentRequest): Observable<PostComment> {
-        return this.http.put<PostComment>(CommentMappings.EDIT_COMMENT, commentRequest);
+    editComment(commentRequest: CommentEditRequest): Observable<PostComment> {
+        return this.http.put<PostComment>(CommentMappings.EDIT_COMMENT, commentRequest).pipe(take(1));
     }
 
-    deleteComment(commentId: string, profileId: string): Observable<PostComment> {
+    deleteComment(commentRequest: CommentDeleteRequest): Observable<PostComment> {
         return this.http.delete<PostComment>(CommentMappings.DELETE_COMMENT, {
-            params: {
-                commentId: commentId,
-                profileId: profileId
-            }
-        });
+            body: commentRequest
+        }).pipe(take(1));
+    }
+
+    updateLikeCommentCount(likeCommentRequest: LikeCommentRequest): Observable<PostComment> {
+        return this.http.put<PostComment>(CommentMappings.UPDATE_LIKE_COMMENT_COUNT, likeCommentRequest).pipe(take(1));
+    }
+
+    private getPostParams(profileId: string, postId: string,
+                          pageSize: number, pagingState: Optional<string>): HttpParams {
+        const params: HttpParams = new HttpParams();
+
+        if (pagingState !== null) {
+            params.set('pagingState', pagingState);
+        }
+        return params
+            .set('profileId', profileId)
+            .set('pagingState', pagingState || "")
+            .set('postId', postId)
+            .set('pageSize', pageSize);
     }
 
 }

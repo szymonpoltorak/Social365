@@ -8,6 +8,10 @@ public final class ImagesMappings {
 
     public static final String GET_COMMENT_IMAGE_MAPPING = IMAGES_MAPPING + "/getCommentImage";
 
+    public static final String DELETE_IMAGES_BY_POST_ID_MAPPING = IMAGES_MAPPING + "/deleteImagesByPostId";
+
+    public static final String DELETE_COMMENT_IMAGE_BY_ID_MAPPING = IMAGES_MAPPING + "/deleteCommentImageById";
+
     private ImagesMappings() {
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -13,6 +13,10 @@ import { DropImageComponent } from "@shared/drop-image/drop-image.component";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Optional } from "@core/types/profile/optional.type";
+import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
+import { ReplyComment } from "@interfaces/posts-comments/reply-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
+import { Either } from "@core/types/feed/either.type";
 
 @Component({
     selector: 'app-comment-create',
@@ -32,17 +36,25 @@ import { Optional } from "@core/types/profile/optional.type";
     templateUrl: './comment-create.component.html',
     styleUrl: './comment-create.component.scss'
 })
-export class CommentCreateComponent {
+export class CommentCreateComponent implements OnInit {
     @Input() user !: Profile;
+    @Input() comment!: Either<PostComment, ReplyComment>;
+    @Output() commentCreated: EventEmitter<CommentCreateData> = new EventEmitter<CommentCreateData>();
     isOpened: boolean = false;
     allowedFileTypes: string[] = [
         'image/jpeg',
         'image/png',
     ];
     attachedImage: Optional<AttachImage> = null;
-    protected contentControl: FormControl<string | null> = new FormControl<string>("", []);
+    protected contentControl !: FormControl<string | null>;
 
     constructor(private snackBar: MatSnackBar) {
+    }
+
+    ngOnInit(): void {
+        const startVal: string = this.comment === undefined ? "" : this.comment.content || "";
+
+        this.contentControl = new FormControl<string>(startVal, []);
     }
 
     emojiSelected($event: EmojiEvent): void {
@@ -71,7 +83,6 @@ export class CommentCreateComponent {
         this.snackBar.open(`Successfully attached 1 images!`, 'Close', {
             duration: 2000
         });
-        console.log(this.attachedImage);
     }
 
     handleRemovesFile(): void {
@@ -79,5 +90,16 @@ export class CommentCreateComponent {
         this.snackBar.open(`Successfully removed 1 images!`, 'Close', {
             duration: 2000
         });
+    }
+
+    emitCommitCreatedEvent(): void {
+        const data: CommentCreateData = {
+            content: this.contentControl.value || "",
+            attachedImage: this.attachedImage
+        };
+        this.contentControl.reset();
+        this.attachedImage = null;
+
+        this.commentCreated.emit(data);
     }
 }

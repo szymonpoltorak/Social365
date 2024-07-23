@@ -13,6 +13,7 @@ import { ProfileService } from "@api/profile/profile.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Page } from "@interfaces/utils/page.interface";
 import { FriendsService } from '@core/services/api/profile/friends.service';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
     selector: 'app-friends-feed',
@@ -24,7 +25,8 @@ import { FriendsService } from '@core/services/api/profile/friends.service';
         MatDivider,
         FriendFeedOptionComponent,
         AsyncPipe,
-        BirthdayComponent
+        BirthdayComponent,
+        MatProgressSpinner
     ],
     templateUrl: './friends-feed.component.html',
     styleUrl: './friends-feed.component.scss'

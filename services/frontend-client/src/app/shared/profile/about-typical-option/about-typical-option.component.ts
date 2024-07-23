@@ -35,9 +35,9 @@ import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 })
 export class AboutTypicalOptionComponent implements OnInit {
 
-    protected readonly DetailsType = DetailsType;
     @Input() option !: AboutOption;
     canEdit: boolean = false;
+    protected readonly DetailsType = DetailsType;
 
     constructor(private routingService: RoutingService,
                 private snackBar: MatSnackBar,

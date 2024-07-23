@@ -20,6 +20,9 @@ import { Page } from "@interfaces/utils/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { RoutingService } from '@core/services/profile/routing.service';
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ImagesService } from "@api/images/images.service";
+import { PostImage } from "@interfaces/images/post-image.interface";
 
 @Component({
     selector: 'app-profile-posts',
@@ -38,31 +41,30 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
         ReactiveFormsModule,
         MatButton,
         NgIf,
-        AsyncPipe
+        AsyncPipe,
+        MatProgressSpinner
     ],
     templateUrl: './profile-posts.component.html',
     styleUrl: './profile-posts.component.scss'
 })
 export class ProfilePostsComponent implements OnInit {
-    private readonly FIRST_PAGE: number = 0;
     protected presentedProfile !: Profile;
     protected isEditing: boolean = false;
     protected bioControl !: FormControl<string | null>;
     protected readonly RouterPaths = RouterPaths;
-    protected imageUrls: string[] = [
-        "https://material.angular.io/assets/img/examples/shiba2.jpg",
-        "https://material.angular.io/assets/img/examples/shiba2.jpg",
-        "https://material.angular.io/assets/img/examples/shiba2.jpg"
-    ];
+    protected imageUrls !: string[];
     protected friends !: Observable<Page<FriendFeedOption>>;
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
+    protected readonly PostMappings = PostMappings;
+    private readonly FIRST_PAGE: number = 0;
 
     constructor(protected router: Router,
                 private routingService: RoutingService,
                 private matSnackBar: MatSnackBar,
                 private friendsService: FriendsService,
                 private localStorage: LocalStorageService,
+                private imagesService: ImagesService,
                 private profileService: ProfileService) {
     }
 
@@ -83,6 +85,12 @@ export class ProfilePostsComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         const username: string = this.routingService.getCurrentUsernameForRoute();
+
+        this.imagesService
+            .getUserUploadedImages(username, this.FIRST_PAGE, this.numberOfItemsToDisplay)
+            .subscribe((imageUrls: Page<PostImage>) => {
+                this.imageUrls = imageUrls.content.map((image: PostImage) => image.imagePath);
+            });
 
         this.fetchFriendsAndProfileInfo(username);
     }
@@ -116,7 +124,7 @@ export class ProfilePostsComponent implements OnInit {
 
     private fetchFriendsAndProfileInfo(username: string): void {
         this.profileService
-            .getBasicProfileInfoByUsername(username)
+            .getProfileInfoByUsername(username)
             .subscribe((profile: Profile) => {
                 this.presentedProfile = profile;
 
@@ -126,6 +134,4 @@ export class ProfilePostsComponent implements OnInit {
                     .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
             });
     }
-
-    protected readonly PostMappings = PostMappings;
 }

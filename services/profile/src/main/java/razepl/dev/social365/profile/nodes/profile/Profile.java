@@ -51,6 +51,8 @@ public class Profile {
     @PositiveOrZero(message = "Profile picture id must be positive or zero")
     private long profilePictureId;
 
+    private long bannerPictureId;
+
     //TODO: Add updating if user is online
     private boolean isOnline;
 

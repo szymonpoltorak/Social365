@@ -4,7 +4,7 @@ import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatDivider } from "@angular/material/divider";
 import { Post } from "@interfaces/feed/post.interface";
-import { PostComment } from "@interfaces/feed/post-comment.interface";
+import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CommentComponent } from "@pages/feed/posts-feed/post/comment/comment.component";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
@@ -31,6 +31,12 @@ import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.
 import { ImagesService } from "@api/images/images.service";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
+import { CommentService } from "@api/posts-comments/comment.service";
+import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
+import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
+import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
+import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
+import { MatProgressBar } from "@angular/material/progress-bar";
 
 @Component({
     selector: 'app-post',
@@ -56,59 +62,30 @@ import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.in
         MatHint,
         CommentCreateComponent,
         NgOptimizedImage,
-        PostImageViewerComponent
+        PostImageViewerComponent,
+        MatProgressBar
     ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit {
-    @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post })
-    post !: Post;
-    protected comments: PostComment[] = [];
-    protected areCommentsVisible: boolean = false;
-    protected currentUser !: Profile;
+
+    @Input({ transform: (value: Either<Post, SharedPost>): Post => value as Post }) post !: Post;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
+    protected comments !: CassandraPage<PostComment>;
+    protected areCommentsVisible: boolean = false;
+    protected currentUser !: Profile;
+    private readonly PAGE_SIZE: number = 5;
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
                 private imagesService: ImagesService,
+                private commentService: CommentService,
                 public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
-        this.comments = [
-            {
-                commentId: "1",
-                commentLikesCount: 5,
-                content: "This is a great post!",
-                author: {
-                    profileId: "1",
-                    fullName: "John Doe",
-                    subtitle: "Software Developer",
-                    bio: "I am a simple man",
-                    username: "shiba@gmail.com",
-                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-                },
-                creationDateTime: new Date(),
-                isLiked: false
-            },
-            {
-                commentId: "2",
-                commentLikesCount: 15,
-                content: "I love this post! Especially the part about the new Angular version!",
-                author: {
-                    profileId: "1",
-                    fullName: "Jacek Kowalski",
-                    subtitle: "Business Analyst",
-                    bio: "I am a simple man",
-                    username: "shiba@gmail.com",
-                    profilePictureUrl: "https://material.angular.io/assets/img/examples/shiba2.jpg"
-                },
-                creationDateTime: new Date("2021-01-01T12:00:00"),
-                isLiked: true
-            }
-        ];
         this.currentUser = this.localStorage.getUserProfileFromStorage();
     }
 
@@ -123,7 +100,18 @@ export class PostComponent implements OnInit {
     }
 
     getCommentsForPost(): void {
-        this.areCommentsVisible = !this.areCommentsVisible;
+        if (this.areCommentsVisible) {
+            this.areCommentsVisible = !this.areCommentsVisible;
+
+            return;
+        }
+        this.commentService
+            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.areCommentsVisible = !this.areCommentsVisible;
+
+                this.comments = comments;
+            });
     }
 
     sharePost(): void {
@@ -137,8 +125,6 @@ export class PostComponent implements OnInit {
             .afterClosed()
             .pipe(take(1))
             .subscribe((content: string) => {
-                console.log(content);
-
                 this.sharePostEvent.emit({
                     post: this.post,
                     content: content
@@ -158,7 +144,7 @@ export class PostComponent implements OnInit {
 
         event.deletedImages.forEach((url: string) => {
             this.imagesService
-                .deleteImageByUrl(url)
+                .deletePostImageByUrl(url)
                 .subscribe();
         });
 
@@ -174,6 +160,49 @@ export class PostComponent implements OnInit {
                 this.post.content = event.content;
 
                 this.post.imageUrls = event.newUrls.map((image: AttachImage) => image.fileUrl);
+            });
+    }
+
+    createComment(event: CommentCreateData): void {
+        const request: CommentAddRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.postId,
+            hasAttachment: event.attachedImage !== null,
+            content: event.content
+        };
+        const image: AttachImage = event.attachedImage as AttachImage;
+
+        this.commentService
+            .addCommentToPost(request)
+            .subscribe((comment: PostComment) => {
+                if (request.hasAttachment) {
+                    this.imagesService
+                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .subscribe();
+
+                    comment.imageUrl = image.fileUrl;
+                }
+                this.comments.data.unshift(comment);
+            });
+    }
+
+    loadMoreComments(): void {
+        this.commentService
+            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.comments.pagingState = comments.pagingState;
+                this.comments.friendsPageNumber = comments.friendsPageNumber;
+                this.comments.hasNextPage = comments.hasNextPage;
+                this.comments.data.push(...comments.data);
+            });
+    }
+
+    deleteComment(event: CommentDeleteRequest): void {
+        this.commentService
+            .deleteComment(event)
+            .subscribe(() => {
+                this.comments.data = this.comments.data
+                    .filter((comment: PostComment) => comment.commentKey.commentId !== event.commentKey.commentId);
             });
     }
 }

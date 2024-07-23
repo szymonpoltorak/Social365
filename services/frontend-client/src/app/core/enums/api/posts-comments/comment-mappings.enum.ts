@@ -1,4 +1,5 @@
 export enum CommentMappings {
+
     COMMENT_MAPPING = "/api/v1/posts/comments",
 
     GET_COMMENTS_FOR_POST = COMMENT_MAPPING + "/getCommentsForPost",
@@ -9,5 +10,6 @@ export enum CommentMappings {
 
     DELETE_COMMENT = COMMENT_MAPPING + "/deleteComment",
 
-    GET_REPLIES_FOR_COMMENT = COMMENT_MAPPING + "/getRepliesForComment",
+    UPDATE_LIKE_COMMENT_COUNT = COMMENT_MAPPING + "/updateLikeCommentCount"
+
 }

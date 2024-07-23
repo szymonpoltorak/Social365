@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
-import razepl.dev.social365.posts.api.comments.data.CommentRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
+import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
@@ -26,15 +29,6 @@ public class CommentControllerImpl implements CommentController {
     private final CommentService commentService;
 
     @Override
-    @GetMapping(value = CommentMappings.GET_REPLIES_FOR_COMMENT)
-    public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                                                     @RequestParam(Params.PROFILE_ID) String profileId,
-                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize,
-                                                                     @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return commentService.getRepliesForComment(commentId, profileId, PageInfo.of(pageSize, pagingState));
-    }
-
-    @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
     public final CassandraPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
                                                                    @RequestParam(Params.PROFILE_ID) String profileId,
@@ -45,20 +39,26 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @PostMapping(value = CommentMappings.ADD_COMMENT_TO_POST)
-    public final CommentResponse addCommentToPost(@RequestBody CommentRequest commentRequest) {
+    public final CommentResponse addCommentToPost(@RequestBody CommentAddRequest commentRequest) {
         return commentService.addCommentToPost(commentRequest);
     }
 
     @Override
     @PutMapping(value = CommentMappings.EDIT_COMMENT)
-    public final CommentResponse editComment(@RequestBody CommentRequest commentRequest) {
-        return commentService.editComment(commentRequest);
+    public final CommentResponse editComment(@RequestBody CommentEditRequest commentEditRequest) {
+        return commentService.editComment(commentEditRequest);
     }
 
     @Override
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
-    public final CommentResponse deleteComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                               @RequestParam(Params.PROFILE_ID) String profileId) {
-        return commentService.deleteComment(commentId, profileId);
+    public final CommentResponse deleteComment(@RequestBody CommentDeleteRequest commentRequest) {
+        return commentService.deleteComment(commentRequest);
     }
+
+    @Override
+    @PutMapping(value = CommentMappings.UPDATE_LIKE_COMMENT_COUNT)
+    public final CommentResponse updateLikeCommentCount(@RequestBody LikeCommentRequest likeCommentRequest) {
+        return commentService.updateLikeCommentCount(likeCommentRequest);
+    }
+
 }

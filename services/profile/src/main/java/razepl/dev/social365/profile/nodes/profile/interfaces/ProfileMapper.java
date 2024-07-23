@@ -11,6 +11,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResp
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -52,4 +53,7 @@ public interface ProfileMapper {
     ProfileQueryResponse mapProfileToProfileQueryResponse(Profile profile);
 
     ProfileSearchResponse mapProfileToProfileSearchResponse(Profile profile);
+
+    ProfileBasicResponse mapProfileToProfileBasicResponse(Profile profile, String currentUserId);
+
 }

@@ -14,6 +14,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResp
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -37,7 +38,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ProfileMapperImpl implements ProfileMapper {
 
-    private static final String PROFILE_IS_NULL = "Profile is null";
     private final ImagesServiceClient imagesServiceClient;
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
@@ -46,8 +46,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final ProfileSummaryResponse mapProfileToProfileSummaryResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return ProfileSummaryResponse
@@ -56,7 +54,8 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .followersCount(profileRepository.getFollowersCount(profile.getProfileId()))
                 .friendsCount(profileRepository.getFriendsCount(profile.getProfileId()))
                 .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
+                .profileBannerUrl(getProfilePicturePath(profile.getBannerPictureId()))
                 .subtitle(getSubtitle(profile))
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
@@ -67,8 +66,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final ProfilePostResponse mapProfileToProfilePostResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return ProfilePostResponse
@@ -77,15 +74,13 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .username(profile.getEmail().getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .fullName(profile.getFullName())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .build();
     }
 
     @Override
     public final ProfileResponse mapProfileToProfileResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return ProfileResponse
@@ -93,7 +88,8 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profileId(profile.getProfileId())
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
+                .profileBannerUrl(getProfilePicturePath(profile.getBannerPictureId()))
                 .username(profile.getEmail().getEmailValue())
                 .subtitle(getSubtitle(profile))
                 .build();
@@ -102,8 +98,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final ProfileRequest mapProfileToProfileRequest(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return ProfileRequest
@@ -118,8 +112,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final OverviewResponse mapProfileToOverviewResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return OverviewResponse
@@ -135,8 +127,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final LocationsResponse mapProfileToLocationsResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return LocationsResponse
@@ -149,8 +139,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final WorkEducationResponse mapProfileToWorkEducationResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return WorkEducationResponse
@@ -164,8 +152,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public final ContactInfoResponse mapProfileToContactInfoResponse(Profile profile) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return ContactInfoResponse
@@ -181,14 +167,12 @@ public class ProfileMapperImpl implements ProfileMapper {
     public final FriendResponse mapProfileToFriendResponse(Profile profile, int numOfMutualFriends,
                                                            boolean isFollowed) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return FriendResponse
                 .builder()
                 .fullName(profile.getFullName())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .profileId(profile.getProfileId())
                 .numOfMutualFriends(numOfMutualFriends)
                 .isFollowed(isFollowed)
@@ -199,8 +183,6 @@ public class ProfileMapperImpl implements ProfileMapper {
     public final FriendSuggestionResponse mapProfileToFriendSuggestionResponse(Profile profile,
                                                                                int numOfMutualFriends) {
         if (profile == null) {
-            log.info(PROFILE_IS_NULL);
-
             return null;
         }
         return FriendSuggestionResponse
@@ -208,7 +190,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .fullName(profile.getFullName())
                 .profileId(profile.getProfileId())
                 .numOfMutualFriends(numOfMutualFriends)
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .build();
     }
 
@@ -244,7 +226,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .builder()
                 .isOnline(profile.isOnline())
                 .profileId(profile.getProfileId())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .fullName(profile.getFullName())
                 .username(profile.getEmail().getEmailValue())
                 .build();
@@ -255,7 +237,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfileQueryResponse
                 .builder()
                 .profileId(profile.getProfileId())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .fullName(profile.getFullName())
                 .build();
     }
@@ -265,14 +247,37 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfileSearchResponse
                 .builder()
                 .profileId(profile.getProfileId())
-                .profilePictureUrl(getProfilePicturePath(profile))
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .fullName(profile.getFullName())
                 .subtitle(getSubtitle(profile))
+                .username(profile.getEmail().getEmailValue())
                 .build();
     }
 
-    private String getProfilePicturePath(Profile profile) {
-        ImageResponse profilePicture = imagesServiceClient.getImagePath(profile.getProfilePictureId());
+    @Override
+    public final ProfileBasicResponse mapProfileToProfileBasicResponse(Profile profile, String currentUserId) {
+        if (profile == null) {
+            return null;
+        }
+        return ProfileBasicResponse
+                .builder()
+                .profileId(profile.getProfileId())
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
+                .profileBannerUrl(getProfilePicturePath(profile.getBannerPictureId()))
+                .bio(profile.getBio())
+                .subtitle(getSubtitle(profile))
+                .fullName(profile.getFullName())
+                .username(profile.getEmail().getEmailValue())
+                .isFriend(profileRepository.areUsersFriends(currentUserId, profile.getProfileId()))
+                .isFollowing(profileRepository.doesUserFollowProfile(currentUserId, profile.getProfileId()))
+                .build();
+    }
+
+    private String getProfilePicturePath(long pictureId) {
+        if (pictureId == -1L) {
+            return "";
+        }
+        ImageResponse profilePicture = imagesServiceClient.getImagePath(pictureId);
 
         log.info("Profile picture response: {}", profilePicture);
 
@@ -295,6 +300,6 @@ public class ProfileMapperImpl implements ProfileMapper {
         if (highSchool != null) {
             return highSchool.getPropertyValue();
         }
-        return null;
+        return profile.getEmail().getEmailValue();
     }
 }

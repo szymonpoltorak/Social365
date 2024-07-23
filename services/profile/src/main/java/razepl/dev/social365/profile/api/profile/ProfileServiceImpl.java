@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -37,6 +38,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private static final long DEFAULT_PROFILE_PICTURE_ID = 1L;
     private static final int PAGE_SIZE = 3;
+    private static final long NO_BANNER_PICTURE_ID = -1L;
 
     private final ProfileRepository profileRepository;
     private final BirthDateRepository birthDateRepository;
@@ -52,9 +54,33 @@ public class ProfileServiceImpl implements ProfileService {
 
         profile.setBio(bio);
 
-        profile = profileRepository.save(profile);
+        profile = updateProfileInDb(profile);
 
-        log.info("Profile updated: {}", profile);
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public ProfileRequest updateProfilePicture(String profileId, long profilePictureId) {
+        log.info("Updating profile picture for profileId: {}", profileId);
+
+        Profile profile = getProfileFromRepository(profileId);
+
+        profile.setProfilePictureId(profilePictureId);
+
+        profile = updateProfileInDb(profile);
+
+        return profileMapper.mapProfileToProfileRequest(profile);
+    }
+
+    @Override
+    public ProfileRequest updateProfileBanner(String profileId, long profileBannerId) {
+        log.info("Updating profile banner for profileId: {}", profileId);
+
+        Profile profile = getProfileFromRepository(profileId);
+
+        profile.setBannerPictureId(profileBannerId);
+
+        profile = updateProfileInDb(profile);
 
         return profileMapper.mapProfileToProfileRequest(profile);
     }
@@ -96,7 +122,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileResponse getBasicProfileInfoByUsername(String username) {
+    public final ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId) {
         log.info("Getting basic profile info for user with username: {}", username);
 
         Profile profile = profileRepository.findByUsername(username)
@@ -104,7 +130,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Profile found : {}", profile);
 
-        return profileMapper.mapProfileToProfileResponse(profile);
+        return profileMapper.mapProfileToProfileBasicResponse(profile, currentUserId);
     }
 
     @Override
@@ -145,10 +171,10 @@ public class ProfileServiceImpl implements ProfileService {
                 .firstName(profileRequest.firstName())
                 .lastName(profileRequest.lastName())
                 .profilePictureId(DEFAULT_PROFILE_PICTURE_ID)
+                .bannerPictureId(NO_BANNER_PICTURE_ID)
                 .build();
-        Profile savedProfile = profileRepository.save(profile);
 
-        log.info("Saved profile: {}", savedProfile);
+        Profile savedProfile = updateProfileInDb(profile);
 
         return profileMapper.mapProfileToProfileResponse(savedProfile);
     }
@@ -158,6 +184,18 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Getting basic profile info for profile with id: {}", profileId);
 
         Profile profile = getProfileFromRepository(profileId);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
+    }
+
+    @Override
+    public final ProfileResponse getProfileInfoByUsername(String username) {
+        log.info("Getting profile info for user with username: {}", username);
+
+        Profile profile = profileRepository.findByUsername(username)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Profile in db found : {}", profile);
 
         return profileMapper.mapProfileToProfileResponse(profile);
     }
@@ -195,6 +233,14 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Saved birth date: {}", savedBirthDate);
 
         return savedBirthDate;
+    }
+
+    private Profile updateProfileInDb(Profile profile) {
+        Profile profile1 = profileRepository.save(profile);
+
+        log.info("Saved profile: {}", profile1);
+
+        return profile1;
     }
 
 }

@@ -37,12 +37,14 @@ export class ProfileFeedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const profileId: string = "b983a0ca-c6fc-4dfb-845d-42805c72057e";
+        const profileId: string = "70e79dd2-d9cc-43cc-8c44-d1d207de0c91";
 
         this.profileService
             .getProfileSummary(profileId)
             .subscribe((profile: ProfileSummary) => {
                 this.profile = profile;
+
+                console.log(profile);
 
                 this.localStorage.saveUserToStorage({
                     profileId: this.profile.profileId,
@@ -50,7 +52,8 @@ export class ProfileFeedComponent implements OnInit {
                     username: this.profile.username,
                     subtitle: this.profile.subtitle,
                     bio: this.profile.bio,
-                    profilePictureUrl: this.profile.profilePictureUrl
+                    profilePictureUrl: this.profile.profilePictureUrl,
+                    profileBannerUrl: this.profile.profileBannerUrl || ""
                 });
             });
     }

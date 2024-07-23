@@ -1,38 +1,192 @@
 <app-toolbar [isOnFeed]="false"></app-toolbar>
 
 <div class="flex flex-col items-center m-4 max-sm:m-0 mt-20">
-    <div class="bg-tertiary w-full h-64"></div>
+    <div class="w-full h-64 relative">
+        @if (profileInfo === undefined || profileInfo.profileBannerUrl === "") {
+            <div class="bg-tertiary h-full w-full"></div>
+
+        } @else if (profileInfo.profileBannerUrl !== "") {
+            <img alt="Profile Banner"
+                 (click)="showProfileBanner()"
+                 (keydown.enter)="showProfileBanner()"
+                 tabindex="0"
+                 class="h-full w-full object-cover hover:cursor-pointer"
+                 [src]="profileInfo.profileBannerUrl">
+        }
+        @if (profileInfo !== undefined && profileInfo.profileId === currentUser.profileId && profileInfo.profileBannerUrl === "") {
+            <div class="absolute right-5 top-3 bg-card rounded-full">
+                <input
+                    #fileInput
+                    (change)="addBannerToProfile($event)"
+                    [accept]="fileService.allowedFileTypes"
+                    [multiple]="false"
+                    class="hidden"
+                    type="file"/>
+
+                <button mat-icon-button
+                        (click)="fileInput.click()"
+                        class="center"
+                        type="button"
+                        aria-label="Change background banner">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        } @else if (profileInfo !== undefined && profileInfo.profileId === currentUser.profileId) {
+            <div class="absolute right-5 top-3 bg-card rounded-full">
+                <input
+                    #fileInput
+                    (change)="addBannerToProfile($event)"
+                    [accept]="fileService.allowedFileTypes"
+                    [multiple]="false"
+                    class="hidden"
+                    type="file"/>
+
+                <button mat-icon-button
+                        [matMenuTriggerFor]="bannerEdit"
+                        class="center"
+                        type="button"
+                        aria-label="Change background banner">
+                    <mat-icon>edit</mat-icon>
+                </button>
+
+                <mat-menu #bannerEdit="matMenu">
+                    <button mat-menu-item
+                            (click)="fileInput.click()"
+                            aria-label="Add banner">
+                        <mat-icon>add</mat-icon>
+
+                        <span>Add</span>
+                    </button>
+
+                    <button mat-menu-item
+                            (click)="deleteBanner()"
+                            aria-label="Delete banner">
+                        <mat-icon>delete</mat-icon>
+
+                        <span>Delete</span>
+                    </button>
+                </mat-menu>
+            </div>
+        }
+    </div>
 
     <mat-card class="p-4 w-full mb-5">
         <div class="flex items-center sm:gap-3 max-sm:gap-1 justify-evenly">
             <div class="flex items-center gap-5">
-                <div class="h-16 sm:w-36 max-sm:w-32 relative">
-                    <img alt="Profile Picture"
-                         class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card" src="{{ profileInfo.profilePictureUrl }}">
+                <div class="h-16 sm:w-36 max-sm:w-32 relative hover:cursor-pointer">
+                    @if (profileInfo === undefined) {
+                        <mat-spinner></mat-spinner>
+                    } @else {
+                        <img alt="Profile Picture"
+                             (click)="showProfilePicture()"
+                             (keydown.enter)="showProfilePicture()"
+                             tabindex="0"
+                             class="absolute rounded-full max-sm:h-32 max-sm:w-32 sm:h-36 sm:w-36 bottom-[0.1%] border-solid border-4 border-card"
+                             [src]="profileInfo.profilePictureUrl">
+
+                        @if (profileInfo.profileId === currentUser.profileId) {
+                            <input
+                                #profilePhotoInput
+                                (change)="changeProfilePicture($event)"
+                                [accept]="fileService.allowedFileTypes"
+                                [multiple]="false"
+                                class="hidden"
+                                type="file"/>
+
+                            <div class="absolute bottom-0 right-0 bg-tertiary rounded-full">
+                                <button mat-icon-button
+                                        [matMenuTriggerFor]="profilePicture"
+                                        class="center"
+                                        aria-label="Change profile photo">
+                                    <mat-icon>photo_camera</mat-icon>
+                                </button>
+
+                                <mat-menu #profilePicture="matMenu">
+                                    <button mat-menu-item
+                                            (click)="profilePhotoInput.click()"
+                                            aria-label="Add banner">
+                                        <mat-icon>add</mat-icon>
+
+                                        <span>Add</span>
+                                    </button>
+
+                                    @if (profileInfo.profilePictureUrl !== "/images/nouser@example.com/shiba1.jpg") {
+                                        <button mat-menu-item
+                                                (click)="deleteBanner()"
+                                                aria-label="Delete banner">
+                                            <mat-icon>delete</mat-icon>
+
+                                            <span>Delete</span>
+                                        </button>
+                                    }
+                                </mat-menu>
+                            </div>
+                        }
+                    }
                 </div>
 
-                <div>
-                    <mat-card-title>{{ profileInfo.fullName }}</mat-card-title>
+                @if (profileInfo !== undefined) {
+                    <div>
+                        <mat-card-title>{{ profileInfo.fullName }}</mat-card-title>
 
-                    <mat-card-subtitle>{{ profileInfo.username }}</mat-card-subtitle>
-                </div>
+                        <mat-card-subtitle>{{ profileInfo.username }}</mat-card-subtitle>
+                    </div>
+                }
             </div>
 
-            @if (currentUser.username !== profileInfo.username) {
+            @if (profileInfo !== undefined && currentUser.username !== profileInfo.username) {
                 <div class="flex gap-3">
-                    <button mat-raised-button>
-                        <mat-icon>persons_tick</mat-icon>
-                        Friends
-                    </button>
+                    @if (profileInfo.isFriend) {
+                        <button mat-raised-button [matMenuTriggerFor]="menu" aria-label="Show friend options">
+                            <mat-icon>persons_tick</mat-icon>
+                            Friends
+                        </button>
+                    } @else {
+                        <button mat-raised-button aria-label="Add user to friends" color="primary">
+                            <mat-icon>person_add</mat-icon>
 
-                    <button mat-raised-button color="primary">
+                            <span>Add Friend</span>
+                        </button>
+                    }
+
+                    <button mat-raised-button [color]="profileInfo.isFriend ? 'primary': 'basic'"
+                            aria-label="Message user">
                         <mat-icon>message</mat-icon>
                         Message
                     </button>
+
+                    <mat-menu #menu="matMenu">
+                        @if (profileInfo.isFollowed) {
+                            <button mat-menu-item
+                                    (click)="unfollowUser()"
+                                    aria-label="Unfollow user">
+                                <mat-icon>person_off</mat-icon>
+
+                                <span>Unfollow</span>
+                            </button>
+                        } @else {
+                            <button mat-menu-item
+                                    (click)="followUser()"
+                                    aria-label="Follow user">
+                                <mat-icon>person</mat-icon>
+
+                                <span>Follow</span>
+                            </button>
+                        }
+
+                        @if (profileInfo.isFriend) {
+                            <button mat-menu-item
+                                    (click)="removeFriend()"
+                                    aria-label="Remove user from friends">
+                                <mat-icon>person_remove</mat-icon>
+
+                                <span>Remove Friend</span>
+                            </button>
+                        }
+                    </mat-menu>
                 </div>
-            } @else {
+            } @else if (profileInfo !== undefined) {
                 <div class="max-sm:hidden">
-                    <!--         TODO: add editing profiles background, profile photo           -->
                     <button mat-raised-button color="primary">
                         <mat-icon>edit</mat-icon>
                         Edit profile

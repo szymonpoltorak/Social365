@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.init.clients.posts.comments.constants.CommentRequest;
+import razepl.dev.social365.init.clients.posts.comments.constants.CommentAddRequest;
 import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
 import razepl.dev.social365.init.clients.profile.ProfileService;
 import razepl.dev.social365.init.clients.profile.data.ProfileRequest;
@@ -76,20 +76,22 @@ public class Initializer implements CommandLineRunner {
         List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
 
         profiles.forEach(profile -> {
+            if (profile.profileId().isEmpty()) {
+                return;
+            }
             String postContent = postContents.get(random.nextInt(postContents.size()));
             PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
 
             for (int i = 0; i < commentContents.size(); i++) {
                 String commentContent = commentContents.get(random.nextInt(commentContents.size()));
-                CommentRequest commentRequest = CommentRequest
+                CommentAddRequest commentAddRequest = CommentAddRequest
                         .builder()
                         .profileId(profile.profileId())
-                        .objectId(postResponse.postId())
+                        .postId(postResponse.postId())
                         .content(commentContent)
-                        .replyToCommentId(null)
                         .hasAttachment(false)
                         .build();
-                postCommentsService.addCommentToPost(commentRequest);
+                postCommentsService.addCommentToPost(commentAddRequest);
             }
         });
 

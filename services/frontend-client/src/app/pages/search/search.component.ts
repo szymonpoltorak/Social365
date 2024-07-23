@@ -9,6 +9,8 @@ import { Page } from "@interfaces/utils/page.interface";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 import { FriendsService } from "@api/profile/friends.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { RoutingService } from "@services/profile/routing.service";
 
 @Component({
     selector: 'app-search',
@@ -17,7 +19,8 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
         ToolbarComponent,
         MatCard,
         MatCardTitle,
-        MatButton
+        MatButton,
+        MatProgressSpinner
     ],
     templateUrl: './search.component.html',
     styleUrl: './search.component.scss'
@@ -31,6 +34,7 @@ export class SearchComponent implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private friendsService: FriendsService,
+                protected routingService: RoutingService,
                 private localStorage: LocalStorageService,
                 private profileService: ProfileService) {
     }
@@ -75,7 +79,9 @@ export class SearchComponent implements OnInit {
         this.friendsService
             .sendFriendRequest(this.localStorage.getUserProfileIdFromStorage(), friendId)
             .subscribe(() => {
-                this.profiles.content = this.profiles.content.filter(profile => profile.profileId !== friendId);
+                this.profiles.content = this.profiles.content
+                    .filter((profile: ProfileSearch) => profile.profileId !== friendId);
             });
     }
+
 }

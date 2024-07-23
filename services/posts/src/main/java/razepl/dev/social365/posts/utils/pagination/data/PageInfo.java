@@ -27,10 +27,9 @@ public record PageInfo(int friendPageNumber, int pageSize, Optional<PagingState>
     }
 
     public Pageable toPageable() {
-        if (pagingState.isEmpty()) {
-            return CassandraPageRequest.first(pageSize);
-        }
-        return CassandraPageRequest.of(CassandraPageRequest.first(pageSize), pagingState.get().toByteBuffer());
+        return pagingState
+                .<Pageable>map(state -> CassandraPageRequest.of(CassandraPageRequest.first(pageSize), state.toByteBuffer()))
+                .orElseGet(() -> CassandraPageRequest.first(pageSize));
     }
 
 }
