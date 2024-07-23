@@ -21,4 +21,6 @@ export enum ProfileMappings {
 
     UPDATE_PROFILE_BANNER_MAPPING = PROFILE_API_MAPPING + "/updateProfileBanner",
 
+    GET_PROFILE_INFO_BY_USERNAME_MAPPING = PROFILE_API_MAPPING + "/infoByUsername",
+
 }

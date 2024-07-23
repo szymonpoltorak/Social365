@@ -6,7 +6,7 @@
             <h1 class="text-xl mb-2">Friends</h1>
 
             @if ((friends | async) === undefined) {
-                <div class="flex items-center justify-center w-full">
+                <div class="flex items-center justify-center w-full p-6">
                     <mat-spinner></mat-spinner>
                 </div>
             } @else {

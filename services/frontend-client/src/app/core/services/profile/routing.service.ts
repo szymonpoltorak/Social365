@@ -5,6 +5,8 @@ import { filter, map, Observable } from "rxjs";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
+import { Either } from "@core/types/feed/either.type";
+import { Profile } from "@interfaces/feed/profile.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -51,7 +53,7 @@ export class RoutingService {
         return url.find((route: string) => route.includes('@'))?.trim() || '';
     }
 
-    navigateToProfileRoute(profile: ProfileSearch): void {
+    navigateToProfileRoute(profile: Either<Profile, ProfileSearch>): void {
         this.router.navigate([RouterPaths.PROFILE_DIRECT, profile.username, RouterPaths.PROFILE_POSTS]);
     }
 }

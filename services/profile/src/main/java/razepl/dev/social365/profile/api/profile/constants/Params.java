@@ -31,6 +31,8 @@ public final class Params {
     public static final String PROFILE_PICTURE_ID = "profilePictureId";
 
     public static final String PROFILE_BANNER_ID = "profileBannerId";
+    
+    public static final String CURRENT_USER_ID = "currentUserId";
 
     private Params() {
     }

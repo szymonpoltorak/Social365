@@ -2,14 +2,22 @@
     <div class="flex flex-col w-full">
         @if (!isEditing) {
             <div class="flex items-center gap-3 w-full">
-                <div class="relative">
+                <div (click)="routingService.navigateToProfileRoute(comment.author)"
+                     (keydown.enter)="routingService.navigateToProfileRoute(comment.author)"
+                     tabindex="0"
+                     class="relative hover:cursor-pointer">
                     <app-avatar-photo [imageLink]="comment.author.profilePictureUrl"></app-avatar-photo>
                 </div>
 
                 <div class="flex items-center w-full">
                     <div class="bg-secondary rounded-xl p-3 w-full">
                         <div class="flex justify-between">
-                            <div class="font-semibold">{{ comment.author.fullName }}</div>
+                            <div (click)="routingService.navigateToProfileRoute(comment.author)"
+                                 (keydown.enter)="routingService.navigateToProfileRoute(comment.author)"
+                                 tabindex="0"
+                                 class="font-semibold hover:cursor-pointer hover:underline">
+                                {{ comment.author.fullName }}
+                            </div>
 
                             <div class="text-xs font-extralight hover:cursor-pointer"
                                  matTooltip="{{ comment.commentKey.creationDateTime | date: 'medium' }}">

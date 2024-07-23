@@ -37,12 +37,14 @@ export class ProfileFeedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const profileId: string = "dc354dae-50cc-4133-8c72-3d97081e1660";
+        const profileId: string = "70e79dd2-d9cc-43cc-8c44-d1d207de0c91";
 
         this.profileService
             .getProfileSummary(profileId)
             .subscribe((profile: ProfileSummary) => {
                 this.profile = profile;
+
+                console.log(profile);
 
                 this.localStorage.saveUserToStorage({
                     profileId: this.profile.profileId,

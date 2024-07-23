@@ -52,20 +52,26 @@
                 </mat-card-header>
 
                 @if (imageUrls === undefined) {
-                    <div class="w-full flex items-center justify-center">
+                    <div class="w-full flex items-center justify-center p-6">
                         <mat-spinner></mat-spinner>
                     </div>
                 } @else {
                     <mat-card-content>
-                        <div class="grid p-xl:grid-cols-3 max-p-xl:grid-cols-2 grid-rows-1 w-full justify-center">
-                            @for (image of imageUrls; track image) {
-                                <div class="flex flex-col justify-center items-center hover:cursor-pointer transition duration-300 ease-in-out hover:brightness-110">
-                                    <img class="rounded-xl w-56 h-56"
-                                         [src]="image"
-                                         alt="Post photo">
-                                </div>
-                            }
-                        </div>
+                        @if (imageUrls.length === 0) {
+                            <div>
+                                <p class="text-center">No photos yet</p>
+                            </div>
+                        } @else {
+                            <div class="grid p-xl:grid-cols-3 max-p-xl:grid-cols-2 grid-rows-1 w-full justify-center">
+                                @for (image of imageUrls; track image) {
+                                    <div class="flex flex-col justify-center items-center hover:cursor-pointer transition duration-300 ease-in-out hover:brightness-110">
+                                        <img class="rounded-xl w-56 h-56"
+                                             [src]="image"
+                                             alt="Post photo">
+                                    </div>
+                                }
+                            </div>
+                        }
                     </mat-card-content>
                 }
             </mat-card>
@@ -85,7 +91,7 @@
                 </mat-card-header>
 
                 @if (friends === undefined) {
-                    <div class="w-full flex items-center justify-center">
+                    <div class="w-full flex items-center justify-center p-6">
                         <mat-spinner></mat-spinner>
                     </div>
                 } @else {

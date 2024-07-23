@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -121,7 +122,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileResponse getBasicProfileInfoByUsername(String username) {
+    public final ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId) {
         log.info("Getting basic profile info for user with username: {}", username);
 
         Profile profile = profileRepository.findByUsername(username)
@@ -129,7 +130,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Profile found : {}", profile);
 
-        return profileMapper.mapProfileToProfileResponse(profile);
+        return profileMapper.mapProfileToProfileBasicResponse(profile, currentUserId);
     }
 
     @Override
@@ -183,6 +184,18 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Getting basic profile info for profile with id: {}", profileId);
 
         Profile profile = getProfileFromRepository(profileId);
+
+        return profileMapper.mapProfileToProfileResponse(profile);
+    }
+
+    @Override
+    public final ProfileResponse getProfileInfoByUsername(String username) {
+        log.info("Getting profile info for user with username: {}", username);
+
+        Profile profile = profileRepository.findByUsername(username)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        log.info("Profile in db found : {}", profile);
 
         return profileMapper.mapProfileToProfileResponse(profile);
     }

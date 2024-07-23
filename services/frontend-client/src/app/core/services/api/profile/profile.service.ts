@@ -100,4 +100,11 @@ export class ProfileService {
         });
     }
 
+    getProfileInfoByUsername(username: string): Observable<Profile> {
+        return this.http.get<Profile>(ProfileMappings.GET_PROFILE_INFO_BY_USERNAME_MAPPING, {
+            params: {
+                username: username
+            }
+        }).pipe(take(1));
+    }
 }

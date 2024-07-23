@@ -26,6 +26,8 @@ public final class ProfileMappings {
 
     public static final String UPDATE_PROFILE_BANNER_MAPPING = "/updateProfileBanner";
 
+    public static final String GET_PROFILE_INFO_BY_USERNAME_MAPPING = "/infoByUsername";
+
     private ProfileMappings() {
     }
 

@@ -22,6 +22,9 @@ import { ImagesService } from "@api/images/images.service";
 import { Image } from "@interfaces/images/image.interface";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
+import { MatDialog } from "@angular/material/dialog";
+import { ImageDialogComponent } from "@shared/post-image-viewer/image-dialog/image-dialog.component";
+import { FriendsService } from "@api/profile/friends.service";
 
 @Component({
     selector: 'app-profile',
@@ -65,6 +68,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 private profileService: ProfileService,
                 private imageService: ImagesService,
                 protected fileService: FileService,
+                private friendsService: FriendsService,
+                protected matDialog: MatDialog,
                 private activatedRoute: ActivatedRoute) {
     }
 
@@ -81,8 +86,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     .getBasicProfileInfoByUsername(this.username, this.currentUser.profileId)
                     .subscribe((profile: ProfileBasicInfo) => {
                         this.profileInfo = profile;
-                        this.profileInfo.isFriend = true;
-                        this.profileInfo.isFollowed = false;
                     });
             })
 
@@ -114,7 +117,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
                     this.profileService
-                        .updateProfileBanner(this.profileInfo.username, image.imageId)
+                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
                         .subscribe();
                 });
         } else {
@@ -124,7 +127,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
                     this.profileService
-                        .updateProfileBanner(this.profileInfo.username, image.imageId)
+                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
                         .subscribe();
                 });
         }
@@ -144,6 +147,57 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.profileService
                     .updateProfilePicture(this.profileInfo.username, image.imageId)
                     .subscribe();
+            });
+    }
+
+    showProfilePicture(): void {
+        this.matDialog.open(ImageDialogComponent, {
+            data: {
+                imageUrls: [this.profileInfo.profilePictureUrl],
+                imageIndex: 0
+            }
+        });
+    }
+
+    showProfileBanner(): void {
+        this.matDialog.open(ImageDialogComponent, {
+            data: {
+                imageUrls: [this.profileInfo.profileBannerUrl],
+                imageIndex: 0
+            }
+        });
+    }
+
+    deleteBanner(): void {
+        this.imageService
+            .deleteImageByUrl(this.profileInfo.profileBannerUrl)
+            .subscribe(() => {
+                this.profileInfo.profileBannerUrl = "";
+            });
+    }
+
+    unfollowUser(): void {
+        this.friendsService
+            .removeProfileFromFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFollowed = false;
+            });
+    }
+
+    followUser(): void {
+        this.friendsService
+            .addProfileToFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFollowed = true;
+            });
+    }
+
+    removeFriend(): void {
+        this.friendsService
+            .removeUserFromFriends(this.currentUser.profileId, this.profileInfo.profileId)
+            .subscribe(() => {
+                this.profileInfo.isFriend = false;
+                this.profileInfo.isFollowed = false;
             });
     }
 }

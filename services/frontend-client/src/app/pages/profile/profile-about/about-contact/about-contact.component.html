@@ -2,7 +2,7 @@
     <mat-card-title>Contact info</mat-card-title>
 
     @if (mobileOption === undefined || mobileOption.data === undefined) {
-        <div class="w-full flex items-center justify-center h-96">
+        <div class="w-full flex items-center justify-center h-96 p-6">
             <mat-spinner></mat-spinner>
         </div>
 
@@ -11,7 +11,7 @@
     }
 
     @if (mailOption === undefined || mailOption.data === undefined) {
-        <div class="w-full flex items-center justify-center h-96">
+        <div class="w-full flex items-center justify-center h-96 p-6">
             <mat-spinner></mat-spinner>
         </div>
 
@@ -22,7 +22,7 @@
     <mat-card-title>Basic info</mat-card-title>
 
     @if (genderOption === undefined || genderOption.data === undefined) {
-        <div class="w-full flex items-center justify-center h-96">
+        <div class="w-full flex items-center justify-center h-96 p-6">
             <mat-spinner></mat-spinner>
         </div>
 

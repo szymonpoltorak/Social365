@@ -22,7 +22,7 @@ import razepl.dev.social365.images.entities.image.post.interfaces.PostImagesRepo
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class ImagesServiceImpl implements ImagesService {
     public ImageResponse uploadImage(String username, MultipartFile image) {
         log.info("Uploading image for user: {}", username);
 
-        String newFilename = String.format("%s_%s", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), image.getOriginalFilename());
+        String newFilename = String.format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
         String imagePath = Path.of(IMAGE_VOLUME_PATH, username, newFilename).toString();
 
         Image imageEntity = Image
@@ -166,7 +166,7 @@ public class ImagesServiceImpl implements ImagesService {
         fileManagementService.deleteFile(imageUrl);
 
         String newFilePath = String
-                .format("%s_%s", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), image.getOriginalFilename());
+                .format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
 
         log.info("Saving new image: {}", newFilePath);
 

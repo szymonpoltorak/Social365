@@ -14,6 +14,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResp
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
+import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileQueryResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
@@ -54,6 +55,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .friendsCount(profileRepository.getFriendsCount(profile.getProfileId()))
                 .postsCount(postCommentsService.getUsersPostCount(profile.getProfileId()))
                 .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
+                .profileBannerUrl(getProfilePicturePath(profile.getBannerPictureId()))
                 .subtitle(getSubtitle(profile))
                 .bio(profile.getBio())
                 .fullName(profile.getFullName())
@@ -252,7 +254,29 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .build();
     }
 
+    @Override
+    public final ProfileBasicResponse mapProfileToProfileBasicResponse(Profile profile, String currentUserId) {
+        if (profile == null) {
+            return null;
+        }
+        return ProfileBasicResponse
+                .builder()
+                .profileId(profile.getProfileId())
+                .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
+                .profileBannerUrl(getProfilePicturePath(profile.getBannerPictureId()))
+                .bio(profile.getBio())
+                .subtitle(getSubtitle(profile))
+                .fullName(profile.getFullName())
+                .username(profile.getEmail().getEmailValue())
+                .isFriend(profileRepository.areUsersFriends(currentUserId, profile.getProfileId()))
+                .isFollowing(profileRepository.doesUserFollowProfile(currentUserId, profile.getProfileId()))
+                .build();
+    }
+
     private String getProfilePicturePath(long pictureId) {
+        if (pictureId == -1L) {
+            return "";
+        }
         ImageResponse profilePicture = imagesServiceClient.getImagePath(pictureId);
 
         log.info("Profile picture response: {}", profilePicture);

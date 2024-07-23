@@ -29,6 +29,7 @@ import { ReplyDeleteRequest } from "@interfaces/posts-comments/reply-delete-requ
 import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.interface";
+import { RoutingService } from "@services/profile/routing.service";
 
 @Component({
     selector: 'app-comment',
@@ -68,6 +69,7 @@ export class CommentComponent implements OnInit {
 
     constructor(private localStorage: LocalStorageService,
                 private repliesService: RepliesService,
+                protected routingService: RoutingService,
                 private imagesService: ImagesService,
                 private commentService: CommentService) {
     }
