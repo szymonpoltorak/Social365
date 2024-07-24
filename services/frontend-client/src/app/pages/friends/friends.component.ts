@@ -28,7 +28,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
     selectedOption !: RouteOption;
     protected options: RouteOption[] = [
         { label: "Friend Requests", route: RouterPaths.FRIEND_REQUESTS },
-        { label: "Friend Suggestions", route: RouterPaths.FRIEND_SUGGESTIONS }
+        { label: "Friend Suggestion", route: RouterPaths.FRIEND_SUGGESTIONS }
     ];
     private routerDestroy$: Subject<void> = new Subject<void>();
 

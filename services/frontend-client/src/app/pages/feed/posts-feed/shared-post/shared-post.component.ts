@@ -24,6 +24,12 @@ import { PostService } from "@api/posts-comments/post.service";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 import { CommentService } from "@api/posts-comments/comment.service";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
+import { MatProgressBar } from "@angular/material/progress-bar";
+import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
+import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
+import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
+import { AttachImage } from "@interfaces/feed/attach-image.interface";
+import { ImagesService } from "@api/images/images.service";
 
 @Component({
     selector: 'app-shared-post',
@@ -39,16 +45,17 @@ import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
         MatDivider,
         MatIcon,
         PostHeaderComponent,
-        PostImageViewerComponent
+        PostImageViewerComponent,
+        MatProgressBar
     ],
     templateUrl: './shared-post.component.html',
     styleUrl: './shared-post.component.scss'
 })
 export class SharedPostComponent implements OnInit {
-    @Input({ transform: (value: Either<Post, SharedPost>) => value as SharedPost })
-    post !: SharedPost;
+    @Input({ transform: (value: Either<Post, SharedPost>) => value as SharedPost }) post !: SharedPost;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
+    private readonly PAGE_SIZE: number = 5;
     protected comments !: CassandraPage<PostComment>;
     protected areCommentsVisible: boolean = false;
     protected currentUser !: Profile;
@@ -56,17 +63,12 @@ export class SharedPostComponent implements OnInit {
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
                 private commentService: CommentService,
+                private imagesService: ImagesService,
                 public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
-
-        this.commentService
-            .getCommentsForPost(this.post.sharingPost.postId, this.currentUser.profileId, 5, null)
-            .subscribe((comments: CassandraPage<PostComment>) => {
-                this.comments = comments;
-            });
     }
 
     likePost(): void {
@@ -77,7 +79,13 @@ export class SharedPostComponent implements OnInit {
     }
 
     getCommentsForPost(): void {
-        this.areCommentsVisible = !this.areCommentsVisible;
+        this.commentService
+            .getCommentsForPost(this.post.sharingPost.postId, this.currentUser.profileId, 5, null)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.areCommentsVisible = !this.areCommentsVisible;
+
+                this.comments = comments;
+            });
     }
 
     sharePost(): void {
@@ -91,6 +99,9 @@ export class SharedPostComponent implements OnInit {
             .afterClosed()
             .pipe(take(1))
             .subscribe((content: string) => {
+                if (content === undefined) {
+                    return;
+                }
                 this.sharePostEvent.emit({
                     post: this.post.sharedPost,
                     content: content
@@ -114,4 +125,46 @@ export class SharedPostComponent implements OnInit {
             });
     }
 
+    createComment(event: CommentCreateData): void {
+        const request: CommentAddRequest = {
+            profileId: this.currentUser.profileId,
+            postId: this.post.sharingPost.postId,
+            hasAttachment: event.attachedImage !== null,
+            content: event.content
+        };
+        const image: AttachImage = event.attachedImage as AttachImage;
+
+        this.commentService
+            .addCommentToPost(request)
+            .subscribe((comment: PostComment) => {
+                if (request.hasAttachment) {
+                    this.imagesService
+                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .subscribe();
+
+                    comment.imageUrl = image.fileUrl;
+                }
+                this.comments.data.unshift(comment);
+            });
+    }
+
+    loadMoreComments(): void {
+        this.commentService
+            .getCommentsForPost(this.post.sharingPost.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .subscribe((comments: CassandraPage<PostComment>) => {
+                this.comments.pagingState = comments.pagingState;
+                this.comments.friendsPageNumber = comments.friendsPageNumber;
+                this.comments.hasNextPage = comments.hasNextPage;
+                this.comments.data.push(...comments.data);
+            });
+    }
+
+    deleteComment(event: CommentDeleteRequest): void {
+        this.commentService
+            .deleteComment(event)
+            .subscribe(() => {
+                this.comments.data = this.comments.data
+                    .filter((comment: PostComment) => comment.commentKey.commentId !== event.commentKey.commentId);
+            });
+    }
 }

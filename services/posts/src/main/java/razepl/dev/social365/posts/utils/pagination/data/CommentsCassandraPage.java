@@ -15,7 +15,11 @@ public record CommentsCassandraPage<T>(List<T> data, int pageSize, boolean hasNe
                                        String pagingState) implements CassandraPage<T> {
 
     public static <V, R> CassandraPage<R> of(Slice<V> comments, Function<V, R> mapper) {
-        List<R> data = comments.stream().map(mapper).toList();
+        List<R> data = comments
+                .stream()
+                .map(mapper)
+                .sorted()
+                .toList();
 
         CassandraPageRequest nextPageable = (CassandraPageRequest) getNextPageable(comments);
         PagingState pagingState = PagingState.newInstance(nextPageable.getPagingState());

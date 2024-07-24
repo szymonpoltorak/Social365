@@ -6,5 +6,10 @@ import razepl.dev.social365.posts.entities.comment.interfaces.CommentKeyData;
 
 @Builder
 public record CommentResponse(CommentKeyData commentKey, int commentLikesCount, String content, Profile author,
-                              boolean isLiked, String imageUrl, boolean hasReplies) {
+                              boolean isLiked, String imageUrl, boolean hasReplies) implements Comparable<CommentResponse> {
+    @Override
+    public int compareTo(CommentResponse commentResponse) {
+        return -commentKey.getCreationDateTime().compareTo(commentResponse.commentKey().getCreationDateTime());
+    }
+
 }

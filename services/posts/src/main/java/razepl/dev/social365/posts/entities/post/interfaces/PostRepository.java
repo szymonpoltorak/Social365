@@ -19,7 +19,8 @@ public interface PostRepository extends CassandraRepository<Post, PostKey> {
 
     @Query("""
             select * from posts
-            where author_id in :followedIds ALLOW FILTERING
+            where author_id in :followedIds
+            ALLOW FILTERING
             """)
     Slice<Post> findAllByFollowedUserIdsOrProfileId(@Param(Params.FOLLOWED_IDS) List<String> followedIds, Pageable pageable);
 

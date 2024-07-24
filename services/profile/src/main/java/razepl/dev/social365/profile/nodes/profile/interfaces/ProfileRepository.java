@@ -200,9 +200,11 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
 
     @Query(
             value = """
-                    MATCH (p1:Profile)-[:FRIENDS_WITH]-(f:Profile)-[:FRIENDS_WITH]-(p:Profile)
-                    WHERE NOT (p)-[:FRIENDS_WITH]-(p1) AND p.profileId = $profileId
-                    RETURN DISTINCT p1 as profile, COUNT(DISTINCT f) as mutualFriendsCount
+                    MATCH (p:Profile)
+                    MATCH (p1:Profile)
+                    WHERE NOT (p)-[:FRIENDS_WITH]-(p1) and p.profileId = $profileId and p1.profileId <> $profileId
+                    OPTIONAL MATCH (p)-[:FRIENDS_WITH]-(f:Profile)-[:FRIENDS_WITH]-(p1)
+                    RETURN p1 as profile, count(f) as mutualFriendsCount
                     ORDER BY mutualFriendsCount DESC
                     SKIP $skip LIMIT $limit
                     """,

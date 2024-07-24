@@ -1,4 +1,9 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
-public interface PostData {
+import java.time.LocalDateTime;
+
+public interface PostData extends Comparable<PostData> {
+
+    LocalDateTime getCreationDateTime();
+
 }

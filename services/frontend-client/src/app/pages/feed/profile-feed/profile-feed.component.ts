@@ -44,8 +44,6 @@ export class ProfileFeedComponent implements OnInit {
             .subscribe((profile: ProfileSummary) => {
                 this.profile = profile;
 
-                console.log(profile);
-
                 this.localStorage.saveUserToStorage({
                     profileId: this.profile.profileId,
                     fullName: this.profile.fullName,

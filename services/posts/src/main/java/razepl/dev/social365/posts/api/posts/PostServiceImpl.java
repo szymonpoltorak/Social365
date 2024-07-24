@@ -120,6 +120,7 @@ public class PostServiceImpl implements PostService {
         List<PostData> content = result
                 .stream()
                 .map(post -> postMapper.toPostData(post, profileId))
+                .sorted()
                 .toList();
 
         return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),

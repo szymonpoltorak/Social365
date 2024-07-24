@@ -73,19 +73,25 @@
         </button>
     </mat-card-actions>
 
-    @if (areCommentsVisible) {
-        <app-comment-create [user]="currentUser"></app-comment-create>
+    @if (areCommentsVisible && comments === undefined) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+    } @else if (areCommentsVisible) {
+        <app-comment-create (commentCreated)="createComment($event)" [user]="currentUser"></app-comment-create>
 
         @for (comment of comments.data; track comment) {
-            <app-comment [comment]="comment"></app-comment>
+            <app-comment (commentDeleted)="deleteComment($event)" [comment]="comment"></app-comment>
         }
 
-        <div class="m-2">
-            <button mat-button type="button">
-                <mat-icon>expand_more</mat-icon>
-
-                Load More Comments
-            </button>
-        </div>
+        @if (comments.hasNextPage) {
+            <div class="m-2">
+                <button mat-button
+                        (click)="loadMoreComments()"
+                        type="button">
+                    <mat-icon>expand_more</mat-icon>
+                    Load More Comments
+                </button>
+            </div>
+        }
     }
 </mat-card>

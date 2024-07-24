@@ -125,6 +125,9 @@ export class PostComponent implements OnInit {
             .afterClosed()
             .pipe(take(1))
             .subscribe((content: string) => {
+                if (content === undefined) {
+                    return;
+                }
                 this.sharePostEvent.emit({
                     post: this.post,
                     content: content
