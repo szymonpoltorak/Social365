@@ -5,6 +5,16 @@
 Social Media application made with modern technologies. This is repository for my diploma project. Goal is to create an App in Microservice architecture.
 Frontend is made with Angular 17 and Angular Material. Backend is made with Spring Boot 3. UI is full responsive and PWA ready.
 
+## How to run it
+
+I provided shell scripts written in `bin/sh` to run the app. They use `docker compose` to run the app but they are shorter than pasting whole command to console.
+
+* `rdv` - run development configuration,
+* `sdv` - stop all running dev containers, remove them and their images,
+* `rpd` - run app in production configuration,
+* `spd` - stop all running prod containers, remove them and their images.
+
+You can configure which service you want to be in dev or prod config in `compose.yml` or `compose.dev.yml`.
 
 ## How this app looks like
 
