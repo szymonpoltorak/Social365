@@ -17,24 +17,24 @@ import java.util.UUID;
 @Repository
 public interface CommentRepository extends CassandraRepository<Comment, CommentKey> {
 
-    @Query("select count(*) from comments where post_id = :postId ALLOW FILTERING")
+    @Query("select count(*) from comments where post_id = :postId")
     int countAllByPostId(@Param(Params.POST_ID) UUID postId);
 
-    @Query("delete from comments where post_id = :postId ALLOW FILTERING")
+    @Query("delete from comments where post_id = :postId")
     void deleteAllByPostId(@Param(Params.POST_ID) UUID postId);
 
-    @Query("select * from comments where post_id = :postId ALLOW FILTERING")
+    @Query("select * from comments where post_id = :postId")
     Slice<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId, Pageable pageable);
 
-    @Query("select * from comments where post_id = :postId ALLOW FILTERING")
+    @Query("select * from comments where post_id = :postId")
     List<Comment> findAllByPostId(@Param(Params.POST_ID) UUID postId);
 
-    @Query("select * from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :authorId")
+    @Query("select * from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :creationDateTime")
     Optional<Comment> findCommentById(@Param(Params.POST_ID) UUID postId,
                                       @Param(Params.COMMENT_ID) UUID commentId,
                                       @Param(Params.CREATION_DATE_TIME) String creationDateTime);
 
-    @Query("delete from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :authorId")
+    @Query("delete from comments where post_id = :postId and comment_id = :commentId and creation_date_time = :creationDateTime")
     void deleteCommentById(@Param(Params.POST_ID) UUID postId,
                            @Param(Params.COMMENT_ID) UUID commentId,
                            @Param(Params.CREATION_DATE_TIME) String creationDateTime);

@@ -108,6 +108,8 @@ export class PostComponent implements OnInit {
         this.commentService
             .getCommentsForPost(this.post.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
+                console.log(comments);
+
                 this.areCommentsVisible = !this.areCommentsVisible;
 
                 this.comments = comments;

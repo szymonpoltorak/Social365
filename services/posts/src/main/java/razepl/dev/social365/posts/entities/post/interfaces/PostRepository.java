@@ -37,7 +37,7 @@ public interface PostRepository extends CassandraRepository<Post, PostKey> {
 
     @Query("""
             delete from posts
-            where post_id = :postId and creation_date_time = :creationDateTime and author_id = :authorId
+            where author_id = :authorId and post_id = :postId and creation_date_time = :creationDateTime
             """)
     void deleteByPostId(@Param(Params.POST_ID) UUID postId,
                         @Param(Params.CREATION_DATE_TIME) String creationDateTime,
