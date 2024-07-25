@@ -19,7 +19,7 @@ public class CommentKey {
     @PrimaryKeyColumn(value = "post_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID postId;
 
-    @PrimaryKeyColumn(value = "comment_id", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
+    @PrimaryKeyColumn(value = "comment_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID commentId;
 
     @PrimaryKeyColumn(value = "creation_date_time", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)

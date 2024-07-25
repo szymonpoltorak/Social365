@@ -20,7 +20,7 @@ public interface ReplyCommentRepository extends CassandraRepository<ReplyComment
     @Query("select * from reply_comments where reply_to_comment_id = :commentId ALLOW FILTERING")
     Slice<ReplyComment> findAllRepliesByCommentId(@Param(Params.COMMENT_ID) UUID commentId, Pageable pageable);
 
-    @Query("select * from reply_comments where reply_to_comment_id = :commentId and reply_comment_id = :replyId and creation_date_time = :creationDateTime")
+    @Query("select * from reply_comments where reply_to_comment_id = :commentId and reply_comment_id = :replyId and creation_date_time = :authorId")
     Optional<ReplyComment> findReplyById(@Param(Params.COMMENT_ID) UUID commentId,
                                         @Param(Params.REPLY_ID) UUID replyId,
                                         @Param(Params.CREATION_DATE_TIME) String creationDateTime);

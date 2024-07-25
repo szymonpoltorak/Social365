@@ -23,6 +23,6 @@ public interface PostController {
 
     PostData editPost(EditPostRequest editPostRequest);
 
-    PostData deletePost(String profileId, String creationDateTime, String postId);
+    PostData deletePost(String profileId, String authorId, String postId);
 
 }

@@ -80,7 +80,7 @@ export class SharedPostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postId, this.currentUser.profileId, 5, null)
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.currentUser.profileId, 5, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.areCommentsVisible = !this.areCommentsVisible;
 
@@ -111,11 +111,10 @@ export class SharedPostComponent implements OnInit {
 
     editPost(event: EditDialogOutput): void {
         const request: EditPostRequest = {
-            profileId: this.currentUser.profileId,
-            postId: this.post.sharingPost.postId,
+            authorId: this.currentUser.profileId,
+            postId: this.post.sharingPost.postKey.postId,
             content: event.content,
             hasAttachments: false,
-            creationDateTime: this.post.sharingPost.creationDateTime
         }
 
         this.postService
@@ -128,7 +127,7 @@ export class SharedPostComponent implements OnInit {
     createComment(event: CommentCreateData): void {
         const request: CommentAddRequest = {
             profileId: this.currentUser.profileId,
-            postId: this.post.sharingPost.postId,
+            postId: this.post.sharingPost.postKey.postId,
             hasAttachment: event.attachedImage !== null,
             content: event.content
         };
@@ -150,7 +149,7 @@ export class SharedPostComponent implements OnInit {
 
     loadMoreComments(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.comments.pagingState = comments.pagingState;
                 this.comments.friendsPageNumber = comments.friendsPageNumber;

@@ -46,7 +46,7 @@ export class PostHeaderComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.creationDateTime = new Date(this.post.creationDateTime);
+        this.creationDateTime = new Date(this.post.postKey.creationDateTime);
     }
 
     editPost(): void {

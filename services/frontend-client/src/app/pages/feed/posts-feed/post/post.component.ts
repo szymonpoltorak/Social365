@@ -91,7 +91,7 @@ export class PostComponent implements OnInit {
 
     likePost(): void {
         this.postService
-            .updateLikePostCount(this.currentUser.profileId, this.post.postId, this.post.creationDateTime)
+            .updateLikePostCount(this.currentUser.profileId, this.post.postKey.postId, this.post.postKey.author.profileId)
             .subscribe(() => {
                 this.post.isPostLiked = !this.post.isPostLiked;
 
@@ -106,7 +106,7 @@ export class PostComponent implements OnInit {
             return;
         }
         this.commentService
-            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .getCommentsForPost(this.post.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.areCommentsVisible = !this.areCommentsVisible;
 
@@ -138,11 +138,10 @@ export class PostComponent implements OnInit {
     editPost(event: EditDialogOutput): void {
         const hasAttachments: boolean = event.newUrls.length > 0;
         const request: EditPostRequest = {
-            profileId: this.currentUser.profileId,
-            postId: this.post.postId,
+            authorId: this.currentUser.profileId,
+            postId: this.post.postKey.postId,
             content: event.content,
             hasAttachments: hasAttachments,
-            creationDateTime: this.post.creationDateTime
         }
 
         event.deletedImages.forEach((url: string) => {
@@ -153,7 +152,7 @@ export class PostComponent implements OnInit {
 
         event.addedImages.forEach((image: AttachImage) => {
             this.imagesService
-                .uploadPostImage(this.currentUser.username, image, this.post.postId)
+                .uploadPostImage(this.currentUser.username, image, this.post.postKey.postId)
                 .subscribe();
         });
 
@@ -169,7 +168,7 @@ export class PostComponent implements OnInit {
     createComment(event: CommentCreateData): void {
         const request: CommentAddRequest = {
             profileId: this.currentUser.profileId,
-            postId: this.post.postId,
+            postId: this.post.postKey.postId,
             hasAttachment: event.attachedImage !== null,
             content: event.content
         };
@@ -191,7 +190,7 @@ export class PostComponent implements OnInit {
 
     loadMoreComments(): void {
         this.commentService
-            .getCommentsForPost(this.post.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .getCommentsForPost(this.post.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.comments.pagingState = comments.pagingState;
                 this.comments.friendsPageNumber = comments.friendsPageNumber;

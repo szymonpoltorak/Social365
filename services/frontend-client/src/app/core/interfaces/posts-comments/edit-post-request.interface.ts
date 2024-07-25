@@ -1,7 +1,6 @@
 export interface EditPostRequest {
-    profileId: string;
+    authorId: string;
     postId: string;
-    creationDateTime: string;
     content: string;
     hasAttachments: boolean;
 }

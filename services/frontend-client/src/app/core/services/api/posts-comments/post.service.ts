@@ -8,6 +8,7 @@ import { Optional } from "@core/types/profile/optional.type";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
+import { PostKey } from "@interfaces/feed/post-key.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -35,42 +36,42 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    updateLikePostCount(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
+    updateLikePostCount(profileId: string, postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_LIKE_POST_COUNT, {}, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                creationDateTime: creationDateTime
+                authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    updateNotificationStatus(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
+    updateNotificationStatus(profileId: string, postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_NOTIFICATION_STATUS, {}, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                creationDateTime: creationDateTime
+                authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    updateBookmarkStatus(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
+    updateBookmarkStatus(profileId: string, postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_BOOKMARK_STATUS, {}, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                creationDateTime: creationDateTime
+                authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    sharePost(profileId: string, postId: string, creationDateTime: string, content: string): Observable<SharedPost> {
+    sharePost(profileId: string, postKey: PostKey, content: string): Observable<SharedPost> {
         return this.http.put<SharedPost>(PostMappings.SHARE_POST, {}, {
             params: {
                 profileId: profileId,
-                postId: postId,
-                creationDateTime: creationDateTime,
+                postId: postKey.postId,
+                authorId: postKey.author.profileId,
                 content: content
             }
         }).pipe(take(1));
@@ -90,12 +91,12 @@ export class PostService {
         return this.http.put<Post>(PostMappings.EDIT_POST, request).pipe(take(1));
     }
 
-    deletePost(profileId: string, postId: string, creationDateTime: string): Observable<Post> {
+    deletePost(profileId: string, postId: string, authorId: string): Observable<Post> {
         return this.http.delete<Post>(PostMappings.DELETE_POST, {
             params: {
                 profileId: profileId,
                 postId: postId,
-                creationDateTime: creationDateTime
+                authorId: authorId
             }
         }).pipe(take(1));
     }

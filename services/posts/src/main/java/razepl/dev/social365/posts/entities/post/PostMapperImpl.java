@@ -3,6 +3,7 @@ package razepl.dev.social365.posts.entities.post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import razepl.dev.social365.posts.api.posts.data.PostKeyResponse;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.data.PostStatistics;
 import razepl.dev.social365.posts.api.posts.data.SharedPostResponse;
@@ -89,8 +90,8 @@ public class PostMapperImpl implements PostMapper {
     @Override
     public final PostData toSharedPostResponse(Post sharingPost, String profileId) {
         SharingPostKey originalPostKey = sharingPost.getSharingPostKey();
-        Post sharedPost = postRepository.findByPostId(originalPostKey.postId(), originalPostKey.creationDateTime())
-                .orElseThrow(() -> new PostDoesNotExistException(sharingPost.getOriginalPostId().toString()));
+        Post sharedPost = postRepository.findByPostId(originalPostKey.authorId(), originalPostKey.postId())
+                .orElseThrow(() -> new PostDoesNotExistException(sharingPost.getOriginalPostId().toString(), originalPostKey.authorId()));
 
         return toSharedPostResponse(sharingPost, sharedPost, profileId);
     }
@@ -119,13 +120,11 @@ public class PostMapperImpl implements PostMapper {
                                            List<String> imagePaths, PostStatistics statistics) {
         return PostResponse
                 .builder()
-                .author(author)
-                .postId(post.getPostId().toString())
+                .postKey(new PostKeyResponse(author, post.getPostId().toString(), post.getCreationDateTime()))
                 .isPostLiked(post.isLikedBy(profileId))
                 .areNotificationTurnedOn(post.areNotificationsTurnedOnBy(profileId))
                 .statistics(statistics)
                 .isBookmarked(post.isBookmarkedBy(profileId))
-                .creationDateTime(post.getCreationDateTime())
                 .content(post.getContent())
                 .imageUrls(imagePaths)
                 .build();
