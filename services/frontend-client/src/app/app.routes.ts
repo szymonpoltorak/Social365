@@ -94,6 +94,11 @@ export const routes: Routes = [
             .then(m => m.SearchComponent)
     },
     {
+        path: RouterPaths.NETWORK_OFFLINE,
+        loadComponent: () => import("./pages/network-offline/network-offline.component")
+            .then(m => m.NetworkOfflineComponent)
+    },
+    {
         path: RouterPaths.CURRENT_PATH,
         redirectTo: RouterPaths.HOME_DIRECT,
         pathMatch: 'full'

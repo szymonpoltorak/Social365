@@ -5,6 +5,7 @@ export enum RouterPaths {
     CURRENT_PATH = '',
 
     FEED = "feed",
+    FEED_DIRECT = "/feed",
 
     UNKNOWN_PATH = "**",
 
@@ -34,5 +35,8 @@ export enum RouterPaths {
 
     SEARCH_PATH = "search",
     SEARCH_PATH_DIRECT = "/search",
+
+    NETWORK_OFFLINE = "offline",
+    NETWORK_OFFLINE_DIRECT = "/offline",
 
 }
