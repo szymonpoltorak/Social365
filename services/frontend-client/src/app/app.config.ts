@@ -7,6 +7,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { networkConnectivityInterceptor } from "@core/interceptors/network-connectivity.interceptor";
+import { errorDecoderInterceptor } from "@core/interceptors/error-decoder.interceptor";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -18,7 +19,8 @@ export const appConfig: ApplicationConfig = {
         }),
         provideNativeDateAdapter(),
         provideHttpClient(withInterceptors([
-            networkConnectivityInterceptor
+            networkConnectivityInterceptor,
+            errorDecoderInterceptor
         ]))
     ]
 };
