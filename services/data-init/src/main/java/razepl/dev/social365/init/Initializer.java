@@ -70,7 +70,7 @@ public class Initializer implements CommandLineRunner {
                 }
             }
         }
-        log.info(profiles.toString());
+        log.info("Profiles created: {}", profiles);
 
         List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.", "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
         List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
@@ -82,15 +82,19 @@ public class Initializer implements CommandLineRunner {
             String postContent = postContents.get(random.nextInt(postContents.size()));
             PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
 
+            log.info("Adding post: {}", postResponse);
+
             for (int i = 0; i < commentContents.size(); i++) {
                 String commentContent = commentContents.get(random.nextInt(commentContents.size()));
                 CommentAddRequest commentAddRequest = CommentAddRequest
                         .builder()
                         .profileId(profile.profileId())
-                        .postId(postResponse.postId())
+                        .postId(postResponse.postKey().postId())
                         .content(commentContent)
                         .hasAttachment(false)
                         .build();
+                log.info("Adding comment: {}", commentAddRequest);
+
                 postCommentsService.addCommentToPost(commentAddRequest);
             }
         });

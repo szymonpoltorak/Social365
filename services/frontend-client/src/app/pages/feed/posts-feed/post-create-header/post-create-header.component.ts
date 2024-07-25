@@ -83,7 +83,7 @@ export class PostCreateHeaderComponent implements OnInit {
                 post.imageUrls = images.map((image: AttachImage) => image.fileUrl);
 
                 images.forEach((image: AttachImage) => {
-                    this.imagesService.uploadPostImage(this.currentUser.username, image, post.postId).subscribe();
+                    this.imagesService.uploadPostImage(this.currentUser.username, image, post.postKey.postId).subscribe();
                 });
 
                 this.postCreated.emit(post);

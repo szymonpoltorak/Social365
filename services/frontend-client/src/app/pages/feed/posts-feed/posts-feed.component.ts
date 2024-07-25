@@ -113,12 +113,12 @@ export class PostsFeedComponent implements OnInit {
     }
 
     isPost(post: Either<Post, SharedPost>): boolean {
-        return Object.prototype.hasOwnProperty.call(post, "postId");
+        return !Object.prototype.hasOwnProperty.call(post, "sharingPost");
     }
 
     sharePost(event: SharePostData): void {
         this.postService
-            .sharePost(this.currentUser.profileId, event.post.postId, event.post.creationDateTime, event.content)
+            .sharePost(this.currentUser.profileId, event.post.postKey, event.content)
             .subscribe((sharedPost: SharedPost) => {
                 this.posts.data.unshift(sharedPost);
 
@@ -131,7 +131,7 @@ export class PostsFeedComponent implements OnInit {
 
     deletePost(event: Post): void {
         this.postService
-            .deletePost(this.currentUser.profileId, event.postId, event.creationDateTime)
+            .deletePost(this.currentUser.profileId, event.postKey.postId, event.postKey.author.profileId)
             .subscribe(() => {
                 this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
 

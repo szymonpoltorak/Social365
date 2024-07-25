@@ -164,12 +164,12 @@ public class PostServiceImpl implements PostService {
     public PostData editPost(EditPostRequest editPostRequest) {
         log.info("Editing post with request: {}", editPostRequest);
 
-        String profileId = editPostRequest.profileId();
+        String profileId = editPostRequest.authorId();
         String content = editPostRequest.content();
 
         postValidator.validatePostContent(content);
 
-        Post post = getPostFromRepository(editPostRequest.postId(), editPostRequest.creationDateTime());
+        Post post = getPostFromRepository(editPostRequest.authorId(), editPostRequest.postId());
 
         if (!post.isAuthorId(profileId)) {
             throw new UserIsNotAuthorException(profileId);
@@ -185,10 +185,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateLikePostCount(String profileId, String postId, String creationDateTime) {
+    public PostData updateLikePostCount(String profileId, String postId, String authorId) {
         log.info("Updating like count for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(authorId, postId);
 
         if (post.isLikedBy(profileId)) {
             post.getUserLikedIds().remove(profileId);
@@ -203,10 +203,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateNotificationStatus(String profileId, String postId, String creationDateTime) {
+    public PostData updateNotificationStatus(String profileId, String postId, String authorId) {
         log.info("Updating notification status for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(authorId, postId);
 
         if (post.areNotificationsTurnedOnBy(profileId)) {
             post.getUserNotificationIds().remove(profileId);
@@ -221,10 +221,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateBookmarkStatus(String profileId, String postId, String creationDateTime) {
+    public PostData updateBookmarkStatus(String profileId, String postId, String authorId) {
         log.info("Updating bookmark status for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(authorId, postId);
 
         if (post.isBookmarkedBy(profileId)) {
             post.getBookmarkedUserIds().remove(profileId);
@@ -239,10 +239,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData sharePost(String profileId, String postId, String content, String creationDateTime) {
+    public PostData sharePost(String profileId, String postId, String content, String authorId) {
         log.info("Updating shares count for post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(authorId, postId);
         String shareCreationDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         Post sharedPost = Post
@@ -250,7 +250,7 @@ public class PostServiceImpl implements PostService {
                 .key(PostKey.of(profileId, UUID.randomUUID(), shareCreationDateTime))
                 .content(content)
                 .originalPostId(post.getPostId())
-                .originalPostCreationDateTime(post.getCreationDateTime())
+                .originalPostAuthorId(authorId)
                 .hasAttachments(false)
                 .build();
 
@@ -269,10 +269,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostData deletePost(String profileId, String postId, String creationDateTime) {
+    public PostData deletePost(String profileId, String postId, String authorId) {
         log.info("Deleting post with id: {} for profileId: {}", postId, profileId);
 
-        Post post = getPostFromRepository(postId, creationDateTime);
+        Post post = getPostFromRepository(authorId, postId);
 
         if (!post.isAuthorId(profileId)) {
             throw new UserIsNotAuthorException(profileId);
@@ -304,9 +304,9 @@ public class PostServiceImpl implements PostService {
         return PostResponse.builder().build();
     }
 
-    private Post getPostFromRepository(String postId, String creationDateTime) {
-        Post post = postRepository.findByPostId(UUID.fromString(postId), creationDateTime)
-                .orElseThrow(() -> new PostDoesNotExistException(postId));
+    private Post getPostFromRepository(String authorId, String postId) {
+        Post post = postRepository.findByPostId(authorId, UUID.fromString(postId))
+                .orElseThrow(() -> new PostDoesNotExistException(postId, authorId));
 
         log.info("Found post with id: {}", post);
 

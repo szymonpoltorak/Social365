@@ -32,8 +32,8 @@ public class Post {
     @Column(value = "original_post_id")
     private UUID originalPostId;
 
-    @Column(value = "original_post_creation_date_time")
-    private String originalPostCreationDateTime;
+    @Column(value = "original_post_author_id")
+    private String originalPostAuthorId;
 
     @Column(value = "user_notification_ids")
     private Set<String> userNotificationIds;
@@ -55,7 +55,7 @@ public class Post {
     }
 
     public final SharingPostKey getSharingPostKey() {
-        return SharingPostKey.of(originalPostCreationDateTime, originalPostId);
+        return SharingPostKey.of(originalPostAuthorId, originalPostId);
     }
 
     public final boolean isAuthorId(String profileId) {
@@ -71,7 +71,7 @@ public class Post {
     }
 
     public final boolean isSharedPost() {
-        return originalPostId != null && originalPostCreationDateTime != null;
+        return originalPostId != null && originalPostAuthorId != null;
     }
 
     public final void addUserLikedId(String profileId) {

@@ -16,13 +16,18 @@ import java.util.UUID;
 @PrimaryKeyClass
 public final class PostKey {
 
-    @PrimaryKeyColumn(name = "author_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    @PrimaryKeyColumn(
+            name = "author_id",
+            ordinal = 0,
+            type = PrimaryKeyType.PARTITIONED
+    )
     private String authorId;
 
     @PrimaryKeyColumn(
             name = "post_id",
             ordinal = 1,
-            type = PrimaryKeyType.PARTITIONED
+            type = PrimaryKeyType.CLUSTERED,
+            ordering = Ordering.ASCENDING
     )
     private UUID postId;
 

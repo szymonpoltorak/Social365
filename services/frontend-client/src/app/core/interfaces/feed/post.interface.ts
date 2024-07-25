@@ -1,14 +1,12 @@
-import { Profile } from "@interfaces/feed/profile.interface";
 import { PostStatistics } from "@interfaces/feed/post-statistics.interface";
+import { PostKey } from "@interfaces/feed/post-key.interface";
 
 export interface Post {
-    postId: string;
+    postKey: PostKey;
     areNotificationTurnedOn: boolean;
     isBookmarked: boolean;
-    creationDateTime: string;
     content: string;
     statistics: PostStatistics;
     isPostLiked: boolean;
-    author: Profile;
     imageUrls: string[];
 }
