@@ -1,0 +1,51 @@
+server:
+    port: ${AUTH_SERVICE_PORT}
+
+    server-header: ""
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+spring:
+    datasource:
+        url: ${AUTH_SPRING_DATASOURCE_URL}
+        username: ${AUTH_POSTGRES_USER}
+        password: ${AUTH_POSTGRES_PASSWORD}
+
+    application:
+        name: ${AUTH_SERVICE_HOSTNAME}
+
+    security:
+        jwt:
+            expiration-time: ${JWT_EXPIRATION_TIME}
+            refresh-time: ${JWT_REFRESH_TIME}
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
+        properties:
+            hibernate:
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+
+                format_sql: true
+
+eureka:
+    client:
+        instance:
+            hostname: ${EUREKA_REGISTRY_HOSTNAME}
+
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true

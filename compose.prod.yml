@@ -6,6 +6,8 @@ include:
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:
+            - ./services/auth-service/compose.yml
+    -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
             - ./services/images/compose.yml

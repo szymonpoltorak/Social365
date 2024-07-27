@@ -1,6 +1,8 @@
 server:
     port: ${API_GATEWAY_PORT}
 
+    server-header: ""
+
     http2:
         enabled: true
 

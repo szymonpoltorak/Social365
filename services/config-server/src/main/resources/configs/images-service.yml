@@ -1,6 +1,8 @@
 server:
     port: ${IMAGES_SERVICE_PORT}
 
+    server-header: ""
+
     http2:
         enabled: true
 

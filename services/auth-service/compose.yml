@@ -1,0 +1,48 @@
+services:
+    auth-postgres:
+        env_file:
+            - path: ../.env
+              required: true
+        image: postgres:alpine
+        container_name: ${AUTH_POSTGRES_HOSTNAME}
+        hostname: ${AUTH_POSTGRES_HOSTNAME}
+        environment:
+            POSTGRES_DB: ${AUTH_POSTGRES_DB}
+            POSTGRES_USER: ${AUTH_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+        ports:
+            - "${AUTH_POSTGRES_PORT}:5432"
+        networks:
+            - social365-network
+        healthcheck:
+            test: pg_isready -U postgres
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    auth-service:
+        env_file:
+            - path: ../.env
+              required: true
+        container_name: ${AUTH_SERVICE_HOSTNAME}
+        image: ${AUTH_SERVICE_HOSTNAME}
+        hostname: ${AUTH_SERVICE_HOSTNAME}
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${AUTH_SERVICE_PORT}/actuator/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - social365-network
+        depends_on:
+            auth-postgres:
+                condition: service_healthy
+            config-server:
+                condition: service_healthy
+            eureka-registry:
+                condition: service_healthy
