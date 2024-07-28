@@ -4,8 +4,8 @@ import java.security.Key;
 
 public interface RsaKeyService {
 
-    Key buildSignInKey();
+    Key getSignKey();
 
-    Key buildVerifyKey();
+    Key getVerifyKey();
 
 }

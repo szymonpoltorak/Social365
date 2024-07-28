@@ -148,7 +148,7 @@ public class JwtServiceImpl implements JwtService {
     private Jws<Claims> parseJwsClaims(String token) {
         return Jwts
                 .parserBuilder()
-                .setSigningKey(rsaKeyService.buildVerifyKey())
+                .setSigningKey(rsaKeyService.getVerifyKey())
                 .build()
                 .parseClaimsJws(token);
     }
@@ -163,7 +163,7 @@ public class JwtServiceImpl implements JwtService {
                 .setHeader(Map.of(TOKEN_TYPE, TokenType.JWT_BEARER_TOKEN))
                 .setIssuedAt(new Date(time))
                 .setExpiration(new Date(time + expiration))
-                .signWith(rsaKeyService.buildSignInKey(), SignatureAlgorithm.RS512)
+                .signWith(rsaKeyService.getSignKey(), SignatureAlgorithm.RS512)
                 .compact();
     }
 

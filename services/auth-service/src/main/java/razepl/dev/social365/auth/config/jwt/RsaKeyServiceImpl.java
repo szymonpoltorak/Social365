@@ -28,23 +28,22 @@ public class RsaKeyServiceImpl implements RsaKeyService {
     private static final String PRIVATE_KEY_PATH = "private.pem";
     private static final String KEY_ALGORITHM = "RSA";
 
-    private Key privateKey = null;
-    private Key publicKey = null;
+    private Key signKey = null;
+    private Key verifyKey = null;
 
-    @Override
-    public final Key buildSignInKey() {
-        if (privateKey == null) {
-            privateKey = buildPrivateKey();
-        }
-        return privateKey;
+    public RsaKeyServiceImpl() {
+        this.signKey = buildPrivateKey();
+        this.verifyKey = buildPublicKey();
     }
 
     @Override
-    public final Key buildVerifyKey() {
-        if (publicKey == null) {
-            publicKey = buildPublicKey();
-        }
-        return publicKey;
+    public final Key getSignKey() {
+        return signKey;
+    }
+
+    @Override
+    public final Key getVerifyKey() {
+        return verifyKey;
     }
 
     private Key buildPublicKey() {
