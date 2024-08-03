@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import razepl.dev.social365.auth.config.api.auth.constants.AuthMessages;
-import razepl.dev.social365.auth.config.api.auth.data.ConstraintExceptionResponse;
-import razepl.dev.social365.auth.config.api.auth.data.ExceptionResponse;
+import razepl.dev.social365.auth.api.auth.constants.AuthMessages;
+import razepl.dev.social365.auth.api.auth.data.ConstraintExceptionResponse;
+import razepl.dev.social365.auth.api.auth.data.ExceptionResponse;
 import razepl.dev.social365.auth.exceptions.auth.throwable.AbstractException;
 
 import java.util.List;

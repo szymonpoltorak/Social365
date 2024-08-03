@@ -1,5 +1,5 @@
 server:
-    port: ${IMAGES_SERVICE_PORT}
+    port: ${AUTH_SERVICE_PORT}
 
     server-header: ""
 
@@ -11,25 +11,17 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
 
+
 spring:
     datasource:
-        url: ${IMAGES_SPRING_DATASOURCE_URL}
-        username: ${IMAGES_POSTGRES_USER}
-        password: ${IMAGES_POSTGRES_PASSWORD}
+        url: ${AUTH_SPRING_DATASOURCE_URL}
+        username: ${AUTH_POSTGRES_USER}
+        password: ${AUTH_POSTGRES_PASSWORD}
 
     security:
-        oauth2:
-            resourceserver:
-                jwt:
-                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
-                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
-                    jws-algorithms: ${JWS_ALGORITHM}
-
-    servlet:
-        multipart:
-            max-file-size: 20MB
-            max-request-size: 20MB
-            enabled: true
+        jwt:
+            expiration-time: ${JWT_EXPIRATION_TIME}
+            refresh-time: ${JWT_REFRESH_TIME}
 
     jpa:
         hibernate:

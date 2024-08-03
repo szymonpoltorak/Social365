@@ -3,27 +3,29 @@ package razepl.dev.social365.auth.config.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-import razepl.dev.social365.auth.config.api.auth.constants.AuthMappings;
-import razepl.dev.social365.auth.config.api.auth.data.AuthResponse;
-import razepl.dev.social365.auth.config.api.auth.devices.constants.DeviceMappings;
+import razepl.dev.social365.auth.api.auth.constants.AuthMappings;
+import razepl.dev.social365.auth.api.auth.data.AuthResponse;
+import razepl.dev.social365.auth.api.auth.devices.constants.DeviceMappings;
 import razepl.dev.social365.auth.config.constants.Headers;
 import razepl.dev.social365.auth.config.constants.Matchers;
 import razepl.dev.social365.auth.config.constants.Properties;
 import razepl.dev.social365.auth.config.constants.TokenRevokeStatus;
 import razepl.dev.social365.auth.config.jwt.constants.TokenType;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
-import razepl.dev.social365.auth.config.jwt.interfaces.RsaKeyService;
+import razepl.dev.social365.auth.config.jwt.interfaces.JwtKeyService;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.ServiceUser;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
 import razepl.dev.social365.auth.exceptions.auth.throwable.InvalidTokenException;
+import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
 
 import java.util.Date;
 import java.util.List;
@@ -36,16 +38,17 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
+    private static final String JWT_VERSION = "ver";
+    private static final String TOKEN_TYPE = "typ";
+    public static final String TOKEN_ISSUER = "http://auth-service:8080";
+
     @Value(Properties.EXPIRATION_PROPERTY)
     private long expirationTime;
 
     @Value(Properties.REFRESH_PROPERTY)
     private long refreshTime;
 
-    private static final String JWT_VERSION = "ver";
-    private static final String TOKEN_TYPE = "type";
-
-    private final RsaKeyService rsaKeyService;
+    private final JwtKeyService jwtKeyService;
     private final UserRepository userRepository;
 
     @Override
@@ -76,15 +79,17 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public final boolean isTokenValid(String jwtToken, ServiceUser userDetails) {
+    public final boolean isTokenNotValid(String jwtToken) {
         if (!isSignatureValid(jwtToken)) {
-            return false;
+            return true;
         }
-        Optional<String> username = getClaimFromToken(jwtToken, Claims::getSubject);
+        String username = getClaimFromToken(jwtToken, Claims::getSubject)
+                .orElseThrow(() -> new InvalidTokenException("Token does not have subject in payload!"));
 
-        return username
-                .filter(s -> s.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken, userDetails))
-                .isPresent();
+        ServiceUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserDoesNotExistException(username));
+
+        return isTokenExpired(jwtToken, user);
     }
 
     @Override
@@ -124,6 +129,14 @@ public class JwtServiceImpl implements JwtService {
         return updatedUser;
     }
 
+    @Override
+    public final OAuth2TokenValidatorResult validate(Jwt token) {
+        if (isTokenNotValid(token.getTokenValue())) {
+            return OAuth2TokenValidatorResult.failure();
+        }
+        return OAuth2TokenValidatorResult.success();
+    }
+
     private AuthResponse buildResponse(String authToken, String refreshToken) {
         return AuthResponse
                 .builder()
@@ -135,22 +148,22 @@ public class JwtServiceImpl implements JwtService {
     private boolean isSignatureValid(String jwtToken) {
         Jws<Claims> claimsJws = parseJwsClaims(jwtToken);
 
-        if (!claimsJws.getHeader().get(TOKEN_TYPE).equals(TokenType.JWT_BEARER_TOKEN.toString())) {
+        if (!claimsJws.getHeader().get(TOKEN_TYPE).equals(TokenType.JWT.toString())) {
             return false;
         }
-        return claimsJws.getHeader().getAlgorithm().equals(SignatureAlgorithm.RS512.getValue());
+        return claimsJws.getHeader().getAlgorithm().equals(Jwts.SIG.RS512.toString());
     }
 
     private Claims getAllClaims(String token) {
-        return parseJwsClaims(token).getBody();
+        return parseJwsClaims(token).getPayload();
     }
 
     private Jws<Claims> parseJwsClaims(String token) {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(rsaKeyService.getVerifyKey())
+                .parser()
+                .verifyWith(jwtKeyService.getVerifyKey())
                 .build()
-                .parseClaimsJws(token);
+                .parseSignedClaims(token);
     }
 
     private String buildToken(Map<String, Object> additionalClaims, UserDetails userDetails, long expiration) {
@@ -158,12 +171,15 @@ public class JwtServiceImpl implements JwtService {
 
         return Jwts
                 .builder()
-                .setClaims(additionalClaims)
-                .setSubject(userDetails.getUsername())
-                .setHeader(Map.of(TOKEN_TYPE, TokenType.JWT_BEARER_TOKEN))
-                .setIssuedAt(new Date(time))
-                .setExpiration(new Date(time + expiration))
-                .signWith(rsaKeyService.getSignKey(), SignatureAlgorithm.RS512)
+                .claims(additionalClaims)
+                .subject(userDetails.getUsername())
+                .header()
+                .add(TOKEN_TYPE, TokenType.JWT.name())
+                .and()
+                .issuer(TOKEN_ISSUER)
+                .issuedAt(new Date(time))
+                .expiration(new Date(time + expiration))
+                .signWith(jwtKeyService.getSignKey())
                 .compact();
     }
 
@@ -191,10 +207,14 @@ public class JwtServiceImpl implements JwtService {
         }
         Optional<Long> jwtVersion = getJwtVersionClaimFromToken(token);
 
+        log.info("Jwt version : {}", jwtVersion);
+
         if (jwtVersion.isEmpty()) {
             throw new InvalidTokenException("Token does not have jwtVersion in payload!");
         }
         long version = jwtVersion.get();
+
+        log.info("User version : {}", userDetails.getJwtVersion());
 
         return version != userDetails.getJwtVersion();
     }

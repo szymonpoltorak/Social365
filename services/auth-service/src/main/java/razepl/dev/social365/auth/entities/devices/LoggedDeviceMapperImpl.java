@@ -1,7 +1,7 @@
 package razepl.dev.social365.auth.entities.devices;
 
 import org.springframework.stereotype.Component;
-import razepl.dev.social365.auth.config.api.auth.devices.data.LoggedDeviceResponse;
+import razepl.dev.social365.auth.api.auth.devices.data.LoggedDeviceResponse;
 import razepl.dev.social365.auth.entities.devices.interfaces.LoggedDeviceMapper;
 
 import java.time.format.DateTimeFormatter;

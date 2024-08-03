@@ -9,14 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtAuthenticationFilter;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
 import razepl.dev.social365.auth.entities.user.interfaces.ServiceUser;
-import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
-import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilterImpl extends OncePerRequestFilter implements JwtAuthenticationFilter {
 
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
 
     @Override
@@ -47,17 +46,17 @@ public class JwtAuthenticationFilterImpl extends OncePerRequestFilter implements
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             return;
         }
-        ServiceUser userDetails = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserDoesNotExistException(username));
+        ServiceUser userDetails = (ServiceUser) userDetailsService.loadUserByUsername(username);
 
-        if (jwtService.isTokenValid(jwtToken, userDetails)) {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+        if (jwtService.isTokenNotValid(jwtToken)) {
+            return;
         }
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities()
+        );
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
 }
