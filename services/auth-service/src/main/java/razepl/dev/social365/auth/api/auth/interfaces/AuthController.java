@@ -2,6 +2,7 @@ package razepl.dev.social365.auth.api.auth.interfaces;
 
 import jakarta.servlet.http.HttpServletRequest;
 import razepl.dev.social365.auth.api.auth.data.AuthResponse;
+import razepl.dev.social365.auth.api.auth.data.TokenResponse;
 import razepl.dev.social365.auth.api.auth.data.LoginRequest;
 import razepl.dev.social365.auth.api.auth.data.RegisterRequest;
 import razepl.dev.social365.auth.api.auth.data.ResetPasswordRequest;
@@ -13,7 +14,7 @@ public interface AuthController {
 
     AuthResponse loginUser(LoginRequest loginRequest, HttpServletRequest request);
 
-    AuthResponse refreshUserToken(String refreshToken);
+    TokenResponse refreshUserToken(String refreshToken);
 
     SimpleStringResponse requestResetUsersPassword(String username);
 

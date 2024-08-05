@@ -38,6 +38,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ProfileMapperImpl implements ProfileMapper {
 
+    private static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/nouser@example.com/shiba1.jpg";
     private final ImagesServiceClient imagesServiceClient;
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
@@ -276,6 +277,9 @@ public class ProfileMapperImpl implements ProfileMapper {
     private String getProfilePicturePath(long pictureId) {
         if (pictureId == -1L) {
             return "";
+        }
+        if (pictureId == 0L) {
+            return DEFAULT_PROFILE_IMAGE_PATH;
         }
         ImageResponse profilePicture = imagesServiceClient.getImagePath(pictureId);
 

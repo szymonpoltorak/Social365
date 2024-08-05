@@ -4,8 +4,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
-import razepl.dev.social365.auth.api.auth.data.AuthResponse;
-import razepl.dev.social365.auth.config.constants.TokenRevokeStatus;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.ServiceUser;
 
@@ -13,26 +12,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface JwtService extends OAuth2TokenValidator<Jwt> {
+public interface JwtService extends OAuth2TokenValidator<Jwt>, JwtDecoder {
 
     Optional<Long> getJwtVersionClaimFromToken(String jwtToken);
 
     <T> Optional<T> getClaimFromToken(String jwtToken, Function<Claims, T> claimsHandler);
 
-    String generateToken(ServiceUser userDetails);
+    Jwt generateToken(ServiceUser userDetails);
 
-    String generateToken(Map<String, Object> additionalClaims, ServiceUser userDetails, long expiration);
+    Jwt generatePasswordRefreshToken(ServiceUser userDetails);
+
+    Jwt generateRefreshToken(ServiceUser userDetails);
+
+    Jwt generateToken(Map<String, Object> additionalClaims, ServiceUser userDetails, long expiration);
 
     boolean isTokenNotValid(String jwtToken);
 
-    Optional<String> getJwtTokenFromRequest(HttpServletRequest request);
+    Optional<Jwt> getJwtTokenFromRequest(HttpServletRequest request);
 
-    String generateRefreshToken(ServiceUser userDetails);
-
-    AuthResponse buildTokensIntoResponse(String authToken, String refreshToken);
-
-    AuthResponse buildTokensIntoResponse(User user, TokenRevokeStatus shouldBeRevoked);
-
-    User revokeUserTokens(User user);
+    void revokeUserTokens(User user);
 
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
@@ -32,19 +33,16 @@ public class LogoutServiceImpl implements LogoutHandler {
 
     @Override
     public final void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String authHeader = request.getHeader(AUTH_HEADER);
+        Optional<Jwt> jwtOpt = jwtService.getJwtTokenFromRequest(request);
 
-        if (authHeader == null || !authHeader.startsWith(TOKEN_HEADER)) {
+        if (jwtOpt.isEmpty()) {
             log.warn("Auth header is null or it does not contain Bearer token");
 
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
             return;
         }
-        String jwt = authHeader.substring(TOKEN_START_INDEX);
-
-        log.info("Jwt in header : {}", jwt);
-
+        Jwt jwt = jwtOpt.get();
         User user = getUserFromToken(jwt);
 
         long jwtVersion = getJwtVersionFromToken(jwt);
@@ -59,8 +57,8 @@ public class LogoutServiceImpl implements LogoutHandler {
         SecurityContextHolder.clearContext();
     }
 
-    private User getUserFromToken(String jwt) {
-        Optional<String> usernameOptional = jwtService.getClaimFromToken(jwt, Claims::getSubject);
+    private User getUserFromToken(Jwt jwt) {
+        Optional<String> usernameOptional = jwtService.getClaimFromToken(jwt.getTokenValue(), Claims::getSubject);
 
         if (usernameOptional.isEmpty()) {
             throw new InvalidTokenException("Username is not present in token!");
@@ -71,8 +69,8 @@ public class LogoutServiceImpl implements LogoutHandler {
                 .orElseThrow(() -> new UserDoesNotExistException(username));
     }
 
-    private long getJwtVersionFromToken(String jwt) {
-        Optional<Long> jwtVersionOptional = jwtService.getJwtVersionClaimFromToken(jwt);
+    private long getJwtVersionFromToken(Jwt jwt) {
+        Optional<Long> jwtVersionOptional = jwtService.getJwtVersionClaimFromToken(jwt.getTokenValue());
 
         if (jwtVersionOptional.isEmpty()) {
             throw new InvalidTokenException("Jwt version is not present in token!");

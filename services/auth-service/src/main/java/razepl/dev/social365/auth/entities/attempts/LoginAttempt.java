@@ -20,6 +20,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginAttempt implements AttemptController {
+
     private static final long LOCK_ATTEMPTS_MULTIPLIER = 5L;
     private static final long MINIMUM_LOCK_TIME = 3L;
     private static final long NO_ATTEMPTS = 0L;

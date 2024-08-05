@@ -1,5 +1,7 @@
 package razepl.dev.social365.auth.config;
 
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import razepl.dev.social365.auth.config.jwt.interfaces.JwtKeyService;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
 import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
 
@@ -27,7 +30,14 @@ public class AppConfiguration {
 
     private static final String API_PATTERN = "/api/v1/**";
     private static final int BCRYPT_STRENGTH = 10;
+
     private final UserRepository userRepository;
+    private final JwtKeyService jwtKeyService;
+
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        return jwtKeyService.getJwkSource();
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -55,11 +65,10 @@ public class AppConfiguration {
                 HttpMethod.POST.name(),
                 HttpMethod.PUT.name(),
                 HttpMethod.DELETE.name(),
-                HttpMethod.OPTIONS.name(),
-                HttpMethod.PATCH.name()
+                HttpMethod.OPTIONS.name()
         ));
         cors.setAllowedOrigins(List.of(
-                "http://reverse-proxy:80",
+                SecurityConfiguration.FRONTEND_URL,
                 "http://localhost:80"
         ));
 
@@ -80,8 +89,11 @@ public class AppConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y,
-                BCRYPT_STRENGTH, new SecureRandom(SecureRandom.getSeed(BCRYPT_STRENGTH)));
+        return new BCryptPasswordEncoder(
+                BCryptPasswordEncoder.BCryptVersion.$2Y,
+                BCRYPT_STRENGTH,
+                new SecureRandom(SecureRandom.getSeed(BCRYPT_STRENGTH))
+        );
     }
 
     @Bean

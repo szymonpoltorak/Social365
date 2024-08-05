@@ -15,7 +15,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -68,6 +67,9 @@ public class User implements ServiceUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
+
+    @Column(unique = true)
+    private String profileId;
 
     @NotNull(message = NAME_NULL_MESSAGE)
     @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = NAME_SIZE_MESSAGE)

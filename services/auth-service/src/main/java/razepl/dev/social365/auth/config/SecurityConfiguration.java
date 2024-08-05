@@ -1,8 +1,5 @@
 package razepl.dev.social365.auth.config;
 
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -34,10 +29,8 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import razepl.dev.social365.auth.config.jwt.JwtServiceImpl;
+import razepl.dev.social365.auth.config.jwt.constants.JwtClaims;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtAuthenticationFilter;
-import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
-import razepl.dev.social365.auth.config.jwt.interfaces.JwtKeyService;
 
 import java.util.UUID;
 
@@ -54,13 +47,11 @@ import static razepl.dev.social365.auth.config.constants.Matchers.LOGOUT_URL;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String FRONTEND_URL = "http://reverse-proxy:80";
+    static final String FRONTEND_URL = "http://reverse-proxy:80";
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final LogoutHandler logoutHandler;
-    private final JwtKeyService jwtKeyService;
-    private final JwtService jwtService;
 
     @Bean
     @Order(1)
@@ -123,11 +114,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        return new ImmutableJWKSet<>(jwtKeyService.getJwkSet());
-    }
-
-    @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("Social365")
@@ -147,19 +133,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        NimbusJwtDecoder decoder = (NimbusJwtDecoder) OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-
-        decoder.setJwtValidator(jwtService);
-
-        return decoder;
-    }
-
-    @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings
                 .builder()
-                .issuer(JwtServiceImpl.TOKEN_ISSUER)
+                .issuer(JwtClaims.TOKEN_ISSUER)
                 .build();
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.auth.api.auth.data.AuthResponse;
+import razepl.dev.social365.auth.api.auth.data.TokenResponse;
 import razepl.dev.social365.auth.api.auth.data.LoginRequest;
 import razepl.dev.social365.auth.api.auth.data.RegisterRequest;
 import razepl.dev.social365.auth.api.auth.data.ResetPasswordRequest;
@@ -43,7 +44,7 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PostMapping(value = AuthMappings.REFRESH_MAPPING)
-    public final AuthResponse refreshUserToken(@RequestParam String refreshToken) {
+    public final TokenResponse refreshUserToken(@RequestParam String refreshToken) {
         return authService.refreshToken(refreshToken);
     }
 

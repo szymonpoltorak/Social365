@@ -13,4 +13,6 @@ public interface ServiceUser extends UserDetails {
 
     void incrementJwtVersion();
 
+    String getProfileId();
+
 }

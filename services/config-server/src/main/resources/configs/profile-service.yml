@@ -22,6 +22,14 @@ spring:
             username: ${NEO4J_USERNAME}
             password: ${NEO4J_PASSWORD}
 
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
+                    jws-algorithms: ${JWS_ALGORITHM}
+
 eureka:
     client:
         service-url:
