@@ -6,5 +6,5 @@ import razepl.dev.social365.auth.entities.user.interfaces.Password;
 import java.time.LocalDate;
 
 @Builder
-public record RegisterRequest(String name, String surname, String username, @Password String password, LocalDate dateOfBirth) {
+public record RegisterRequest(String firstName, String lastName, String username, @Password String password, LocalDate dateOfBirth) {
 }

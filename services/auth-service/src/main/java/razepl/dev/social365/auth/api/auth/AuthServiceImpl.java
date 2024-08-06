@@ -99,11 +99,12 @@ public class AuthServiceImpl implements AuthService {
 
         loginDeviceFilter.addNewDeviceToUserLoggedInDevices(user, request);
 
+        addJwtSecurityContext(user);
+
         Profile profile = profileService.getBasicProfileInfo(user.getProfileId());
 
         log.info("Profile of user : {}", profile);
 
-//        return authHelperService.buildTokensIntoResponse(user, Profile.builder().build(), TokenRevokeStatus.TO_REVOKE);
         return authHelperService.buildTokensIntoResponse(user, profile, TokenRevokeStatus.TO_REVOKE);
     }
 

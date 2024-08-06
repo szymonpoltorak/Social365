@@ -41,13 +41,13 @@ import static razepl.dev.social365.auth.entities.user.constants.UserValidation.N
 import static razepl.dev.social365.auth.entities.user.constants.UserValidation.NAME_PATTERN;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.EMAIL_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.EMAIL_NULL_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.NAME_NULL_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.NAME_PATTERN_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.NAME_SIZE_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_NULL_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_PATTERN_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_SIZE_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.PASSWORD_NULL_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.SURNAME_NULL_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.SURNAME_PATTERN_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.SURNAME_SIZE_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_NULL_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_PATTERN_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_SIZE_MESSAGE;
 
 
 @Slf4j
@@ -71,15 +71,15 @@ public class User implements ServiceUser {
     @Column(unique = true)
     private String profileId;
 
-    @NotNull(message = NAME_NULL_MESSAGE)
-    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = NAME_SIZE_MESSAGE)
-    @Pattern(regexp = NAME_PATTERN, message = NAME_PATTERN_MESSAGE)
-    private String name;
+    @NotNull(message = FIRST_NAME_NULL_MESSAGE)
+    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = FIRST_NAME_SIZE_MESSAGE)
+    @Pattern(regexp = NAME_PATTERN, message = FIRST_NAME_PATTERN_MESSAGE)
+    private String firstName;
 
-    @NotNull(message = SURNAME_NULL_MESSAGE)
-    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = SURNAME_SIZE_MESSAGE)
-    @Pattern(regexp = NAME_PATTERN, message = SURNAME_PATTERN_MESSAGE)
-    private String surname;
+    @NotNull(message = LAST_NAME_NULL_MESSAGE)
+    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = LAST_NAME_SIZE_MESSAGE)
+    @Pattern(regexp = NAME_PATTERN, message = LAST_NAME_PATTERN_MESSAGE)
+    private String lastName;
 
     @NotNull(message = EMAIL_NULL_MESSAGE)
     @Column(unique = true)
@@ -98,7 +98,7 @@ public class User implements ServiceUser {
 
     @Override
     public final String getFullName() {
-        return String.format("%s %s", name, surname);
+        return String.format("%s %s", firstName, lastName);
     }
 
     @Override

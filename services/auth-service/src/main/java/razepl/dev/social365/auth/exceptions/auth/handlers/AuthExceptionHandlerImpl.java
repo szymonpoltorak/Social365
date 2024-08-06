@@ -53,7 +53,7 @@ public class AuthExceptionHandlerImpl {
     }
 
     private <T> ResponseEntity<T> buildResponseEntity(T response, HttpStatusCode status, String errorMessage, String className) {
-        log.error("Exception class name : {}\nError message : {}", className, errorMessage);
+        log.error("Exception class firstName : {}\nError message : {}", className, errorMessage);
 
         return new ResponseEntity<>(response, status);
     }

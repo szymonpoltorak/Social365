@@ -18,6 +18,8 @@ public interface JwtService extends OAuth2TokenValidator<Jwt>, JwtDecoder {
 
     <T> Optional<T> getClaimFromToken(String jwtToken, Function<Claims, T> claimsHandler);
 
+    Optional<Jwt> getJwtTokenFromRequest(HttpServletRequest request);
+
     Jwt generateToken(ServiceUser userDetails);
 
     Jwt generatePasswordRefreshToken(ServiceUser userDetails);
@@ -27,8 +29,6 @@ public interface JwtService extends OAuth2TokenValidator<Jwt>, JwtDecoder {
     Jwt generateToken(Map<String, Object> additionalClaims, ServiceUser userDetails, long expiration);
 
     boolean isTokenNotValid(String jwtToken);
-
-    Optional<Jwt> getJwtTokenFromRequest(HttpServletRequest request);
 
     void revokeUserTokens(User user);
 

@@ -61,9 +61,9 @@ public class AuthHelperServiceImpl implements AuthHelperService {
     public final User buildRequestIntoUser(RegisterRequest registerRequest, LoginAttempt loginAttempt) {
         return User
                 .builder()
-                .name(registerRequest.name())
+                .firstName(registerRequest.firstName())
                 .username(registerRequest.username())
-                .surname(registerRequest.surname())
+                .lastName(registerRequest.lastName())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .jwtVersion(0L)
                 .loginAttempt(loginAttempt)
@@ -113,11 +113,6 @@ public class AuthHelperServiceImpl implements AuthHelperService {
 
         userRepository.save(user);
 
-    }
-
-    @Override
-    public final TokenResponse buildTokenResponse(User user) {
-        return buildResponse(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
 
     private TokenResponse buildResponse(Jwt authToken, Jwt refreshToken) {

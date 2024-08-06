@@ -1,94 +1,139 @@
 package razepl.dev.social365.init;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import razepl.dev.social365.init.clients.auth.AuthService;
+import razepl.dev.social365.init.clients.auth.data.AuthResponse;
+import razepl.dev.social365.init.clients.auth.data.RegisterRequest;
 import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
 import razepl.dev.social365.init.clients.posts.comments.constants.CommentAddRequest;
 import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
 import razepl.dev.social365.init.clients.profile.ProfileService;
-import razepl.dev.social365.init.clients.profile.data.ProfileRequest;
-import razepl.dev.social365.init.clients.profile.data.ProfileResponse;
+import razepl.dev.social365.init.clients.profile.data.Profile;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.random.RandomGenerator;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class Initializer implements CommandLineRunner {
 
+    private static final int MINIMAL_AGE = 13;
+    private static final int MAX_BOUND = 50;
+    private static final int NUM_OF_PROFILES = 10;
+    private static final int BEGIN_RANGE = 0;
+    private static final String PASSWORD = "Abc1!l1.DKk";
+
     private final ProfileService profileService;
     private final PostCommentsService postCommentsService;
+    private final AuthService authService;
+    private final JwtDecoder jwtDecoder;
 
     @Override
     public final void run(String... args) {
-        final int numberOfProfiles = 10;
         List<String> firstNames = List.of("Andrzej", "Jan", "Tomasz", "Piotr", "Pawel", "Mariusz",
                 "Wojciech", "Kacper", "Kamil", "Krzysztof");
         List<String> lastNames = List.of("Kowalski", "Nowak", "Wojcik", "Kaminski", "Lewandowski");
-        Collection<ProfileRequest> profileRequests = new ArrayList<>(numberOfProfiles);
-        List<ProfileResponse> profiles = new ArrayList<>(numberOfProfiles);
         RandomGenerator random = new SecureRandom();
 
-        for (int i = 0; i < numberOfProfiles; i++) {
-            String firstName = firstNames.get(i);
-            String lastName = lastNames.get(random.nextInt(lastNames.size()));
-            String email = firstName.toLowerCase(Locale.ROOT) + "." + lastName.toLowerCase(Locale.ROOT) + "@example.com";
-            LocalDate dateOfBirth = LocalDate.now().minusYears((long) (13 + random.nextInt(50)));
+        Collection<RegisterRequest> registerRequests = IntStream
+                .range(BEGIN_RANGE, NUM_OF_PROFILES)
+                .mapToObj(i -> {
+                    String firstName = firstNames.get(i);
+                    String lastName = lastNames.get(random.nextInt(lastNames.size()));
+                    String email = "%s.%s@gmail.com".formatted(firstName.toLowerCase(Locale.US), lastName.toLowerCase(Locale.US));
+                    LocalDate dateOfBirth = LocalDate.now().minusYears((MINIMAL_AGE + random.nextInt(MAX_BOUND)));
 
-            ProfileRequest profileRequest = ProfileRequest.builder()
-                    .userId((long) i)
-                    .username(email)
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .dateOfBirth(dateOfBirth)
-                    .build();
-            profileRequests.add(profileRequest);
-        }
+                    return RegisterRequest
+                            .builder()
+                            .username(email)
+                            .password(PASSWORD)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .dateOfBirth(dateOfBirth)
+                            .build();
+                })
+                .toList();
 
-        profileRequests.forEach(request -> {
-            ProfileResponse profile = profileService.createUsersProfile(request);
-
-            profiles.add(profile);
-        });
-
-        for (int i = 0; i < profiles.size(); i++) {
-            for (int j = 0; j < profiles.size(); j++) {
-                try {
-                    if (i != j) {
-                        profileService.addUserToFriends(profiles.get(i).profileId(), profiles.get(j).profileId());
-                    }
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
-        }
-        log.info("Profiles created: {}", profiles);
-
-        List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.", "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
-        List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!", "I agree.", "Nice picture.");
-
-        profiles
+        List<AuthResponse> registeredUsers = registerRequests
                 .stream()
-                .filter(profile -> profile.profileId() != null)
-                .forEach(profile -> {
-                    if (profile.profileId().isEmpty()) {
-                        return;
+                .map(request -> {
+                    try {
+                        return authService.registerUser(request);
+                    } catch (FeignException e) {
+                        return null;
                     }
-                    String postContent = postContents.get(random.nextInt(postContents.size()));
+                })
+                .filter(Objects::nonNull)
+                .filter(user -> user.profile().profileId() != null && !user.profile().profileId().isEmpty())
+                .toList();
+
+        printList(registeredUsers.stream().map(AuthResponse::profile).toList());
+
+        registeredUsers.forEach(user -> registeredUsers.forEach(friendUser -> {
+            Profile profile = user.profile();
+            Profile friend = friendUser.profile();
+
+            setAuthentication(user);
+
+            if (profile.profileId().equals(friend.profileId())) {
+                return;
+            }
+            try {
+                profileService.addUserToFriends(profile.profileId(), friend.profileId());
+            } catch (FeignException e) {
+                // user are already friends ignore
+            }
+        }));
+
+        createPostsForProfiles(registeredUsers, random);
+
+        System.exit(0);
+    }
+
+    private void setAuthentication(AuthResponse user) {
+        SecurityContextHolder.getContext().setAuthentication(
+                new JwtAuthenticationToken(jwtDecoder.decode(user.token().authToken()))
+        );
+    }
+
+    private void createPostsForProfiles(Iterable<AuthResponse> registeredUsers, RandomGenerator random) {
+        List<String> postContents = List.of("This is my first post!", "Enjoying a beautiful sunset.",
+                "Had a great time at the park today.", "Love spending time with family.", "Just finished a good book.");
+        List<String> commentContents = List.of("Great post!", "Thanks for sharing.", "Looks fun!",
+                "I agree.", "Nice picture.");
+
+        int commentsContentCount = commentContents.size();
+        int postsContentCount = postContents.size();
+
+        registeredUsers
+                .forEach(user -> {
+                    Profile profile = user.profile();
+                    String postContent = postContents.get(random.nextInt(postsContentCount));
+
+                    setAuthentication(user);
+
                     PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
 
                     log.info("Adding post: {}", postResponse);
 
-                    for (int i = 0; i < commentContents.size(); i++) {
-                        String commentContent = commentContents.get(random.nextInt(commentContents.size()));
+                    for (int i = 0; i < commentsContentCount; i++) {
+                        String commentContent = commentContents.get(random.nextInt(commentsContentCount));
                         CommentAddRequest commentAddRequest = CommentAddRequest
                                 .builder()
                                 .profileId(profile.profileId())
@@ -101,7 +146,14 @@ public class Initializer implements CommandLineRunner {
                         postCommentsService.addCommentToPost(commentAddRequest);
                     }
                 });
+    }
 
-        System.exit(0);
+    private <T> void printList(List<T> list) {
+        try {
+            log.info("Profile: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(list));
+
+        } catch (JsonProcessingException e) {
+            log.error("Error while printing list: {}", e.getMessage());
+        }
     }
 }

@@ -12,8 +12,8 @@ public record ProfileRequest(long userId, String username, String firstName, Str
         return ProfileRequest.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
-                .firstName(user.getName())
-                .lastName(user.getSurname())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .dateOfBirth(dateOfBirth)
                 .build();
     }

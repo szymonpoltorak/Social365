@@ -19,8 +19,6 @@ public interface AuthHelperService {
 
     void executePasswordResetProcess(ResetPasswordRequest request, User user);
 
-    TokenResponse buildTokenResponse(User user);
-
     TokenResponse buildTokensIntoResponse(String authToken, String refreshToken);
 
     AuthResponse buildTokensIntoResponse(User user, Profile profile, TokenRevokeStatus shouldBeRevoked);
