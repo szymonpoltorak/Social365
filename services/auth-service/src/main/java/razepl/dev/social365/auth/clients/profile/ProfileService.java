@@ -17,6 +17,6 @@ public interface ProfileService {
     Profile createUsersProfile(@RequestBody ProfileRequest profileRequest);
 
     @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING)
-    Profile getBasicProfileInfo(@RequestParam(Params.PROFILE_ID) String profileId);
+    Profile getBasicProfileInfo();
 
 }

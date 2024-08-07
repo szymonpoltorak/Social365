@@ -1,4 +1,4 @@
-package razepl.dev.social365.init.clients.profile.data;
+package razepl.dev.social365.init.clients.api.data;
 
 import lombok.Builder;
 

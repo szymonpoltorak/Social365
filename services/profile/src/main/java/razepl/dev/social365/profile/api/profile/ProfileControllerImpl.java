@@ -22,6 +22,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
+import razepl.dev.social365.profile.config.AuthUser;
+import razepl.dev.social365.profile.config.User;
 
 @RestController
 @RequiredArgsConstructor
@@ -101,8 +103,8 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING)
-    public final ProfileResponse getBasicProfileInfo(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return profileService.getBasicProfileInfo(profileId);
+    public final ProfileResponse getBasicProfileInfo(@AuthUser User user) {
+        return profileService.getBasicProfileInfo(user);
     }
 
     @Override

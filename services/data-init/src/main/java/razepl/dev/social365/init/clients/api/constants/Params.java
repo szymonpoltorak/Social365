@@ -1,6 +1,6 @@
-package razepl.dev.social365.init.clients.posts.comments.constants;
+package razepl.dev.social365.init.clients.api.constants;
 
-public final class PostParams {
+public final class Params {
 
     public static final String PROFILE_ID = "profileId";
 
@@ -10,6 +10,8 @@ public final class PostParams {
 
     public static final String HAS_ATTACHMENTS = "hasAttachments";
 
-    private PostParams() {
+    public static final String FRIEND_ID = "friendId";
+
+    private Params() {
     }
 }

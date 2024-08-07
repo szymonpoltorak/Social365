@@ -1,4 +1,4 @@
-package razepl.dev.social365.init.clients;
+package razepl.dev.social365.init.clients.api;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

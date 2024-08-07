@@ -1,4 +1,4 @@
-package razepl.dev.social365.init.clients.profile.constants;
+package razepl.dev.social365.init.clients.api.constants;
 
 public final class ProfileMappings {
     private static final String PROFILE_API_MAPPING = "/api/v1/profile";

@@ -1,4 +1,4 @@
-package razepl.dev.social365.init.clients.posts.comments.constants;
+package razepl.dev.social365.init.clients.api.constants;
 
 public final class PostCommentsMappings {
 

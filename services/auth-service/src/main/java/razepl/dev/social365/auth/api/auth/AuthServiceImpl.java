@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
 
         addJwtSecurityContext(user);
 
-        Profile profile = profileService.getBasicProfileInfo(user.getProfileId());
+        Profile profile = profileService.getBasicProfileInfo();
 
         log.info("Profile of user : {}", profile);
 

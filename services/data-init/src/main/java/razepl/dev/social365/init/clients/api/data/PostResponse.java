@@ -1,7 +1,7 @@
-package razepl.dev.social365.init.clients.posts.comments.data;
+package razepl.dev.social365.init.clients.api.data;
 
 import lombok.Builder;
-import razepl.dev.social365.init.clients.posts.comments.PostData;
+import razepl.dev.social365.init.clients.api.PostData;
 
 import java.util.List;
 

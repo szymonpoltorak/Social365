@@ -9,6 +9,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
+import razepl.dev.social365.profile.config.User;
 
 public interface ProfileController {
 
@@ -26,7 +27,7 @@ public interface ProfileController {
 
     ProfileResponse createUsersProfile(ProfileRequest profileRequest);
 
-    ProfileResponse getBasicProfileInfo(String profileId);
+    ProfileResponse getBasicProfileInfo(User user);
 
     ProfileResponse getProfileInfoByUsername(String username);
 

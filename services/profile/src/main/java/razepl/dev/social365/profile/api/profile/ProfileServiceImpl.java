@@ -17,6 +17,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
@@ -182,10 +183,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponse getBasicProfileInfo(String profileId) {
-        log.info("Getting basic profile info for profile with id: {}", profileId);
+    public ProfileResponse getBasicProfileInfo(User user) {
+        log.info("Getting basic profile info for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         return profileMapper.mapProfileToProfileResponse(profile);
     }

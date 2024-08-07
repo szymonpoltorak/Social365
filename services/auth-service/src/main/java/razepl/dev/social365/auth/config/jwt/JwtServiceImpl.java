@@ -149,7 +149,7 @@ public class JwtServiceImpl implements JwtService {
         return decoder;
     }
 
-    private boolean isSignatureValid(String jwtToken) {
+    private boolean isSignatureValid(CharSequence jwtToken) {
         Jws<Claims> claimsJws = parseJwsClaims(jwtToken);
 
         if (!claimsJws.getHeader().get(JwtClaims.TOKEN_TYPE).equals(TokenType.JWT.toString())) {
@@ -158,11 +158,11 @@ public class JwtServiceImpl implements JwtService {
         return claimsJws.getHeader().getAlgorithm().equals(Jwts.SIG.RS512.toString());
     }
 
-    private Claims getAllClaims(String token) {
+    private Claims getAllClaims(CharSequence token) {
         return parseJwsClaims(token).getPayload();
     }
 
-    private Jws<Claims> parseJwsClaims(String token) {
+    private Jws<Claims> parseJwsClaims(CharSequence token) {
         return Jwts
                 .parser()
                 .verifyWith(jwtKeyService.getVerifyKey())

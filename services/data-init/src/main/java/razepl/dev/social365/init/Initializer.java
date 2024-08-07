@@ -10,14 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import razepl.dev.social365.init.clients.auth.AuthService;
-import razepl.dev.social365.init.clients.auth.data.AuthResponse;
-import razepl.dev.social365.init.clients.auth.data.RegisterRequest;
-import razepl.dev.social365.init.clients.posts.comments.PostCommentsService;
-import razepl.dev.social365.init.clients.posts.comments.constants.CommentAddRequest;
-import razepl.dev.social365.init.clients.posts.comments.data.PostResponse;
-import razepl.dev.social365.init.clients.profile.ProfileService;
-import razepl.dev.social365.init.clients.profile.data.Profile;
+import razepl.dev.social365.init.clients.api.GatewayService;
+import razepl.dev.social365.init.clients.api.data.AuthResponse;
+import razepl.dev.social365.init.clients.api.data.RegisterRequest;
+import razepl.dev.social365.init.clients.api.constants.CommentAddRequest;
+import razepl.dev.social365.init.clients.api.data.PostResponse;
+import razepl.dev.social365.init.clients.api.data.Profile;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -39,9 +37,7 @@ public class Initializer implements CommandLineRunner {
     private static final int BEGIN_RANGE = 0;
     private static final String PASSWORD = "Abc1!l1.DKk";
 
-    private final ProfileService profileService;
-    private final PostCommentsService postCommentsService;
-    private final AuthService authService;
+    private final GatewayService gatewayService;
     private final JwtDecoder jwtDecoder;
 
     @Override
@@ -74,8 +70,9 @@ public class Initializer implements CommandLineRunner {
                 .stream()
                 .map(request -> {
                     try {
-                        return authService.registerUser(request);
+                        return gatewayService.registerUser(request);
                     } catch (FeignException e) {
+                        e.printStackTrace();
                         return null;
                     }
                 })
@@ -95,7 +92,7 @@ public class Initializer implements CommandLineRunner {
                 return;
             }
             try {
-                profileService.addUserToFriends(profile.profileId(), friend.profileId());
+                gatewayService.addUserToFriends(profile.profileId(), friend.profileId());
             } catch (FeignException e) {
                 // user are already friends ignore
             }
@@ -128,7 +125,7 @@ public class Initializer implements CommandLineRunner {
 
                     setAuthentication(user);
 
-                    PostResponse postResponse = postCommentsService.createPost(profile.profileId(), postContent, false);
+                    PostResponse postResponse = gatewayService.createPost(profile.profileId(), postContent, false);
 
                     log.info("Adding post: {}", postResponse);
 
@@ -143,7 +140,7 @@ public class Initializer implements CommandLineRunner {
                                 .build();
                         log.info("Adding comment: {}", commentAddRequest);
 
-                        postCommentsService.addCommentToPost(commentAddRequest);
+                        gatewayService.addCommentToPost(commentAddRequest);
                     }
                 });
     }
