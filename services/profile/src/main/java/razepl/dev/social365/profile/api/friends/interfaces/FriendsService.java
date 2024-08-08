@@ -5,33 +5,34 @@ import org.springframework.data.domain.Pageable;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
+import razepl.dev.social365.profile.config.User;
 
 public interface FriendsService {
 
-    Page<FriendResponse> getFriends(String profileId, Pageable pageable);
+    Page<FriendResponse> getFriends(User user, Pageable pageable);
 
-    Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, Pageable pageable);
+    Page<FriendResponse> getFriendsByPattern(User user, String pattern, Pageable pageable);
 
-    Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable);
+    Page<FriendFeedResponse> getFriendsFeedOptions(User user, Pageable pageable);
 
-    Page<String> getFollowedProfileIds(String profileId, int pageNumber);
+    Page<String> getFollowedProfileIds(User user, int pageNumber);
 
-    Page<FriendSuggestionResponse> getFriendRequests(String profileId, Pageable pageable);
+    Page<FriendSuggestionResponse> getFriendRequests(User user, Pageable pageable);
 
-    Page<FriendSuggestionResponse> getFriendSuggestions(String profileId, Pageable pageable);
+    Page<FriendSuggestionResponse> getFriendSuggestions(User user, Pageable pageable);
 
-    FriendResponse removeUserFromFriends(String profileId, String friendId);
+    FriendResponse removeUserFromFriends(User user, String friendId);
 
-    FriendResponse addUserToFriends(String profileId, String friendId);
+    FriendResponse addUserToFriends(User user, String friendId);
 
-    FriendResponse addProfileToFollowed(String profileId, String friendId);
+    FriendResponse addProfileToFollowed(User user, String friendId);
 
-    FriendResponse removeProfileFromFollowed(String profileId, String toFollowId);
+    FriendResponse removeProfileFromFollowed(User user, String toFollowId);
 
-    FriendResponse sendFriendRequest(String profileId, String friendId);
+    FriendResponse sendFriendRequest(User user, String friendId);
 
-    FriendResponse acceptFriendRequest(String profileId, String friendId);
+    FriendResponse acceptFriendRequest(User user, String friendId);
 
-    FriendResponse declineFriendRequest(String profileId, String friendId);
+    FriendResponse declineFriendRequest(User user, String friendId);
 
 }

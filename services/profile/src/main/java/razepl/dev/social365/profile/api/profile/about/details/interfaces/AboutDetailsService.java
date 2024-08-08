@@ -5,16 +5,17 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.DateOfBirt
 import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 
 public interface AboutDetailsService {
 
-    ProfileRequest updateProfileGender(GenderRequest genderRequest);
+    ProfileRequest updateProfileGender(User user, GenderRequest genderRequest);
 
     ProfileRequest deleteProfileGender(String profileId);
 
-    ProfileRequest updateProfileDateOfBirth(DateOfBirthRequest dateOfBirthRequest);
+    ProfileRequest updateProfileDateOfBirth(User user, DateOfBirthRequest dateOfBirthRequest);
 
-    ProfileRequest updateProfileRelationshipStatus(RelationshipStatusRequest relationshipStatusRequest);
+    ProfileRequest updateProfileRelationshipStatus(User user, RelationshipStatusRequest relationshipStatusRequest);
 
     ProfileRequest deleteProfileRelationshipStatus(String profileId);
 
@@ -22,8 +23,8 @@ public interface AboutDetailsService {
 
     ProfileRequest deleteProfileHomeTown(String profileId);
 
-    ProfileRequest updateProfileCurrentCity(AboutDetailsRequest cityRequest);
+    ProfileRequest updateProfileCurrentCity(User user, AboutDetailsRequest cityRequest);
 
-    ProfileRequest updateProfileHomeTown(AboutDetailsRequest cityRequest);
+    ProfileRequest updateProfileHomeTown(User user, AboutDetailsRequest cityRequest);
 
 }

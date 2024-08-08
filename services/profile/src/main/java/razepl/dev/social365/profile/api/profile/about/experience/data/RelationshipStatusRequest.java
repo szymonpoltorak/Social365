@@ -5,6 +5,5 @@ import razepl.dev.social365.profile.nodes.about.relationship.enums.RelationshipS
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @Builder
-public record RelationshipStatusRequest(String profileId, RelationshipStatusType relationshipStatus,
-                                        PrivacyLevel privacyLevel) {
+public record RelationshipStatusRequest(RelationshipStatusType relationshipStatus, PrivacyLevel privacyLevel) {
 }

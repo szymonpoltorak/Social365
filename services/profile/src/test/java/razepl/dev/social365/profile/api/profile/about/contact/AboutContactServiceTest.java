@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
@@ -47,9 +48,9 @@ class AboutContactServiceTest {
     final void test_updateProfilePhoneNumber_addNewPhoneNumber() {
         // given
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest
                 .builder()
-                .profileId(profileId)
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .detailsValue("1234567890")
                 .build();
@@ -66,10 +67,12 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
         when(mobileRepository.save(mobile))
                 .thenReturn(mobile);
+        when(profileRepository.save(profile))
+                .thenReturn(profile);
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);
+        ProfileRequest actual = aboutContactService.updateProfilePhoneNumber(user, phoneNumberRequest);
 
         // then
         Assertions.assertEquals(expected, actual, "ProfileRequest should be equal");
@@ -79,9 +82,9 @@ class AboutContactServiceTest {
     final void test_updateProfilePhoneNumber_update() {
         // given
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest
                 .builder()
-                .profileId(profileId)
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .detailsValue("1234567890")
                 .build();
@@ -98,10 +101,12 @@ class AboutContactServiceTest {
                 .thenReturn(Optional.of(profile));
         when(mobileRepository.save(mobile))
                 .thenReturn(mobile);
+        when(profileRepository.save(profile))
+                .thenReturn(profile);
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);
+        ProfileRequest actual = aboutContactService.updateProfilePhoneNumber(user, phoneNumberRequest);
 
         // then
         Assertions.assertEquals(expected, actual, "ProfileRequest should be equal");
@@ -111,7 +116,8 @@ class AboutContactServiceTest {
     final void test_updateProfilePhoneNumber_exception() {
         // given
         String profileId = "profileId";
-        AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest.builder().profileId(profileId).build();
+        User user = User.builder().profileId(profileId).build();
+        AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest.builder().build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
@@ -119,7 +125,7 @@ class AboutContactServiceTest {
 
         // then
         Assertions.assertThrows(ProfileNotFoundException.class, () -> {
-            aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);
+            aboutContactService.updateProfilePhoneNumber(user, phoneNumberRequest);
         });
     }
 
@@ -127,9 +133,9 @@ class AboutContactServiceTest {
     final void test_updateProfileEmailPrivacyLevel_update() {
         // given
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest
                 .builder()
-                .profileId(profileId)
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .detailsValue("1234567890")
                 .build();
@@ -149,7 +155,7 @@ class AboutContactServiceTest {
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutContactService.updateProfileEmailPrivacyLevel(profileId, PrivacyLevel.ONLY_ME);
+        ProfileRequest actual = aboutContactService.updateProfileEmailPrivacyLevel(user, PrivacyLevel.ONLY_ME);
 
         // then
         Assertions.assertEquals(expected, actual, "ProfileRequest should be equal");
@@ -160,6 +166,7 @@ class AboutContactServiceTest {
     final void test_updateProfileEmailPrivacyLevel_exception() {
         // given
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
@@ -167,7 +174,7 @@ class AboutContactServiceTest {
 
         // then
         Assertions.assertThrows(ProfileNotFoundException.class, () -> {
-            aboutContactService.updateProfileEmailPrivacyLevel(profileId, PrivacyLevel.ONLY_ME);
+            aboutContactService.updateProfileEmailPrivacyLevel(user, PrivacyLevel.ONLY_ME);
         });
     }
 
@@ -175,9 +182,9 @@ class AboutContactServiceTest {
     final void test_deleteProfilePhoneNumber_success() {
         // given
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest
                 .builder()
-                .profileId(profileId)
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .detailsValue("1234567890")
                 .build();
@@ -197,7 +204,7 @@ class AboutContactServiceTest {
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutContactService.deleteProfilePhoneNumber(profileId);
+        ProfileRequest actual = aboutContactService.deleteProfilePhoneNumber(user);
 
         // then
         Assertions.assertEquals(expected, actual, "ProfileRequest should be equal");
@@ -208,12 +215,7 @@ class AboutContactServiceTest {
     final void test_deleteProfilePhoneNumber_nullMobile() {
         // given
         String profileId = "profileId";
-        AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest
-                .builder()
-                .profileId(profileId)
-                .privacyLevel(PrivacyLevel.ONLY_ME)
-                .detailsValue("1234567890")
-                .build();
+        User user = User.builder().profileId(profileId).build();
         Profile profile = Profile.builder().profileId(profileId).phoneNumber(null).build();
 
         // when
@@ -222,7 +224,7 @@ class AboutContactServiceTest {
 
         // then
         Assertions.assertThrows(MobileNotFoundException.class, () -> {
-            aboutContactService.deleteProfilePhoneNumber(profileId);
+            aboutContactService.deleteProfilePhoneNumber(user);
         });
     }
 
@@ -230,7 +232,8 @@ class AboutContactServiceTest {
     final void test_deleteProfilePhoneNumber_exception() {
         // given
         String profileId = "profileId";
-        AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest.builder().profileId(profileId).build();
+        User user = User.builder().profileId(profileId).build();
+        AboutDetailsRequest phoneNumberRequest = AboutDetailsRequest.builder().build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
@@ -238,7 +241,7 @@ class AboutContactServiceTest {
 
         // then
         Assertions.assertThrows(ProfileNotFoundException.class, () -> {
-            aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);
+            aboutContactService.updateProfilePhoneNumber(user, phoneNumberRequest);
         });
     }
 

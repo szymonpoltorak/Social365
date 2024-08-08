@@ -49,10 +49,10 @@ public class ProfileServiceImpl implements ProfileService {
     private final ParamValidator paramValidator;
 
     @Override
-    public ProfileRequest updateProfileBio(String profileId, String bio) {
-        log.info("Updating profile bio for profileId: {}", profileId);
+    public ProfileRequest updateProfileBio(User user, String bio) {
+        log.info("Updating profile bio for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setBio(bio);
 
@@ -62,10 +62,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileRequest updateProfilePicture(String profileId, long profilePictureId) {
-        log.info("Updating profile picture for profileId: {}", profileId);
+    public ProfileRequest updateProfilePicture(User user, long profilePictureId) {
+        log.info("Updating profile picture for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setProfilePictureId(profilePictureId);
 
@@ -75,10 +75,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileRequest updateProfileBanner(String profileId, long profileBannerId) {
-        log.info("Updating profile banner for profileId: {}", profileId);
+    public ProfileRequest updateProfileBanner(User user, long profileBannerId) {
+        log.info("Updating profile banner for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setBannerPictureId(profileBannerId);
 
@@ -88,12 +88,12 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber) {
-        log.info("Getting today birthdays for user with id: {}", profileId);
+    public Page<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber) {
+        log.info("Getting today birthdays for user : {}", user);
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
+        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(user.profileId(), pageable);
 
         log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
@@ -136,10 +136,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileSummaryResponse getProfileSummary(String profileId) {
-        log.info("Getting profile summary for user with id: {}", profileId);
+    public ProfileSummaryResponse getProfileSummary(User user) {
+        log.info("Getting profile summary for user : {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         return profileMapper.mapProfileToProfileSummaryResponse(profile);
     }

@@ -34,9 +34,9 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING)
-    public final Page<BirthdayInfoResponse> getTodayBirthdays(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final Page<BirthdayInfoResponse> getTodayBirthdays(@AuthUser User user,
                                                               @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
-        return profileService.getTodayBirthdays(profileId, pageNumber);
+        return profileService.getTodayBirthdays(user, pageNumber);
     }
 
     @Override
@@ -64,29 +64,29 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILE_SUMMARY_MAPPING)
-    public final ProfileSummaryResponse getProfileSummary(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return profileService.getProfileSummary(profileId);
+    public final ProfileSummaryResponse getProfileSummary(@AuthUser User user) {
+        return profileService.getProfileSummary(user);
     }
 
     @Override
     @PutMapping(value = ProfileMappings.UPDATE_PROFILE_BIO_MAPPING)
-    public final ProfileRequest updateProfileBio(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final ProfileRequest updateProfileBio(@AuthUser User user,
                                                  @RequestParam(Params.BIO) String bio) {
-        return profileService.updateProfileBio(profileId, bio);
+        return profileService.updateProfileBio(user, bio);
     }
 
     @Override
     @PutMapping(value = ProfileMappings.UPDATE_PROFILE_PICTURE_MAPPING)
-    public final ProfileRequest updateProfilePicture(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final ProfileRequest updateProfilePicture(@AuthUser User user,
                                                      @RequestParam(Params.PROFILE_PICTURE_ID) long profilePictureId) {
-        return profileService.updateProfilePicture(profileId, profilePictureId);
+        return profileService.updateProfilePicture(user, profilePictureId);
     }
 
     @Override
     @PutMapping(value = ProfileMappings.UPDATE_PROFILE_BANNER_MAPPING)
-    public final ProfileRequest updateProfileBanner(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final ProfileRequest updateProfileBanner(@AuthUser User user,
                                                     @RequestParam(Params.PROFILE_BANNER_ID) long profileBannerId) {
-        return profileService.updateProfileBanner(profileId, profileBannerId);
+        return profileService.updateProfileBanner(user, profileBannerId);
     }
 
     @Override

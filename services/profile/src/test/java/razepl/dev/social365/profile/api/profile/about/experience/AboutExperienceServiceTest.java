@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.WorkPlaceRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
@@ -53,25 +54,26 @@ class AboutExperienceServiceTest {
         // given
         WorkPlaceRequest workPlaceRequest = WorkPlaceRequest
                 .builder()
-                .profileId("profileId")
                 .build();
+        User user = User.builder().profileId("profileId").build();
 
         // when
-        when(profileRepository.findByProfileId(workPlaceRequest.profileId()))
+        when(profileRepository.findByProfileId(user.profileId()))
                 .thenReturn(Optional.empty());
 
         // then
         Assertions.assertThrows(ProfileNotFoundException.class, () -> {
-            aboutExperienceService.updateProfileWorkPlace(workPlaceRequest);
+            aboutExperienceService.updateProfileWorkPlace(user, workPlaceRequest);
         });
     }
 
     @Test
     final void test_updateProfileWorkPlace_addNewWorkplace() {
         // given
+        String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         WorkPlaceRequest workPlaceRequest = WorkPlaceRequest
                 .builder()
-                .profileId("profileId")
                 .position("position")
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .workplace("workplace")
@@ -86,12 +88,16 @@ class AboutExperienceServiceTest {
         ProfileRequest expected = ProfileRequest.builder().build();
 
         // when
-        when(profileRepository.findByProfileId(workPlaceRequest.profileId()))
+        when(profileRepository.findByProfileId(user.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(workplaceRepository.save(workPlace))
+                .thenReturn(workPlace);
+        when(profileRepository.save(profile))
+                .thenReturn(profile);
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutExperienceService.updateProfileWorkPlace(workPlaceRequest);
+        ProfileRequest actual = aboutExperienceService.updateProfileWorkPlace(user, workPlaceRequest);
 
         // then
         Assertions.assertEquals(expected, actual);
@@ -101,44 +107,55 @@ class AboutExperienceServiceTest {
     @Test
     final void test_updateProfileHighSchool_profileNotFound() {
         // given
+        String profileId = "profileId";
         AboutDetailsRequest highSchoolRequest = AboutDetailsRequest
                 .builder()
-                .profileId("profileId")
                 .build();
+        User user = User.builder().profileId(profileId).build();
 
         // when
-        when(profileRepository.findByProfileId(highSchoolRequest.profileId()))
+        when(profileRepository.findByProfileId(user.profileId()))
                 .thenReturn(Optional.empty());
 
         // then
         Assertions.assertThrows(ProfileNotFoundException.class, () -> {
-            aboutExperienceService.updateProfileHighSchool(highSchoolRequest);
+            aboutExperienceService.updateProfileHighSchool(user, highSchoolRequest);
         });
     }
 
     @Test
     final void test_updateProfileHighSchool_addNewHighSchool() {
         // given
+        String profileId = "profileId";
         AboutDetailsRequest highSchoolRequest = AboutDetailsRequest
                 .builder()
-                .profileId("profileId")
                 .detailsValue("details")
                 .detailsType(DetailsType.HIGH_SCHOOL)
                 .privacyLevel(PrivacyLevel.FRIENDS)
                 .build();
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .highSchool(AboutDetails.builder().detailsType(DetailsType.HIGH_SCHOOL).build())
                 .build();
+        AboutDetails highSchool = AboutDetails
+                .builder()
+                .propertyValue("details")
+                .detailsType(DetailsType.HIGH_SCHOOL)
+                .privacyLevel(PrivacyLevel.FRIENDS)
+                .build();
+        User user = User.builder().profileId(profileId).build();
         ProfileRequest expected = ProfileRequest.builder().build();
 
         // when
-        when(profileRepository.findByProfileId(highSchoolRequest.profileId()))
+        when(profileRepository.findByProfileId(user.profileId()))
                 .thenReturn(Optional.of(profile));
+        when(aboutDetailsRepository.save(highSchool))
+                .thenReturn(highSchool);
         when(profileMapper.mapProfileToProfileRequest(profile))
                 .thenReturn(expected);
 
-        ProfileRequest actual = aboutExperienceService.updateProfileHighSchool(highSchoolRequest);
+        ProfileRequest actual = aboutExperienceService.updateProfileHighSchool(user, highSchoolRequest);
 
         // then
         Assertions.assertEquals(expected, actual);

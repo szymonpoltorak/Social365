@@ -14,7 +14,7 @@ import razepl.dev.social365.profile.config.User;
 
 public interface ProfileService {
 
-    Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int page);
+    Page<BirthdayInfoResponse> getTodayBirthdays(User user, int page);
 
     Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable);
 
@@ -22,7 +22,7 @@ public interface ProfileService {
 
     ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId);
 
-    ProfileSummaryResponse getProfileSummary(String userId);
+    ProfileSummaryResponse getProfileSummary(User user);
 
     ProfilePostResponse getPostProfileInfo(String userId);
 
@@ -32,10 +32,10 @@ public interface ProfileService {
 
     ProfileResponse getProfileInfoByUsername(String username);
 
-    ProfileRequest updateProfileBio(String profileId, String bio);
+    ProfileRequest updateProfileBio(User user, String bio);
 
-    ProfileRequest updateProfilePicture(String profileId, long profilePictureId);
+    ProfileRequest updateProfilePicture(User user, long profilePictureId);
 
-    ProfileRequest updateProfileBanner(String profileId, long profileBannerId);
+    ProfileRequest updateProfileBanner(User user, long profileBannerId);
 
 }
