@@ -21,6 +21,8 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
+import razepl.dev.social365.images.config.AuthUser;
+import razepl.dev.social365.images.config.User;
 
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class ImagesControllerImpl implements ImagesController {
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_IMAGE_MAPPING)
-    public final ImageResponse uploadImage(@RequestParam(Params.USERNAME) String username,
+    public final ImageResponse uploadImage(@AuthUser User user,
                                            @RequestBody MultipartFile image) {
-        return imagesService.uploadImage(username, image);
+        return imagesService.uploadImage(user.username(), image);
     }
 
     @Override
@@ -51,18 +53,18 @@ public class ImagesControllerImpl implements ImagesController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_COMMENT_IMAGE_MAPPING)
     public final CommentImageResponse uploadCommentImage(@RequestParam(Params.COMMENT_ID) String commentId,
-                                                         @RequestParam(Params.USERNAME) String username,
+                                                         @AuthUser User user,
                                                          @RequestBody MultipartFile image) {
-        return imagesService.uploadCommentImage(commentId, username, image);
+        return imagesService.uploadCommentImage(commentId, user.username(), image);
     }
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_POST_IMAGE_MAPPING)
     public final PostImageResponse uploadPostImage(@RequestParam(Params.POST_ID) String postId,
-                                                   @RequestParam(Params.USERNAME) String username,
+                                                   @AuthUser User user,
                                                    @RequestBody MultipartFile image) {
-        return imagesService.uploadPostImage(postId, username, image);
+        return imagesService.uploadPostImage(postId, user.username(), image);
     }
 
     @Override
@@ -86,37 +88,42 @@ public class ImagesControllerImpl implements ImagesController {
     @Override
     @PutMapping(value = ImagesMappings.UPDATE_IMAGE_MAPPING)
     public final ImageResponse updateImage(@RequestParam(Params.IMAGE_URL) String imageUrl,
+                                           @AuthUser User user,
                                            @RequestBody MultipartFile image) {
-        return imagesService.updateImage(imageUrl, image);
+        return imagesService.updateImage(imageUrl, image, user);
     }
 
     @Override
     @DeleteMapping(value = ImagesMappings.DELETE_IMAGE_MAPPING)
-    public final ImageResponse deleteImage(@RequestParam(Params.IMAGE_ID) long imageId) {
-        return imagesService.deleteImage(imageId);
+    public final ImageResponse deleteImage(@RequestParam(Params.IMAGE_ID) long imageId, @AuthUser User user) {
+        return imagesService.deleteImage(imageId, user);
     }
 
     @Override
     @DeleteMapping(value = ImagesMappings.DELETE_IMAGE_BY_URL_MAPPING)
-    public final ImageResponse deleteImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl) {
-        return imagesService.deleteImageByImageUrl(imageUrl);
+    public final ImageResponse deleteImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl,
+                                                     @AuthUser User user) {
+        return imagesService.deleteImageByImageUrl(imageUrl, user);
     }
 
     @Override
     @DeleteMapping(value = ImagesMappings.DELETE_POST_IMAGE_BY_URL_MAPPING)
-    public final PostImageResponse deletePostImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl) {
-        return imagesService.deletePostImageByImageUrl(imageUrl);
+    public final PostImageResponse deletePostImageByImageUrl(@RequestParam(Params.IMAGE_URL) String imageUrl,
+                                                             @AuthUser User user) {
+        return imagesService.deletePostImageByImageUrl(imageUrl, user);
     }
 
     @Override
     @DeleteMapping(value = ImagesMappings.DELETE_COMMENT_IMAGE_BY_ID_MAPPING)
-    public final CommentImageResponse deleteCommentImageById(@RequestParam(Params.COMMENT_ID) String commentId) {
-        return imagesService.deleteCommentImageById(commentId);
+    public final CommentImageResponse deleteCommentImageById(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                             @AuthUser User user) {
+        return imagesService.deleteCommentImageById(commentId, user);
     }
 
     @Override
     @DeleteMapping(value = ImagesMappings.DELETE_IMAGES_BY_POST_ID_MAPPING)
-    public final List<PostImageResponse> deleteImagesByPostId(@RequestParam(Params.POST_ID) String postId) {
-        return imagesService.deleteImagesByPostId(postId);
+    public final List<PostImageResponse> deleteImagesByPostId(@RequestParam(Params.POST_ID) String postId,
+                                                              @AuthUser User user) {
+        return imagesService.deleteImagesByPostId(postId, user);
     }
 }

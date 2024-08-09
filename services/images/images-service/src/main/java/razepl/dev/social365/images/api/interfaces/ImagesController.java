@@ -5,18 +5,19 @@ import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
+import razepl.dev.social365.images.config.User;
 
 import java.util.List;
 
 public interface ImagesController {
 
-    ImageResponse uploadImage(String username, MultipartFile image);
+    ImageResponse uploadImage(User user, MultipartFile image);
 
     Page<PostImageResponse> getUserUploadedImages(String username, int page, int pageSize);
 
-    CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image);
+    CommentImageResponse uploadCommentImage(String commentId, User user, MultipartFile image);
 
-    PostImageResponse uploadPostImage(String postId, String username, MultipartFile image);
+    PostImageResponse uploadPostImage(String postId, User user, MultipartFile image);
 
     CommentImageResponse getCommentImage(String commentId);
 
@@ -24,16 +25,16 @@ public interface ImagesController {
 
     ImageResponse getImagePath(long imageId);
 
-    ImageResponse updateImage(String imageUrl, MultipartFile image);
+    ImageResponse updateImage(String imageUrl, User user, MultipartFile image);
 
-    ImageResponse deleteImage(long imageId);
+    ImageResponse deleteImage(long imageId, User user);
 
-    ImageResponse deleteImageByImageUrl(String imageUrl);
+    ImageResponse deleteImageByImageUrl(String imageUrl, User user);
 
-    PostImageResponse deletePostImageByImageUrl(String imageUrl);
+    PostImageResponse deletePostImageByImageUrl(String imageUrl, User user);
 
-    CommentImageResponse deleteCommentImageById(String commentId);
+    CommentImageResponse deleteCommentImageById(String commentId, User user);
 
-    List<PostImageResponse> deleteImagesByPostId(String postId);
+    List<PostImageResponse> deleteImagesByPostId(String postId, User user);
 
 }
