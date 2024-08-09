@@ -6,14 +6,14 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
-import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.clients.images.ImageService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
@@ -51,9 +51,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse addCommentToPost(CommentAddRequest commentRequest) {
-        log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.postId(),
-                commentRequest.profileId());
+    public CommentResponse addCommentToPost(User user, CommentAddRequest commentRequest) {
+        log.info("Adding comment to post with id: {}, by profile: {}", commentRequest.postId(), user);
 
         Comment comment = Comment
                 .builder()
@@ -65,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
                         .build()
                 )
                 .hasAttachments(commentRequest.hasAttachment())
-                .authorId(commentRequest.profileId())
+                .authorId(user.profileId())
                 .content(commentRequest.content())
                 .hasReplies(false)
                 .build();
@@ -74,20 +73,20 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Added comment with id: {}", savedComment.getCommentId());
 
-        return commentMapper.toCommentResponseNoImage(savedComment, commentRequest.profileId());
+        return commentMapper.toCommentResponseNoImage(savedComment, user.profileId());
     }
 
     @Override
-    public CommentResponse editComment(CommentEditRequest commentEditRequest) {
-        log.info("Editing comment with data: {}", commentEditRequest);
+    public CommentResponse editComment(User user, CommentEditRequest commentEditRequest) {
+        log.info("Editing comment with data: {}, by user : {}", commentEditRequest, user);
 
         commentValidator.validateCommentRequest(commentEditRequest);
 
         CommentKey commentKey = commentMapper.toCommentKey(commentEditRequest.commentKey());
         Comment comment = getCommentFromRepository(commentKey);
 
-        if (!comment.isAuthor(commentEditRequest.profileId())) {
-            throw new UserIsNotAuthorException(commentEditRequest.profileId());
+        if (!comment.isAuthor(user.profileId())) {
+            throw new UserIsNotAuthorException(user.profileId());
         }
         comment.setContent(commentEditRequest.content());
 
@@ -95,17 +94,17 @@ public class CommentServiceImpl implements CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        return commentMapper.toCommentResponse(savedComment, commentEditRequest.profileId());
+        return commentMapper.toCommentResponse(savedComment, user.profileId());
     }
 
     @Override
     @Transactional
-    public CommentResponse deleteComment(CommentDeleteRequest commentRequest) {
-        log.info("Deleting comment with id: {}", commentRequest.commentKey());
+    public CommentResponse deleteComment(User user, CommentKeyResponse key) {
+        log.info("Deleting comment with id: {}, by user : {}", key, user);
 
-        CommentKey commentKey = commentMapper.toCommentKey(commentRequest.commentKey());
+        CommentKey commentKey = commentMapper.toCommentKey(key);
         Comment comment = getCommentFromRepository(commentKey);
-        String profileId = commentRequest.profileId();
+        String profileId = user.profileId();
 
         if (!comment.isAuthor(profileId)) {
             throw new UserIsNotAuthorException(profileId);
@@ -124,17 +123,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest) {
-        log.info("Updating like count for comment with id: {}", likeCommentRequest.commentKey());
+    public CommentResponse updateLikeCommentCount(User user, CommentKeyResponse key) {
+        log.info("Updating like count for comment with id: {}, by user : {}", key, user);
 
-        CommentKey commentKey = commentMapper.toCommentKey(likeCommentRequest.commentKey());
+        CommentKey commentKey = commentMapper.toCommentKey(key);
 
         Comment comment = getCommentFromRepository(commentKey);
 
-        if (comment.isLikedBy(likeCommentRequest.profileId())) {
-            comment.getUserLikedIds().remove(likeCommentRequest.profileId());
+        if (comment.isLikedBy(user.profileId())) {
+            comment.getUserLikedIds().remove(user.profileId());
         } else {
-            comment.addUserLikedId(likeCommentRequest.profileId());
+            comment.addUserLikedId(user.profileId());
         }
         Comment savedComment = commentRepository.save(comment);
 

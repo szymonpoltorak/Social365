@@ -7,9 +7,9 @@ import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
-import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 

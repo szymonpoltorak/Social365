@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.constants.CommentMappings;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
-import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentController;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.api.constants.Params;
+import razepl.dev.social365.posts.config.AuthUser;
+import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
@@ -31,34 +32,34 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
     public final CassandraPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
-                                                                   @RequestParam(Params.PROFILE_ID) String profileId,
+                                                                   @AuthUser User user,
                                                                    @RequestParam(Params.PAGE_SIZE) int pageSize,
                                                                    @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return commentService.getCommentsForPost(postId, profileId, PageInfo.of(pageSize, pagingState));
+        return commentService.getCommentsForPost(postId, user.profileId(), PageInfo.of(pageSize, pagingState));
     }
 
     @Override
     @PostMapping(value = CommentMappings.ADD_COMMENT_TO_POST)
-    public final CommentResponse addCommentToPost(@RequestBody CommentAddRequest commentRequest) {
-        return commentService.addCommentToPost(commentRequest);
+    public final CommentResponse addCommentToPost(@AuthUser User user, @RequestBody CommentAddRequest commentRequest) {
+        return commentService.addCommentToPost(user, commentRequest);
     }
 
     @Override
     @PutMapping(value = CommentMappings.EDIT_COMMENT)
-    public final CommentResponse editComment(@RequestBody CommentEditRequest commentEditRequest) {
-        return commentService.editComment(commentEditRequest);
+    public final CommentResponse editComment(@AuthUser User user, @RequestBody CommentEditRequest commentEditRequest) {
+        return commentService.editComment(user, commentEditRequest);
     }
 
     @Override
     @DeleteMapping(value = CommentMappings.DELETE_COMMENT)
-    public final CommentResponse deleteComment(@RequestBody CommentDeleteRequest commentRequest) {
-        return commentService.deleteComment(commentRequest);
+    public final CommentResponse deleteComment(@AuthUser User user, @RequestBody CommentKeyResponse commentKey) {
+        return commentService.deleteComment(user, commentKey);
     }
 
     @Override
     @PutMapping(value = CommentMappings.UPDATE_LIKE_COMMENT_COUNT)
-    public final CommentResponse updateLikeCommentCount(@RequestBody LikeCommentRequest likeCommentRequest) {
-        return commentService.updateLikeCommentCount(likeCommentRequest);
+    public final CommentResponse updateLikeCommentCount(@AuthUser User user, @RequestBody CommentKeyResponse commentKey) {
+        return commentService.updateLikeCommentCount(user, commentKey);
     }
 
 }

@@ -1,22 +1,22 @@
 package razepl.dev.social365.posts.api.comments.interfaces;
 
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
-import razepl.dev.social365.posts.api.comments.data.LikeCommentRequest;
+import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 public interface CommentController {
 
-    CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, int pageSize, String pagingState);
+    CassandraPage<CommentResponse> getCommentsForPost(String postId, User user, int pageSize, String pagingState);
 
-    CommentResponse addCommentToPost(CommentAddRequest commentRequest);
+    CommentResponse addCommentToPost(User user, CommentAddRequest commentRequest);
 
-    CommentResponse editComment(CommentEditRequest commentEditRequest);
+    CommentResponse editComment(User user, CommentEditRequest commentEditRequest);
 
-    CommentResponse deleteComment(CommentDeleteRequest commentRequest);
+    CommentResponse deleteComment(User user, CommentKeyResponse commentKey);
 
-    CommentResponse updateLikeCommentCount(LikeCommentRequest likeCommentRequest);
+    CommentResponse updateLikeCommentCount(User user, CommentKeyResponse commentKey);
 
 }

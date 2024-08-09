@@ -9,6 +9,7 @@ import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.PostKey;
@@ -87,20 +88,20 @@ class PostServiceTest {
         PostResponse postResponse = PostResponse.builder().build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
-                .profileId(profileId)
                 .postId(postId.toString())
                 .content(content)
-                .creationDateTime(post.getCreationDateTime())
+                .hasAttachments(false)
                 .build();
+        User user = User.builder().profileId(profileId).build();
 
-        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
+        when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
         when(postRepository.save(any(Post.class)))
                 .thenReturn(post);
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostData result = postService.editPost(editPostRequest);
+        PostData result = postService.editPost(user, editPostRequest);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -118,16 +119,16 @@ class PostServiceTest {
                 .build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
-                .profileId(profileId)
                 .postId(postId.toString())
                 .content(content)
-                .creationDateTime(post.getCreationDateTime())
+                .hasAttachments(false)
                 .build();
+        User user = User.builder().profileId(profileId).build();
 
-        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
+        when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(editPostRequest));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(user, editPostRequest));
     }
 
     @Test
