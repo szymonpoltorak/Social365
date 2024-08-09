@@ -5,6 +5,6 @@ import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 @FunctionalInterface
 public interface CommentValidator {
 
-    void validateCommentRequest(CommentEditRequest commentEditRequest);
+    void validateCommentRequest(CommentEditRequest commentEditRequest, String profileId);
 
 }

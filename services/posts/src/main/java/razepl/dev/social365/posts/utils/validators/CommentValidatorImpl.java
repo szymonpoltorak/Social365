@@ -12,7 +12,7 @@ public class CommentValidatorImpl implements CommentValidator {
     private static final int MIN_COMMENT_LENGTH = 2;
 
     @Override
-    public final void validateCommentRequest(CommentEditRequest commentEditRequest) {
+    public final void validateCommentRequest(CommentEditRequest commentEditRequest, String profileId) {
         String content = commentEditRequest.content();
 
         if (content == null || content.isEmpty() || content.isBlank()) {
@@ -28,8 +28,6 @@ public class CommentValidatorImpl implements CommentValidator {
         if (objectId == null || objectId.isEmpty() || objectId.isBlank()) {
             throw new InvalidCommentRequestException("Comment object id cannot be null!");
         }
-        String profileId = commentEditRequest.profileId();
-
         if (profileId == null || profileId.isEmpty() || profileId.isBlank()) {
             throw new InvalidCommentRequestException("Comment profile id cannot be null!");
         }

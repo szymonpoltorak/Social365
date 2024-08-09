@@ -8,12 +8,14 @@ import org.mockito.MockitoAnnotations;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
+import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
@@ -35,8 +37,14 @@ class CommentServiceTest {
     @Mock
     private CommentMapper commentMapper;
 
+    @Mock
+    private ImageService imageService;
+
     @InjectMocks
     private CommentServiceImpl commentService;
+
+    @Mock
+    private ReplyCommentRepository replyCommentRepository;
 
     @Mock
     private CommentValidator commentValidator;
@@ -67,7 +75,7 @@ class CommentServiceTest {
 
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
-        when(commentMapper.toCommentResponse(any(Comment.class), eq(user.profileId())))
+        when(commentMapper.toCommentResponseNoImage(any(Comment.class), eq(user.profileId())))
                 .thenReturn(commentResponse);
 
         CommentResponse result = commentService.addCommentToPost(user, commentRequest);

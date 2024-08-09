@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse editComment(User user, CommentEditRequest commentEditRequest) {
         log.info("Editing comment with data: {}, by user : {}", commentEditRequest, user);
 
-        commentValidator.validateCommentRequest(commentEditRequest);
+        commentValidator.validateCommentRequest(commentEditRequest, user.profileId());
 
         CommentKey commentKey = commentMapper.toCommentKey(commentEditRequest.commentKey());
         Comment comment = getCommentFromRepository(commentKey);
