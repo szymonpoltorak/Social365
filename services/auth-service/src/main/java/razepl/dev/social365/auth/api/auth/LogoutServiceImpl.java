@@ -18,10 +18,6 @@ import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistExcep
 
 import java.util.Optional;
 
-import static razepl.dev.social365.auth.config.constants.Headers.AUTH_HEADER;
-import static razepl.dev.social365.auth.config.constants.Headers.TOKEN_HEADER;
-import static razepl.dev.social365.auth.config.constants.Headers.TOKEN_START_INDEX;
-
 
 @Slf4j
 @Service

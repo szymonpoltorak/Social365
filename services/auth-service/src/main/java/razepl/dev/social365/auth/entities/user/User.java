@@ -44,10 +44,10 @@ import static razepl.dev.social365.auth.entities.user.constants.UserValidationMe
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_NULL_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_PATTERN_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.FIRST_NAME_SIZE_MESSAGE;
-import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.PASSWORD_NULL_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_NULL_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_PATTERN_MESSAGE;
 import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.LAST_NAME_SIZE_MESSAGE;
+import static razepl.dev.social365.auth.entities.user.constants.UserValidationMessages.PASSWORD_NULL_MESSAGE;
 
 
 @Slf4j
