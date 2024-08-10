@@ -81,7 +81,7 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.postService
-            .getPostsFromUrl(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
+            .getPostsFromUrl(this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 this.posts = posts;
 
@@ -101,7 +101,7 @@ export class PostsFeedComponent implements OnInit {
             return;
         }
         this.postService
-            .getPostsFromUrl(this.presentedProfileId, this.posts.friendsPageNumber + 1,
+            .getPostsFromUrl(this.posts.friendsPageNumber + 1,
                 this.PAGE_SIZE, this.posts.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 const oldContent: Either<Post, SharedPost>[] = this.posts.data;
@@ -118,7 +118,7 @@ export class PostsFeedComponent implements OnInit {
 
     sharePost(event: SharePostData): void {
         this.postService
-            .sharePost(this.currentUser.profileId, event.post.postKey, event.content)
+            .sharePost(event.post.postKey, event.content)
             .subscribe((sharedPost: SharedPost) => {
                 this.posts.data.unshift(sharedPost);
 
@@ -131,7 +131,7 @@ export class PostsFeedComponent implements OnInit {
 
     deletePost(event: Post): void {
         this.postService
-            .deletePost(this.currentUser.profileId, event.postKey.postId, event.postKey.author.profileId)
+            .deletePost(event.postKey.postId, event.postKey.author.profileId)
             .subscribe(() => {
                 this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
 

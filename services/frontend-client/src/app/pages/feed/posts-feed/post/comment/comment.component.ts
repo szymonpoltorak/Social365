@@ -17,16 +17,12 @@ import { ReplyComment } from "@interfaces/posts-comments/reply-comment.interface
 import { Either } from "@core/types/feed/either.type";
 import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
 import { ReplyKey } from "@interfaces/posts-comments/reply-key.interface";
-import { LikeCommentRequest } from "@interfaces/posts-comments/like-comment-request.interface";
-import { LikeReplyRequest } from "@interfaces/posts-comments/like-reply-request.interface";
 import { ReplyAddRequest } from "@interfaces/posts-comments/reply-add-request.interface";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 import { ImagesService } from "@api/images/images.service";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-viewer.component";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { ReplyDeleteRequest } from "@interfaces/posts-comments/reply-delete-request.interface";
-import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.interface";
 import { RoutingService } from "@services/profile/routing.service";
@@ -57,8 +53,8 @@ export class CommentComponent implements OnInit {
 
     @Input() comment!: Either<PostComment, ReplyComment>;
     @Input() replyLevel: number = 3;
-    @Output() commentDeleted: EventEmitter<CommentDeleteRequest> = new EventEmitter<CommentDeleteRequest>();
-    @Output() replyCommentDeleted: EventEmitter<ReplyDeleteRequest> = new EventEmitter<ReplyDeleteRequest>();
+    @Output() commentDeleted: EventEmitter<CommentKey> = new EventEmitter<CommentKey>();
+    @Output() replyCommentDeleted: EventEmitter<ReplyKey> = new EventEmitter<ReplyKey>();
     replyComments !: CassandraPage<ReplyComment>;
     currentUser !: Profile;
     isMakingReply: boolean = false;
@@ -81,24 +77,16 @@ export class CommentComponent implements OnInit {
 
     onLikeComment(): void {
         if (this.isPostComment()) {
-            const likeCommentRequest: LikeCommentRequest = {
-                commentKey: this.comment.commentKey as CommentKey,
-                profileId: this.currentUser.profileId
-            }
             this.commentService
-                .updateLikeCommentCount(likeCommentRequest)
+                .updateLikeCommentCount(this.comment.commentKey as CommentKey)
                 .subscribe(() => {
                     this.comment.isLiked = !this.comment.isLiked;
 
                     this.comment.commentLikesCount = this.comment.isLiked ? this.comment.commentLikesCount + 1 : this.comment.commentLikesCount - 1;
                 })
         } else {
-            const likeReplyRequest: LikeReplyRequest = {
-                replyKey: this.comment.commentKey as ReplyKey,
-                profileId: this.currentUser.profileId
-            }
             this.repliesService
-                .updateLikeCommentCount(likeReplyRequest)
+                .updateLikeCommentCount(this.comment.commentKey as ReplyKey)
                 .subscribe(() => {
                     this.comment.isLiked = !this.comment.isLiked;
 
@@ -111,7 +99,7 @@ export class CommentComponent implements OnInit {
         this.areRepliesVisible = true;
 
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.currentUser.profileId, this.PAGE_SIZE, null)
+            .getRepliesForComment(this.getProperCommentId(), this.PAGE_SIZE, null)
             .subscribe((replies: CassandraPage<ReplyComment>) => {
                 this.replyComments = replies;
             });
@@ -119,7 +107,6 @@ export class CommentComponent implements OnInit {
 
     createReplyComment(event: CommentCreateData): void {
         const replyAddRequest: ReplyAddRequest = {
-            profileId: this.currentUser.profileId,
             commentId: this.getProperCommentId(),
             hasAttachment: event.attachedImage !== null,
             content: event.content
@@ -143,7 +130,7 @@ export class CommentComponent implements OnInit {
 
     loadMoreReplies(): void {
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.currentUser.profileId, this.PAGE_SIZE, this.replyComments.pagingState)
+            .getRepliesForComment(this.getProperCommentId(), this.PAGE_SIZE, this.replyComments.pagingState)
             .subscribe((replies: CassandraPage<ReplyComment>) => {
                 this.replyComments = replies;
             });
@@ -151,28 +138,18 @@ export class CommentComponent implements OnInit {
 
     deleteComment(): void {
         if (this.isPostComment()) {
-            const request: CommentDeleteRequest = {
-                commentKey: this.comment.commentKey as CommentKey,
-                profileId: this.currentUser.profileId
-            };
-
-            this.commentDeleted.emit(request);
+            this.commentDeleted.emit(this.comment.commentKey as CommentKey);
         } else {
-            const request: ReplyDeleteRequest = {
-                replyKey: this.comment.commentKey as ReplyKey,
-                profileId: this.currentUser.profileId
-            };
-
-            this.replyCommentDeleted.emit(request);
+            this.replyCommentDeleted.emit(this.comment.commentKey as ReplyKey);
         }
     }
 
-    deleteReplyComment(event: ReplyDeleteRequest): void {
+    deleteReplyComment(replyKey: ReplyKey): void {
         this.repliesService
-            .deleteReplyComment(event)
+            .deleteReplyComment(replyKey)
             .subscribe(() => {
                 this.replyComments.data = this.replyComments.data
-                    .filter((reply: ReplyComment) => reply.commentKey.replyCommentId !== event.replyKey.replyCommentId);
+                    .filter((reply: ReplyComment) => reply.commentKey.replyCommentId !== replyKey.replyCommentId);
             });
     }
 
@@ -204,7 +181,6 @@ export class CommentComponent implements OnInit {
     private handleCommentEdit(event: CommentCreateData): void {
         const request: CommentEditRequest = {
             commentKey: this.comment.commentKey as CommentKey,
-            profileId: this.currentUser.profileId,
             content: event.content,
             hasAttachment: event.attachedImage !== null
         };
@@ -233,7 +209,6 @@ export class CommentComponent implements OnInit {
     private handleReplyCommentEdit(event: CommentCreateData): void {
         const request: ReplyEditRequest = {
             replyKey: this.comment.commentKey as ReplyKey,
-            profileId: this.currentUser.profileId,
             content: event.content,
             hasAttachment: event.attachedImage !== null
         };
