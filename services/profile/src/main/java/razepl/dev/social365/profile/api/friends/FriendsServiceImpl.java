@@ -55,10 +55,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final Page<FriendFeedResponse> getFriendsFeedOptions(User user, Pageable pageable) {
-        log.info("Getting friends feed options for user : {} with pageable : {}", user, pageable);
+    public final Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
+        log.info("Getting friends feed options for user : {} with pageable : {}", profileId, pageable);
 
-        Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(user.profileId(), pageable);
+        Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(profileId, pageable);
 
         log.info("Found online friends for feed : {}", friends.getNumberOfElements());
 

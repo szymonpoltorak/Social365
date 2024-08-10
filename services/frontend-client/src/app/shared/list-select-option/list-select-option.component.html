@@ -1,4 +1,6 @@
 <div (click)="changeSelectionStatus()" [ngClass]="{'option-selected': isSelected}"
+     (keydown.enter)="changeSelectionStatus()"
+     tabindex="0"
      class="mat-button-ripple"
      matRipple
      routerLink="{{ option.route }}">

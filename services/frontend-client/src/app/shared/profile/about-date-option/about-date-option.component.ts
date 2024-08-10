@@ -11,7 +11,6 @@ import { RoutingService } from "@services/profile/routing.service";
 import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-option/about-unfilled-option.component";
 import { AboutDetailsService } from "@api/profile/about/about-details.service";
 import { DateOfBirthRequest } from "@interfaces/profile/about/date-of-birth-request.interface";
-import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
@@ -41,7 +40,6 @@ export class AboutDateOptionComponent implements OnInit {
     canEdit !: boolean;
 
     constructor(private routingService: RoutingService,
-                private localStorage: LocalStorageService,
                 private aboutDetailsService: AboutDetailsService) {
     }
 
@@ -55,7 +53,6 @@ export class AboutDateOptionComponent implements OnInit {
         }
         const request: DateOfBirthRequest = {
             detailsType: this.option.type,
-            profileId: this.localStorage.getUserProfileIdFromStorage(),
             dateOfBirth: this.option.formControl.value as Date,
             privacyLevel: this.getPrivacyLevel(this.option.data)
         };

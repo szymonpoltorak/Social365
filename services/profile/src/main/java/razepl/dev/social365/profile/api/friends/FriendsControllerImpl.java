@@ -46,10 +46,10 @@ public class FriendsControllerImpl implements FriendsController {
 
     @Override
     @GetMapping(value = FriendMappings.GET_FRIENDS_FEED_OPTIONS)
-    public final Page<FriendFeedResponse> getFriendsFeedOptions(@AuthUser User user,
+    public final Page<FriendFeedResponse> getFriendsFeedOptions(@RequestParam(Params.PROFILE_ID) String profileId,
                                                                 @RequestParam(Params.PAGE_NUMBER) int pageNumber,
                                                                 @RequestParam(Params.PAGE_SIZE) int pageSize) {
-        return friendsService.getFriendsFeedOptions(user, PageRequest.of(pageNumber, pageSize));
+        return friendsService.getFriendsFeedOptions(profileId, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override

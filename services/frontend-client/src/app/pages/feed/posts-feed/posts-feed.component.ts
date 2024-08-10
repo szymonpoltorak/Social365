@@ -90,7 +90,7 @@ export class PostsFeedComponent implements OnInit {
     }
 
     @HostListener('window:scroll', ['$event'])
-    onScroll(event: any): void {
+    onScroll(): void {
         if (!this.posts.hasNextPage) {
             return;
         }

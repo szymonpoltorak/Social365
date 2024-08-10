@@ -66,7 +66,7 @@ export class AboutWorkplaceComponent implements OnInit {
 
     deleteAboutDate(): void {
         this.aboutExperienceService
-            .deleteProfileWorkPlace(this.localStorage.getUserProfileIdFromStorage())
+            .deleteProfileWorkPlace()
             .subscribe(() => {
                 this.option.data = null;
                 this.option.isBeingEdited = false;
@@ -105,7 +105,6 @@ export class AboutWorkplaceComponent implements OnInit {
         const workplaceRequest: WorkPlaceRequest = {
             position: position,
             workplace: workplace,
-            profileId: this.localStorage.getUserProfileIdFromStorage(),
             privacyLevel: privacyLevel
         };
         this.aboutExperienceService

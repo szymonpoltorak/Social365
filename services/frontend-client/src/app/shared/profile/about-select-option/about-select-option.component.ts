@@ -12,6 +12,7 @@ import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-opt
 import { AboutApiHelperService } from "@api/profile/about/about-api-helper.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
+import { AboutDetailsRequest } from "@interfaces/profile/about/about-details-request.interface";
 
 @Component({
     selector: 'app-about-select-option',
@@ -64,7 +65,7 @@ export class AboutSelectOptionComponent implements OnInit {
         if (this.option.data === null) {
             return;
         }
-        const request: any = this.aboutApiHelperService
+        const request: AboutDetailsRequest = this.aboutApiHelperService
             .mapAboutOptionToAboutOptionRequest(this.option.data.label, this.option);
 
         request.privacyLevel = event;
@@ -85,7 +86,7 @@ export class AboutSelectOptionComponent implements OnInit {
 
             return;
         }
-        const request: any = this.aboutApiHelperService
+        const request: AboutDetailsRequest = this.aboutApiHelperService
             .mapAboutOptionToAboutOptionRequest(this.option.formControl.value, this.option);
 
         this.aboutApiHelperService

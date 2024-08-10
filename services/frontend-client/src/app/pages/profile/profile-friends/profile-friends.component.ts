@@ -71,7 +71,7 @@ export class ProfileFriendsComponent implements OnInit {
     }
 
     @HostListener('window:scroll', ['$event'])
-    onScroll(event: any): void {
+    onScroll(): void {
         if (this.friends.last) {
             return;
         }
@@ -87,13 +87,13 @@ export class ProfileFriendsComponent implements OnInit {
     private fetchFriends(value: Optional<string>, pageNumber: number): void {
         if (value === "") {
             this.friendsService
-                .getFriends(this.currentUser.profileId, pageNumber, this.pageSize)
+                .getFriends(pageNumber, this.pageSize)
                 .subscribe((friends: Page<FriendProfileOption>) => {
                     this.friends = friends;
                 });
         } else if (value !== null) {
             this.friendsService
-                .getFriendsByPattern(this.currentUser.profileId, value as string, pageNumber, this.pageSize)
+                .getFriendsByPattern(value as string, pageNumber, this.pageSize)
                 .subscribe((friends: Page<FriendProfileOption>) => {
                     this.friends = friends;
                 });

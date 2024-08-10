@@ -15,30 +15,24 @@ export class ImagesService {
     constructor(private http: HttpClient) {
     }
 
-    uploadPostImage(username: string, image: AttachImage, postId: string): Observable<void> {
+    uploadPostImage(image: AttachImage, postId: string): Observable<void> {
         return this.http.post<void>(ImagesMappings.UPLOAD_POST_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                username: username,
                 postId: postId
             }
         }).pipe(take(1));
     }
 
-    uploadCommentImage(username: string, image: AttachImage, commentId: string): Observable<void> {
+    uploadCommentImage(image: AttachImage, commentId: string): Observable<void> {
         return this.http.post<void>(ImagesMappings.UPLOAD_COMMENT_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                username: username,
                 commentId: commentId
             }
         }).pipe(take(1));
     }
 
-    uploadImage(username: string, image: AttachImage): Observable<Image> {
-        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
-            params: {
-                username: username
-            }
-        }).pipe(take(1));
+    uploadImage(image: AttachImage): Observable<Image> {
+        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image)).pipe(take(1));
     }
 
     getCommentImage(commentId: string): Observable<void> {

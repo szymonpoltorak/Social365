@@ -154,7 +154,7 @@ export class PostComponent implements OnInit {
 
         event.addedImages.forEach((image: AttachImage) => {
             this.imagesService
-                .uploadPostImage(this.currentUser.username, image, this.post.postKey.postId)
+                .uploadPostImage(image, this.post.postKey.postId)
                 .subscribe();
         });
 
@@ -181,7 +181,7 @@ export class PostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;

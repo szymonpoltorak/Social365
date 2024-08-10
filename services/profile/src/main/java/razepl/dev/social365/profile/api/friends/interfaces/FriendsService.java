@@ -13,7 +13,7 @@ public interface FriendsService {
 
     Page<FriendResponse> getFriendsByPattern(User user, String pattern, Pageable pageable);
 
-    Page<FriendFeedResponse> getFriendsFeedOptions(User user, Pageable pageable);
+    Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable);
 
     Page<String> getFollowedProfileIds(User user, int pageNumber);
 

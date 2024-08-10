@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit {
     }
 
     @HostListener('window:scroll', ['$event'])
-    onScroll(event: any): void {
+    onScroll(): void {
         if (this.profiles.last) {
             return;
         }
@@ -77,7 +77,7 @@ export class SearchComponent implements OnInit {
 
     addFriend(friendId: string): void {
         this.friendsService
-            .sendFriendRequest(this.localStorage.getUserProfileIdFromStorage(), friendId)
+            .sendFriendRequest(friendId)
             .subscribe(() => {
                 this.profiles.content = this.profiles.content
                     .filter((profile: ProfileSearch) => profile.profileId !== friendId);

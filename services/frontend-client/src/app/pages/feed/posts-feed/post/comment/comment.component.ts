@@ -128,7 +128,7 @@ export class CommentComponent implements OnInit {
 
         if (replyAddRequest.hasAttachment) {
             this.imagesService
-                .uploadCommentImage(this.currentUser.username, image, replyAddRequest.commentId)
+                .uploadCommentImage(image, replyAddRequest.commentId)
                 .subscribe();
         }
         this.repliesService
@@ -211,7 +211,7 @@ export class CommentComponent implements OnInit {
 
         if (event.attachedImage !== null && event.attachedImage.fileUrl !== this.comment.imageUrl) {
             this.imagesService
-                .uploadCommentImage(this.currentUser.username, event.attachedImage, request.commentKey.commentId)
+                .uploadCommentImage(event.attachedImage, request.commentKey.commentId)
                 .subscribe();
         } else if (event.attachedImage === null && this.comment.imageUrl !== "") {
             this.imagesService
@@ -240,7 +240,7 @@ export class CommentComponent implements OnInit {
 
         if (event.attachedImage !== null && event.attachedImage.fileUrl !== this.comment.imageUrl) {
             this.imagesService
-                .uploadCommentImage(this.currentUser.username, event.attachedImage, request.replyKey.replyCommentId)
+                .uploadCommentImage(event.attachedImage, request.replyKey.replyCommentId)
                 .subscribe();
         } else if (event.attachedImage === null && this.comment.imageUrl !== "") {
             this.imagesService

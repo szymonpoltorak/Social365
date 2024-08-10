@@ -58,8 +58,8 @@ public class ProfileControllerImpl implements ProfileController {
     @Override
     @GetMapping(value = ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING)
     public final ProfileBasicResponse getBasicProfileInfoByUsername(@RequestParam(Params.USERNAME) String username,
-                                                                    @RequestParam(Params.CURRENT_USER_ID) String currentUserId) {
-        return profileService.getBasicProfileInfoByUsername(username, currentUserId);
+                                                                    @AuthUser User user) {
+        return profileService.getBasicProfileInfoByUsername(username, user.profileId());
     }
 
     @Override

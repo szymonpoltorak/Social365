@@ -19,7 +19,7 @@ public interface ProfileController {
 
     Page<ProfileQueryResponse> getProfilesByPattern(String pattern, int pageNumber, int pageSize);
 
-    ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId);
+    ProfileBasicResponse getBasicProfileInfoByUsername(String username, User user);
 
     ProfileSummaryResponse getProfileSummary(User user);
 

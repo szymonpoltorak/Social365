@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.username = params.get("username") as string;
 
                 this.profileService
-                    .getBasicProfileInfoByUsername(this.username, this.currentUser.profileId)
+                    .getBasicProfileInfoByUsername(this.username)
                     .subscribe((profile: ProfileBasicInfo) => {
                         this.profileInfo = profile;
                     });
@@ -112,12 +112,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
         if (this.profileInfo.profileBannerUrl === "") {
             this.imageService
-                .uploadImage(this.profileInfo.username, profileBanner)
+                .uploadImage(profileBanner)
                 .subscribe((image: Image) => {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
                     this.profileService
-                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
+                        .updateProfileBanner(image.imageId)
                         .subscribe();
                 });
         } else {
@@ -127,7 +127,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
                     this.profileService
-                        .updateProfileBanner(this.profileInfo.profileId, image.imageId)
+                        .updateProfileBanner(image.imageId)
                         .subscribe();
                 });
         }
@@ -145,7 +145,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.profileInfo.profileBannerUrl = image.imagePath;
 
                 this.profileService
-                    .updateProfilePicture(this.profileInfo.username, image.imageId)
+                    .updateProfilePicture(image.imageId)
                     .subscribe();
             });
     }
@@ -178,7 +178,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     unfollowUser(): void {
         this.friendsService
-            .removeProfileFromFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .removeProfileFromFollowed(this.profileInfo.profileId)
             .subscribe(() => {
                 this.profileInfo.isFollowed = false;
             });
@@ -186,7 +186,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     followUser(): void {
         this.friendsService
-            .addProfileToFollowed(this.currentUser.profileId, this.profileInfo.profileId)
+            .addProfileToFollowed(this.profileInfo.profileId)
             .subscribe(() => {
                 this.profileInfo.isFollowed = true;
             });
@@ -194,7 +194,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     removeFriend(): void {
         this.friendsService
-            .removeUserFromFriends(this.currentUser.profileId, this.profileInfo.profileId)
+            .removeUserFromFriends(this.profileInfo.profileId)
             .subscribe(() => {
                 this.profileInfo.isFriend = false;
                 this.profileInfo.isFollowed = false;

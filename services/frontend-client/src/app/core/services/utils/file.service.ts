@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Optional } from "@core/types/profile/optional.type";
+import { ImageEvent } from "@core/types/utils/image-event.type";
 
 @Injectable({
     providedIn: 'root'
@@ -21,17 +22,17 @@ export class FileService {
         return this._allowedFileTypes;
     }
 
-    processAttachSingleFileEvent(event: any): Optional<AttachImage> {
+    processAttachSingleFileEvent(event: ImageEvent): Optional<AttachImage> {
         const val: Optional<AttachImage[]> = this._processAttachFilesEvent(event, 1);
 
         return val === null ? null : val[0];
     }
 
-    processAttachFilesEvent(event: any): Optional<AttachImage[]> {
+    processAttachFilesEvent(event: ImageEvent): Optional<AttachImage[]> {
         return this._processAttachFilesEvent(event, 10);
     }
 
-    private _processAttachFilesEvent(event: any, maxNumOfFiles: number): Optional<AttachImage[]> {
+    private _processAttachFilesEvent(event: ImageEvent, maxNumOfFiles: number): Optional<AttachImage[]> {
         const files: File[] = event.target.files as File[];
         const attachedImages: AttachImage[] = [];
 

@@ -69,7 +69,7 @@ export class FriendsFeedComponent implements OnInit {
         const profileId: string = this.localStorage.getUserProfileIdFromStorage();
 
         this.profileService
-            .getTodayBirthdays(profileId, this.pageNumber)
+            .getTodayBirthdays(this.pageNumber)
             .subscribe(data => {
                 this.birthdayInfos = data;
                 this.pageNumber = this.birthdayInfos.number;

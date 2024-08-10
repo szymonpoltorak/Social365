@@ -29,27 +29,15 @@ export class AboutExperienceService {
             highSchoolRequest).pipe(take(1));
     }
 
-    deleteProfileWorkPlace(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_WORK_PLACE_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileWorkPlace(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_WORK_PLACE_MAPPING).pipe(take(1));
     }
 
-    deleteProfileCollege(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_EDUCATION_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileCollege(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_EDUCATION_MAPPING).pipe(take(1));
     }
 
-    deleteProfileHighSchool(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_HIGH_SCHOOL_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileHighSchool(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutExperienceMappings.DELETE_PROFILE_HIGH_SCHOOL_MAPPING).pipe(take(1));
     }
 }

@@ -23,6 +23,7 @@ import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { ImagesService } from "@api/images/images.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
+import { ResizeEvent } from "@core/types/utils/resize-event.type";
 
 @Component({
     selector: 'app-profile-posts',
@@ -69,7 +70,7 @@ export class ProfilePostsComponent implements OnInit {
     }
 
     @HostListener('window:resize', ['$event'])
-    onResize(event: any): void {
+    onResize(event: ResizeEvent): void {
         const windowWidth: number = event.target.innerWidth;
         const newDisplayItems: number = windowWidth <= 1526 ? 2 : 3;
 
@@ -77,7 +78,7 @@ export class ProfilePostsComponent implements OnInit {
             this.numberOfItemsToDisplay = newDisplayItems;
 
             this.friends = this.friendsService
-                .getFriendsFeedOptions(this.currentUser.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
+                .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
         }
     }
 

@@ -12,7 +12,7 @@ public interface FriendsController {
 
     Page<FriendResponse> getFriendsByPattern(User user, String pattern, int pageNumber, int pageSize);
 
-    Page<FriendFeedResponse> getFriendsFeedOptions(User user, int pageNumber, int pageSize);
+    Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, int pageNumber, int pageSize);
 
     Page<String> getFollowedProfileIds(User user, int pageNumber);
 
