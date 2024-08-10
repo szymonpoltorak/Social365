@@ -20,7 +20,10 @@
                 </div>
             } @else {
                 @for (friend of friendRequests.content; track friend) {
-                    <app-friend-request [friendElement]="friend"></app-friend-request>
+                    <app-friend-request (addFriend)="acceptFriendRequest($event)"
+                                        (removeFriend)="declineFriendRequest($event)"
+                                        [friendElement]="friend">
+                    </app-friend-request>
                 }
             }
         </div>

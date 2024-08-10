@@ -15,7 +15,9 @@
     </mat-card-content>
 
     <div class="flex flex-col m-4">
-        <button class="mb-3" color="primary" mat-raised-button>
+        <button class="mb-3" color="primary"
+                (click)="addOrAcceptFriendRequest()"
+                mat-raised-button>
             @if (isFriendRequest) {
                 Accept
             } @else {
@@ -23,7 +25,9 @@
             }
         </button>
 
-        <button color="accent" mat-raised-button>
+        <button color="accent"
+                (click)="removeOrDeclineFriendRequest()"
+                mat-raised-button>
             @if (isFriendRequest) {
                 Decline
             } @else {

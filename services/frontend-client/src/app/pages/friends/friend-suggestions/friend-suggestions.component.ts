@@ -52,4 +52,14 @@ export class FriendSuggestionsComponent implements OnInit {
             .subscribe((response: Page<FriendElement>) => this.friendSuggestions = response);
     }
 
+    sendFriendRequest(event: FriendElement): void {
+        this.friendsService
+            .sendFriendRequest(event.profileId)
+            .subscribe(() => this.removeSuggestion(event));
+    }
+
+    removeSuggestion(event: FriendElement): void {
+        this.friendSuggestions.content = this.friendSuggestions.content
+            .filter((friend: FriendElement) => friend.profileId !== event.profileId);
+    }
 }

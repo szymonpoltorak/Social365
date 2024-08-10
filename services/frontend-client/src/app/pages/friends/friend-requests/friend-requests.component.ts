@@ -58,4 +58,21 @@ export class FriendRequestsComponent implements OnInit {
             .subscribe((response: Page<FriendElement>) => this.friendRequests = response);
     }
 
+    acceptFriendRequest(event: FriendElement): void {
+        this.friendsService
+            .acceptFriendRequest(event.profileId)
+            .subscribe(() => this.removeFriendRequest(event));
+    }
+
+    declineFriendRequest(event: FriendElement): void {
+        this.friendsService
+            .declineFriendRequest(event.profileId)
+            .subscribe(() => this.removeFriendRequest(event));
+    }
+
+    private removeFriendRequest(event: FriendElement): void {
+        this.friendRequests.content = this.friendRequests.content
+            .filter((friend: FriendElement) => friend.profileId !== event.profileId);
+    }
+
 }
