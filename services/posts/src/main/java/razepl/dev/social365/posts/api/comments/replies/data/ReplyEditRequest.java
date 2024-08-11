@@ -4,5 +4,5 @@ import lombok.Builder;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 
 @Builder
-public record ReplyEditRequest(ReplyKeyResponse replyKey, String profileId, String content, boolean hasAttachment) {
+public record ReplyEditRequest(ReplyKeyResponse replyKey, String content, boolean hasAttachment) {
 }

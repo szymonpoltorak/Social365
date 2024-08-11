@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.replies.constants.ReplyMappings;
-import razepl.dev.social365.posts.api.comments.replies.data.LikeReplyRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
-import razepl.dev.social365.posts.api.comments.replies.data.ReplyDeleteRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesController;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesService;
 import razepl.dev.social365.posts.api.constants.Params;
+import razepl.dev.social365.posts.config.AuthUser;
+import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
@@ -30,34 +31,34 @@ public class RepliesControllerImpl implements RepliesController {
     @Override
     @GetMapping(value = ReplyMappings.GET_REPLIES_FOR_COMMENT)
     public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                                                     @RequestParam(Params.PROFILE_ID) String profileId,
+                                                                     @AuthUser User user,
                                                                      @RequestParam(Params.PAGE_SIZE) int pageSize,
                                                                      @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return repliesService.getRepliesForComment(commentId, profileId, PageInfo.of(pageSize, pagingState));
+        return repliesService.getRepliesForComment(commentId, user.profileId(), PageInfo.of(pageSize, pagingState));
     }
 
     @Override
     @PostMapping(value = ReplyMappings.ADD_REPLY_TO_COMMENT)
-    public final CommentResponse addReplyToComment(@RequestBody ReplyAddRequest commentRequest) {
-        return repliesService.addReplyToComment(commentRequest);
+    public final CommentResponse addReplyToComment(@AuthUser User user, @RequestBody ReplyAddRequest commentRequest) {
+        return repliesService.addReplyToComment(user, commentRequest);
     }
 
     @Override
     @PutMapping(value = ReplyMappings.EDIT_REPLY)
-    public final CommentResponse editReplyComment(@RequestBody ReplyEditRequest commentRequest) {
-        return repliesService.editReplyComment(commentRequest);
+    public final CommentResponse editReplyComment(@AuthUser User user, @RequestBody ReplyEditRequest commentRequest) {
+        return repliesService.editReplyComment(user, commentRequest);
     }
 
     @Override
     @PutMapping(value = ReplyMappings.DELETE_REPLY)
-    public final CommentResponse deleteReplyComment(@RequestBody ReplyDeleteRequest commentRequest) {
-        return repliesService.deleteReplyComment(commentRequest);
+    public final CommentResponse deleteReplyComment(@AuthUser User user, @RequestBody ReplyKeyResponse replyKey) {
+        return repliesService.deleteReplyComment(user, replyKey);
     }
 
     @Override
     @PutMapping(value = ReplyMappings.UPDATE_LIKE_REPLY_COUNT)
-    public final CommentResponse updateLikeCommentCount(@RequestBody LikeReplyRequest likeCommentRequest) {
-        return repliesService.updateLikeCommentCount(likeCommentRequest);
+    public final CommentResponse updateLikeCommentCount(@AuthUser User user, @RequestBody ReplyKeyResponse replyKey) {
+        return repliesService.updateLikeCommentCount(user, replyKey);
     }
 
 }

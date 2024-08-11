@@ -76,14 +76,14 @@ export class PostCreateHeaderComponent implements OnInit {
         const hasAttachments: boolean = this.attachedImagesLength > 0;
 
         this.postService
-            .createPost(this.currentUser.profileId, postContent, hasAttachments)
+            .createPost(postContent, hasAttachments)
             .subscribe((post: Post) => {
                 const images: AttachImage[] = this.dropImageComponent.onFormSubmit();
 
                 post.imageUrls = images.map((image: AttachImage) => image.fileUrl);
 
                 images.forEach((image: AttachImage) => {
-                    this.imagesService.uploadPostImage(this.currentUser.username, image, post.postKey.postId).subscribe();
+                    this.imagesService.uploadPostImage(image, post.postKey.postId).subscribe();
                 });
 
                 this.postCreated.emit(post);

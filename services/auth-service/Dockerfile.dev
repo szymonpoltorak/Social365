@@ -1,0 +1,9 @@
+FROM alpine:3.19.1
+
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle openjdk17 curl
+
+WORKDIR /home/auth
+
+EXPOSE 8080
+
+CMD ["gradle", "bootRun"]

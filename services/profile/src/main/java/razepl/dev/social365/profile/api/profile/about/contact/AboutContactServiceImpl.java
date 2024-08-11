@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutContactService;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
@@ -28,10 +29,10 @@ public class AboutContactServiceImpl implements AboutContactService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final ProfileRequest updateProfilePhoneNumber(AboutDetailsRequest phoneNumberRequest) {
-        log.info("Updating profile phone number with request: {}", phoneNumberRequest);
+    public final ProfileRequest updateProfilePhoneNumber(User user, AboutDetailsRequest phoneNumberRequest) {
+        log.info("Updating profile phone number with request: {}, by user : {}", phoneNumberRequest, user);
 
-        Profile profile = profileRepository.findByProfileId(phoneNumberRequest.profileId())
+        Profile profile = profileRepository.findByProfileId(user.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for updating phone number: {}", profile);
@@ -69,10 +70,10 @@ public class AboutContactServiceImpl implements AboutContactService {
     }
 
     @Override
-    public final ProfileRequest updateProfileEmailPrivacyLevel(String profileId, PrivacyLevel privacyLevel) {
-        log.info("Updating profile email privacy level with profileId: {} and privacyLevel: {}", profileId, privacyLevel);
+    public final ProfileRequest updateProfileEmailPrivacyLevel(User user, PrivacyLevel privacyLevel) {
+        log.info("Updating profile email privacy level by user: {} and privacyLevel: {}", user, privacyLevel);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
+        Profile profile = profileRepository.findByProfileId(user.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for updating email privacy level: {}", profile);
@@ -91,15 +92,15 @@ public class AboutContactServiceImpl implements AboutContactService {
     }
 
     @Override
-    public final ProfileRequest deleteProfilePhoneNumber(String profileId) {
-        log.info("Deleting profile phone number with profileId: {}", profileId);
+    public final ProfileRequest deleteProfilePhoneNumber(User user) {
+        log.info("Deleting profile phone number by user: {}", user);
 
-        Profile profile = profileRepository.findByProfileId(profileId)
+        Profile profile = profileRepository.findByProfileId(user.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for deleting phone number: {}", profile);
 
-        Mobile mobile = mobileRepository.findByProfileId(profileId)
+        Mobile mobile = mobileRepository.findByProfileId(user.profileId())
                 .orElseThrow(() -> new MobileNotFoundException(profile.getProfileId()));
 
         log.info("Mobile for deleting: {}", mobile);

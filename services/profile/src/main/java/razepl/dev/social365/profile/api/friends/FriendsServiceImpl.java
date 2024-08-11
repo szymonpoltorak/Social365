@@ -12,6 +12,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.exceptions.UserAlreadySendFriendRequestException;
@@ -35,62 +36,63 @@ public class FriendsServiceImpl implements FriendsService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final Page<FriendResponse> getFriends(String profileId, Pageable pageable) {
-        log.info("Getting friends for profile with id: {} with pageable : {}", profileId, pageable);
+    public final Page<FriendResponse> getFriends(User user, Pageable pageable) {
+        log.info("Getting friends for user : {} with pageable : {}", user, pageable);
 
-        Page<FriendData> friends = profileRepository.findFriendsByProfileId(profileId, pageable);
+        Page<FriendData> friends = profileRepository.findFriendsByProfileId(user.profileId(), pageable);
 
-        return mapFriendDataPageToFriendResponse(friends, profileId);
+        return mapFriendDataPageToFriendResponse(friends, user.profileId());
     }
 
     @Override
-    public final Page<FriendResponse> getFriendsByPattern(String profileId, String pattern, Pageable pageable) {
-        log.info("Getting friends for profile with id: {} with pattern: {} and pageable : {}", profileId, pattern, pageable);
+    public final Page<FriendResponse> getFriendsByPattern(User user, String pattern, Pageable pageable) {
+        log.info("Getting friends for user: {} with pattern: {} and pageable : {}", user, pattern, pageable);
 
-        Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(profileId,
+        Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(user.profileId(),
                 pattern.toLowerCase(Locale.ROOT), pageable);
 
-        return mapFriendDataPageToFriendResponse(friends, profileId);
+        return mapFriendDataPageToFriendResponse(friends, user.profileId());
     }
 
     @Override
     public final Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
-        log.info("Getting friends feed options for profileId: {} with pageable : {}", profileId, pageable);
+        log.info("Getting friends feed options for user : {} with pageable : {}", profileId, pageable);
 
         Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(profileId, pageable);
 
-        log.info("Found online friends for feed : {}, for profileId: {}", friends.getNumberOfElements(), profileId);
+        log.info("Found online friends for feed : {}", friends.getNumberOfElements());
 
         return friends.map(profileMapper::mapProfileToFriendFeedResponse);
     }
 
     @Override
-    public final Page<FriendSuggestionResponse> getFriendRequests(String profileId, Pageable pageable) {
-        log.info("Getting friend requests for profile with id: {}", profileId);
+    public final Page<FriendSuggestionResponse> getFriendRequests(User user, Pageable pageable) {
+        log.info("Getting friend requests for user : {}", user);
 
         Page<FriendSuggestion> friendRequests = profileRepository
-                .findFriendRequestsByProfileId(profileId, pageable);
+                .findFriendRequestsByProfileId(user.profileId(), pageable);
 
-        log.info("Found {} friend requests for profile with id: {}", friendRequests.getNumberOfElements(), profileId);
+        log.info("Found {} friend requests", friendRequests.getNumberOfElements());
 
         return friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
 
     @Override
-    public final Page<FriendSuggestionResponse> getFriendSuggestions(String profileId, Pageable pageable) {
-        log.info("Getting friend suggestions for profile with id: {}", profileId);
+    public final Page<FriendSuggestionResponse> getFriendSuggestions(User user, Pageable pageable) {
+        log.info("Getting friend suggestions for user : {}", user);
 
-        Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(profileId, pageable);
+        Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(user.profileId(), pageable);
 
-        log.info("Found {} friend suggestions for profile with id: {}", friendSuggestions.getNumberOfElements(), profileId);
+        log.info("Found {} friend suggestions", friendSuggestions.getNumberOfElements());
 
         return friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
     }
 
     @Override
-    public final FriendResponse removeUserFromFriends(String profileId, String friendId) {
-        log.info("Removing friend with id: {} from profile with id: {}", friendId, profileId);
+    public final FriendResponse removeUserFromFriends(User user, String friendId) {
+        log.info("Removing friend with id: {} from user : {}", friendId, user);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
         if (!profileRepository.areUsersFriends(profileId, friendId)) {
@@ -108,9 +110,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse addUserToFriends(String profileId, String friendId) {
-        log.info("Adding friend with id: {} to profile with id: {}", friendId, profileId);
+    public final FriendResponse addUserToFriends(User user, String friendId) {
+        log.info("Adding friend with id: {} to user : {}", friendId, user);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
         if (profileRepository.areUsersFriends(profileId, friendId)) {
@@ -129,22 +132,23 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final Page<String> getFollowedProfileIds(String profileId, int pageNumber) {
-        log.info("Getting friends ids for profile with id: {}", profileId);
+    public final Page<String> getFollowedProfileIds(User user, int pageNumber) {
+        log.info("Getting friends ids for user : {}", user);
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-        Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(profileId, pageable);
+        Page<String> friendsIds = profileRepository.findFollowedIdsByProfileId(user.profileId(), pageable);
 
-        log.info("Found {} friends ids for profile with id: {}", friendsIds.getNumberOfElements(), profileId);
+        log.info("Found {} friends ids", friendsIds.getNumberOfElements());
 
         return friendsIds;
     }
 
     @Override
-    public final FriendResponse addProfileToFollowed(String profileId, String toFollowId) {
-        log.info("Adding follow status for profile with id: {} and user with id: {}", profileId, toFollowId);
+    public final FriendResponse addProfileToFollowed(User user, String toFollowId) {
+        log.info("Adding follow status for user : {} and user with id: {}", user, toFollowId);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, toFollowId);
 
         if (profileRepository.doesUserFollowProfile(profileId, toFollowId)) {
@@ -158,9 +162,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse removeProfileFromFollowed(String profileId, String toFollowId) {
-        log.info("Removing follow status for profile with id: {} and user with id: {}", profileId, toFollowId);
+    public final FriendResponse removeProfileFromFollowed(User user, String toFollowId) {
+        log.info("Removing follow status for user : {} and user with id: {}", user, toFollowId);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, toFollowId);
 
         if (!profileRepository.doesUserFollowProfile(profileId, toFollowId)) {
@@ -174,9 +179,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse sendFriendRequest(String profileId, String friendId) {
-        log.info("Sending friend request from profile with id: {} to user with id: {}", profileId, friendId);
+    public final FriendResponse sendFriendRequest(User user, String friendId) {
+        log.info("Sending friend request from user : {} to user with id: {}", user, friendId);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
         if (profileRepository.areUsersFriends(profileId, friendId)) {
@@ -193,9 +199,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse acceptFriendRequest(String profileId, String friendId) {
-        log.info("Accepting friend request from profile with id: {} to user with id: {}", profileId, friendId);
+    public final FriendResponse acceptFriendRequest(User user, String friendId) {
+        log.info("Accepting friend request from user : {} to user with id: {}", user, friendId);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
         if (!profileRepository.doesUserWantToBeFriendWith(profileId, friendId)) {
@@ -210,9 +217,10 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final FriendResponse declineFriendRequest(String profileId, String friendId) {
-        log.info("Declining friend request from profile with id: {} to user with id: {}", profileId, friendId);
+    public final FriendResponse declineFriendRequest(User user, String friendId) {
+        log.info("Declining friend request from user : {} to user with id: {}", user, friendId);
 
+        String profileId = user.profileId();
         Profile profile = getProfileAndCheckFriendExistence(profileId, friendId);
 
         if (!profileRepository.doesUserWantToBeFriendWith(profileId, friendId)) {

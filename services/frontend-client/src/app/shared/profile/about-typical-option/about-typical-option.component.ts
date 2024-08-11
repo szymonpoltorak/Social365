@@ -14,6 +14,7 @@ import { Either } from "@core/types/feed/either.type";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DetailsType } from "@enums/profile/details-type.enum";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
+import { AboutDetailsRequest } from "@interfaces/profile/about/about-details-request.interface";
 
 @Component({
     selector: 'app-about-typical-option',
@@ -69,7 +70,7 @@ export class AboutTypicalOptionComponent implements OnInit {
             return;
         }
         const detailsValue: Either<string, Date> = this.option.formControl.value;
-        const request: any = this.aboutApiHelperService
+        const request: AboutDetailsRequest = this.aboutApiHelperService
             .mapAboutOptionToAboutOptionRequest(detailsValue, this.option);
 
         this.aboutApiHelperService
@@ -89,7 +90,7 @@ export class AboutTypicalOptionComponent implements OnInit {
         if (this.option.data === null) {
             return;
         }
-        const request: any = this.aboutApiHelperService
+        const request: AboutDetailsRequest = this.aboutApiHelperService
             .mapAboutOptionToAboutOptionRequest(this.option.data.label, this.option);
 
         request.privacyLevel = event;

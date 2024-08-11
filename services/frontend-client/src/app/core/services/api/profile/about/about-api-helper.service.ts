@@ -67,7 +67,7 @@ export class AboutApiHelperService {
             return this.aboutContactService.updateProfilePhoneNumber(data as unknown as AboutDetailsRequest);
         }
         if (data.detailsType === DetailsType.MAIL) {
-            return this.aboutContactService.updateProfileEmailPrivacyLevel(data.profileId, data.privacyLevel);
+            return this.aboutContactService.updateProfileEmailPrivacyLevel(data.privacyLevel);
         }
         if (data.detailsType === DetailsType.COLLEGE) {
             return this.aboutExperienceService.updateProfileCollege(data as unknown as AboutDetailsRequest);
@@ -91,28 +91,26 @@ export class AboutApiHelperService {
     }
 
     deleteAboutOption(detailsType: DetailsType): Observable<ProfileRequest> {
-        const profileId: string = this.localStorage.getUserProfileIdFromStorage();
-
         if (detailsType === DetailsType.PHONE) {
-            return this.aboutContactService.deleteProfilePhoneNumber(profileId);
+            return this.aboutContactService.deleteProfilePhoneNumber();
         }
         if (detailsType === DetailsType.COLLEGE) {
-            return this.aboutExperienceService.deleteProfileCollege(profileId);
+            return this.aboutExperienceService.deleteProfileCollege();
         }
         if (detailsType === DetailsType.HIGH_SCHOOL) {
-            return this.aboutExperienceService.deleteProfileHighSchool(profileId);
+            return this.aboutExperienceService.deleteProfileHighSchool();
         }
         if (detailsType === DetailsType.RELATIONSHIP_STATUS) {
-            return this.aboutDetailsService.deleteProfileRelationshipStatus(profileId);
+            return this.aboutDetailsService.deleteProfileRelationshipStatus();
         }
         if (detailsType === DetailsType.CURRENT_CITY) {
-            return this.aboutDetailsService.deleteProfileCurrentCity(profileId);
+            return this.aboutDetailsService.deleteProfileCurrentCity();
         }
         if (detailsType === DetailsType.GENDER) {
-            return this.aboutDetailsService.deleteProfileGender(profileId);
+            return this.aboutDetailsService.deleteProfileGender();
         }
         if (detailsType === DetailsType.HOMETOWN) {
-            return this.aboutDetailsService.deleteProfileHomeTown(profileId);
+            return this.aboutDetailsService.deleteProfileHomeTown();
         }
         throw new Error('Invalid details type');
     }

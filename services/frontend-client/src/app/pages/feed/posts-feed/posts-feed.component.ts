@@ -90,7 +90,7 @@ export class PostsFeedComponent implements OnInit {
     }
 
     @HostListener('window:scroll', ['$event'])
-    onScroll(event: any): void {
+    onScroll(): void {
         if (!this.posts.hasNextPage) {
             return;
         }
@@ -118,7 +118,7 @@ export class PostsFeedComponent implements OnInit {
 
     sharePost(event: SharePostData): void {
         this.postService
-            .sharePost(this.currentUser.profileId, event.post.postKey, event.content)
+            .sharePost(event.post.postKey, event.content)
             .subscribe((sharedPost: SharedPost) => {
                 this.posts.data.unshift(sharedPost);
 
@@ -131,7 +131,7 @@ export class PostsFeedComponent implements OnInit {
 
     deletePost(event: Post): void {
         this.postService
-            .deletePost(this.currentUser.profileId, event.postKey.postId, event.postKey.author.profileId)
+            .deletePost(event.postKey.postId, event.postKey.author.profileId)
             .subscribe(() => {
                 this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
 

@@ -44,15 +44,6 @@ export class AboutEnumMapperService {
         throw new Error('Invalid relationship');
     }
 
-    mapGenderTypeToGender(gender: string): Gender {
-        if (gender === GenderType.MALE) {
-            return Gender.MALE;
-        } else if (gender === GenderType.FEMALE) {
-            return Gender.FEMALE;
-        }
-        throw new Error("Invalid gender");
-    }
-
     mapGenderToEnum(gender: string): GenderType {
         if (gender === Gender.MALE) {
             return GenderType.MALE;

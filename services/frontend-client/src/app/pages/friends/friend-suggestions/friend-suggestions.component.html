@@ -21,7 +21,11 @@
 
             } @else {
                 @for (friend of friendSuggestions.content; track friend) {
-                    <app-friend-request [friendElement]="friend" [isFriendRequest]="false"></app-friend-request>
+                    <app-friend-request [friendElement]="friend"
+                                        (addFriend)="sendFriendRequest($event)"
+                                        (removeFriend)="removeSuggestion($event)"
+                                        [isFriendRequest]="false">
+                    </app-friend-request>
                 }
             }
         </div>

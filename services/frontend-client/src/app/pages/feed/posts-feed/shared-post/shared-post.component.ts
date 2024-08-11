@@ -26,10 +26,10 @@ import { CommentService } from "@api/posts-comments/comment.service";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
-import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { ImagesService } from "@api/images/images.service";
+import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
 
 @Component({
     selector: 'app-shared-post',
@@ -80,7 +80,7 @@ export class SharedPostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.currentUser.profileId, 5, null)
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, 5, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.areCommentsVisible = !this.areCommentsVisible;
 
@@ -126,7 +126,6 @@ export class SharedPostComponent implements OnInit {
 
     createComment(event: CommentCreateData): void {
         const request: CommentAddRequest = {
-            profileId: this.currentUser.profileId,
             postId: this.post.sharingPost.postKey.postId,
             hasAttachment: event.attachedImage !== null,
             content: event.content
@@ -138,7 +137,7 @@ export class SharedPostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;
@@ -149,7 +148,7 @@ export class SharedPostComponent implements OnInit {
 
     loadMoreComments(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.PAGE_SIZE, this.comments.pagingState)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.comments.pagingState = comments.pagingState;
                 this.comments.friendsPageNumber = comments.friendsPageNumber;
@@ -158,12 +157,12 @@ export class SharedPostComponent implements OnInit {
             });
     }
 
-    deleteComment(event: CommentDeleteRequest): void {
+    deleteComment(commentKey: CommentKey): void {
         this.commentService
-            .deleteComment(event)
+            .deleteComment(commentKey)
             .subscribe(() => {
                 this.comments.data = this.comments.data
-                    .filter((comment: PostComment) => comment.commentKey.commentId !== event.commentKey.commentId);
+                    .filter((comment: PostComment) => comment.commentKey.commentId !== commentKey.commentId);
             });
     }
 }

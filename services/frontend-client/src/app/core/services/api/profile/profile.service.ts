@@ -19,10 +19,9 @@ export class ProfileService {
     constructor(private http: HttpClient) {
     }
 
-    getTodayBirthdays(profileId: string, pageNumber: number): Observable<Page<BirthdayInfo>> {
+    getTodayBirthdays(pageNumber: number): Observable<Page<BirthdayInfo>> {
         return this.http.get<Page<BirthdayInfo>>(ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING, {
             params: {
-                profileId: profileId,
                 pageNumber: pageNumber
             }
         }).pipe(take(1));
@@ -38,36 +37,26 @@ export class ProfileService {
         }).pipe(take(1));
     }
 
-    getProfileSummary(profileId: string): Observable<ProfileSummary> {
-        return this.http.get<ProfileSummary>(ProfileMappings.GET_PROFILE_SUMMARY_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    getProfileSummary(): Observable<ProfileSummary> {
+        return this.http.get<ProfileSummary>(ProfileMappings.GET_PROFILE_SUMMARY_MAPPING).pipe(take(1));
     }
 
-    getBasicProfileInfo(profileId: string): Observable<Profile> {
-        return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    getBasicProfileInfo(): Observable<Profile> {
+        return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING).pipe(take(1));
     }
 
     updateProfileBio(profileId: string, bio: string): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BIO_MAPPING, {}, {
             params: {
-                profileId: profileId,
                 bio: bio
             }
         }).pipe(take(1));
     }
 
-    getBasicProfileInfoByUsername(username: string, currentUserId: string): Observable<ProfileBasicInfo> {
+    getBasicProfileInfoByUsername(username: string): Observable<ProfileBasicInfo> {
         return this.http.get<ProfileBasicInfo>(ProfileMappings.GET_BASIC_PROFILE_INFO_BY_USERNAME_MAPPING, {
             params: {
-                username: username,
-                currentUserId: currentUserId
+                username: username
             }
         }).pipe(take(1));
     }
@@ -82,19 +71,17 @@ export class ProfileService {
         }).pipe(take(1));
     }
 
-    updateProfilePicture(profileId: string, profilePictureId: number): Observable<ProfileRequest> {
+    updateProfilePicture(profilePictureId: number): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_PICTURE_MAPPING, {}, {
             params: {
-                profileId: profileId,
                 profilePictureId: profilePictureId
             }
         });
     }
 
-    updateProfileBanner(profileId: string, profileBannerId: number): Observable<ProfileRequest> {
+    updateProfileBanner(profileBannerId: number): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BANNER_MAPPING, {}, {
             params: {
-                profileId: profileId,
                 profileBannerId: profileBannerId
             }
         });

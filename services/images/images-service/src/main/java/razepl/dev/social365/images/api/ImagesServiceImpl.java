@@ -12,6 +12,7 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
+import razepl.dev.social365.images.config.User;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.comment.CommentImage;
 import razepl.dev.social365.images.entities.image.comment.interfaces.CommentImageRepository;
@@ -20,6 +21,7 @@ import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
 import razepl.dev.social365.images.entities.image.post.PostImage;
 import razepl.dev.social365.images.entities.image.post.interfaces.PostImagesRepository;
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
+import razepl.dev.social365.images.exceptions.UserNotImageAuthorException;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -33,6 +35,7 @@ public class ImagesServiceImpl implements ImagesService {
 
     private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
     private static final String IMAGE_NOT_FOUND = "Image not found";
+
     private final ImagesRepository imagesRepository;
     private final FileManagementService fileManagementService;
     private final ImagesMapper imagesMapper;
@@ -153,7 +156,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public ImageResponse updateImage(String imageUrl, MultipartFile image) {
+    public ImageResponse updateImage(String imageUrl, MultipartFile image, User user) {
         log.info("Updating image with imagePath: {}", imageUrl);
 
         Image imageEntity = imagesRepository.findImageByImagePath(imageUrl)
@@ -176,7 +179,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public ImageResponse deleteImage(long imageId) {
+    public ImageResponse deleteImage(long imageId, User user) {
         log.info("Deleting image with imageId: {}", imageId);
 
         Image image = getImageFromRepository(imageId);
@@ -189,7 +192,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public ImageResponse deleteImageByImageUrl(String imageUrl) {
+    public ImageResponse deleteImageByImageUrl(String imageUrl, User user) {
         log.info("Deleting image with imageUrl: {}", imageUrl);
 
         Image image = imagesRepository.findImageByImagePath(imageUrl)
@@ -197,6 +200,9 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Image found by url: {}", image);
 
+        if (!image.getUsername().equals(user.username())) {
+            throw new UserNotImageAuthorException(user.username());
+        }
         imagesRepository.delete(image);
 
         fileManagementService.deleteFile(image.getImagePath());
@@ -207,7 +213,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public PostImageResponse deletePostImageByImageUrl(String imageUrl) {
+    public PostImageResponse deletePostImageByImageUrl(String imageUrl, User user) {
         log.info("Deleting post image with imageUrl: {}", imageUrl);
 
         PostImage postImage = postImagesRepository.findPostImageByImagePath(imageUrl)
@@ -215,6 +221,9 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Post image found by url: {}", postImage);
 
+        if (postImage.getUsername().equals(user.username())) {
+            throw new UserNotImageAuthorException(user.username());
+        }
         postImagesRepository.delete(postImage);
 
         fileManagementService.deleteFile(postImage.getImagePath());
@@ -225,7 +234,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public CommentImageResponse deleteCommentImageById(String commentId) {
+    public CommentImageResponse deleteCommentImageById(String commentId, User user) {
         log.info("Deleting comment image with commentId: {}", commentId);
 
         CommentImage commentImage = commentImageRepository.findCommentImageByCommentId(commentId)
@@ -233,6 +242,9 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("Comment image found: {}", commentImage);
 
+        if (!commentImage.getUsername().equals(user.username())) {
+            throw new UserNotImageAuthorException(user.username());
+        }
         commentImageRepository.delete(commentImage);
 
         fileManagementService.deleteFile(commentImage.getImagePath());
@@ -244,11 +256,14 @@ public class ImagesServiceImpl implements ImagesService {
 
     @Override
     @Transactional
-    public List<PostImageResponse> deleteImagesByPostId(String postId) {
+    public List<PostImageResponse> deleteImagesByPostId(String postId, User user) {
         log.info("Deleting post images with postId: {}", postId);
 
         List<PostImage> postImages = postImagesRepository.findPostImagesByPostId(postId);
 
+        if (postImages.stream().noneMatch(postImage -> postImage.getUsername().equals(user.username()))) {
+            throw new UserNotImageAuthorException(user.username());
+        }
         log.info("Deleting images from database...");
 
         postImagesRepository.deleteAllByPostId(postId);

@@ -19,19 +19,14 @@ export class AboutContactService {
             phoneNumberRequest).pipe(take(1));
     }
 
-    updateProfileEmailPrivacyLevel(profileId: string, privacyLevel: PrivacyLevel): Observable<ProfileRequest> {
+    updateProfileEmailPrivacyLevel(privacyLevel: PrivacyLevel): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(AboutContactMappings.UPDATE_PROFILE_EMAIL_PRIVACY_LEVEL_MAPPING, {
-            profileId: profileId,
             privacyLevel: privacyLevel
         }).pipe(take(1));
     }
 
-    deleteProfilePhoneNumber(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutContactMappings.DELETE_PROFILE_PHONE_NUMBER_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfilePhoneNumber(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutContactMappings.DELETE_PROFILE_PHONE_NUMBER_MAPPING).pipe(take(1));
     }
 
 }

@@ -18,16 +18,6 @@ export class PostService {
     constructor(private http: HttpClient) {
     }
 
-    getPostsOnPage(profileId: string, friendsPageNumber: number,
-                   pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<Either<Post, SharedPost>>> {
-        return this.getPostsFromUrl(profileId, friendsPageNumber, pageSize, pagingState, PostMappings.GET_POSTS_ON_PAGE);
-    }
-
-    getUsersPosts(profileId: string, friendsPageNumber: number,
-                  pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<Either<Post, SharedPost>>> {
-        return this.getPostsFromUrl(profileId, friendsPageNumber, pageSize, pagingState, PostMappings.GET_USERS_POSTS);
-    }
-
     getPostsFromUrl(profileId: string, friendsPageNumber: number,
                     pageSize: number, pagingState: Optional<string>,
                     url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
@@ -36,40 +26,36 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    updateLikePostCount(profileId: string, postId: string, authorId: string): Observable<Post> {
+    updateLikePostCount(postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_LIKE_POST_COUNT, {}, {
             params: {
-                profileId: profileId,
                 postId: postId,
                 authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    updateNotificationStatus(profileId: string, postId: string, authorId: string): Observable<Post> {
+    updateNotificationStatus(postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_NOTIFICATION_STATUS, {}, {
             params: {
-                profileId: profileId,
                 postId: postId,
                 authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    updateBookmarkStatus(profileId: string, postId: string, authorId: string): Observable<Post> {
+    updateBookmarkStatus(postId: string, authorId: string): Observable<Post> {
         return this.http.put<Post>(PostMappings.UPDATE_BOOKMARK_STATUS, {}, {
             params: {
-                profileId: profileId,
                 postId: postId,
                 authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    sharePost(profileId: string, postKey: PostKey, content: string): Observable<SharedPost> {
+    sharePost(postKey: PostKey, content: string): Observable<SharedPost> {
         return this.http.put<SharedPost>(PostMappings.SHARE_POST, {}, {
             params: {
-                profileId: profileId,
                 postId: postKey.postId,
                 authorId: postKey.author.profileId,
                 content: content
@@ -77,10 +63,9 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    createPost(profileId: string, content: string, hasAttachments: boolean): Observable<Post> {
+    createPost(content: string, hasAttachments: boolean): Observable<Post> {
         return this.http.post<Post>(PostMappings.CREATE_POST, {}, {
             params: {
-                profileId: profileId,
                 content: content,
                 hasAttachments: hasAttachments
             }
@@ -91,26 +76,25 @@ export class PostService {
         return this.http.put<Post>(PostMappings.EDIT_POST, request).pipe(take(1));
     }
 
-    deletePost(profileId: string, postId: string, authorId: string): Observable<Post> {
+    deletePost(postId: string, authorId: string): Observable<Post> {
         return this.http.delete<Post>(PostMappings.DELETE_POST, {
             params: {
-                profileId: profileId,
                 postId: postId,
                 authorId: authorId
             }
         }).pipe(take(1));
     }
 
-    private getHttpParams(profileId: string, friendsPageNumber: number,
-                          pageSize: number, pagingState: Optional<string>): HttpParams {
+    private getHttpParams(profileId: string, friendsPageNumber: number, pageSize: number,
+                          pagingState: Optional<string>): HttpParams {
         const params: HttpParams = new HttpParams();
 
         if (pagingState !== null) {
             params.set('pagingState', pagingState || "");
         }
         return params
-            .set('profileId', profileId)
             .set('friendsPageNumber', friendsPageNumber)
+            .set('profileId', profileId)
             .set('pageSize', pageSize);
     }
 

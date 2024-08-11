@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
-import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 
 import java.util.Optional;
 import java.util.UUID;

@@ -51,7 +51,7 @@ class AboutDataServiceTest {
     @Test
     final void test_getOverview_success() {
         // given
-        String profileId = "profileId";
+        String username = "profileId";
         Profile profile = Profile
                 .builder()
                 .lastName("lastName")
@@ -63,12 +63,12 @@ class AboutDataServiceTest {
                 .build();
 
         // when
-        when(profileRepository.findByProfileId(profileId))
+        when(profileRepository.findByUsername(username))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToOverviewResponse(profile))
                 .thenReturn(expected);
 
-        OverviewResponse actual = aboutDataService.getOverview(profileId);
+        OverviewResponse actual = aboutDataService.getOverview(username);
 
         // then
         Assertions.assertEquals(expected, actual);
@@ -122,7 +122,7 @@ class AboutDataServiceTest {
     @Test
     final void test_getWorkEducation_success() {
         // given
-        String profileId = "profileId";
+        String username = "profileId";
         Profile profile = Profile
                 .builder()
                 .lastName("lastName")
@@ -134,12 +134,12 @@ class AboutDataServiceTest {
                 .build();
 
         // when
-        when(profileRepository.findByProfileId(profileId))
+        when(profileRepository.findByUsername(username))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToWorkEducationResponse(profile))
                 .thenReturn(expected);
 
-        WorkEducationResponse actual = aboutDataService.getWorkEducation(profileId);
+        WorkEducationResponse actual = aboutDataService.getWorkEducation(username);
 
         // then
         Assertions.assertEquals(expected, actual);
@@ -151,6 +151,7 @@ class AboutDataServiceTest {
         String profileId = "profileId";
         Profile profile = Profile
                 .builder()
+                .profileId(profileId)
                 .lastName("lastName")
                 .firstName("firstName")
                 .bio("bio")
@@ -160,7 +161,7 @@ class AboutDataServiceTest {
                 .build();
 
         // when
-        when(profileRepository.findByProfileId(profileId))
+        when(profileRepository.findByUsername(profileId))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToLocationsResponse(profile))
                 .thenReturn(expected);
@@ -174,7 +175,7 @@ class AboutDataServiceTest {
     @Test
     final void test_getContactInfo_success() {
         // given
-        String profileId = "profileId";
+        String username = "profileId";
         Profile profile = Profile
                 .builder()
                 .lastName("lastName")
@@ -186,12 +187,12 @@ class AboutDataServiceTest {
                 .build();
 
         // when
-        when(profileRepository.findByProfileId(profileId))
+        when(profileRepository.findByUsername(username))
                 .thenReturn(Optional.of(profile));
         when(profileMapper.mapProfileToContactInfoResponse(profile))
                 .thenReturn(expected);
 
-        ContactInfoResponse actual = aboutDataService.getContactInfo(profileId);
+        ContactInfoResponse actual = aboutDataService.getContactInfo(username);
 
         // then
         Assertions.assertEquals(expected, actual);

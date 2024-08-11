@@ -8,7 +8,6 @@ import { NgOptimizedImage } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { ProfileService } from "@api/profile/profile.service";
-import { LocalStorageService } from "@services/utils/local-storage.service";
 
 @Component({
     selector: 'app-profile-feed',
@@ -28,31 +27,17 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
     styleUrl: './profile-feed.component.scss'
 })
 export class ProfileFeedComponent implements OnInit {
+
     protected profile !: ProfileSummary;
     protected readonly RouterPaths = RouterPaths;
 
     constructor(protected router: Router,
-                private profileService: ProfileService,
-                private localStorage: LocalStorageService) {
+                private profileService: ProfileService) {
     }
 
     ngOnInit(): void {
-        const profileId: string = "e557650a-04f1-47c2-895f-190bc8f18b76";
-
         this.profileService
-            .getProfileSummary(profileId)
-            .subscribe((profile: ProfileSummary) => {
-                this.profile = profile;
-
-                this.localStorage.saveUserToStorage({
-                    profileId: this.profile.profileId,
-                    fullName: this.profile.fullName,
-                    username: this.profile.username,
-                    subtitle: this.profile.subtitle,
-                    bio: this.profile.bio,
-                    profilePictureUrl: this.profile.profilePictureUrl,
-                    profileBannerUrl: this.profile.profileBannerUrl || ""
-                });
-            });
+            .getProfileSummary()
+            .subscribe((profile: ProfileSummary) => this.profile = profile);
     }
 }

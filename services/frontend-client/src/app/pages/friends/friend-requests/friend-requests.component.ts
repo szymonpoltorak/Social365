@@ -36,14 +36,14 @@ export class FriendRequestsComponent implements OnInit {
         this.currentUser = this.localStorageService.getUserProfileFromStorage();
 
         this.friendsService
-            .getFriendRequests(this.currentUser.profileId, this.FIRST_PAGE, this.PAGE_SIZE)
+            .getFriendRequests(this.FIRST_PAGE, this.PAGE_SIZE)
             .subscribe((response: Page<FriendElement>) => {
                 this.friendRequests = response;
             });
     }
 
     @HostListener('window:scroll', ['$event'])
-    onScroll(event: any): void {
+    onScroll(): void {
         if (this.friendRequests.last) {
             return;
         }
@@ -54,8 +54,25 @@ export class FriendRequestsComponent implements OnInit {
             return;
         }
         this.friendsService
-            .getFriendSuggestions(this.currentUser.profileId, this.friendRequests.number + 1, this.PAGE_SIZE)
+            .getFriendSuggestions(this.friendRequests.number + 1, this.PAGE_SIZE)
             .subscribe((response: Page<FriendElement>) => this.friendRequests = response);
+    }
+
+    acceptFriendRequest(event: FriendElement): void {
+        this.friendsService
+            .acceptFriendRequest(event.profileId)
+            .subscribe(() => this.removeFriendRequest(event));
+    }
+
+    declineFriendRequest(event: FriendElement): void {
+        this.friendsService
+            .declineFriendRequest(event.profileId)
+            .subscribe(() => this.removeFriendRequest(event));
+    }
+
+    private removeFriendRequest(event: FriendElement): void {
+        this.friendRequests.content = this.friendRequests.content
+            .filter((friend: FriendElement) => friend.profileId !== event.profileId);
     }
 
 }

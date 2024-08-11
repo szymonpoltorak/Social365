@@ -1,16 +1,18 @@
 include:
     -   path:
-            - ./services/config-server/compose.yml
+            - ./services/config-server/compose.dev.yml
     -   path:
             - ./services/frontend-client/compose.dev.yml
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:
+            - ./services/auth-service/compose.dev.yml
+    -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
             - ./services/images/compose.dev.yml
     -   path:
-            - ./services/api-gateway/compose.yml
+            - ./services/api-gateway/compose.dev.yml
     -   path:
             - ./services/profile/compose.dev.yml
     -   path:

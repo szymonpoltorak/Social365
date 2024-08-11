@@ -7,12 +7,13 @@ Frontend is made with Angular 17 and Angular Material. Backend is made with Spri
 
 ## How to run it
 
-I provided shell scripts written in `bin/sh` to run the app. They use `docker compose` to run the app but they are shorter than pasting whole command to console.
+I provided shell scripts written in `bin/sh` to run the app. They use `docker compose` to run the app but they are shorter than pasting whole command to console. All the scripts I written are listed below:
 
 * `rdv` - run development configuration,
 * `sdv` - stop all running dev containers, remove them and their images,
 * `rpd` - run app in production configuration,
-* `spd` - stop all running prod containers, remove them and their images.
+* `spd` - stop all running prod containers, remove them and their images,
+* `rsa` - the script go generate rsa public and private keys for signing jwt.
 
 You can configure which service you want to be in dev or prod config in `compose.yml` or `compose.dev.yml`.
 

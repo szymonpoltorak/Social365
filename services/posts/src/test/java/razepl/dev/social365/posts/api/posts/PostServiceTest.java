@@ -8,12 +8,15 @@ import org.mockito.MockitoAnnotations;
 import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
+import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.PostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
+import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
@@ -46,6 +49,9 @@ class PostServiceTest {
 
     @Mock
     private CommentRepository commentRepository;
+
+    @Mock
+    private ImageService imageService;
 
     @BeforeEach
     final void setUp() {
@@ -87,20 +93,20 @@ class PostServiceTest {
         PostResponse postResponse = PostResponse.builder().build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
-                .profileId(profileId)
                 .postId(postId.toString())
                 .content(content)
-                .creationDateTime(post.getCreationDateTime())
+                .hasAttachments(false)
                 .build();
+        User user = User.builder().profileId(profileId).build();
 
-        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
+        when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
         when(postRepository.save(any(Post.class)))
                 .thenReturn(post);
         when(postMapper.toPostResponse(any(Post.class), eq(profileId)))
                 .thenReturn(postResponse);
 
-        PostData result = postService.editPost(editPostRequest);
+        PostData result = postService.editPost(user, editPostRequest);
 
         verify(postRepository).save(any(Post.class));
         assertEquals(postResponse, result);
@@ -118,16 +124,16 @@ class PostServiceTest {
                 .build();
         EditPostRequest editPostRequest = EditPostRequest
                 .builder()
-                .profileId(profileId)
                 .postId(postId.toString())
                 .content(content)
-                .creationDateTime(post.getCreationDateTime())
+                .hasAttachments(false)
                 .build();
+        User user = User.builder().profileId(profileId).build();
 
-        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
+        when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.editPost(editPostRequest));
+        assertThrows(PostDoesNotExistException.class, () -> postService.editPost(user, editPostRequest));
     }
 
     @Test
@@ -140,10 +146,10 @@ class PostServiceTest {
                 .content("content")
                 .build();
 
-        when(postRepository.findByPostId(post.getPostId(), post.getCreationDateTime()))
+        when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        postService.deletePost(profileId, postId.toString(), post.getCreationDateTime());
+        postService.deletePost(profileId, postId.toString(), post.getAuthorId());
 
         verify(postRepository).deleteByPostId(postId, post.getCreationDateTime(), profileId);
     }
@@ -164,9 +170,9 @@ class PostServiceTest {
                 .content("content")
                 .build();
 
-        when(postRepository.findByPostId(key.getPostId(), key.getCreationDateTime()))
+        when(postRepository.findByPostId(key.getAuthorId(), key.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, key.getCreationDateTime()));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, key.getAuthorId()));
     }
 }

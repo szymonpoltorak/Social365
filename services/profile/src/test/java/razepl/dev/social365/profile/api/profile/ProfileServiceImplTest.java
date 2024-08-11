@@ -8,6 +8,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
@@ -27,7 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {ProfileRepository.class, BirthDateRepository.class, ProfileMapper.class})
+@SpringBootTest(classes = {
+        ProfileRepository.class, BirthDateRepository.class, EmailRepository.class, ProfileMapper.class
+})
 class ProfileServiceImplTest {
 
     @InjectMocks
@@ -52,13 +55,14 @@ class ProfileServiceImplTest {
     final void test_getProfileSummary_throwsException() {
         // given
         String profileId = "1234";
+        User user = User.builder().profileId(profileId).build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.empty());
 
         // then
-        assertThrows(ProfileNotFoundException.class, () -> profileService.getProfileSummary(profileId));
+        assertThrows(ProfileNotFoundException.class, () -> profileService.getProfileSummary(user));
     }
 
     @Test
@@ -78,8 +82,9 @@ class ProfileServiceImplTest {
     final void test_getProfileSummary_shouldReturnData() {
         // given
         String profileId = "1234";
-        Profile profile = new Profile();
+        Profile profile = Profile.builder().profileId(profileId).build();
         ProfileSummaryResponse expected = ProfileSummaryResponse.builder().build();
+        User user = User.builder().profileId(profileId).build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
@@ -87,7 +92,7 @@ class ProfileServiceImplTest {
         when(profileMapper.mapProfileToProfileSummaryResponse(profile))
                 .thenReturn(expected);
 
-        ProfileSummaryResponse actual = profileService.getProfileSummary(profileId);
+        ProfileSummaryResponse actual = profileService.getProfileSummary(user);
 
         // then
         assertEquals(expected, actual, "Should return profile summary");
@@ -116,13 +121,14 @@ class ProfileServiceImplTest {
     final void test_getBasicProfileInfo_throwsException() {
         // given
         String profileId = "1234";
+        User user = User.builder().profileId(profileId).build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
                 .thenReturn(Optional.empty());
 
         // then
-        assertThrows(ProfileNotFoundException.class, () -> profileService.getBasicProfileInfo(profileId));
+        assertThrows(ProfileNotFoundException.class, () -> profileService.getBasicProfileInfo(user));
     }
 
     @Test
@@ -131,6 +137,7 @@ class ProfileServiceImplTest {
         String profileId = "1234";
         Profile profile = new Profile();
         ProfileResponse expected = ProfileResponse.builder().build();
+        User user = User.builder().profileId(profileId).build();
 
         // when
         when(profileRepository.findByProfileId(profileId))
@@ -138,7 +145,7 @@ class ProfileServiceImplTest {
         when(profileMapper.mapProfileToProfileResponse(profile))
                 .thenReturn(expected);
 
-        ProfileResponse actual = profileService.getBasicProfileInfo(profileId);
+        ProfileResponse actual = profileService.getBasicProfileInfo(user);
 
         // then
         assertEquals(expected, actual, "Should return profile response");
@@ -155,6 +162,8 @@ class ProfileServiceImplTest {
                 .builder()
                 .profilePictureId(1L)
                 .email(Email.builder().privacyLevel(PrivacyLevel.ONLY_ME).build())
+                .bannerPictureId(-1L)
+                .isOnline(true)
                 .birthDate(BirthDate
                         .builder()
                         .dateOfBirth(profileRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))

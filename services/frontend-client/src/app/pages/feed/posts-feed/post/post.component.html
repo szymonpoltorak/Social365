@@ -17,10 +17,14 @@
 
     <div class="flex justify-between p-2">
         <div class="flex items-center gap-2">
-            @if (post.isPostLiked) {
+            @if (post.isPostLiked && post.statistics.likes - 1 > 0) {
                 <mat-icon class="transform scale-75">thumb_up</mat-icon>
 
                 <span class="text-sm">You and {{ post.statistics.likes - 1 }} others</span>
+            } @else if (post.isPostLiked && post.statistics.likes - 1 === 0) {
+                <mat-icon class="transform scale-75">thumb_up</mat-icon>
+
+                <span class="text-sm">You</span>
             } @else {
                 <mat-icon class="transform scale-75">thumb_up_off_alt</mat-icon>
 

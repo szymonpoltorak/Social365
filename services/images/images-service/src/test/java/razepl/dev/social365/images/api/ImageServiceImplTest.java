@@ -8,6 +8,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
+import razepl.dev.social365.images.config.User;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
@@ -92,11 +93,12 @@ class ImageServiceImplTest {
         long imageId = 1L;
         Image image = Image.builder().imageId(imageId).username("testUser").imagePath("testUser/image.jpg").build();
         ImageResponse imageResponse = new ImageResponse(image.getImageId(), image.getUsername(), image.getImagePath());
+        User user = User.builder().userId(imageId).build();
 
         when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.of(image));
         when(imagesMapper.toImageResponse(image)).thenReturn(imageResponse);
 
-        ImageResponse result = imagesService.deleteImage(imageId);
+        ImageResponse result = imagesService.deleteImage(imageId, user);
 
         verify(imagesRepository, times(1)).delete(image);
         verify(fileManagementService, times(1)).deleteFile(image.getImagePath());
@@ -109,6 +111,6 @@ class ImageServiceImplTest {
 
         when(imagesRepository.findImageByImageId(imageId)).thenReturn(Optional.empty());
 
-        assertThrows(ImageNotFoundException.class, () -> imagesService.deleteImage(imageId));
+        assertThrows(ImageNotFoundException.class, () -> imagesService.deleteImage(imageId, User.builder().build()));
     }
 }

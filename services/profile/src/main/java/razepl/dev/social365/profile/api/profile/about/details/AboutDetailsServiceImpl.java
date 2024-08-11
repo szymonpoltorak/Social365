@@ -9,6 +9,7 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.DateOfBirt
 import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.IllegalDateException;
 import razepl.dev.social365.profile.exceptions.IllegalDetailsTypeException;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
@@ -48,10 +49,10 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     private final BirthDateRepository dateOfBirthRepository;
 
     @Override
-    public final ProfileRequest updateProfileGender(GenderRequest genderRequest) {
-        log.info("New gender data : {}", genderRequest);
+    public final ProfileRequest updateProfileGender(User user, GenderRequest genderRequest) {
+        log.info("New gender data : {}, by user : {}", genderRequest, user);
 
-        Profile profile = getProfileData(genderRequest.profileId());
+        Profile profile = getProfileData(user.profileId());
         Gender gender = profile.getGender();
 
         if (gender == null) {
@@ -97,14 +98,14 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     }
 
     @Override
-    public final ProfileRequest updateProfileDateOfBirth(DateOfBirthRequest dateOfBirthRequest) {
+    public final ProfileRequest updateProfileDateOfBirth(User user, DateOfBirthRequest dateOfBirthRequest) {
         log.info("New date of birth data : {}", dateOfBirthRequest);
 
-        Profile profile = getProfileData(dateOfBirthRequest.profileId());
+        Profile profile = getProfileData(user.profileId());
 
         BirthDate birthDate = profile.getBirthDate();
 
-        log.info("Birth of date for profile id {} : {}", dateOfBirthRequest.profileId(), birthDate);
+        log.info("Birth of date for profile id {} : {}", user.profileId(), birthDate);
 
         if (Period.between(dateOfBirthRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMUM_AGE) {
             throw new TooYoungForAccountException();
@@ -123,10 +124,10 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     }
 
     @Override
-    public final ProfileRequest updateProfileRelationshipStatus(RelationshipStatusRequest relationshipStatusRequest) {
+    public final ProfileRequest updateProfileRelationshipStatus(User user, RelationshipStatusRequest relationshipStatusRequest) {
         log.info("New relationship status data : {}", relationshipStatusRequest);
 
-        Profile profile = getProfileData(relationshipStatusRequest.profileId());
+        Profile profile = getProfileData(user.profileId());
 
         RelationshipStatus relationshipStatus = profile.getRelationshipStatus();
 
@@ -162,13 +163,13 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     }
 
     @Override
-    public final ProfileRequest updateProfileCurrentCity(AboutDetailsRequest cityRequest) {
+    public final ProfileRequest updateProfileCurrentCity(User user, AboutDetailsRequest cityRequest) {
         log.info("New current city data : {}", cityRequest);
 
         if (cityRequest.detailsType() != DetailsType.CURRENT_CITY) {
             throw new IllegalDetailsTypeException();
         }
-        Profile profile = getProfileData(cityRequest.profileId());
+        Profile profile = getProfileData(user.profileId());
 
         AboutDetails currentCityOptional = profile.getCurrentCity();
 
@@ -184,13 +185,13 @@ public class AboutDetailsServiceImpl implements AboutDetailsService {
     }
 
     @Override
-    public final ProfileRequest updateProfileHomeTown(AboutDetailsRequest homeRequest) {
+    public final ProfileRequest updateProfileHomeTown(User user, AboutDetailsRequest homeRequest) {
         log.info("New home town data : {}", homeRequest);
 
         if (homeRequest.detailsType() != DetailsType.HOMETOWN) {
             throw new IllegalDetailsTypeException();
         }
-        Profile profile = getProfileData(homeRequest.profileId());
+        Profile profile = getProfileData(user.profileId());
 
         AboutDetails homeTownOptional = profile.getHomeTown();
 

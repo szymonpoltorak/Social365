@@ -34,7 +34,7 @@ export class BirthdayInfoDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.profileService
-            .getTodayBirthdays(this.localStorage.getUserProfileIdFromStorage(), this.page.number + 1)
+            .getTodayBirthdays(this.page.number + 1)
             .subscribe(data => {
                 this.appendData(data);
             })
@@ -42,7 +42,7 @@ export class BirthdayInfoDialogComponent implements OnInit {
 
     showMoreBirthdays(): void {
         this.profileService
-            .getTodayBirthdays(this.localStorage.getUserProfileIdFromStorage(), this.page.number + 1)
+            .getTodayBirthdays(this.page.number + 1)
             .subscribe(data => {
                 this.appendData(data);
             });

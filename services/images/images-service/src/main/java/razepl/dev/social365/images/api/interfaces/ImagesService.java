@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
+import razepl.dev.social365.images.config.User;
 
 import java.util.List;
 
@@ -25,16 +26,16 @@ public interface ImagesService {
 
     ImageResponse getImagePath(long imageId);
 
-    ImageResponse updateImage(String imageUrl, MultipartFile image);
+    ImageResponse updateImage(String imageUrl, MultipartFile image, User user);
 
-    ImageResponse deleteImage(long imageId);
+    ImageResponse deleteImage(long imageId, User user);
 
-    ImageResponse deleteImageByImageUrl(String imageUrl);
+    ImageResponse deleteImageByImageUrl(String imageUrl, User user);
 
-    PostImageResponse deletePostImageByImageUrl(String imageUrl);
+    PostImageResponse deletePostImageByImageUrl(String imageUrl, User user);
 
-    CommentImageResponse deleteCommentImageById(String commentId);
+    CommentImageResponse deleteCommentImageById(String commentId, User user);
 
-    List<PostImageResponse> deleteImagesByPostId(String postId);
+    List<PostImageResponse> deleteImagesByPostId(String postId, User user);
 
 }

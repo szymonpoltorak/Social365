@@ -26,6 +26,4 @@ export enum ImagesMappings {
 
     DELETE_COMMENT_IMAGE_BY_ID_MAPPING = "/deleteCommentImageById",
 
-    DELETE_IMAGES_BY_POST_ID_MAPPING = "/deleteImagesByPostId",
-
 }

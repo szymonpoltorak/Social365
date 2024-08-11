@@ -1,28 +1,29 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
 import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
 public interface PostController {
 
     int getUsersPostCount(String profileId);
 
-    CassandraPage<PostData> getPostsOnPage(String profileId, int pageNumber, int pageSize, String pagingState);
+    CassandraPage<PostData> getPostsOnPage(User user, int pageNumber, int pageSize, String pagingState);
 
     CassandraPage<PostData> getUsersPosts(String profileId, int pageNumber, int pageSize, String pagingState);
 
-    PostData updateLikePostCount(String profileId, String creationDateTime, String postId);
+    PostData updateLikePostCount(User user, String creationDateTime, String postId);
 
-    PostData updateNotificationStatus(String profileId, String creationDateTime, String postId);
+    PostData updateNotificationStatus(User user, String creationDateTime, String postId);
 
-    PostData updateBookmarkStatus(String profileId, String creationDateTime, String postId);
+    PostData updateBookmarkStatus(User user, String creationDateTime, String postId);
 
-    PostData sharePost(String profileId, String postId, String creationDateTime, String content);
+    PostData sharePost(User user, String postId, String creationDateTime, String content);
 
-    PostData createPost(String profileId, String content, boolean hasAttachments);
+    PostData createPost(User user, String content, boolean hasAttachments);
 
-    PostData editPost(EditPostRequest editPostRequest);
+    PostData editPost(User user, EditPostRequest editPostRequest);
 
-    PostData deletePost(String profileId, String authorId, String postId);
+    PostData deletePost(User user, String authorId, String postId);
 
 }

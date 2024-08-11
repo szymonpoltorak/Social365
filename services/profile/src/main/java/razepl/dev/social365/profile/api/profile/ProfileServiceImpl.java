@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.profile.api.profile.data.BirthdayData;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
@@ -16,6 +17,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
@@ -47,10 +49,10 @@ public class ProfileServiceImpl implements ProfileService {
     private final ParamValidator paramValidator;
 
     @Override
-    public final ProfileRequest updateProfileBio(String profileId, String bio) {
-        log.info("Updating profile bio for profileId: {}", profileId);
+    public ProfileRequest updateProfileBio(User user, String bio) {
+        log.info("Updating profile bio for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setBio(bio);
 
@@ -60,10 +62,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileRequest updateProfilePicture(String profileId, long profilePictureId) {
-        log.info("Updating profile picture for profileId: {}", profileId);
+    public ProfileRequest updateProfilePicture(User user, long profilePictureId) {
+        log.info("Updating profile picture for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setProfilePictureId(profilePictureId);
 
@@ -73,10 +75,10 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileRequest updateProfileBanner(String profileId, long profileBannerId) {
-        log.info("Updating profile banner for profileId: {}", profileId);
+    public ProfileRequest updateProfileBanner(User user, long profileBannerId) {
+        log.info("Updating profile banner for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         profile.setBannerPictureId(profileBannerId);
 
@@ -86,12 +88,12 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final Page<BirthdayInfoResponse> getTodayBirthdays(String profileId, int pageNumber) {
-        log.info("Getting today birthdays for user with id: {}", profileId);
+    public Page<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber) {
+        log.info("Getting today birthdays for user : {}", user);
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(profileId, pageable);
+        Page<BirthdayData> birthdayDataPage = birthDateRepository.findTodayBirthdaysByProfileId(user.profileId(), pageable);
 
         log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
@@ -99,7 +101,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
+    public Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
         log.info("Getting profiles search by pattern: '{}', with pageable : {}", pattern, pageable);
 
         Page<Profile> profiles = profileRepository
@@ -111,7 +113,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final Page<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
+    public Page<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
         log.info("Getting profiles by pattern: '{}', with pageable : {}", pattern, pageable);
 
         Page<Profile> profiles = profileRepository.findAllByPattern(pattern.toLowerCase(Locale.ROOT), pageable);
@@ -122,7 +124,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId) {
+    public ProfileBasicResponse getBasicProfileInfoByUsername(String username, String currentUserId) {
         log.info("Getting basic profile info for user with username: {}", username);
 
         Profile profile = profileRepository.findByUsername(username)
@@ -134,16 +136,16 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileSummaryResponse getProfileSummary(String profileId) {
-        log.info("Getting profile summary for user with id: {}", profileId);
+    public ProfileSummaryResponse getProfileSummary(User user) {
+        log.info("Getting profile summary for user : {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         return profileMapper.mapProfileToProfileSummaryResponse(profile);
     }
 
     @Override
-    public final ProfilePostResponse getPostProfileInfo(String profileId) {
+    public ProfilePostResponse getPostProfileInfo(String profileId) {
         log.info("Getting post profile info for profile with id: {}", profileId);
 
         Profile profile = getProfileFromRepository(profileId);
@@ -152,7 +154,8 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileResponse createUsersProfile(ProfileRequest profileRequest) {
+    @Transactional(transactionManager = "transactionManager")
+    public ProfileResponse createUsersProfile(ProfileRequest profileRequest) {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
         log.info("Profile request: {}", profileRequest);
 
@@ -180,16 +183,16 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public final ProfileResponse getBasicProfileInfo(String profileId) {
-        log.info("Getting basic profile info for profile with id: {}", profileId);
+    public ProfileResponse getBasicProfileInfo(User user) {
+        log.info("Getting basic profile info for user: {}", user);
 
-        Profile profile = getProfileFromRepository(profileId);
+        Profile profile = getProfileFromRepository(user.profileId());
 
         return profileMapper.mapProfileToProfileResponse(profile);
     }
 
     @Override
-    public final ProfileResponse getProfileInfoByUsername(String username) {
+    public ProfileResponse getProfileInfoByUsername(String username) {
         log.info("Getting profile info for user with username: {}", username);
 
         Profile profile = profileRepository.findByUsername(username)

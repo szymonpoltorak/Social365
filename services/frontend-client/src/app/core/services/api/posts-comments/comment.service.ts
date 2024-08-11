@@ -7,8 +7,7 @@ import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
-import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
-import { LikeCommentRequest } from "@interfaces/posts-comments/like-comment-request.interface";
+import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +17,10 @@ export class CommentService {
     constructor(private http: HttpClient) {
     }
 
-    getCommentsForPost(postId: string, profileId: string,
-                       pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<PostComment>> {
+    getCommentsForPost(postId: string, pageSize: number,
+                       pagingState: Optional<string>): Observable<CassandraPage<PostComment>> {
         return this.http.get<CassandraPage<PostComment>>(CommentMappings.GET_COMMENTS_FOR_POST, {
-            params: this.getPostParams(profileId, postId, pageSize, pagingState)
+            params: this.getPostParams(postId, pageSize, pagingState)
         }).pipe(take(1));
     }
 
@@ -33,25 +32,23 @@ export class CommentService {
         return this.http.put<PostComment>(CommentMappings.EDIT_COMMENT, commentRequest).pipe(take(1));
     }
 
-    deleteComment(commentRequest: CommentDeleteRequest): Observable<PostComment> {
+    deleteComment(key: CommentKey): Observable<PostComment> {
         return this.http.delete<PostComment>(CommentMappings.DELETE_COMMENT, {
-            body: commentRequest
+            body: key
         }).pipe(take(1));
     }
 
-    updateLikeCommentCount(likeCommentRequest: LikeCommentRequest): Observable<PostComment> {
-        return this.http.put<PostComment>(CommentMappings.UPDATE_LIKE_COMMENT_COUNT, likeCommentRequest).pipe(take(1));
+    updateLikeCommentCount(key: CommentKey): Observable<PostComment> {
+        return this.http.put<PostComment>(CommentMappings.UPDATE_LIKE_COMMENT_COUNT, key).pipe(take(1));
     }
 
-    private getPostParams(profileId: string, postId: string,
-                          pageSize: number, pagingState: Optional<string>): HttpParams {
+    private getPostParams(postId: string, pageSize: number, pagingState: Optional<string>): HttpParams {
         const params: HttpParams = new HttpParams();
 
         if (pagingState !== null) {
             params.set('pagingState', pagingState);
         }
         return params
-            .set('profileId', profileId)
             .set('pagingState', pagingState || "")
             .set('postId', postId)
             .set('pageSize', pageSize);

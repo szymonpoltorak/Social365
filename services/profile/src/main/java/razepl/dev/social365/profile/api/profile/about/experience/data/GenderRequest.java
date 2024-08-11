@@ -5,5 +5,5 @@ import razepl.dev.social365.profile.nodes.about.gender.enums.GenderType;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @Builder
-public record GenderRequest(String profileId, GenderType gender, PrivacyLevel privacyLevel) {
+public record GenderRequest(GenderType gender, PrivacyLevel privacyLevel) {
 }

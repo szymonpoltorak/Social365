@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
-import razepl.dev.social365.posts.api.comments.replies.data.LikeReplyRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
-import razepl.dev.social365.posts.api.comments.replies.data.ReplyDeleteRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesService;
 import razepl.dev.social365.posts.clients.images.ImageService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
@@ -46,7 +45,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse addReplyToComment(ReplyAddRequest commentRequest) {
+    public final CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest) {
         log.info("Adding reply to comment with id: {}, with content: {}", commentRequest.commentId(), commentRequest.content());
 
         ReplyCommentKey key = ReplyCommentKey
@@ -61,7 +60,7 @@ public class RepliesServiceImpl implements RepliesService {
                 .hasReplies(false)
                 .key(key)
                 .content(commentRequest.content())
-                .authorId(commentRequest.profileId())
+                .authorId(user.profileId())
                 .hasAttachments(commentRequest.hasAttachment())
                 .build();
 
@@ -69,17 +68,17 @@ public class RepliesServiceImpl implements RepliesService {
 
         log.info("Added reply : {}", replyComment);
 
-        return commentMapper.toCommentResponse(replyComment, commentRequest.profileId());
+        return commentMapper.toCommentResponse(replyComment, user.profileId());
     }
 
     @Override
-    public final CommentResponse editReplyComment(ReplyEditRequest commentRequest) {
+    public final CommentResponse editReplyComment(User user, ReplyEditRequest commentRequest) {
         log.info("Editing reply with id: {}, with content: {}", commentRequest.replyKey().replyToCommentId(), commentRequest.content());
 
         ReplyComment replyComment = getReplyComment(commentRequest.replyKey());
 
-        if (!replyComment.isAuthor(commentRequest.profileId())) {
-            throw new UserIsNotAuthorException(commentRequest.profileId());
+        if (!replyComment.isAuthor(user.profileId())) {
+            throw new UserIsNotAuthorException(user.profileId());
         }
         replyComment.setContent(commentRequest.content());
         replyComment.setHasAttachments(commentRequest.hasAttachment());
@@ -88,17 +87,17 @@ public class RepliesServiceImpl implements RepliesService {
 
         log.info("Edited reply : {}", replyComment);
 
-        return commentMapper.toCommentResponse(replyComment, commentRequest.profileId());
+        return commentMapper.toCommentResponse(replyComment, user.profileId());
     }
 
     @Override
-    public final CommentResponse deleteReplyComment(ReplyDeleteRequest commentRequest) {
-        log.info("Deleting reply with id: {}", commentRequest.replyKey().replyToCommentId());
+    public final CommentResponse deleteReplyComment(User user, ReplyKeyResponse replyKey) {
+        log.info("Deleting reply with id: {}", replyKey);
 
-        ReplyComment replyComment = getReplyComment(commentRequest.replyKey());
+        ReplyComment replyComment = getReplyComment(replyKey);
 
-        if (!replyComment.isAuthor(commentRequest.profileId())) {
-            throw new UserIsNotAuthorException(commentRequest.profileId());
+        if (!replyComment.isAuthor(user.profileId())) {
+            throw new UserIsNotAuthorException(user.profileId());
         }
         log.info("Deleting reply : {}", replyComment);
 
@@ -114,21 +113,21 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse updateLikeCommentCount(LikeReplyRequest likeCommentRequest) {
-        log.info("Updating like count for reply with id: {}", likeCommentRequest.replyKey());
+    public final CommentResponse updateLikeCommentCount(User user,ReplyKeyResponse replyKey) {
+        log.info("Updating like count for reply with id: {}", replyKey);
 
-        ReplyComment replyComment = getReplyComment(likeCommentRequest.replyKey());
+        ReplyComment replyComment = getReplyComment(replyKey);
 
-        if (replyComment.isLikedBy(likeCommentRequest.profileId())) {
-            replyComment.getUserLikedIds().remove(likeCommentRequest.profileId());
+        if (replyComment.isLikedBy(user.profileId())) {
+            replyComment.getUserLikedIds().remove(user.profileId());
         } else {
-            replyComment.addUserLikedId(likeCommentRequest.profileId());
+            replyComment.addUserLikedId(user.profileId());
         }
         ReplyComment savedReplyComment = replyCommentRepository.save(replyComment);
 
         log.info("Updated like count for reply : {}", savedReplyComment);
 
-        return commentMapper.toCommentResponse(savedReplyComment, likeCommentRequest.profileId());
+        return commentMapper.toCommentResponse(savedReplyComment, user.profileId());
     }
 
     private ReplyComment getReplyComment(ReplyKeyResponse keyResponse) {

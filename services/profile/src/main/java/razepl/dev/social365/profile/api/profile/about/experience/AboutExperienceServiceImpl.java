@@ -7,6 +7,7 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetai
 import razepl.dev.social365.profile.api.profile.about.experience.data.WorkPlaceRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.interfaces.AboutExperienceService;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.exceptions.IllegalDetailsTypeException;
 import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
@@ -32,10 +33,10 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final ProfileRequest updateProfileWorkPlace(WorkPlaceRequest workPlaceRequest) {
-        log.info("Updating profile work place with request: {}", workPlaceRequest);
+    public final ProfileRequest updateProfileWorkPlace(User user, WorkPlaceRequest workPlaceRequest) {
+        log.info("Updating profile work place with request: {}, by user : {}", workPlaceRequest, user);
 
-        Profile profile = profileRepository.findByProfileId(workPlaceRequest.profileId())
+        Profile profile = profileRepository.findByProfileId(user.profileId())
                 .orElseThrow(ProfileNotFoundException::new);
 
         log.info("Profile for work place update: {}", profile);
@@ -77,10 +78,10 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     }
 
     @Override
-    public final ProfileRequest updateProfileCollege(AboutDetailsRequest educationRequest) {
-        log.info("Updating profile education with request: {}", educationRequest);
+    public final ProfileRequest updateProfileCollege(User user, AboutDetailsRequest educationRequest) {
+        log.info("Updating profile education with request: {}, by user : {}", educationRequest, user);
 
-        Profile profile = getProfileAndValidateRequest(educationRequest, DetailsType.COLLEGE);
+        Profile profile = getProfileAndValidateRequest(user.profileId(), educationRequest, DetailsType.COLLEGE);
 
         Optional<AboutDetails> collegeOptional = aboutDetailsRepository.findCollegeByProfileId(profile.getProfileId());
 
@@ -95,10 +96,10 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
     }
 
     @Override
-    public final ProfileRequest updateProfileHighSchool(AboutDetailsRequest highSchoolRequest) {
-        log.info("Updating profile high school with request: {}", highSchoolRequest);
+    public final ProfileRequest updateProfileHighSchool(User user, AboutDetailsRequest highSchoolRequest) {
+        log.info("Updating profile high school with request: {}, by user : {}", highSchoolRequest, user);
 
-        Profile profile = getProfileAndValidateRequest(highSchoolRequest, DetailsType.HIGH_SCHOOL);
+        Profile profile = getProfileAndValidateRequest(user.profileId(), highSchoolRequest, DetailsType.HIGH_SCHOOL);
 
         Optional<AboutDetails> highSchoolOptional = aboutDetailsRepository
                 .findHighSchoolByProfileId(profile.getProfileId());
@@ -197,8 +198,8 @@ public class AboutExperienceServiceImpl implements AboutExperienceService {
         return details;
     }
 
-    private Profile getProfileAndValidateRequest(AboutDetailsRequest request, DetailsType detailsType) {
-        Profile profile = profileRepository.findByProfileId(request.profileId())
+    private Profile getProfileAndValidateRequest(String profileId, AboutDetailsRequest request, DetailsType detailsType) {
+        Profile profile = profileRepository.findByProfileId(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         if (request.detailsType() != detailsType) {

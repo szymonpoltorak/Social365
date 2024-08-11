@@ -1,6 +1,8 @@
 server:
     port: ${API_GATEWAY_PORT}
 
+    server-header: ""
+
     http2:
         enabled: true
 
@@ -31,6 +33,21 @@ spring:
                 locator:
                     enabled: true
 
+            globalcors:
+                cors-configurations:
+                    '[/**]':
+                        allowedOrigins: "http://localhost:4200"
+                        allowedMethods:
+                            - GET
+                            - POST
+                            - PUT
+                            - DELETE
+                        allowedHeaders:
+                            - "*"
+                        allowCredentials: true
+                        maxAge: 3600
+
+
             routes:
                 -   id: ${IMAGES_SERVICE_HOSTNAME}
                     uri: http://${IMAGES_SERVICE_HOSTNAME}:${IMAGES_SERVICE_PORT}
@@ -46,6 +63,11 @@ spring:
                     uri: http://${POSTS_SERVICE_HOSTNAME}:${POSTS_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/posts/**
+
+                -   id: ${AUTH_SERVICE_HOSTNAME}
+                    uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    predicates:
+                        - Path=/api/v1/auth/**
 
 management:
     endpoints:

@@ -14,6 +14,7 @@ import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
@@ -161,15 +162,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData editPost(EditPostRequest editPostRequest) {
+    public PostData editPost(User user, EditPostRequest editPostRequest) {
         log.info("Editing post with request: {}", editPostRequest);
 
-        String profileId = editPostRequest.authorId();
+        String profileId = user.profileId();
         String content = editPostRequest.content();
 
         postValidator.validatePostContent(content);
 
-        Post post = getPostFromRepository(editPostRequest.authorId(), editPostRequest.postId());
+        Post post = getPostFromRepository(profileId, editPostRequest.postId());
 
         if (!post.isAuthorId(profileId)) {
             throw new UserIsNotAuthorException(profileId);

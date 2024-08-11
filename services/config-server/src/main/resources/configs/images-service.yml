@@ -1,6 +1,8 @@
 server:
     port: ${IMAGES_SERVICE_PORT}
 
+    server-header: ""
+
     http2:
         enabled: true
 
@@ -14,6 +16,14 @@ spring:
         url: ${IMAGES_SPRING_DATASOURCE_URL}
         username: ${IMAGES_POSTGRES_USER}
         password: ${IMAGES_POSTGRES_PASSWORD}
+
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
+                    jws-algorithms: ${JWS_ALGORITHM}
 
     servlet:
         multipart:

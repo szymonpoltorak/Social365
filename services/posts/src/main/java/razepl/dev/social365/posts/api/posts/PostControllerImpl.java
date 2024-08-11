@@ -15,6 +15,8 @@ import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
+import razepl.dev.social365.posts.config.AuthUser;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
 
@@ -33,11 +35,11 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @GetMapping(value = PostMappings.GET_POSTS_ON_PAGE)
-    public final CassandraPage<PostData> getPostsOnPage(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final CassandraPage<PostData> getPostsOnPage(@AuthUser User user,
                                                         @RequestParam(Params.FRIENDS_PAGE_NUMBER) int friendsPageNumber,
                                                         @RequestParam(Params.PAGE_SIZE) int pageSize,
                                                         @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return postService.getPostsOnPage(profileId, PageInfo.of(friendsPageNumber, pageSize, pagingState));
+        return postService.getPostsOnPage(user.profileId(), PageInfo.of(friendsPageNumber, pageSize, pagingState));
     }
 
     @Override
@@ -51,56 +53,56 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_LIKE_POST_COUNT)
-    public final PostData updateLikePostCount(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData updateLikePostCount(@AuthUser User user,
                                               @RequestParam(Params.AUTHOR_ID) String authorId,
                                               @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateLikePostCount(profileId, postId, authorId);
+        return postService.updateLikePostCount(user.profileId(), postId, authorId);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_NOTIFICATION_STATUS)
-    public final PostData updateNotificationStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData updateNotificationStatus(@AuthUser User user,
                                                    @RequestParam(Params.AUTHOR_ID) String authorId,
                                                    @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateNotificationStatus(profileId, postId, authorId);
+        return postService.updateNotificationStatus(user.profileId(), postId, authorId);
     }
 
     @Override
     @PutMapping(value = PostMappings.UPDATE_BOOKMARK_STATUS)
-    public final PostData updateBookmarkStatus(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData updateBookmarkStatus(@AuthUser User user,
                                                @RequestParam(Params.AUTHOR_ID) String authorId,
                                                @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateBookmarkStatus(profileId, postId, authorId);
+        return postService.updateBookmarkStatus(user.profileId(), postId, authorId);
     }
 
     @Override
     @PutMapping(value = PostMappings.SHARE_POST)
-    public final PostData sharePost(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData sharePost(@AuthUser User user,
                                     @RequestParam(Params.POST_ID) String postId,
                                     @RequestParam(Params.AUTHOR_ID) String authorId,
                                     @RequestParam(Params.CONTENT) String content) {
-        return postService.sharePost(profileId, postId, content, authorId);
+        return postService.sharePost(user.profileId(), postId, content, authorId);
     }
 
     @Override
     @PostMapping(value = PostMappings.CREATE_POST)
-    public final PostData createPost(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData createPost(@AuthUser User user,
                                      @RequestParam(Params.CONTENT) String content,
                                      @RequestParam(Params.HAS_ATTACHMENTS) boolean hasAttachments) {
-        return postService.createPost(profileId, content, hasAttachments);
+        return postService.createPost(user.profileId(), content, hasAttachments);
     }
 
     @Override
     @PutMapping(value = PostMappings.EDIT_POST)
-    public final PostData editPost(@RequestBody EditPostRequest editPostRequest) {
-        return postService.editPost(editPostRequest);
+    public final PostData editPost(@AuthUser User user, @RequestBody EditPostRequest editPostRequest) {
+        return postService.editPost(user, editPostRequest);
     }
 
     @Override
     @DeleteMapping(value = PostMappings.DELETE_POST)
-    public final PostData deletePost(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final PostData deletePost(@AuthUser User user,
                                      @RequestParam(Params.AUTHOR_ID) String authorId,
                                      @RequestParam(Params.POST_ID) String postId) {
-        return postService.deletePost(profileId, postId, authorId);
+        return postService.deletePost(user.profileId(), postId, authorId);
     }
 }

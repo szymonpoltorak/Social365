@@ -13,6 +13,8 @@ import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutCo
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.constants.Params;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
+import razepl.dev.social365.profile.config.AuthUser;
+import razepl.dev.social365.profile.config.User;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @RestController
@@ -24,21 +26,21 @@ public class AboutContactControllerImpl implements AboutContactController {
 
     @Override
     @PutMapping(value = AboutContactMappings.UPDATE_PROFILE_PHONE_NUMBER_MAPPING)
-    public final ProfileRequest updateProfilePhoneNumber(@RequestBody AboutDetailsRequest phoneNumberRequest) {
-        return aboutContactService.updateProfilePhoneNumber(phoneNumberRequest);
+    public final ProfileRequest updateProfilePhoneNumber(@AuthUser User user,@RequestBody AboutDetailsRequest phoneNumberRequest) {
+        return aboutContactService.updateProfilePhoneNumber(user, phoneNumberRequest);
     }
 
     @Override
     @PutMapping(value = AboutContactMappings.UPDATE_PROFILE_EMAIL_PRIVACY_LEVEL_MAPPING)
-    public final ProfileRequest updateProfileEmailPrivacyLevel(@RequestParam(Params.PROFILE_ID) String profileId,
+    public final ProfileRequest updateProfileEmailPrivacyLevel(@AuthUser User user,
                                                                @RequestParam(Params.PRIVACY_LEVEL) PrivacyLevel privacyLevel) {
-        return aboutContactService.updateProfileEmailPrivacyLevel(profileId, privacyLevel);
+        return aboutContactService.updateProfileEmailPrivacyLevel(user, privacyLevel);
     }
 
     @Override
     @DeleteMapping(value = AboutContactMappings.DELETE_PROFILE_PHONE_NUMBER_MAPPING)
-    public final ProfileRequest deleteProfilePhoneNumber(@RequestParam(Params.PROFILE_ID) String profileId) {
-        return aboutContactService.deleteProfilePhoneNumber(profileId);
+    public final ProfileRequest deleteProfilePhoneNumber(@AuthUser User user) {
+        return aboutContactService.deleteProfilePhoneNumber(user);
     }
 
 }

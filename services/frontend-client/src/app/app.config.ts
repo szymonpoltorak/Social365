@@ -8,6 +8,7 @@ import { provideNativeDateAdapter } from "@angular/material/core";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { networkConnectivityInterceptor } from "@core/interceptors/network-connectivity.interceptor";
 import { errorDecoderInterceptor } from "@core/interceptors/error-decoder.interceptor";
+import { authInterceptor } from "@core/interceptors/auth.interceptor";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -20,7 +21,8 @@ export const appConfig: ApplicationConfig = {
         provideNativeDateAdapter(),
         provideHttpClient(withInterceptors([
             networkConnectivityInterceptor,
-            errorDecoderInterceptor
+            errorDecoderInterceptor,
+            authInterceptor
         ]))
     ]
 };

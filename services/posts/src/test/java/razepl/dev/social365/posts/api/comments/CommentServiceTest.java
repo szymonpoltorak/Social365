@@ -6,14 +6,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import razepl.dev.social365.posts.api.comments.data.CommentAddRequest;
-import razepl.dev.social365.posts.api.comments.data.CommentDeleteRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
+import razepl.dev.social365.posts.clients.images.ImageService;
+import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
+import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
-import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
+import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
@@ -35,8 +37,14 @@ class CommentServiceTest {
     @Mock
     private CommentMapper commentMapper;
 
+    @Mock
+    private ImageService imageService;
+
     @InjectMocks
     private CommentServiceImpl commentService;
+
+    @Mock
+    private ReplyCommentRepository replyCommentRepository;
 
     @Mock
     private CommentValidator commentValidator;
@@ -49,7 +57,9 @@ class CommentServiceTest {
     @Test
     final void addCommentToPost_validatesAndSavesComment() {
         UUID postId = UUID.randomUUID();
-        CommentAddRequest commentRequest = new CommentAddRequest("profileId", "content", false, postId.toString());
+        String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
+        CommentAddRequest commentRequest = new CommentAddRequest("content", false, postId.toString());
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -58,17 +68,17 @@ class CommentServiceTest {
                         .postId(postId)
                         .build()
                 )
-                .authorId(commentRequest.profileId())
+                .authorId(user.profileId())
                 .content(commentRequest.content())
                 .build();
         CommentResponse commentResponse = CommentResponse.builder().build();
 
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
-        when(commentMapper.toCommentResponse(any(Comment.class), eq(commentRequest.profileId())))
+        when(commentMapper.toCommentResponseNoImage(any(Comment.class), eq(user.profileId())))
                 .thenReturn(commentResponse);
 
-        CommentResponse result = commentService.addCommentToPost(commentRequest);
+        CommentResponse result = commentService.addCommentToPost(user, commentRequest);
 
         verify(commentRepository).save(any(Comment.class));
         assertEquals(commentResponse, result);
@@ -78,12 +88,14 @@ class CommentServiceTest {
     final void editComment_validatesAndUpdatesComment() {
         UUID postId = UUID.randomUUID();
         UUID commentId = UUID.randomUUID();
+        String profileId = "profileId";
         CommentKeyResponse commentKey = CommentKeyResponse
                 .builder()
                 .postId(postId.toString())
                 .commentId(commentId.toString())
                 .build();
-        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "profileId", "content", false);
+        User user = User.builder().profileId(profileId).build();
+        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "content", false);
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -92,7 +104,7 @@ class CommentServiceTest {
                         .postId(postId)
                         .build()
                 )
-                .authorId(commentEditRequest.profileId())
+                .authorId(profileId)
                 .content("old content")
                 .build();
         CommentResponse commentResponse = CommentResponse.builder().build();
@@ -103,10 +115,10 @@ class CommentServiceTest {
                 .thenReturn(Optional.of(comment));
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
-        when(commentMapper.toCommentResponse(any(Comment.class), eq(commentEditRequest.profileId())))
+        when(commentMapper.toCommentResponse(any(Comment.class), eq(profileId)))
                 .thenReturn(commentResponse);
 
-        CommentResponse result = commentService.editComment(commentEditRequest);
+        CommentResponse result = commentService.editComment(user, commentEditRequest);
 
         assertEquals(commentResponse, result);
 
@@ -115,6 +127,7 @@ class CommentServiceTest {
 
     @Test
     final void editComment_throwsException_whenUserIsNotAuthor() {
+        String profileId = "profileId";
         UUID postId = UUID.randomUUID();
         UUID commentId = UUID.randomUUID();
         CommentKeyResponse commentKey = CommentKeyResponse
@@ -122,7 +135,8 @@ class CommentServiceTest {
                 .postId(postId.toString())
                 .commentId(commentId.toString())
                 .build();
-        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "profileId", "content", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(commentKey, "content", false);
+        User user = User.builder().profileId(profileId).build();
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -140,7 +154,7 @@ class CommentServiceTest {
         when(commentRepository.findCommentByKey(comment.getKey()))
                 .thenReturn(Optional.of(comment));
 
-        assertThrows(UserIsNotAuthorException.class, () -> commentService.editComment(commentEditRequest));
+        assertThrows(UserIsNotAuthorException.class, () -> commentService.editComment(user, commentEditRequest));
     }
 
     @Test
@@ -154,7 +168,7 @@ class CommentServiceTest {
                 .postId(postId.toString())
                 .creationDateTime("2021-01-01T00:00:00")
                 .build();
-        CommentDeleteRequest commentRequest = new CommentDeleteRequest(commentKeyResponse, profileId);
+        User user = User.builder().profileId(profileId).build();
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -173,7 +187,7 @@ class CommentServiceTest {
         when(commentRepository.findCommentByKey(comment.getKey()))
                 .thenReturn(Optional.of(comment));
 
-        commentService.deleteComment(commentRequest);
+        commentService.deleteComment(user, commentKeyResponse);
 
         verify(commentRepository).deleteCommentByKey(comment.getKey());
     }
@@ -189,7 +203,7 @@ class CommentServiceTest {
                 .postId(postId.toString())
                 .creationDateTime("2021-01-01T00:00:00")
                 .build();
-        CommentDeleteRequest commentRequest = new CommentDeleteRequest(commentKeyResponse, profileId);
+        User user = User.builder().profileId(profileId).build();
         Comment comment = Comment
                 .builder()
                 .key(CommentKey
@@ -207,6 +221,6 @@ class CommentServiceTest {
         when(commentRepository.findCommentByKey(comment.getKey()))
                 .thenReturn(Optional.of(comment));
 
-        assertThrows(UserIsNotAuthorException.class, () -> commentService.deleteComment(commentRequest));
+        assertThrows(UserIsNotAuthorException.class, () -> commentService.deleteComment(user, commentKeyResponse));
     }
 }

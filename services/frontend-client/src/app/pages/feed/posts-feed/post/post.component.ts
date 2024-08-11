@@ -35,8 +35,8 @@ import { CommentService } from "@api/posts-comments/comment.service";
 import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
-import { CommentDeleteRequest } from "@interfaces/posts-comments/comment-delete-request.interface";
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
 
 @Component({
     selector: 'app-post',
@@ -91,7 +91,7 @@ export class PostComponent implements OnInit {
 
     likePost(): void {
         this.postService
-            .updateLikePostCount(this.currentUser.profileId, this.post.postKey.postId, this.post.postKey.author.profileId)
+            .updateLikePostCount(this.post.postKey.postId, this.post.postKey.author.profileId)
             .subscribe(() => {
                 this.post.isPostLiked = !this.post.isPostLiked;
 
@@ -106,7 +106,7 @@ export class PostComponent implements OnInit {
             return;
         }
         this.commentService
-            .getCommentsForPost(this.post.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, null)
+            .getCommentsForPost(this.post.postKey.postId, this.PAGE_SIZE, null)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 console.log(comments);
 
@@ -154,7 +154,7 @@ export class PostComponent implements OnInit {
 
         event.addedImages.forEach((image: AttachImage) => {
             this.imagesService
-                .uploadPostImage(this.currentUser.username, image, this.post.postKey.postId)
+                .uploadPostImage(image, this.post.postKey.postId)
                 .subscribe();
         });
 
@@ -169,7 +169,6 @@ export class PostComponent implements OnInit {
 
     createComment(event: CommentCreateData): void {
         const request: CommentAddRequest = {
-            profileId: this.currentUser.profileId,
             postId: this.post.postKey.postId,
             hasAttachment: event.attachedImage !== null,
             content: event.content
@@ -181,7 +180,7 @@ export class PostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(this.currentUser.username, image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;
@@ -192,7 +191,7 @@ export class PostComponent implements OnInit {
 
     loadMoreComments(): void {
         this.commentService
-            .getCommentsForPost(this.post.postKey.postId, this.currentUser.profileId, this.PAGE_SIZE, this.comments.pagingState)
+            .getCommentsForPost(this.post.postKey.postId, this.PAGE_SIZE, this.comments.pagingState)
             .subscribe((comments: CassandraPage<PostComment>) => {
                 this.comments.pagingState = comments.pagingState;
                 this.comments.friendsPageNumber = comments.friendsPageNumber;
@@ -201,12 +200,12 @@ export class PostComponent implements OnInit {
             });
     }
 
-    deleteComment(event: CommentDeleteRequest): void {
+    deleteComment(commentKey: CommentKey): void {
         this.commentService
-            .deleteComment(event)
+            .deleteComment(commentKey)
             .subscribe(() => {
                 this.comments.data = this.comments.data
-                    .filter((comment: PostComment) => comment.commentKey.commentId !== event.commentKey.commentId);
+                    .filter((comment: PostComment) => comment.commentKey.commentId !== commentKey.commentId);
             });
     }
 }

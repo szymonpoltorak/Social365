@@ -26,12 +26,8 @@ export class AboutDetailsService {
             genderRequest).pipe(take(1));
     }
 
-    deleteProfileGender(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_GENDER_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileGender(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_GENDER_MAPPING).pipe(take(1));
     }
 
     updateProfileRelationshipStatus(relationshipStatusRequest: RelationshipStatusRequest): Observable<ProfileRequest> {
@@ -39,12 +35,8 @@ export class AboutDetailsService {
             relationshipStatusRequest).pipe(take(1));
     }
 
-    deleteProfileRelationshipStatus(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileRelationshipStatus(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_RELATIONSHIP_STATUS_MAPPING).pipe(take(1));
     }
 
     updateProfileCurrentCity(currentCity: AboutDetailsRequest): Observable<ProfileRequest> {
@@ -52,12 +44,8 @@ export class AboutDetailsService {
             currentCity).pipe(take(1));
     }
 
-    deleteProfileCurrentCity(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_CURRENT_CITY_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileCurrentCity(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_CURRENT_CITY_MAPPING).pipe(take(1));
     }
 
     updateProfileHomeTown(homeTown: AboutDetailsRequest): Observable<ProfileRequest> {
@@ -65,11 +53,7 @@ export class AboutDetailsService {
             homeTown).pipe(take(1));
     }
 
-    deleteProfileHomeTown(profileId: string): Observable<ProfileRequest> {
-        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_HOME_TOWN_MAPPING, {
-            params: {
-                profileId: profileId
-            }
-        }).pipe(take(1));
+    deleteProfileHomeTown(): Observable<ProfileRequest> {
+        return this.http.delete<ProfileRequest>(AboutDetailsMappings.DELETE_PROFILE_HOME_TOWN_MAPPING).pipe(take(1));
     }
 }

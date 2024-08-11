@@ -22,79 +22,79 @@ class CommentValidatorTest {
     @Test
     final void validateCommentRequest_throwsException_whenContentIsNull() {
         // given
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "objectId", null, false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), null, false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, "profileId"));
     }
 
     @Test
     final void validateCommentRequest_throwsException_whenContentIsEmpty() {
         // given
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "objectId", "", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "", false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, "profileId"));
     }
 
     @Test
     final void validateCommentRequest_throwsException_whenContentIsBlank() {
         // given
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "objectId", "   ", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "   ", false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, "profileId"));
     }
 
     @Test
     final void validateCommentRequest_throwsException_whenContentIsTooLong() {
         // given
         String longContent = "a".repeat(501);
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "profileId", longContent, false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(),  longContent, false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, "profileId"));
     }
 
     @Test
     final void validateCommentRequest_throwsException_whenObjectIdIsNull() {
         // given
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "profileId", "content", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "content", false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, null));
     }
 
     @Test
     final void validateCommentRequest_throwsException_whenProfileIdIsNull() {
         // given
-        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), null, "content", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(CommentKeyResponse.builder().build(), "content", false);
 
         // when
 
         // then
-        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertThrows(InvalidCommentRequestException.class, () -> commentValidator.validateCommentRequest(commentEditRequest, null));
     }
 
     @Test
     final void validateCommentRequest_doesNotThrowException_whenRequestIsValid() {
         // given
         CommentKeyResponse response = CommentKeyResponse.builder().postId("postId").build();
-        CommentEditRequest commentEditRequest = new CommentEditRequest(response, "objectId", "profileId", false);
+        CommentEditRequest commentEditRequest = new CommentEditRequest(response, "content", false);
 
         // when
 
         // then
-        assertDoesNotThrow(() -> commentValidator.validateCommentRequest(commentEditRequest));
+        assertDoesNotThrow(() -> commentValidator.validateCommentRequest(commentEditRequest, "profileId"));
     }
 }
