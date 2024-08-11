@@ -30,4 +30,7 @@ export class AuthService {
         }).pipe(take(1));
     }
 
+    logout(): Observable<void> {
+        return this.http.post<void>(AuthMappings.LOGOUT_MAPPING, {}).pipe(take(1));
+    }
 }

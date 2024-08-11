@@ -8,7 +8,7 @@ import { MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { debounceTime, distinctUntilChanged, EMPTY, Observable, startWith, switchMap } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, Observable, startWith, switchMap } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
 import { RouterPaths } from "@enums/router-paths.enum";
@@ -18,6 +18,7 @@ import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.componen
 import { ProfileService } from "@api/profile/profile.service";
 import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
 import { Page } from "@interfaces/utils/page.interface";
+import { AuthService } from "@api/auth/auth.service";
 
 @Component({
     selector: 'app-toolbar',
@@ -57,6 +58,7 @@ export class ToolbarComponent implements OnInit {
 
     constructor(protected router: Router,
                 private profileService: ProfileService,
+                private authService: AuthService,
                 private localStorageService: LocalStorageService) {
     }
 
@@ -83,5 +85,22 @@ export class ToolbarComponent implements OnInit {
             return EMPTY;
         }
         return this.profileService.getProfilesByPattern(pattern, this.FIRST_PAGE, this.PAGE_SIZE);
+    }
+
+    logout(): void {
+        this.authService
+            .logout()
+            .pipe(
+                catchError(() => {
+                    this.localStorageService.clearStorage();
+
+                    return EMPTY;
+                }
+            ))
+            .subscribe(() => {
+                this.localStorageService.clearStorage();
+
+                this.router.navigate([RouterPaths.HOME_DIRECT]);
+            });
     }
 }

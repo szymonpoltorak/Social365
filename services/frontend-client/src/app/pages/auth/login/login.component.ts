@@ -4,7 +4,12 @@ import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { NgIf } from "@angular/common";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AuthService } from "@api/auth/auth.service";
+import { LoginRequest } from "@interfaces/auth/login-request.interface";
+import { Auth } from "@interfaces/auth/auth-response.interface";
+import { LocalStorageService } from "@services/utils/local-storage.service";
+import { RouterPaths } from "@enums/router-paths.enum";
 
 @Component({
     selector: 'app-login',
@@ -21,9 +26,13 @@ import { RouterLink } from "@angular/router";
     styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
+
     loginForm !: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder,
+                private localStorage: LocalStorageService,
+                private router: Router,
+                private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -42,5 +51,20 @@ export class LoginComponent implements OnInit {
         if (this.loginForm.invalid) {
             return;
         }
+        const request: LoginRequest = {
+            username: this.loginForm.get('email')?.value,
+            password: this.loginForm.get('password')?.value
+        };
+
+        this.authService
+            .loginUser(request)
+            .subscribe((response: Auth) => {
+                console.log(response);
+
+                this.localStorage.saveUserToStorage(response.profile);
+                this.localStorage.saveTokenToStorage(response.token);
+
+                this.router.navigate([RouterPaths.FEED_DIRECT])
+            });
     }
 }

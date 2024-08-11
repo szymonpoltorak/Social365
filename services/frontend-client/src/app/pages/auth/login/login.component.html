@@ -36,6 +36,7 @@
 
                 <input formControlName="password"
                        matInput
+                       type="password"
                        placeholder="My really hard password" required>
 
                 <mat-error *ngIf="loginForm.controls['password'].hasError('required')">

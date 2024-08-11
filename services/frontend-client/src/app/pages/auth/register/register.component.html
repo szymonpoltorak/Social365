@@ -11,9 +11,49 @@
         </div>
     </div>
 
-    <div class="flex justify-center flex-col md:m-8 max-md:m-4 max-md:items-center max-w-[35em]">
-        <form (ngSubmit)="submitForm()" [formGroup]="registerForm" class="bg-secondary p-5 rounded-2xl">
+    <div class="flex justify-center flex-col md:m-8 max-md:m-4 max-md:items-center">
+        <form (ngSubmit)="submitForm()" [formGroup]="registerForm" class="bg-secondary p-5 rounded-2xl max-w-[35em]">
             <div class="text-4xl font-bold mb-3">Create account</div>
+
+            <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                <mat-label>First Name</mat-label>
+
+                <input formControlName="firstName"
+                       matInput
+                       placeholder="Jogn" required>
+
+                <mat-error *ngIf="registerForm.controls['firstName'].hasError('required')">
+                    First Name is <strong>required</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['firstName'].hasError('minlength')">
+                    First Name must be at least <strong>3 characters</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['firstName'].hasError('maxlength')">
+                    First Name must be at most <strong>32 characters</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
+                <mat-label>Last Name</mat-label>
+
+                <input formControlName="lastName"
+                       matInput
+                       placeholder="Doe" required>
+
+                <mat-error *ngIf="registerForm.controls['lastName'].hasError('required')">
+                    Last Name is <strong>required</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['lastName'].hasError('minlength')">
+                    Last Name must be at least <strong>3 characters</strong>
+                </mat-error>
+
+                <mat-error *ngIf="registerForm.controls['lastName'].hasError('maxlength')">
+                    Last Name must be at most <strong>32 characters</strong>
+                </mat-error>
+            </mat-form-field>
 
             <mat-form-field class="w-full mb-4" subscriptSizing="dynamic">
                 <mat-label>Email</mat-label>
@@ -64,6 +104,7 @@
 
                     <input formControlName="confirmPassword"
                            matInput
+                           type="password"
                            placeholder="My really hard password" required>
 
                     <mat-error *ngIf="passwordsGroup.controls['confirmPassword'].hasError('required')">

@@ -18,11 +18,11 @@ export class PostService {
     constructor(private http: HttpClient) {
     }
 
-    getPostsFromUrl(friendsPageNumber: number,
+    getPostsFromUrl(profileId: string, friendsPageNumber: number,
                     pageSize: number, pagingState: Optional<string>,
                     url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
         return this.http.get<CassandraPage<Either<Post, SharedPost>>>(url, {
-            params: this.getHttpParams(friendsPageNumber, pageSize, pagingState)
+            params: this.getHttpParams(profileId, friendsPageNumber, pageSize, pagingState)
         }).pipe(take(1));
     }
 
@@ -85,7 +85,8 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    private getHttpParams(friendsPageNumber: number, pageSize: number, pagingState: Optional<string>): HttpParams {
+    private getHttpParams(profileId: string, friendsPageNumber: number, pageSize: number,
+                          pagingState: Optional<string>): HttpParams {
         const params: HttpParams = new HttpParams();
 
         if (pagingState !== null) {
@@ -93,6 +94,7 @@ export class PostService {
         }
         return params
             .set('friendsPageNumber', friendsPageNumber)
+            .set('profileId', profileId)
             .set('pageSize', pageSize);
     }
 

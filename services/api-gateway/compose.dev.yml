@@ -24,9 +24,10 @@ services:
               required: true
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${API_GATEWAY_PORT}/actuator/health" ]
-            interval: 10s
-            timeout: 5s
-            retries: 3
+            start_period: 45s
+            interval: 15s
+            timeout: 15s
+            retries: 15
         volumes:
             - "./:/home/api-gateway"
         ports:

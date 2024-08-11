@@ -44,12 +44,14 @@ public class AuthHelperServiceImpl implements AuthHelperService {
 
     @Override
     public final AuthResponse buildTokensIntoResponse(User user, Profile profile, TokenRevokeStatus shouldBeRevoked) {
-        Jwt authToken = jwtService.generateToken(user);
-        Jwt refreshToken = jwtService.generateRefreshToken(user);
+        User jwtUser = user;
 
         if (shouldBeRevoked == TokenRevokeStatus.TO_REVOKE) {
-            jwtService.revokeUserTokens(user);
+            jwtUser = jwtService.revokeUserTokens(user);
         }
+        Jwt authToken = jwtService.generateToken(jwtUser);
+        Jwt refreshToken = jwtService.generateRefreshToken(jwtUser);
+
         return AuthResponse
                 .builder()
                 .token(buildResponse(authToken, refreshToken))

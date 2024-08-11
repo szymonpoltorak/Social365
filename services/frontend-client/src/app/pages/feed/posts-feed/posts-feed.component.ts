@@ -81,7 +81,7 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.postService
-            .getPostsFromUrl(this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
+            .getPostsFromUrl(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 this.posts = posts;
 
@@ -101,7 +101,7 @@ export class PostsFeedComponent implements OnInit {
             return;
         }
         this.postService
-            .getPostsFromUrl(this.posts.friendsPageNumber + 1,
+            .getPostsFromUrl(this.presentedProfileId, this.posts.friendsPageNumber + 1,
                 this.PAGE_SIZE, this.posts.pagingState, this.postsUrl)
             .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
                 const oldContent: Either<Post, SharedPost>[] = this.posts.data;

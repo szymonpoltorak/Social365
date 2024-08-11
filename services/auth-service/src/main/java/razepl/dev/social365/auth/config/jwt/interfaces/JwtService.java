@@ -30,6 +30,6 @@ public interface JwtService extends OAuth2TokenValidator<Jwt>, JwtDecoder {
 
     boolean isTokenNotValid(String jwtToken);
 
-    void revokeUserTokens(User user);
+    User revokeUserTokens(User user);
 
 }

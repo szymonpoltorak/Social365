@@ -89,8 +89,7 @@ public class SecurityConfiguration {
                 HttpMethod.OPTIONS.name()
         ));
         cors.setAllowedOrigins(List.of(
-                FRONTEND_URL,
-                "http://localhost:80"
+                "*"
         ));
 
         source.registerCorsConfiguration(API_PATTERN, cors);

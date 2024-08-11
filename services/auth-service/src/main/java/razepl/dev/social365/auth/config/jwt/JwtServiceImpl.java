@@ -59,12 +59,14 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public final void revokeUserTokens(User user) {
+    public final User revokeUserTokens(User user) {
         user.incrementJwtVersion();
 
-        ServiceUser updatedUser = userRepository.save(user);
+        User updatedUser = userRepository.save(user);
 
         log.info("User with revoked tokens : {}", updatedUser);
+
+        return updatedUser;
     }
 
     @Override
@@ -202,7 +204,7 @@ public class JwtServiceImpl implements JwtService {
         if (allowedMatchers.stream().anyMatch(servletPath::contains)) {
             return true;
         }
-        return !servletPath.contains(Matchers.AUTH_MAPPING);
+        return servletPath.contains(Matchers.AUTH_MAPPING);
     }
 
     private boolean isTokenExpired(String token, ServiceUser userDetails) {

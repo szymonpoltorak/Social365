@@ -21,6 +21,9 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>
     const refreshTokenSubject: BehaviorSubject<Optional<string>> = new BehaviorSubject<Optional<string>>(null);
 
     const addTokenToRequest = (token: string, req: HttpRequest<unknown>): HttpRequest<unknown> => {
+        if (token === "") {
+            return req;
+        }
         return req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
