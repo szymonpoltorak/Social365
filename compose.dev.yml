@@ -1,6 +1,6 @@
 include:
     -   path:
-            - ./services/config-server/compose.dev.yml
+            - ./services/config-server/compose.yml
     -   path:
             - ./services/frontend-client/compose.dev.yml
     -   path:
@@ -10,9 +10,9 @@ include:
     -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
-            - ./services/images/compose.dev.yml
+            - ./services/images/compose.yml
     -   path:
-            - ./services/api-gateway/compose.dev.yml
+            - ./services/api-gateway/compose.yml
     -   path:
             - ./services/profile/compose.dev.yml
     -   path:

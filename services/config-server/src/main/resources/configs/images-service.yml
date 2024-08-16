@@ -1,5 +1,5 @@
 server:
-    port: ${IMAGES_SERVICE_PORT}
+    port: ${IMAGES_SERVICE_PORT:-8081}
 
     server-header: ""
 

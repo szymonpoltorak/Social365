@@ -23,6 +23,10 @@ spring:
             expiration-time: ${JWT_EXPIRATION_TIME}
             refresh-time: ${JWT_REFRESH_TIME}
 
+    cloud:
+        refresh:
+            enabled: false
+
     jpa:
         hibernate:
             ddl-auto: update

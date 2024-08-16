@@ -22,6 +22,10 @@ spring:
             username: ${NEO4J_USERNAME}
             password: ${NEO4J_PASSWORD}
 
+    cloud:
+        refresh:
+            enabled: false
+
     security:
         oauth2:
             resourceserver:

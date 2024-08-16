@@ -1,8 +1,9 @@
-FROM alpine:3.19.1 AS build
+FROM social-native:base as build
 
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+ENV EXECUTABLE_NAME="images-service"
+ENV WORKING_DIR="/${EXECUTABLE_NAME}"
 
-WORKDIR /images-service
+WORKDIR "${WORKING_DIR}"
 
 COPY build.gradle .
 
@@ -10,18 +11,18 @@ COPY settings.gradle .
 
 COPY src/ src/
 
-RUN gradle build -x test
+RUN gradle nativeBuild -x test
 
-RUN mv build/libs/images-0.0.1-SNAPSHOT.jar images-service.jar
+FROM ubuntu:latest
 
-FROM alpine:3.19.1
+WORKDIR "${WORKING_DIR}"
 
-WORKDIR /images-service
+RUN apt -y update && apt -y upgrade
 
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
+RUN apt install -y curl
 
-COPY --from=build /images-service/images-service.jar .
+COPY --from=build "${WORKING_DIR}/build/native" .
 
-EXPOSE 8080
+RUN chmod +x "./nativeCompile/${EXECUTABLE_NAME}"
 
-CMD ["java", "-jar", "images-service.jar"]
+CMD ["./nativeCompile/${EXECUTABLE_NAME}"]

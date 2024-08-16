@@ -1,27 +1,31 @@
-FROM alpine:3.19.1 AS build
+FROM social-native:base AS build
 
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+ENV EXECUTABLE_NAME="auth"
+ENV WORKING_DIR="/${EXECUTABLE_NAME}"
 
-WORKDIR /auth
+WORKDIR "${WORKING_DIR}"
 
 COPY build.gradle .
 
 COPY settings.gradle .
 
 COPY src/ src/
+`
+RUN gradle nativeBuild -x test
 
-RUN gradle build -x test
+FROM ubuntu:latest
 
-RUN mv build/libs/auth-0.0.1-SNAPSHOT.jar auth.jar
+WORKDIR "${WORKING_DIR}"
 
-FROM alpine:3.19.1
+RUN apt -y update &&  \
+    apt -y upgrade &&  \
+    apt clean
 
-WORKDIR /auth
+RUN apt install -y curl &&  \
+    apt clean
 
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
+COPY --from=build "${WORKING_DIR}/build/native" .
 
-COPY --from=build /auth/auth.jar .
+RUN chmod +x "./nativeCompile/${EXECUTABLE_NAME}"
 
-EXPOSE 8080
-
-CMD ["java", "-jar", "auth.jar"]
+CMD ["./nativeCompile/${EXECUTABLE_NAME}"]

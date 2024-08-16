@@ -20,6 +20,10 @@ spring:
                     jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
                     jws-algorithms: ${JWS_ALGORITHM}
 
+    cloud:
+        refresh:
+            enabled: false
+
     cassandra:
         schema-action: create_if_not_exists
 
