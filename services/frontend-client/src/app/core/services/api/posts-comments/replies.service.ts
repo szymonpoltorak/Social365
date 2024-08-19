@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Optional } from "@core/types/profile/optional.type";
 import { Observable, take } from "rxjs";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { RepliesMappings } from "@enums/api/posts-comments/replies-mappings.enum";
 import { ReplyAddRequest } from "@interfaces/posts-comments/reply-add-request.interface";
 import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.interface";
 import { ReplyComment } from "@interfaces/posts-comments/reply-comment.interface";
 import { ReplyKey } from "@interfaces/posts-comments/reply-key.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { CommentsPagingState } from "@core/utils/comments-paging-state";
 
 @Injectable({
     providedIn: 'root'
@@ -18,9 +18,9 @@ export class RepliesService {
     }
 
     getRepliesForComment(commentId: string,
-                         pageSize: number, pagingState: Optional<string>): Observable<CassandraPage<ReplyComment>> {
-        return this.http.get<CassandraPage<ReplyComment>>(RepliesMappings.GET_REPLIES_FOR_COMMENT, {
-            params: this.getCommentParams(commentId, pageSize, pagingState)
+                         pagingState: CommentsPagingState): Observable<SocialPage<ReplyComment, CommentsPagingState>> {
+        return this.http.get<SocialPage<ReplyComment, CommentsPagingState>>(RepliesMappings.GET_REPLIES_FOR_COMMENT, {
+            params: this.getCommentParams(commentId, pagingState)
         }).pipe(take(1));
     }
 
@@ -40,16 +40,15 @@ export class RepliesService {
         return this.http.put<ReplyComment>(RepliesMappings.UPDATE_LIKE_REPLY_COUNT, key).pipe(take(1));
     }
 
-    private getCommentParams(commentId: string,
-                             pageSize: number, pagingState: Optional<string>): HttpParams {
+    private getCommentParams(commentId: string, pagingState: CommentsPagingState): HttpParams {
         const params: HttpParams = new HttpParams();
 
-        if (pagingState !== null) {
-            params.set('pagingState', pagingState as string);
+        if (pagingState.hasPagingStarted()) {
+            params.set('pagingState', pagingState.pagingState as string);
         }
         return params
             .set('commentId', commentId)
-            .set('pageSize', pageSize);
+            .set('pageSize', pagingState.pageSize);
     }
 
 }

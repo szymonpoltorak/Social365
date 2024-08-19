@@ -6,13 +6,14 @@ import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { Router } from '@angular/router';
-import { Page } from "@interfaces/utils/page.interface";
 import { MatDialog } from "@angular/material/dialog";
 import {
     BirthdayInfoDialogComponent
 } from "@pages/feed/friends-feed/birthday/birthday-info-dialog/birthday-info-dialog.component";
 import { BirthdayInfoComponent } from "@pages/feed/friends-feed/birthday/birthday-info/birthday-info.component";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-birthday',
@@ -29,7 +30,8 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
     styleUrl: './birthday.component.scss'
 })
 export class BirthdayComponent {
-    @Input() birthdayInfos !: Page<BirthdayInfo>;
+
+    @Input() birthdayInfos !: SocialPage<BirthdayInfo, PageablePagingState>;
     protected isExpanded: boolean = false;
     protected readonly RouterPaths = RouterPaths;
 
@@ -42,4 +44,5 @@ export class BirthdayComponent {
             exitAnimationDuration: 100,
         });
     }
+
 }

@@ -1,12 +1,12 @@
 package razepl.dev.social365.images.api.interfaces;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.utils.pagination.SocialPage;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface ImagesService {
 
     ImageResponse uploadImage(String username, MultipartFile image);
 
-    Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable);
+    SocialPage<PostImageResponse> getUserUploadedImages(String username, Pageable pageable);
 
     CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image);
 

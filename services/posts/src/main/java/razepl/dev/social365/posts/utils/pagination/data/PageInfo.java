@@ -1,14 +1,12 @@
 package razepl.dev.social365.posts.utils.pagination.data;
 
 import lombok.Builder;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Pageable;
 import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
 
 import java.util.Optional;
 
-@Slf4j
 @Builder
 public record PageInfo(int friendPageNumber, int pageSize, Optional<PagingState> pagingState) {
 

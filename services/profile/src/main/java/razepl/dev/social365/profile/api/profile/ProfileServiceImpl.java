@@ -28,9 +28,10 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
+import razepl.dev.social365.profile.utils.pagination.SocialPageImpl;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
 
 @Slf4j
@@ -88,7 +89,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Page<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber) {
+    public SocialPage<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber) {
         log.info("Getting today birthdays for user : {}", user);
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
@@ -97,11 +98,11 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Found {} birthdays", birthdayDataPage.getNumberOfElements());
 
-        return birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse);
+        return SocialPageImpl.of(birthdayDataPage.map(profileMapper::mapBirthdayDataToBirthdayInfoResponse));
     }
 
     @Override
-    public Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
+    public SocialPage<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, Pageable pageable) {
         log.info("Getting profiles search by pattern: '{}', with pageable : {}", pattern, pageable);
 
         Page<Profile> profiles = profileRepository
@@ -109,18 +110,18 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Found {} search profiles by pattern", profiles.getNumberOfElements());
 
-        return profiles.map(profileMapper::mapProfileToProfileSearchResponse);
+        return SocialPageImpl.of(profiles.map(profileMapper::mapProfileToProfileSearchResponse));
     }
 
     @Override
-    public Page<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
+    public SocialPage<ProfileQueryResponse> getProfilesByPattern(String pattern, Pageable pageable) {
         log.info("Getting profiles by pattern: '{}', with pageable : {}", pattern, pageable);
 
         Page<Profile> profiles = profileRepository.findAllByPattern(pattern.toLowerCase(Locale.ROOT), pageable);
 
         log.info("Found {} profiles", profiles.getNumberOfElements());
 
-        return profiles.map(profileMapper::mapProfileToProfileQueryResponse);
+        return SocialPageImpl.of(profiles.map(profileMapper::mapProfileToProfileQueryResponse));
     }
 
     @Override

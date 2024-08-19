@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Page } from "@interfaces/utils/page.interface";
 import { Observable, take } from 'rxjs';
 import { FriendsMappings } from "@enums/api/profile/friends-mappings.enum";
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from '@core/utils/pageable-paging-state';
 
 @Injectable({
     providedIn: 'root'
@@ -15,49 +16,49 @@ export class FriendsService {
     constructor(private http: HttpClient) {
     }
 
-    getFriends(pageNumber: number, pageSize: number): Observable<Page<FriendProfileOption>> {
-        return this.http.get<Page<FriendProfileOption>>(FriendsMappings.GET_FRIENDS_ON_PAGE, {
+    getFriends(pagingState: PageablePagingState): Observable<SocialPage<FriendProfileOption, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendProfileOption, PageablePagingState>>(FriendsMappings.GET_FRIENDS_ON_PAGE, {
             params: {
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
         }).pipe(take(1));
     }
 
-    getFriendsByPattern(pattern: string, pageNumber: number, pageSize: number): Observable<Page<FriendProfileOption>> {
-        return this.http.get<Page<FriendProfileOption>>(FriendsMappings.GET_FRIENDS_BY_PATTERN, {
+    getFriendsByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<FriendProfileOption, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendProfileOption, PageablePagingState>>(FriendsMappings.GET_FRIENDS_BY_PATTERN, {
             params: {
                 pattern: pattern,
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
         }).pipe(take(1));
     }
 
-    getFriendsFeedOptions(profileId: string, pageNumber: number, pageSize: number): Observable<Page<FriendFeedOption>> {
-        return this.http.get<Page<FriendFeedOption>>(FriendsMappings.GET_FRIENDS_FEED_OPTIONS, {
+    getFriendsFeedOptions(profileId: string, pagingState: PageablePagingState): Observable<SocialPage<FriendFeedOption, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendFeedOption, PageablePagingState>>(FriendsMappings.GET_FRIENDS_FEED_OPTIONS, {
             params: {
                 profileId: profileId,
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
         }).pipe(take(1));
     }
 
-    getFriendRequests(pageNumber: number, pageSize: number): Observable<Page<FriendElement>> {
-        return this.http.get<Page<FriendElement>>(FriendsMappings.FRIEND_REQUESTS, {
+    getFriendRequests(pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendElement, PageablePagingState>>(FriendsMappings.FRIEND_REQUESTS, {
             params: {
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
         }).pipe(take(1));
     }
 
-    getFriendSuggestions(pageNumber: number, pageSize: number): Observable<Page<FriendElement>> {
-        return this.http.get<Page<FriendElement>>(FriendsMappings.FRIEND_SUGGESTIONS, {
+    getFriendSuggestions(pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendElement, PageablePagingState>>(FriendsMappings.FRIEND_SUGGESTIONS, {
             params: {
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
         }).pipe(take(1));
     }

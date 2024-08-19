@@ -23,13 +23,14 @@ import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.
 import { PostService } from "@api/posts-comments/post.service";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 import { CommentService } from "@api/posts-comments/comment.service";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { CommentCreateData } from "@interfaces/posts-comments/comment-create-data.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { ImagesService } from "@api/images/images.service";
 import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { CommentsPagingState } from "@core/utils/comments-paging-state";
 
 @Component({
     selector: 'app-shared-post',
@@ -52,13 +53,14 @@ import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
     styleUrl: './shared-post.component.scss'
 })
 export class SharedPostComponent implements OnInit {
+
     @Input({ transform: (value: Either<Post, SharedPost>) => value as SharedPost }) post !: SharedPost;
     @Output() sharePostEvent: EventEmitter<SharePostData> = new EventEmitter<SharePostData>();
     @Output() deletePostEvent: EventEmitter<Post> = new EventEmitter<Post>();
-    private readonly PAGE_SIZE: number = 5;
-    protected comments !: CassandraPage<PostComment>;
+    protected comments !: SocialPage<PostComment, CommentsPagingState>;
     protected areCommentsVisible: boolean = false;
     protected currentUser !: Profile;
+    private readonly PAGE_SIZE: number = 5;
 
     constructor(private localStorage: LocalStorageService,
                 private postService: PostService,
@@ -80,8 +82,8 @@ export class SharedPostComponent implements OnInit {
 
     getCommentsForPost(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postKey.postId, 5, null)
-            .subscribe((comments: CassandraPage<PostComment>) => {
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, new CommentsPagingState(this.PAGE_SIZE, null))
+            .subscribe((comments: SocialPage<PostComment, CommentsPagingState>) => {
                 this.areCommentsVisible = !this.areCommentsVisible;
 
                 this.comments = comments;
@@ -142,27 +144,19 @@ export class SharedPostComponent implements OnInit {
 
                     comment.imageUrl = image.fileUrl;
                 }
-                this.comments.data.unshift(comment);
+                this.comments.addFirst(comment);
             });
     }
 
     loadMoreComments(): void {
         this.commentService
-            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.PAGE_SIZE, this.comments.pagingState)
-            .subscribe((comments: CassandraPage<PostComment>) => {
-                this.comments.pagingState = comments.pagingState;
-                this.comments.friendsPageNumber = comments.friendsPageNumber;
-                this.comments.hasNextPage = comments.hasNextPage;
-                this.comments.data.push(...comments.data);
-            });
+            .getCommentsForPost(this.post.sharingPost.postKey.postId, this.comments.pagingState)
+            .subscribe((comments: SocialPage<PostComment, CommentsPagingState>) => this.comments.updatePage(comments));
     }
 
     deleteComment(commentKey: CommentKey): void {
         this.commentService
             .deleteComment(commentKey)
-            .subscribe(() => {
-                this.comments.data = this.comments.data
-                    .filter((comment: PostComment) => comment.commentKey.commentId !== commentKey.commentId);
-            });
+            .subscribe((comment: PostComment) => this.comments.remove(comment));
     }
 }

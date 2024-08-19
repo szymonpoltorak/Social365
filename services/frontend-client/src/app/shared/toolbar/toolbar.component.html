@@ -26,7 +26,7 @@
         </div>
 
         <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-            @for (option of (filteredOptions$ | async)?.content; track option) {
+            @for (option of filteredOptions$ | async; track option) {
                 <mat-option [value]="option.fullName">
                     <div class="flex items-center gap-2 text-xs">
                         <app-avatar-photo [imageLink]="'/images/nouser@example.com/shiba1.jpg'"></app-avatar-photo>

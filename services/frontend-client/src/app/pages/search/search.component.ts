@@ -5,12 +5,12 @@ import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
 import { MatCard, MatCardTitle } from "@angular/material/card";
 import { MatButton } from "@angular/material/button";
 import { ProfileService } from "@api/profile/profile.service";
-import { Page } from "@interfaces/utils/page.interface";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 import { FriendsService } from "@api/profile/friends.service";
-import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { RoutingService } from "@services/profile/routing.service";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-search',
@@ -27,7 +27,7 @@ import { RoutingService } from "@services/profile/routing.service";
 })
 export class SearchComponent implements OnInit {
 
-    profiles !: Page<ProfileSearch>;
+    protected profiles !: SocialPage<ProfileSearch, PageablePagingState>;
     private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
     private pattern !: string;
@@ -35,7 +35,6 @@ export class SearchComponent implements OnInit {
     constructor(private activatedRoute: ActivatedRoute,
                 private friendsService: FriendsService,
                 protected routingService: RoutingService,
-                private localStorage: LocalStorageService,
                 private profileService: ProfileService) {
     }
 
@@ -46,16 +45,14 @@ export class SearchComponent implements OnInit {
                 this.pattern = params['pattern'];
 
                 this.profileService
-                    .getProfilesSearchByPattern(params['pattern'], this.FIRST_PAGE, this.PAGE_SIZE)
-                    .subscribe((profiles: Page<ProfileSearch>) => {
-                        this.profiles = profiles;
-                    });
+                    .getProfilesSearchByPattern(params['pattern'], new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE))
+                    .subscribe((profiles: SocialPage<ProfileSearch, PageablePagingState>) => this.profiles = profiles);
             });
     }
 
     @HostListener('window:scroll', ['$event'])
     onScroll(): void {
-        if (this.profiles.last) {
+        if (!this.profiles.hasNextPage) {
             return;
         }
         const position: number = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight;
@@ -65,23 +62,14 @@ export class SearchComponent implements OnInit {
             return;
         }
         this.profileService
-            .getProfilesSearchByPattern(this.pattern, this.profiles.number + 1, this.PAGE_SIZE)
-            .subscribe((profiles: Page<ProfileSearch>) => {
-                const oldContent: ProfileSearch[] = this.profiles.content;
-
-                this.profiles = profiles;
-
-                this.profiles.content = oldContent.concat(profiles.content);
-            });
+            .getProfilesSearchByPattern(this.pattern, this.profiles.nextPagingState())
+            .subscribe((profiles: SocialPage<ProfileSearch, PageablePagingState>) => this.profiles.updatePage(profiles));
     }
 
-    addFriend(friendId: string): void {
+    addFriend(friend: ProfileSearch): void {
         this.friendsService
-            .sendFriendRequest(friendId)
-            .subscribe(() => {
-                this.profiles.content = this.profiles.content
-                    .filter((profile: ProfileSearch) => profile.profileId !== friendId);
-            });
+            .sendFriendRequest(friend.profileId)
+            .subscribe(() => this.profiles.remove(friend));
     }
 
 }

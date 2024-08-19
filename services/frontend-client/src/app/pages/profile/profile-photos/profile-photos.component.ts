@@ -6,8 +6,9 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ImagesService } from "@api/images/images.service";
 import { RoutingService } from "@services/profile/routing.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
-import { Page } from "@interfaces/utils/page.interface";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { SocialPage } from "@core/utils/social-page";
 
 @Component({
     selector: 'app-profile-photos',
@@ -29,7 +30,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 })
 export class ProfilePhotosComponent implements OnInit {
 
-    protected photos !: Page<PostImage>;
+    protected photos !: SocialPage<PostImage, PageablePagingState>;
     protected currentUsername !: string;
     private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 15;
@@ -42,8 +43,8 @@ export class ProfilePhotosComponent implements OnInit {
         this.currentUsername = this.routingService.getCurrentUsernameForRoute();
 
         this.imagesService
-            .getUserUploadedImages(this.currentUsername, this.FIRST_PAGE, this.PAGE_SIZE)
-            .subscribe((images: Page<PostImage>) => {
+            .getUserUploadedImages(this.currentUsername, new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE))
+            .subscribe((images: SocialPage<PostImage, PageablePagingState>) => {
                 this.photos = images;
 
                 window.scrollTo(0, 0);

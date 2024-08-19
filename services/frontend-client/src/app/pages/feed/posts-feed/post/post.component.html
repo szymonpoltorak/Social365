@@ -72,7 +72,7 @@
     } @else if (areCommentsVisible) {
         <app-comment-create (commentCreated)="createComment($event)" [user]="currentUser"></app-comment-create>
 
-        @for (comment of comments.data; track comment) {
+        @for (comment of comments; track comment) {
             <app-comment (commentDeleted)="deleteComment($event)" [comment]="comment"></app-comment>
         }
 

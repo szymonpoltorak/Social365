@@ -1,11 +1,11 @@
 <div class="p-3 w-96 max-h-[50rem] overflow-y-auto">
     <div class="text-xl mb-2">Birthdays</div>
 
-    @for (birthdayInfo of page.content; track birthdayInfo) {
+    @for (birthdayInfo of page; track birthdayInfo) {
         <app-birthday-info [birthdayInfo]="birthdayInfo"></app-birthday-info>
     }
 
-    @if (!page.last) {
+    @if (page.hasNextPage) {
         <button mat-button class="birthday-button mb-3"
                 (click)="showMoreBirthdays()"
                 aria-label="Show more">

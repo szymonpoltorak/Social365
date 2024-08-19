@@ -1,7 +1,6 @@
 package razepl.dev.social365.profile.api.profile;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +23,7 @@ import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
 import razepl.dev.social365.profile.config.AuthUser;
 import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,14 +34,14 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING)
-    public final Page<BirthdayInfoResponse> getTodayBirthdays(@AuthUser User user,
-                                                              @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
+    public final SocialPage<BirthdayInfoResponse> getTodayBirthdays(@AuthUser User user,
+                                                                    @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
         return profileService.getTodayBirthdays(user, pageNumber);
     }
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING)
-    public final Page<ProfileSearchResponse> getProfilesSearchByPattern(@RequestParam(Params.PATTERN) String pattern,
+    public final SocialPage<ProfileSearchResponse> getProfilesSearchByPattern(@RequestParam(Params.PATTERN) String pattern,
                                                                         @RequestParam(Params.PAGE_NUMBER) int pageNumber,
                                                                         @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return profileService.getProfilesSearchByPattern(pattern, PageRequest.of(pageNumber, pageSize));
@@ -49,7 +49,7 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     @GetMapping(value = ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING)
-    public final Page<ProfileQueryResponse> getProfilesByPattern(@RequestParam(Params.PATTERN) String pattern,
+    public final SocialPage<ProfileQueryResponse> getProfilesByPattern(@RequestParam(Params.PATTERN) String pattern,
                                                                  @RequestParam(Params.PAGE_NUMBER) int pageNumber,
                                                                  @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return profileService.getProfilesByPattern(pattern, PageRequest.of(pageNumber, pageSize));

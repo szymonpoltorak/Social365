@@ -5,11 +5,11 @@ import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 public interface RepliesController {
 
-    CassandraPage<CommentResponse> getRepliesForComment(String commentId, User user, int pageSize, String pagingState);
+    SocialPage<CommentResponse> getRepliesForComment(String commentId, User user, int pageSize, String pagingState);
 
     CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest);
 

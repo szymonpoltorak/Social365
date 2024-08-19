@@ -1,24 +1,24 @@
 package razepl.dev.social365.profile.api.friends.interfaces;
 
-import org.springframework.data.domain.Page;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 public interface FriendsController {
 
-    Page<FriendResponse> getFriends(User user, int pageNumber, int pageSize);
+    SocialPage<FriendResponse> getFriends(User user, int pageNumber, int pageSize);
 
-    Page<FriendResponse> getFriendsByPattern(User user, String pattern, int pageNumber, int pageSize);
+    SocialPage<FriendResponse> getFriendsByPattern(User user, String pattern, int pageNumber, int pageSize);
 
-    Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, int pageNumber, int pageSize);
+    SocialPage<FriendFeedResponse> getFriendsFeedOptions(String profileId, int pageNumber, int pageSize);
 
-    Page<String> getFollowedProfileIds(User user, int pageNumber);
+    SocialPage<String> getFollowedProfileIds(User user, int pageNumber);
 
-    Page<FriendSuggestionResponse> getFriendRequests(User user, int pageNumber, int pageSize);
+    SocialPage<FriendSuggestionResponse> getFriendRequests(User user, int pageNumber, int pageSize);
 
-    Page<FriendSuggestionResponse> getFriendSuggestions(User user, int pageNumber, int pageSize);
+    SocialPage<FriendSuggestionResponse> getFriendSuggestions(User user, int pageNumber, int pageSize);
 
     FriendResponse removeUserFromFriends(User user, String friendId);
 

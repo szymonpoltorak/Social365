@@ -1,6 +1,5 @@
 package razepl.dev.social365.profile.api.profile.interfaces;
 
-import org.springframework.data.domain.Page;
 import razepl.dev.social365.profile.api.profile.data.BirthdayInfoResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileBasicResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfilePostResponse;
@@ -10,14 +9,15 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 public interface ProfileController {
 
-    Page<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber);
+    SocialPage<BirthdayInfoResponse> getTodayBirthdays(User user, int pageNumber);
 
-    Page<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, int pageNumber, int pageSize);
+    SocialPage<ProfileSearchResponse> getProfilesSearchByPattern(String pattern, int pageNumber, int pageSize);
 
-    Page<ProfileQueryResponse> getProfilesByPattern(String pattern, int pageNumber, int pageSize);
+    SocialPage<ProfileQueryResponse> getProfilesByPattern(String pattern, int pageNumber, int pageSize);
 
     ProfileBasicResponse getBasicProfileInfoByUsername(String username, User user);
 

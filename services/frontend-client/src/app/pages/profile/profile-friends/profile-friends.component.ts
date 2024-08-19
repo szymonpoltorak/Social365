@@ -9,13 +9,12 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
 import { RouterLink } from "@angular/router";
-import { Page } from "@interfaces/utils/page.interface";
 import { FriendsService } from "@api/profile/friends.service";
-import { LocalStorageService } from '@core/services/utils/local-storage.service';
-import { Profile } from "@interfaces/feed/profile.interface";
 import { debounceTime, distinctUntilChanged, startWith, tap } from "rxjs";
 import { Optional } from "@core/types/profile/optional.type";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-profile-friends',
@@ -43,36 +42,32 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 export class ProfileFriendsComponent implements OnInit {
 
     protected searchSocialControl: FormControl<Optional<string>> = new FormControl<string>("");
-    protected friends !: Page<FriendProfileOption>;
-    private currentUser !: Profile;
+    protected friends !: SocialPage<FriendProfileOption, PageablePagingState>;
     private readonly FIRST_PAGE: number = 0;
-    private pageSize: number = 15;
+    private readonly PAGE_SIZE: number = 15;
 
-    constructor(private friendsService: FriendsService,
-                private localStorage: LocalStorageService) {
+    constructor(private friendsService: FriendsService) {
     }
 
     ngOnInit(): void {
-        this.currentUser = this.localStorage.getUserProfileFromStorage();
-
         this.searchSocialControl
             .valueChanges
             .pipe(
                 startWith(""),
                 tap(value => {
-                    this.fetchFriends(value, this.FIRST_PAGE);
+                    this.fetchFriends(value, new PageablePagingState(this.PAGE_SIZE, this.FIRST_PAGE));
                 }),
                 distinctUntilChanged(),
                 debounceTime(1500),
             )
             .subscribe(value => {
-                this.fetchFriends(value, this.FIRST_PAGE);
+                this.fetchFriends(value, new PageablePagingState(this.PAGE_SIZE, this.FIRST_PAGE));
             });
     }
 
     @HostListener('window:scroll', ['$event'])
     onScroll(): void {
-        if (this.friends.last) {
+        if (!this.friends.hasNextPage) {
             return;
         }
         const position: number = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight;
@@ -81,20 +76,20 @@ export class ProfileFriendsComponent implements OnInit {
         if (position < max) {
             return;
         }
-        this.fetchFriends(this.searchSocialControl.value, this.friends.number + 1);
+        this.fetchFriends(this.searchSocialControl.value, this.friends.nextPagingState());
     }
 
-    private fetchFriends(value: Optional<string>, pageNumber: number): void {
+    private fetchFriends(value: Optional<string>, pagingState: PageablePagingState): void {
         if (value === "") {
             this.friendsService
-                .getFriends(pageNumber, this.pageSize)
-                .subscribe((friends: Page<FriendProfileOption>) => {
+                .getFriends(pagingState)
+                .subscribe((friends: SocialPage<FriendProfileOption, PageablePagingState>) => {
                     this.friends = friends;
                 });
         } else if (value !== null) {
             this.friendsService
-                .getFriendsByPattern(value as string, pageNumber, this.pageSize)
-                .subscribe((friends: Page<FriendProfileOption>) => {
+                .getFriendsByPattern(value as string, pagingState)
+                .subscribe((friends: SocialPage<FriendProfileOption, PageablePagingState>) => {
                     this.friends = friends;
                 });
         }

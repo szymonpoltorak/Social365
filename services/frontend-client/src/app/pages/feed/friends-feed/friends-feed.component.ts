@@ -11,9 +11,10 @@ import { BirthdayComponent } from "@pages/feed/friends-feed/birthday/birthday.co
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
 import { ProfileService } from "@api/profile/profile.service";
 import { LocalStorageService } from "@services/utils/local-storage.service";
-import { Page } from "@interfaces/utils/page.interface";
 import { FriendsService } from '@core/services/api/profile/friends.service';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-friends-feed',
@@ -32,8 +33,9 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
     styleUrl: './friends-feed.component.scss'
 })
 export class FriendsFeedComponent implements OnInit {
-    protected birthdayInfos !: Page<BirthdayInfo>;
-    protected friends !: Observable<Page<FriendFeedOption>>;
+
+    protected birthdayInfos !: SocialPage<BirthdayInfo, PageablePagingState>;
+    protected friends !: Observable<SocialPage<FriendFeedOption, PageablePagingState>>;
     protected groupChats: Observable<FriendFeedOption[]> = of([
         {
             profileId: "1",
@@ -67,14 +69,13 @@ export class FriendsFeedComponent implements OnInit {
 
     ngOnInit(): void {
         const profileId: string = this.localStorage.getUserProfileIdFromStorage();
+        const pagingState: PageablePagingState = new PageablePagingState(this.pageNumber, this.friendsPageSize);
 
         this.profileService
-            .getTodayBirthdays(this.pageNumber)
-            .subscribe(data => {
-                this.birthdayInfos = data;
-                this.pageNumber = this.birthdayInfos.number;
-            });
+            .getTodayBirthdays(pagingState)
+            .subscribe(data => this.birthdayInfos = data);
 
-        this.friends = this.friendsService.getFriendsFeedOptions(profileId, this.pageNumber, this.friendsPageSize);
+        this.friends = this.friendsService.getFriendsFeedOptions(profileId, pagingState);
     }
+
 }

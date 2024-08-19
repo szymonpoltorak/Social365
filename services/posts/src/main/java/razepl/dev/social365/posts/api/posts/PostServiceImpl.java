@@ -2,7 +2,6 @@ package razepl.dev.social365.posts.api.posts;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,8 +25,7 @@ import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
-import razepl.dev.social365.posts.utils.pagination.interfaces.PagingState;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
 import java.time.LocalDateTime;
@@ -43,6 +41,7 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     private static final int NOT_NEEDED = -1;
+
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final ProfileService profileService;
@@ -52,7 +51,7 @@ public class PostServiceImpl implements PostService {
     private final ImageService imageService;
 
     @Override
-    public CassandraPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
+    public SocialPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
         log.info("Getting posts for profile with id: {}, using page info : {}", profileId, pageInfo);
 
         int currentFriendPage = pageInfo.friendPageNumber();
@@ -67,7 +66,7 @@ public class PostServiceImpl implements PostService {
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
-                return createCassandraPage(pageable, result, profileId, currentFriendPage);
+                return PostsCassandraPage.of(pageable, result, post -> postMapper.toPostData(post, profileId), currentFriendPage);
             }
             friendsIds.add(profileId);
 
@@ -82,19 +81,19 @@ public class PostServiceImpl implements PostService {
             if (resultSize >= pageSize) {
                 log.info("Found enough posts returning result of size: {}", resultSize);
 
-                return createCassandraPage(posts.getPageable(), result, profileId, currentFriendPage);
+                return PostsCassandraPage.of(posts.getPageable(), result, post -> postMapper.toPostData(post, profileId), currentFriendPage);
             }
             if (!friendsPage.hasNext()) {
                 log.info("There are no more friends to fetch posts from returning result of size: {}", resultSize);
 
-                return createCassandraPage(posts.getPageable(), result, profileId, currentFriendPage);
+                return PostsCassandraPage.of(posts.getPageable(), result, post -> postMapper.toPostData(post, profileId), currentFriendPage);
             }
             currentFriendPage++;
         }
     }
 
     @Override
-    public final CassandraPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo) {
+    public final SocialPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo) {
         log.info("Getting user posts with id: {}, using page info : {}", profileId, pageInfo);
 
         Pageable pageable = pageInfo.toPageable();
@@ -103,33 +102,7 @@ public class PostServiceImpl implements PostService {
 
         log.info("Found total posts : {}", posts.getNumberOfElements());
 
-        return createCassandraPage(posts.getPageable(), posts.getContent(), profileId, NOT_NEEDED);
-    }
-
-    private PostsCassandraPage<PostData> createCassandraPage(Pageable currentPageable, Collection<Post> result,
-                                                            String profileId, int currentFriendsPage) {
-        return createCassandraPage((CassandraPageRequest) currentPageable, result, profileId, currentFriendsPage);
-    }
-
-    private PostsCassandraPage<PostData> createCassandraPage(CassandraPageRequest currentPageable, Collection<Post> result,
-                                                             String profileId, int currentFriendsPage) {
-        log.info("Found posts returning result...");
-
-        CassandraPageRequest pageable = getNextPageable(currentPageable);
-        PagingState pagingState = PagingState.newInstance(pageable.getPagingState());
-
-        List<PostData> content = result
-                .stream()
-                .map(post -> postMapper.toPostData(post, profileId))
-                .sorted()
-                .toList();
-
-        return new PostsCassandraPage<>(content, currentFriendsPage, pageable.getPageSize(),
-                currentPageable.hasNext(), PagingState.encode(pagingState));
-    }
-
-    private CassandraPageRequest getNextPageable(CassandraPageRequest pageable) {
-        return pageable.hasNext() ? pageable.next() : pageable;
+        return PostsCassandraPage.of(posts.getPageable(), posts.getContent(), post -> postMapper.toPostData(post, profileId), NOT_NEEDED);
     }
 
     @Override

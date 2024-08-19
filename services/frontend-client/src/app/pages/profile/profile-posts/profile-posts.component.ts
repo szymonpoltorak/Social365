@@ -16,7 +16,6 @@ import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendsService } from '@core/services/api/profile/friends.service';
 import { Observable } from "rxjs";
-import { Page } from "@interfaces/utils/page.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
 import { RoutingService } from '@core/services/profile/routing.service';
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
@@ -24,6 +23,8 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { ImagesService } from "@api/images/images.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { ResizeEvent } from "@core/types/utils/resize-event.type";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { SocialPage } from "@core/utils/social-page";
 
 @Component({
     selector: 'app-profile-posts',
@@ -54,7 +55,7 @@ export class ProfilePostsComponent implements OnInit {
     protected bioControl !: FormControl<string | null>;
     protected readonly RouterPaths = RouterPaths;
     protected imageUrls !: string[];
-    protected friends !: Observable<Page<FriendFeedOption>>;
+    protected friends !: Observable<SocialPage<FriendFeedOption, PageablePagingState>>;
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
     protected readonly PostMappings = PostMappings;
@@ -78,7 +79,7 @@ export class ProfilePostsComponent implements OnInit {
             this.numberOfItemsToDisplay = newDisplayItems;
 
             this.friends = this.friendsService
-                .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
+                .getFriendsFeedOptions(this.presentedProfile.profileId, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay));
         }
     }
 
@@ -88,9 +89,9 @@ export class ProfilePostsComponent implements OnInit {
         const username: string = this.routingService.getCurrentUsernameForRoute();
 
         this.imagesService
-            .getUserUploadedImages(username, this.FIRST_PAGE, this.numberOfItemsToDisplay)
-            .subscribe((imageUrls: Page<PostImage>) => {
-                this.imageUrls = imageUrls.content.map((image: PostImage) => image.imagePath);
+            .getUserUploadedImages(username, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay))
+            .subscribe((imageUrls: SocialPage<PostImage, PageablePagingState>) => {
+                this.imageUrls = imageUrls.map((image: PostImage) => image.imagePath);
             });
 
         this.fetchFriendsAndProfileInfo(username);
@@ -105,7 +106,7 @@ export class ProfilePostsComponent implements OnInit {
             return;
         }
         this.profileService
-            .updateProfileBio(this.currentUser.profileId, bio)
+            .updateProfileBio(bio)
             .subscribe(() => {
                 this.presentedProfile.bio = bio;
 
@@ -132,7 +133,7 @@ export class ProfilePostsComponent implements OnInit {
                 this.bioControl = new FormControl(this.presentedProfile.bio);
 
                 this.friends = this.friendsService
-                    .getFriendsFeedOptions(this.presentedProfile.profileId, this.FIRST_PAGE, this.numberOfItemsToDisplay);
+                    .getFriendsFeedOptions(this.presentedProfile.profileId, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay));
             });
     }
 }
