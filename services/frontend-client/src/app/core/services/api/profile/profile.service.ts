@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { ProfileMappings } from "@enums/api/profile/profile-mappings.enum";
 import { Profile } from "@interfaces/feed/profile.interface";
@@ -25,7 +25,10 @@ export class ProfileService {
             params: {
                 pageNumber: pagingState.pageNumber
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<BirthdayInfo, PageablePagingState>(json))
+        );
     }
 
     getProfilesByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<ProfileQuery, PageablePagingState>> {
@@ -35,7 +38,10 @@ export class ProfileService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<ProfileQuery, PageablePagingState>(json))
+        );
     }
 
     getProfileSummary(): Observable<ProfileSummary> {
@@ -70,7 +76,10 @@ export class ProfileService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<ProfileSearch, PageablePagingState>(json))
+        );
     }
 
     updateProfilePicture(profilePictureId: number): Observable<ProfileRequest> {

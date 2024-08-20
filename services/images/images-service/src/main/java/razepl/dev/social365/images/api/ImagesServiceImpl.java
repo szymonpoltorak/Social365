@@ -73,6 +73,9 @@ public class ImagesServiceImpl implements ImagesService {
 
         log.info("User uploaded images found: {}", postImages.getNumberOfElements());
 
+        if (postImages.isEmpty()) {
+            return SocialPageImpl.empty();
+        }
         return SocialPageImpl.from(postImages.map(imagesMapper::toPostImageResponse));
     }
 

@@ -2,11 +2,11 @@ include:
     -   path:
             - ./services/config-server/compose.yml
     -   path:
-            - ./services/frontend-client/compose.dev.yml
+            - ./services/frontend-client/compose.yml
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:
-            - ./services/auth-service/compose.dev.yml
+            - ./services/auth-service/compose.yml
     -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:

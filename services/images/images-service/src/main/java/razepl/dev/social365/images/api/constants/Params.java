@@ -16,6 +16,14 @@ public final class Params {
 
     public static final String IMAGE_URL = "imageUrl";
 
+    public static final String PAGING_STATE = "pagingState";
+
+    public static final String DATA = "data";
+
+    public static final String HAS_NEXT_PAGE = "hasNextPage";
+
+    public static final String IMAGE_PATH = "imagePath";
+
     private Params() {
     }
 

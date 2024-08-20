@@ -15,6 +15,7 @@ import { FriendsService } from '@core/services/api/profile/friends.service';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { PostsPagingState } from "@core/utils/posts-paging-state";
 
 @Component({
     selector: 'app-friends-feed',
@@ -59,8 +60,7 @@ export class FriendsFeedComponent implements OnInit {
             profilePictureUrl: "https://static.scientificamerican.com/sciam/cache/file/8F2611FB-1329-445F-9428B91317BC067B_source.jpg?w=1200"
         }
     ]);
-    private pageNumber: number = 0;
-    private friendsPageSize: number = 5;
+    private readonly PAGE_SIZE: number = 5;
 
     constructor(private profileService: ProfileService,
                 private friendsService: FriendsService,
@@ -69,7 +69,7 @@ export class FriendsFeedComponent implements OnInit {
 
     ngOnInit(): void {
         const profileId: string = this.localStorage.getUserProfileIdFromStorage();
-        const pagingState: PageablePagingState = new PageablePagingState(this.pageNumber, this.friendsPageSize);
+        const pagingState: PageablePagingState = PageablePagingState.firstPage(this.PAGE_SIZE);
 
         this.profileService
             .getTodayBirthdays(pagingState)

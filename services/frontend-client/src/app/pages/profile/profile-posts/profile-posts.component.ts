@@ -59,7 +59,6 @@ export class ProfilePostsComponent implements OnInit {
     protected numberOfItemsToDisplay: number = 3;
     protected currentUser !: Profile;
     protected readonly PostMappings = PostMappings;
-    private readonly FIRST_PAGE: number = 0;
 
     constructor(protected router: Router,
                 private routingService: RoutingService,
@@ -79,7 +78,7 @@ export class ProfilePostsComponent implements OnInit {
             this.numberOfItemsToDisplay = newDisplayItems;
 
             this.friends = this.friendsService
-                .getFriendsFeedOptions(this.presentedProfile.profileId, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay));
+                .getFriendsFeedOptions(this.presentedProfile.profileId, PageablePagingState.firstPage(this.numberOfItemsToDisplay));
         }
     }
 
@@ -89,7 +88,7 @@ export class ProfilePostsComponent implements OnInit {
         const username: string = this.routingService.getCurrentUsernameForRoute();
 
         this.imagesService
-            .getUserUploadedImages(username, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay))
+            .getUserUploadedImages(username, PageablePagingState.firstPage(this.numberOfItemsToDisplay))
             .subscribe((imageUrls: SocialPage<PostImage, PageablePagingState>) => {
                 this.imageUrls = imageUrls.map((image: PostImage) => image.imagePath);
             });
@@ -133,7 +132,7 @@ export class ProfilePostsComponent implements OnInit {
                 this.bioControl = new FormControl(this.presentedProfile.bio);
 
                 this.friends = this.friendsService
-                    .getFriendsFeedOptions(this.presentedProfile.profileId, new PageablePagingState(this.FIRST_PAGE, this.numberOfItemsToDisplay));
+                    .getFriendsFeedOptions(this.presentedProfile.profileId, PageablePagingState.firstPage(this.numberOfItemsToDisplay));
             });
     }
 }

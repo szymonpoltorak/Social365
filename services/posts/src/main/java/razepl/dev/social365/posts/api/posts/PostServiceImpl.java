@@ -25,6 +25,7 @@ import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.data.PostsCassandraPage;
+import razepl.dev.social365.posts.utils.pagination.data.ProfileSocialPage;
 import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 import razepl.dev.social365.posts.utils.validators.interfaces.PostValidator;
 
@@ -60,8 +61,8 @@ public class PostServiceImpl implements PostService {
         Collection<Post> result = new ArrayList<>(pageSize + 1);
 
         while (true) {
-            Page<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
-            List<String> friendsIds = new ArrayList<>(friendsPage.toList());
+            ProfileSocialPage<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
+            List<String> friendsIds = friendsPage.data();
 
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
@@ -83,7 +84,7 @@ public class PostServiceImpl implements PostService {
 
                 return PostsCassandraPage.of(posts.getPageable(), result, post -> postMapper.toPostData(post, profileId), currentFriendPage);
             }
-            if (!friendsPage.hasNext()) {
+            if (!friendsPage.hasNextPage()) {
                 log.info("There are no more friends to fetch posts from returning result of size: {}", resultSize);
 
                 return PostsCassandraPage.of(posts.getPageable(), result, post -> postMapper.toPostData(post, profileId), currentFriendPage);

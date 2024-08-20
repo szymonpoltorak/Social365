@@ -22,4 +22,7 @@ export class PageablePagingState implements SocialPagingState<PageablePagingStat
         return new PageablePagingState(this._pageSize, this._pageNumber + 1);
     }
 
+    static firstPage(pageSize: number) {
+        return new PageablePagingState(pageSize, 0);
+    }
 }

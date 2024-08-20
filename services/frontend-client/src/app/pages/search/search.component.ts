@@ -28,7 +28,6 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
 export class SearchComponent implements OnInit {
 
     protected profiles !: SocialPage<ProfileSearch, PageablePagingState>;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
     private pattern !: string;
 
@@ -45,7 +44,7 @@ export class SearchComponent implements OnInit {
                 this.pattern = params['pattern'];
 
                 this.profileService
-                    .getProfilesSearchByPattern(params['pattern'], new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE))
+                    .getProfilesSearchByPattern(params['pattern'], PageablePagingState.firstPage(this.PAGE_SIZE))
                     .subscribe((profiles: SocialPage<ProfileSearch, PageablePagingState>) => this.profiles = profiles);
             });
     }

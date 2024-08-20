@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { ImagesMappings } from "@enums/api/images/images-mappings.enum";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { Image } from "@interfaces/images/image.interface";
 import { SocialPage } from "@core/utils/social-page";
@@ -75,7 +75,10 @@ export class ImagesService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json))
+        );
     }
 
     deleteImage(imageId: number): Observable<void> {

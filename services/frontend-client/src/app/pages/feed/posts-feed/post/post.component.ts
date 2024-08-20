@@ -109,8 +109,6 @@ export class PostComponent implements OnInit {
         this.commentService
             .getCommentsForPost(this.post.postKey.postId, new CommentsPagingState(this.PAGE_SIZE, null))
             .subscribe((comments: SocialPage<PostComment, CommentsPagingState>) => {
-                console.log(comments);
-
                 this.areCommentsVisible = !this.areCommentsVisible;
 
                 this.comments = comments;

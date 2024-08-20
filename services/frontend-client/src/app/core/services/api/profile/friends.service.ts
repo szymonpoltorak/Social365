@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { FriendsMappings } from "@enums/api/profile/friends-mappings.enum";
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
@@ -22,7 +22,10 @@ export class FriendsService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<FriendProfileOption, PageablePagingState>(json))
+        );
     }
 
     getFriendsByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<FriendProfileOption, PageablePagingState>> {
@@ -32,7 +35,10 @@ export class FriendsService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<FriendProfileOption, PageablePagingState>(json))
+        );
     }
 
     getFriendsFeedOptions(profileId: string, pagingState: PageablePagingState): Observable<SocialPage<FriendFeedOption, PageablePagingState>> {
@@ -42,7 +48,10 @@ export class FriendsService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<FriendFeedOption, PageablePagingState>(json))
+        );
     }
 
     getFriendRequests(pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
@@ -51,7 +60,10 @@ export class FriendsService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json))
+        );
     }
 
     getFriendSuggestions(pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
@@ -60,7 +72,10 @@ export class FriendsService {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json))
+        );
     }
 
     sendFriendRequest(friendId: string): Observable<FriendElement> {

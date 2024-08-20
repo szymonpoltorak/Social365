@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { CommentMappings } from "@enums/api/posts-comments/comment-mappings.enum";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
@@ -20,7 +20,10 @@ export class CommentService {
     getCommentsForPost(postId: string, pagingState: CommentsPagingState): Observable<SocialPage<PostComment, CommentsPagingState>> {
         return this.http.get<SocialPage<PostComment, CommentsPagingState>>(CommentMappings.GET_COMMENTS_FOR_POST, {
             params: this.getPostParams(postId, pagingState)
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<PostComment, CommentsPagingState>(json))
+        );
     }
 
     addCommentToPost(commentRequest: CommentAddRequest): Observable<PostComment> {

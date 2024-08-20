@@ -11,9 +11,9 @@
             <mat-icon>cake</mat-icon>
 
             @if (birthdayInfos.length === 1) {
-                <strong>{{ birthdayInfos.get(0).profile.fullName }}'s</strong> birthday is today!
+                <strong>{{ birthdayInfos.first.profile.fullName }}'s</strong> birthday is today!
             } @else {
-                <strong>{{ birthdayInfos.get(0).profile.fullName }}</strong> and
+                <strong>{{ birthdayInfos.first.profile.fullName }}</strong> and
                 <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
             }
         </button>

@@ -24,12 +24,8 @@ export class SocialPage<T, S extends SocialPagingState<S>> implements Iterable<T
         return this._data.length;
     }
 
-    get isEmpty(): boolean {
-        return this._data.length === 0;
-    }
-
-    get(index: number): T {
-        return this._data[index];
+    get first(): T {
+        return this._data[0];
     }
 
     nextPagingState(): S {
@@ -42,6 +38,14 @@ export class SocialPage<T, S extends SocialPagingState<S>> implements Iterable<T
 
     add(...element: T[]): void {
         this._data.push(...element);
+    }
+
+    static fromJson<T, S extends SocialPagingState<S>>(json: any): SocialPage<T, S> {
+        return new SocialPage<T, S>(
+            json.data,
+            json.pagingState,
+            json.hasNextPage
+        );
     }
 
     addFirst(...element: T[]): void {

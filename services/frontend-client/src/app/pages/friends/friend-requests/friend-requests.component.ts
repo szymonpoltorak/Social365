@@ -23,7 +23,6 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
 export class FriendRequestsComponent implements OnInit {
 
     protected friendRequests !: SocialPage<FriendElement, PageablePagingState>;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
 
     constructor(private friendsService: FriendsService) {
@@ -31,7 +30,7 @@ export class FriendRequestsComponent implements OnInit {
 
     ngOnInit(): void {
         this.friendsService
-            .getFriendRequests(new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE))
+            .getFriendRequests(PageablePagingState.firstPage(this.PAGE_SIZE))
             .subscribe((response: SocialPage<FriendElement, PageablePagingState>) => {
                 this.friendRequests = response;
             });

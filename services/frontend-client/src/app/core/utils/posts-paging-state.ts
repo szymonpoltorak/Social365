@@ -35,4 +35,8 @@ export class PostsPagingState implements SocialPagingState<PostsPagingState> {
         return this._pagingState;
     }
 
+    static firstPage(pageSize: number): PostsPagingState {
+        return new PostsPagingState(pageSize, null, 0);
+    }
+
 }

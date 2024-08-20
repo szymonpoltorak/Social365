@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { Post } from "@interfaces/feed/post.interface";
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { Either } from "@core/types/feed/either.type";
@@ -22,7 +22,10 @@ export class PostService {
                     url: PostMappings): Observable<SocialPage<Either<Post, SharedPost>, PostsPagingState>> {
         return this.http.get<SocialPage<Either<Post, SharedPost>, PostsPagingState>>(url, {
             params: this.getHttpParams(profileId, pagingState)
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json))
+        );
     }
 
     updateLikePostCount(postId: string, authorId: string): Observable<Post> {

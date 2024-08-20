@@ -43,7 +43,6 @@ export class ProfileFriendsComponent implements OnInit {
 
     protected searchSocialControl: FormControl<Optional<string>> = new FormControl<string>("");
     protected friends !: SocialPage<FriendProfileOption, PageablePagingState>;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 15;
 
     constructor(private friendsService: FriendsService) {
@@ -55,13 +54,13 @@ export class ProfileFriendsComponent implements OnInit {
             .pipe(
                 startWith(""),
                 tap(value => {
-                    this.fetchFriends(value, new PageablePagingState(this.PAGE_SIZE, this.FIRST_PAGE));
+                    this.fetchFriends(value, PageablePagingState.firstPage(this.PAGE_SIZE));
                 }),
                 distinctUntilChanged(),
                 debounceTime(1500),
             )
             .subscribe(value => {
-                this.fetchFriends(value, new PageablePagingState(this.PAGE_SIZE, this.FIRST_PAGE));
+                this.fetchFriends(value, PageablePagingState.firstPage(this.PAGE_SIZE));
             });
     }
 

@@ -1,13 +1,11 @@
 package razepl.dev.social365.images.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-class UserConverter implements Converter<Jwt, User> {
+public class UserConverter implements Converter<Jwt, User> {
 
     @Override
     public final User convert(Jwt jwt) {

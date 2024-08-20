@@ -32,7 +32,6 @@ export class ProfilePhotosComponent implements OnInit {
 
     protected photos !: SocialPage<PostImage, PageablePagingState>;
     protected currentUsername !: string;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 15;
 
     constructor(private imagesService: ImagesService,
@@ -43,7 +42,7 @@ export class ProfilePhotosComponent implements OnInit {
         this.currentUsername = this.routingService.getCurrentUsernameForRoute();
 
         this.imagesService
-            .getUserUploadedImages(this.currentUsername, new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE))
+            .getUserUploadedImages(this.currentUsername, PageablePagingState.firstPage(this.PAGE_SIZE))
             .subscribe((images: SocialPage<PostImage, PageablePagingState>) => {
                 this.photos = images;
 

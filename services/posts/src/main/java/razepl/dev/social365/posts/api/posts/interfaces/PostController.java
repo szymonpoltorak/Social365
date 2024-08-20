@@ -2,15 +2,15 @@ package razepl.dev.social365.posts.api.posts.interfaces;
 
 import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.config.User;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 public interface PostController {
 
     int getUsersPostCount(String profileId);
 
-    CassandraPage<PostData> getPostsOnPage(User user, int pageNumber, int pageSize, String pagingState);
+    SocialPage<PostData> getPostsOnPage(User user, int pageNumber, int pageSize, String pagingState);
 
-    CassandraPage<PostData> getUsersPosts(String profileId, int pageNumber, int pageSize, String pagingState);
+    SocialPage<PostData> getUsersPosts(String profileId, int pageNumber, int pageSize, String pagingState);
 
     PostData updateLikePostCount(User user, String creationDateTime, String postId);
 

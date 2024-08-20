@@ -68,7 +68,6 @@ export class PostsFeedComponent implements OnInit {
     @Input() postsUrl !: PostMappings;
     protected posts !: SocialPage<Either<Post, SharedPost>, PostsPagingState>;
     protected currentUser !: Profile;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
 
     constructor(private localStorage: LocalStorageService,
@@ -80,7 +79,7 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.postService
-            .getPostsFromUrl(this.presentedProfileId, new PostsPagingState(this.PAGE_SIZE, null, this.FIRST_PAGE), this.postsUrl)
+            .getPostsFromUrl(this.presentedProfileId, PostsPagingState.firstPage(this.PAGE_SIZE), this.postsUrl)
             .subscribe((posts: SocialPage<Either<Post, SharedPost>, PostsPagingState>) => {
                 this.posts = posts;
 
@@ -142,5 +141,4 @@ export class PostsFeedComponent implements OnInit {
             duration: 2000,
         });
     }
-
 }

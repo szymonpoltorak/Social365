@@ -1,5 +1,5 @@
 server:
-    port: ${AUTH_SERVICE_PORT}
+    port: ${AUTH_SERVICE_PORT:8080}
 
     server-header: ""
 

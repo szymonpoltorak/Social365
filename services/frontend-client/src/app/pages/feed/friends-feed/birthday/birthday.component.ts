@@ -38,6 +38,7 @@ export class BirthdayComponent {
     constructor(protected router: Router,
                 private dialog: MatDialog) {
     }
+
     showInfosDialog(): void {
         this.dialog.open(BirthdayInfoDialogComponent, {
             data: this.birthdayInfos,

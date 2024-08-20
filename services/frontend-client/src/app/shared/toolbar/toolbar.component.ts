@@ -55,7 +55,6 @@ export class ToolbarComponent implements OnInit {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 5;
 
     constructor(protected router: Router,
@@ -86,7 +85,7 @@ export class ToolbarComponent implements OnInit {
         if (pattern === "") {
             return EMPTY;
         }
-        return this.profileService.getProfilesByPattern(pattern, new PageablePagingState(this.FIRST_PAGE, this.PAGE_SIZE));
+        return this.profileService.getProfilesByPattern(pattern, PageablePagingState.firstPage(this.PAGE_SIZE));
     }
 
     logout(): void {

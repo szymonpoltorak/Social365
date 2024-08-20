@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { RepliesMappings } from "@enums/api/posts-comments/replies-mappings.enum";
 import { ReplyAddRequest } from "@interfaces/posts-comments/reply-add-request.interface";
@@ -21,7 +21,10 @@ export class RepliesService {
                          pagingState: CommentsPagingState): Observable<SocialPage<ReplyComment, CommentsPagingState>> {
         return this.http.get<SocialPage<ReplyComment, CommentsPagingState>>(RepliesMappings.GET_REPLIES_FOR_COMMENT, {
             params: this.getCommentParams(commentId, pagingState)
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<ReplyComment, CommentsPagingState>(json))
+        );
     }
 
     addReplyToComment(replyAddRequest: ReplyAddRequest): Observable<ReplyComment> {

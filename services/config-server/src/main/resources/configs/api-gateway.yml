@@ -27,6 +27,7 @@ spring:
     application:
         name: ${API_GATEWAY_HOSTNAME}
 
+    cloud:
         gateway:
             discovery:
                 locator:
@@ -67,3 +68,9 @@ spring:
                     uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/auth/**
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"

@@ -26,6 +26,8 @@ import razepl.dev.social365.images.utils.pagination.SocialPage;
 
 import java.util.List;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = ImagesMappings.IMAGES_MAPPING)
@@ -42,7 +44,7 @@ public class ImagesControllerImpl implements ImagesController {
     }
 
     @Override
-    @GetMapping(value = ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING)
+    @GetMapping(value = ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING, produces = APPLICATION_JSON)
     public final SocialPage<PostImageResponse> getUserUploadedImages(@RequestParam(Params.USERNAME) String username,
                                                                      @RequestParam(Params.PAGE_NUMBER) int pageNumber,
                                                                      @RequestParam(Params.PAGE_SIZE) int pageSize) {
