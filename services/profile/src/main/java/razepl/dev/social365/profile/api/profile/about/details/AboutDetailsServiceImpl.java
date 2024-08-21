@@ -10,11 +10,11 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequ
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.config.User;
-import razepl.dev.social365.profile.exceptions.IllegalDateException;
-import razepl.dev.social365.profile.exceptions.IllegalDetailsTypeException;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
-import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
-import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
+import razepl.dev.social365.profile.utils.exceptions.IllegalDateException;
+import razepl.dev.social365.profile.utils.exceptions.IllegalDetailsTypeException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileDetailsNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.TooYoungForAccountException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
@@ -31,7 +31,6 @@ import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Slf4j
 @Service

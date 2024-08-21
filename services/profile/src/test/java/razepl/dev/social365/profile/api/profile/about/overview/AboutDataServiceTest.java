@@ -9,7 +9,7 @@ import razepl.dev.social365.profile.api.profile.about.overview.data.ContactInfoR
 import razepl.dev.social365.profile.api.profile.about.overview.data.LocationsResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.OverviewResponse;
 import razepl.dev.social365.profile.api.profile.about.overview.data.WorkEducationResponse;
-import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;

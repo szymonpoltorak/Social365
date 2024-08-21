@@ -22,8 +22,8 @@ import razepl.dev.social365.auth.entities.attempts.LoginAttempt;
 import razepl.dev.social365.auth.entities.attempts.interfaces.LoginAttemptRepository;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
-import razepl.dev.social365.auth.exceptions.auth.throwable.InvalidTokenException;
-import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
+import razepl.dev.social365.auth.utils.exceptions.InvalidTokenException;
+import razepl.dev.social365.auth.utils.exceptions.UserDoesNotExistException;
 
 
 @Slf4j

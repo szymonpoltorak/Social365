@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtKeyService;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
-import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
+import razepl.dev.social365.auth.utils.exceptions.UserDoesNotExistException;
 
 import java.security.SecureRandom;
 import java.util.List;

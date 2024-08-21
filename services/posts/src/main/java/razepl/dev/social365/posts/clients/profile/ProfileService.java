@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.clients.profile.constants.ProfileMappings;
 import razepl.dev.social365.posts.clients.profile.data.Profile;
+import razepl.dev.social365.posts.utils.handlers.MicroserviceErrorDecoder;
 import razepl.dev.social365.posts.utils.pagination.data.ProfileSocialPage;
 
-@FeignClient(name = "PROFILE-SERVICE", url = "http://profile-service:8083")
+@FeignClient(name = "PROFILE-SERVICE", url = "http://profile-service:8083", configuration = {MicroserviceErrorDecoder.class})
 public interface ProfileService {
 
     @GetMapping(value = ProfileMappings.GET_FOLLOWED_IDS)

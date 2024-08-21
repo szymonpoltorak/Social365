@@ -8,10 +8,11 @@ import razepl.dev.social365.posts.api.constants.Params;
 import razepl.dev.social365.posts.clients.images.constants.ImagesMappings;
 import razepl.dev.social365.posts.clients.images.data.CommentImage;
 import razepl.dev.social365.posts.clients.images.data.PostImage;
+import razepl.dev.social365.posts.utils.handlers.MicroserviceErrorDecoder;
 
 import java.util.List;
 
-@FeignClient(name = "IMAGES-SERVICE", url = "http://images-service:8081")
+@FeignClient(name = "IMAGES-SERVICE", url = "http://images-service:8081", configuration = {MicroserviceErrorDecoder.class})
 public interface ImageService {
 
     @GetMapping(value = ImagesMappings.GET_COMMENT_IMAGE_MAPPING)

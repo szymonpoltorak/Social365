@@ -26,8 +26,8 @@ import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.ServiceUser;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
-import razepl.dev.social365.auth.exceptions.auth.throwable.InvalidTokenException;
-import razepl.dev.social365.auth.exceptions.auth.throwable.UserDoesNotExistException;
+import razepl.dev.social365.auth.utils.exceptions.InvalidTokenException;
+import razepl.dev.social365.auth.utils.exceptions.UserDoesNotExistException;
 
 import java.util.Date;
 import java.util.HashMap;
