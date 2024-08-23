@@ -1,6 +1,9 @@
 server:
     port: ${POSTS_SERVICE_PORT}
 
+    servlet:
+        context-path: /
+
     server-header: ""
 
     http2:
@@ -11,6 +14,18 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
 
+openapi:
+    service:
+        title: ${POSTS_SERVICE_HOSTNAME}
+        version: 1.0.0
+        url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
+
+springdoc:
+    api-docs:
+        path: /${POSTS_SERVICE_HOSTNAME}/v3/api-docs
+    swagger-ui:
+        path: /${POSTS_SERVICE_HOSTNAME}/swagger-ui.html
+
 spring:
     security:
         oauth2:
@@ -19,10 +34,6 @@ spring:
                     issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
                     jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
                     jws-algorithms: ${JWS_ALGORITHM}
-
-    cloud:
-        refresh:
-            enabled: false
 
     cassandra:
         schema-action: create_if_not_exists

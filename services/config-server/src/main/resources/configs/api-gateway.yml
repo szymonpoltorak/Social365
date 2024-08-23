@@ -1,6 +1,9 @@
 server:
     port: ${API_GATEWAY_PORT}
 
+    servlet:
+        context-path: /
+
     server-header: ""
 
     http2:
@@ -21,12 +24,41 @@ eureka:
         fetch-registry: true
 
     instance:
-        hostname: ${EUREKA_REGISTRY_HOSTNAME}
+        hostname: localhost
+
+springdoc:
+    api-docs:
+        enabled: true
+
+    swagger-ui:
+        enabled: true
+
+        path: /swagger-ui.html
+
+        config-url: /v3/api-docs/swagger-config
+
+        urls:
+            -   url: /v3/api-docs
+                name: API Gateway Service
+                display-name: API Gateway Service
+
+            -   url: /${AUTH_SERVICE_HOSTNAME}/v3/api-docs
+                name: Authorisation Service
+                display-name: Authorisation Service
+
+            -   url: /${IMAGES_SERVICE_HOSTNAME}/v3/api-docs
+                name: Images Service
+                display-name: Images Service
+
+            -   url: /${POSTS_SERVICE_HOSTNAME}/v3/api-docs
+                name: Posts Comments Service
+                display-name: Posts Comments Service
+
+            -   url: /${PROFILE_SERVICE_HOSTNAME}/v3/api-docs
+                name: Profile Service
+                display-name: Profile Service
 
 spring:
-    application:
-        name: ${API_GATEWAY_HOSTNAME}
-
     cloud:
         gateway:
             discovery:
@@ -49,20 +81,44 @@ spring:
 
 
             routes:
+                -   id: ${IMAGES_SERVICE_HOSTNAME}-swagger
+                    uri: lb://${IMAGES_SERVICE_HOSTNAME}
+                    predicates:
+                        - Path=/${IMAGES_SERVICE_HOSTNAME}/v3/api-docs
+                        - Method=GET
+
                 -   id: ${IMAGES_SERVICE_HOSTNAME}
                     uri: http://${IMAGES_SERVICE_HOSTNAME}:${IMAGES_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/images/**
+
+                -   id: ${PROFILE_SERVICE_HOSTNAME}-swagger
+                    uri: http://${PROFILE_SERVICE_HOSTNAME}:${PROFILE_SERVICE_PORT}
+                    predicates:
+                        - Path=/${PROFILE_SERVICE_HOSTNAME}/v3/api-docs
+                        - Method=GET
 
                 -   id: ${PROFILE_SERVICE_HOSTNAME}
                     uri: http://${PROFILE_SERVICE_HOSTNAME}:${PROFILE_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/profile/**
 
+                -   id: ${POSTS_SERVICE_HOSTNAME}-swagger
+                    uri: http://${POSTS_SERVICE_HOSTNAME}:${POSTS_SERVICE_PORT}
+                    predicates:
+                        - Path=/${POSTS_SERVICE_HOSTNAME}/v3/api-docs
+                        - Method=GET
+
                 -   id: ${POSTS_SERVICE_HOSTNAME}
                     uri: http://${POSTS_SERVICE_HOSTNAME}:${POSTS_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/posts/**
+
+                -   id: ${AUTH_SERVICE_HOSTNAME}-swagger
+                    uri: lb://${AUTH_SERVICE_HOSTNAME}
+                    predicates:
+                        - Path=/${AUTH_SERVICE_HOSTNAME}/v3/api-docs
+                        - Method=GET
 
                 -   id: ${AUTH_SERVICE_HOSTNAME}
                     uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}

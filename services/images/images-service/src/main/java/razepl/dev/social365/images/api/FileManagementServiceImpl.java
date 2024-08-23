@@ -20,8 +20,12 @@ public class FileManagementServiceImpl implements FileManagementService {
             File out = new File(filePath);
             File parentDir = out.getParentFile();
 
-            if (!parentDir.exists() && !parentDir.mkdirs()) {
-                throw new IOException("Failed to create directory: " + parentDir.getAbsolutePath());
+            if (!parentDir.exists()) {
+                boolean isDirectoryCreated = parentDir.mkdirs();
+
+                if (!isDirectoryCreated && !parentDir.exists()) {
+                    throw new IOException("Failed to create directory: %s".formatted(parentDir.getAbsolutePath()));
+                }
             }
             file.transferTo(out);
         } catch (IOException exception) {

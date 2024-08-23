@@ -40,7 +40,6 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -59,7 +58,6 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.testcontainers:cassandra'
 	testImplementation 'org.testcontainers:junit-jupiter'
 }
