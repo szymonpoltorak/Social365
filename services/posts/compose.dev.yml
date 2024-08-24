@@ -31,7 +31,7 @@ services:
             start_period: 30s
             interval: 15s
             timeout: 15s
-            retries: 10
+            retries: 15
 
     posts-cassandra:
         container_name: ${POSTS_CASSANDRA_HOSTNAME}

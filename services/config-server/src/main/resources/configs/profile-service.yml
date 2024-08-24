@@ -16,7 +16,7 @@ server:
 
 openapi:
     service:
-        title: ${PROFILE_SERVICE_HOSTNAME}
+        title: Profile Service
         version: 1.0.0
         url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
 

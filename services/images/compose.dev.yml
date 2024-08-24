@@ -38,9 +38,9 @@ services:
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${IMAGES_SERVICE_PORT}/actuator/health" ]
             start_period: 45s
-            interval: 15s
+            interval: 20s
             timeout: 15s
-            retries: 15
+            retries: 20
         networks:
             - social365-network
         depends_on:

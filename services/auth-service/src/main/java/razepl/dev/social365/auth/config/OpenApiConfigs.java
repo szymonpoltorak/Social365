@@ -1,6 +1,9 @@
 package razepl.dev.social365.auth.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
@@ -12,6 +15,14 @@ import java.util.List;
 
 @Configuration
 @OpenAPIDefinition
+@SecurityScheme(
+        name = "JWT Bearer Token Authorisation",
+        description = "Provide a valid JWT token to access this API",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "Bearer {token}",
+        in = SecuritySchemeIn.HEADER
+)
 public class OpenApiConfigs {
 
     @Bean
