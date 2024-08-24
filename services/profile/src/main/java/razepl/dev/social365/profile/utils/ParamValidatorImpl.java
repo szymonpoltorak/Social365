@@ -3,10 +3,10 @@ package razepl.dev.social365.profile.utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.exceptions.InvalidEmailException;
-import razepl.dev.social365.profile.exceptions.InvalidParamException;
-import razepl.dev.social365.profile.exceptions.TooYoungForAccountException;
-import razepl.dev.social365.profile.exceptions.UsernameAlreadyClaimedException;
+import razepl.dev.social365.profile.utils.exceptions.InvalidEmailException;
+import razepl.dev.social365.profile.utils.exceptions.InvalidParamException;
+import razepl.dev.social365.profile.utils.exceptions.TooYoungForAccountException;
+import razepl.dev.social365.profile.utils.exceptions.UsernameAlreadyClaimedException;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.utils.interfaces.ParamValidator;
 

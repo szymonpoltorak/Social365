@@ -28,6 +28,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(indexes = @Index(columnList = Params.USERNAME))
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long imageId;

@@ -10,7 +10,6 @@ import { Profile } from '@interfaces/feed/profile.interface';
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentService } from "@api/posts-comments/comment.service";
 import { RepliesService } from "@api/posts-comments/replies.service";
 import { ReplyComment } from "@interfaces/posts-comments/reply-comment.interface";
@@ -26,6 +25,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.interface";
 import { RoutingService } from "@services/profile/routing.service";
+import { SocialPage } from "@core/utils/social-page";
+import { CommentsPagingState } from "@core/utils/comments-paging-state";
 
 @Component({
     selector: 'app-comment',
@@ -55,7 +56,7 @@ export class CommentComponent implements OnInit {
     @Input() replyLevel: number = 3;
     @Output() commentDeleted: EventEmitter<CommentKey> = new EventEmitter<CommentKey>();
     @Output() replyCommentDeleted: EventEmitter<ReplyKey> = new EventEmitter<ReplyKey>();
-    replyComments !: CassandraPage<ReplyComment>;
+    replyComments !: SocialPage<ReplyComment, CommentsPagingState>;
     currentUser !: Profile;
     isMakingReply: boolean = false;
     areRepliesVisible: boolean = false;
@@ -99,8 +100,8 @@ export class CommentComponent implements OnInit {
         this.areRepliesVisible = true;
 
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.PAGE_SIZE, null)
-            .subscribe((replies: CassandraPage<ReplyComment>) => {
+            .getRepliesForComment(this.getProperCommentId(), new CommentsPagingState(this.PAGE_SIZE, null))
+            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => {
                 this.replyComments = replies;
             });
     }
@@ -124,14 +125,14 @@ export class CommentComponent implements OnInit {
                 if (replyAddRequest.hasAttachment) {
                     reply.imageUrl = image.fileUrl;
                 }
-                this.replyComments.data.push(reply);
+                this.replyComments.add(reply);
             });
     }
 
     loadMoreReplies(): void {
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.PAGE_SIZE, this.replyComments.pagingState)
-            .subscribe((replies: CassandraPage<ReplyComment>) => {
+            .getRepliesForComment(this.getProperCommentId(), this.replyComments.pagingState)
+            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => {
                 this.replyComments = replies;
             });
     }
@@ -147,9 +148,8 @@ export class CommentComponent implements OnInit {
     deleteReplyComment(replyKey: ReplyKey): void {
         this.repliesService
             .deleteReplyComment(replyKey)
-            .subscribe(() => {
-                this.replyComments.data = this.replyComments.data
-                    .filter((reply: ReplyComment) => reply.commentKey.replyCommentId !== replyKey.replyCommentId);
+            .subscribe((replyComment: ReplyComment) => {
+                this.replyComments.remove(replyComment);
             });
     }
 

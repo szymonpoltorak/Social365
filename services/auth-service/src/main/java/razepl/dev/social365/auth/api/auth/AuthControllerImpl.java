@@ -22,8 +22,8 @@ import razepl.dev.social365.auth.api.auth.interfaces.AuthService;
 
 import static razepl.dev.social365.auth.config.constants.Matchers.AUTH_MAPPING;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = AUTH_MAPPING)
 public class AuthControllerImpl implements AuthController {
     private final AuthService authService;

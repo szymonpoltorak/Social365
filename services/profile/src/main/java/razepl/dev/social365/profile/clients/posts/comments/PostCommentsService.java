@@ -11,8 +11,9 @@ import razepl.dev.social365.profile.clients.posts.comments.constants.CommentResp
 import razepl.dev.social365.profile.clients.posts.comments.constants.PostCommentsMappings;
 import razepl.dev.social365.profile.clients.posts.comments.constants.PostParams;
 import razepl.dev.social365.profile.clients.posts.comments.data.PostResponse;
+import razepl.dev.social365.profile.utils.handler.MicroserviceErrorDecoder;
 
-@FeignClient(name = "POSTS-COMMENTS", url = "http://posts-comments:8082")
+@FeignClient(name = "POSTS-COMMENTS", url = "http://posts-comments:8082", configuration = {MicroserviceErrorDecoder.class})
 public interface PostCommentsService {
 
     @GetMapping(value = PostCommentsMappings.GET_USERS_POST_COUNT)

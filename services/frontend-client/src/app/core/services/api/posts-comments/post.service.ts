@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { Post } from "@interfaces/feed/post.interface";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
-import { Optional } from "@core/types/profile/optional.type";
 import { Either } from "@core/types/feed/either.type";
 import { SharedPost } from "@interfaces/feed/shared-post.interface";
 import { EditPostRequest } from "@interfaces/posts-comments/edit-post-request.interface";
 import { PostKey } from "@interfaces/feed/post-key.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { PostsPagingState } from "@core/utils/posts-paging-state";
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +18,14 @@ export class PostService {
     constructor(private http: HttpClient) {
     }
 
-    getPostsFromUrl(profileId: string, friendsPageNumber: number,
-                    pageSize: number, pagingState: Optional<string>,
-                    url: PostMappings): Observable<CassandraPage<Either<Post, SharedPost>>> {
-        return this.http.get<CassandraPage<Either<Post, SharedPost>>>(url, {
-            params: this.getHttpParams(profileId, friendsPageNumber, pageSize, pagingState)
-        }).pipe(take(1));
+    getPostsFromUrl(profileId: string, pagingState: PostsPagingState,
+                    url: PostMappings): Observable<SocialPage<Either<Post, SharedPost>, PostsPagingState>> {
+        return this.http.get<SocialPage<Either<Post, SharedPost>, PostsPagingState>>(url, {
+            params: this.getHttpParams(profileId, pagingState)
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json))
+        );
     }
 
     updateLikePostCount(postId: string, authorId: string): Observable<Post> {
@@ -85,17 +87,16 @@ export class PostService {
         }).pipe(take(1));
     }
 
-    private getHttpParams(profileId: string, friendsPageNumber: number, pageSize: number,
-                          pagingState: Optional<string>): HttpParams {
+    private getHttpParams(profileId: string, pagingState: PostsPagingState): HttpParams {
         const params: HttpParams = new HttpParams();
 
-        if (pagingState !== null) {
-            params.set('pagingState', pagingState || "");
+        if (pagingState.hasPagingStarted()) {
+            params.set('pagingState', pagingState.pagingState as string);
         }
         return params
-            .set('friendsPageNumber', friendsPageNumber)
+            .set('friendsPageNumber', pagingState.friendsPageNumber)
             .set('profileId', profileId)
-            .set('pageSize', pageSize);
+            .set('pageSize', pagingState.pageSize);
     }
 
 }

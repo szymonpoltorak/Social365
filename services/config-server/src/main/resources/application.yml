@@ -1,5 +1,5 @@
 server:
-    port: ${CONFIG_SERVER_PORT}
+    port: ${CONFIG_SERVER_PORT:8888}
 
     server-header: ""
 
@@ -16,7 +16,7 @@ spring:
         active: native
 
     application:
-        name: ${CONFIG_SERVER_HOSTNAME}
+        name: ${CONFIG_SERVER_HOSTNAME:localhost}
 
     cloud:
         config:

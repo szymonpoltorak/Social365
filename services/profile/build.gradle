@@ -8,8 +8,6 @@ plugins {
 group = 'razepl.dev.social365'
 version = '0.0.1-SNAPSHOT'
 
-def swaggerVer = '2.6.0'
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -36,11 +34,12 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2023.0.3")
+	set('swaggerVer', "2.6.0")
+	set('testcontainers.version', "1.19.3")
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -59,8 +58,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:neo4j'
 }

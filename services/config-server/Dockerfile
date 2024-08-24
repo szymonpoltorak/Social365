@@ -1,6 +1,4 @@
-FROM alpine:3.19.1 AS build
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+FROM social:build AS build
 
 WORKDIR /config-server
 
@@ -14,11 +12,9 @@ RUN gradle build -x test
 
 RUN mv build/libs/config-server-0.0.1-SNAPSHOT.jar config-server.jar
 
-FROM alpine:3.19.1
+FROM social:prod
 
 WORKDIR /config-server
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
 
 COPY --from=build /config-server/config-server.jar .
 

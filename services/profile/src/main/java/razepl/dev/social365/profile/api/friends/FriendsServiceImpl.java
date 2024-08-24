@@ -13,15 +13,17 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.config.User;
-import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
-import razepl.dev.social365.profile.exceptions.UserAlreadyFollows;
-import razepl.dev.social365.profile.exceptions.UserAlreadySendFriendRequestException;
-import razepl.dev.social365.profile.exceptions.UserDidNotSendFriendRequestException;
-import razepl.dev.social365.profile.exceptions.UsersAlreadyFriendsException;
-import razepl.dev.social365.profile.exceptions.UsersAreNotFriendsException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.UserAlreadyFollows;
+import razepl.dev.social365.profile.utils.exceptions.UserAlreadySendFriendRequestException;
+import razepl.dev.social365.profile.utils.exceptions.UserDidNotSendFriendRequestException;
+import razepl.dev.social365.profile.utils.exceptions.UsersAlreadyFriendsException;
+import razepl.dev.social365.profile.utils.exceptions.UsersAreNotFriendsException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
+import razepl.dev.social365.profile.utils.pagination.SocialPageImpl;
 
 import java.util.Locale;
 
@@ -36,7 +38,7 @@ public class FriendsServiceImpl implements FriendsService {
     private final ProfileMapper profileMapper;
 
     @Override
-    public final Page<FriendResponse> getFriends(User user, Pageable pageable) {
+    public final SocialPage<FriendResponse> getFriends(User user, Pageable pageable) {
         log.info("Getting friends for user : {} with pageable : {}", user, pageable);
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileId(user.profileId(), pageable);
@@ -45,7 +47,7 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final Page<FriendResponse> getFriendsByPattern(User user, String pattern, Pageable pageable) {
+    public final SocialPage<FriendResponse> getFriendsByPattern(User user, String pattern, Pageable pageable) {
         log.info("Getting friends for user: {} with pattern: {} and pageable : {}", user, pattern, pageable);
 
         Page<FriendData> friends = profileRepository.findFriendsByProfileIdAndPattern(user.profileId(),
@@ -55,18 +57,18 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final Page<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
+    public final SocialPage<FriendFeedResponse> getFriendsFeedOptions(String profileId, Pageable pageable) {
         log.info("Getting friends feed options for user : {} with pageable : {}", profileId, pageable);
 
         Page<Profile> friends = profileRepository.findOnlineFriendsByProfileId(profileId, pageable);
 
         log.info("Found online friends for feed : {}", friends.getNumberOfElements());
 
-        return friends.map(profileMapper::mapProfileToFriendFeedResponse);
+        return SocialPageImpl.of(friends.map(profileMapper::mapProfileToFriendFeedResponse));
     }
 
     @Override
-    public final Page<FriendSuggestionResponse> getFriendRequests(User user, Pageable pageable) {
+    public final SocialPage<FriendSuggestionResponse> getFriendRequests(User user, Pageable pageable) {
         log.info("Getting friend requests for user : {}", user);
 
         Page<FriendSuggestion> friendRequests = profileRepository
@@ -74,18 +76,18 @@ public class FriendsServiceImpl implements FriendsService {
 
         log.info("Found {} friend requests", friendRequests.getNumberOfElements());
 
-        return friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
+        return SocialPageImpl.of(friendRequests.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse));
     }
 
     @Override
-    public final Page<FriendSuggestionResponse> getFriendSuggestions(User user, Pageable pageable) {
+    public final SocialPage<FriendSuggestionResponse> getFriendSuggestions(User user, Pageable pageable) {
         log.info("Getting friend suggestions for user : {}", user);
 
         Page<FriendSuggestion> friendSuggestions = profileRepository.findProfileSuggestions(user.profileId(), pageable);
 
         log.info("Found {} friend suggestions", friendSuggestions.getNumberOfElements());
 
-        return friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse);
+        return SocialPageImpl.of(friendSuggestions.map(profileMapper::mapFriendSuggestionToFriendSuggestionResponse));
     }
 
     @Override
@@ -132,7 +134,7 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
-    public final Page<String> getFollowedProfileIds(User user, int pageNumber) {
+    public final SocialPage<String> getFollowedProfileIds(User user, int pageNumber) {
         log.info("Getting friends ids for user : {}", user);
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
@@ -141,7 +143,7 @@ public class FriendsServiceImpl implements FriendsService {
 
         log.info("Found {} friends ids", friendsIds.getNumberOfElements());
 
-        return friendsIds;
+        return SocialPageImpl.of(friendsIds);
     }
 
     @Override
@@ -233,10 +235,10 @@ public class FriendsServiceImpl implements FriendsService {
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
-    private Page<FriendResponse> mapFriendDataPageToFriendResponse(Page<FriendData> friends, String profileId) {
+    private SocialPage<FriendResponse> mapFriendDataPageToFriendResponse(Page<FriendData> friends, String profileId) {
         log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
 
-        return friends.map(profileMapper::mapFriendDataToFriendResponse);
+        return SocialPageImpl.of(friends.map(profileMapper::mapFriendDataToFriendResponse));
     }
 
     private Profile getProfileAndCheckFriendExistence(String profileId, String friendId) {

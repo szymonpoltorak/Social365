@@ -17,8 +17,9 @@ import { Profile } from "@interfaces/feed/profile.interface";
 import { AvatarPhotoComponent } from "@shared/avatar-photo/avatar-photo.component";
 import { ProfileService } from "@api/profile/profile.service";
 import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
-import { Page } from "@interfaces/utils/page.interface";
 import { AuthService } from "@api/auth/auth.service";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-toolbar',
@@ -46,14 +47,14 @@ import { AuthService } from "@api/auth/auth.service";
     styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent implements OnInit {
+
     @Input() isOnFeed!: boolean;
-    filteredOptions$ !: Observable<Page<ProfileQuery>>;
+    filteredOptions$ !: Observable<SocialPage<ProfileQuery, PageablePagingState>>;
     newMessages: number = 5;
     newNotifications: number = 0;
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 5;
 
     constructor(protected router: Router,
@@ -80,11 +81,11 @@ export class ToolbarComponent implements OnInit {
         });
     }
 
-    private fetchProfiles(pattern: string): Observable<Page<ProfileQuery>> {
+    private fetchProfiles(pattern: string): Observable<SocialPage<ProfileQuery, PageablePagingState>> {
         if (pattern === "") {
             return EMPTY;
         }
-        return this.profileService.getProfilesByPattern(pattern, this.FIRST_PAGE, this.PAGE_SIZE);
+        return this.profileService.getProfilesByPattern(pattern, PageablePagingState.firstPage(this.PAGE_SIZE));
     }
 
     logout(): void {
@@ -103,4 +104,5 @@ export class ToolbarComponent implements OnInit {
                 this.router.navigate([RouterPaths.HOME_DIRECT]);
             });
     }
+
 }

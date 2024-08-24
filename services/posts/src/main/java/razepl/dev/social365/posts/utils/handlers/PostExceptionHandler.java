@@ -1,10 +1,12 @@
 package razepl.dev.social365.posts.utils.handlers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import razepl.dev.social365.posts.utils.exceptions.AbstractException;
+import razepl.dev.social365.posts.utils.exceptions.MicroserviceRequestException;
 import razepl.dev.social365.posts.utils.handlers.data.ExceptionResponse;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,13 @@ public class PostExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, exception.getStatusCode());
+    }
+
+    @ExceptionHandler(MicroserviceRequestException.class)
+    public final ResponseEntity<ExceptionResponse> handleMicroserviceRequestException(MicroserviceRequestException exception) {
+        ExceptionResponse response = exception.getExceptionResponse();
+
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.statusCode()));
     }
 
 }

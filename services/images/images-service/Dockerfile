@@ -1,6 +1,4 @@
-FROM alpine:3.19.1 AS build
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+FROM social:build AS build
 
 WORKDIR /images-service
 
@@ -12,13 +10,11 @@ COPY src/ src/
 
 RUN gradle build -x test
 
-RUN mv build/libs/images-0.0.1-SNAPSHOT.jar images-service.jar
+RUN mv build/libs/images-service-0.0.1-SNAPSHOT.jar images-service.jar
 
-FROM alpine:3.19.1
+FROM social:prod
 
 WORKDIR /images-service
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
 
 COPY --from=build /images-service/images-service.jar .
 

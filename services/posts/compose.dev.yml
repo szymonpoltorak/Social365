@@ -31,7 +31,7 @@ services:
             start_period: 30s
             interval: 15s
             timeout: 15s
-            retries: 10
+            retries: 15
 
     posts-cassandra:
         container_name: ${POSTS_CASSANDRA_HOSTNAME}
@@ -47,6 +47,8 @@ services:
             - "${POSTS_CASSANDRA_PORT}:${POSTS_CASSANDRA_PORT}"
         environment:
             - CASSANDRA_CLUSTER_NAME=${POSTS_CASSANDRA_CLUSTER_NAME}
+            - MAX_HEAP_SIZE=${POSTS_CASSANDRA_MAX_HEAP_SIZE}
+            - HEAP_NEWSIZE=${POSTS_CASSANDRA_HEAP_NEWSIZE}
         command: "sh /cassandra_init.sh"
         networks:
             - social365-network

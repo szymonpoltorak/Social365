@@ -1,6 +1,4 @@
-FROM alpine:3.19.1 AS build
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+FROM social:build AS build
 
 WORKDIR /profile-service
 
@@ -14,11 +12,9 @@ RUN gradle build -x test
 
 RUN mv build/libs/profile-0.0.1-SNAPSHOT.jar profile-service.jar
 
-FROM alpine:3.19.1
+FROM social:prod
 
 WORKDIR /profile-service
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
 
 COPY --from=build /profile-service/profile-service.jar .
 

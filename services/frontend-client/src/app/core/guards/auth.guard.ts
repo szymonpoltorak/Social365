@@ -4,7 +4,7 @@ import { UserService } from "@services/utils/user.service";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
     const userService: UserService = inject(UserService);
     const router: Router = inject(Router);
     const localStorage: LocalStorageService = inject(LocalStorageService);

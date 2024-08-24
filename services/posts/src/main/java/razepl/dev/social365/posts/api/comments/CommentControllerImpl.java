@@ -20,7 +20,7 @@ import razepl.dev.social365.posts.config.AuthUser;
 import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +31,10 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @GetMapping(value = CommentMappings.GET_COMMENTS_FOR_POST)
-    public final CassandraPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
-                                                                   @AuthUser User user,
-                                                                   @RequestParam(Params.PAGE_SIZE) int pageSize,
-                                                                   @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+    public final SocialPage<CommentResponse> getCommentsForPost(@RequestParam(Params.POST_ID) String postId,
+                                                                @AuthUser User user,
+                                                                @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                                @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
         return commentService.getCommentsForPost(postId, user.profileId(), PageInfo.of(pageSize, pagingState));
     }
 

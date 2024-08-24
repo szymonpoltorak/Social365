@@ -2,6 +2,7 @@ package razepl.dev.social365.auth.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -76,7 +77,8 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   @Value("${spring.application.name}") String applicationName) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
@@ -86,7 +88,10 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/actuator/**", "/oauth2/jwks")
                         .permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+                        .requestMatchers(
+                                "/%s/swagger-ui/**".formatted(applicationName),
+                                "/%s/v3/api-docs/**".formatted(applicationName)
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated()

@@ -16,7 +16,7 @@
                     <mat-spinner></mat-spinner>
                 </div>
             } @else {
-                @for (friend of (friends | async)?.content; track friend) {
+                @for (friend of friends | async; track friend) {
                     <app-friend-feed-option [feedOption]="friend"></app-friend-feed-option>
                 }
             }

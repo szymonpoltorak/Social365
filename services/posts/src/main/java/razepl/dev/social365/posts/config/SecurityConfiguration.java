@@ -39,11 +39,15 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   @Value("${spring.application.name}") String applicationName) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+                        .requestMatchers(
+                                "/%s/swagger-ui/**".formatted(applicationName),
+                                "/%s/v3/api-docs/**".formatted(applicationName)
+                        )
                         .permitAll()
                         .requestMatchers("/actuator/**")
                         .permitAll()

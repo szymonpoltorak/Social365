@@ -1,7 +1,6 @@
 package razepl.dev.social365.profile.api.friends;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +18,7 @@ import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.api.profile.constants.Params;
 import razepl.dev.social365.profile.config.AuthUser;
 import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,49 +29,49 @@ public class FriendsControllerImpl implements FriendsController {
 
     @Override
     @GetMapping(value = FriendMappings.GET_FRIENDS_ON_PAGE)
-    public final Page<FriendResponse> getFriends(@AuthUser User user,
-                                                 @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                 @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final SocialPage<FriendResponse> getFriends(@AuthUser User user,
+                                                       @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                       @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return friendsService.getFriends(user, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     @GetMapping(value = FriendMappings.GET_FRIENDS_BY_PATTERN)
-    public final Page<FriendResponse> getFriendsByPattern(@AuthUser User user,
-                                                          @RequestParam(Params.PATTERN)String pattern,
-                                                          @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                          @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final SocialPage<FriendResponse> getFriendsByPattern(@AuthUser User user,
+                                                                @RequestParam(Params.PATTERN) String pattern,
+                                                                @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return friendsService.getFriendsByPattern(user, pattern, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     @GetMapping(value = FriendMappings.GET_FRIENDS_FEED_OPTIONS)
-    public final Page<FriendFeedResponse> getFriendsFeedOptions(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                                @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                                @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final SocialPage<FriendFeedResponse> getFriendsFeedOptions(@RequestParam(Params.PROFILE_ID) String profileId,
+                                                                      @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                      @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return friendsService.getFriendsFeedOptions(profileId, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     @GetMapping(value = FriendMappings.GET_FOLLOWED_IDS)
-    public final Page<String> getFollowedProfileIds(@AuthUser User user,
-                                                    @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
+    public final SocialPage<String> getFollowedProfileIds(@AuthUser User user,
+                                                          @RequestParam(Params.PAGE_NUMBER) int pageNumber) {
         return friendsService.getFollowedProfileIds(user, pageNumber);
     }
 
     @Override
     @GetMapping(value = FriendMappings.FRIEND_REQUESTS)
-    public final Page<FriendSuggestionResponse> getFriendRequests(@AuthUser User user,
-                                                                  @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                                  @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final SocialPage<FriendSuggestionResponse> getFriendRequests(@AuthUser User user,
+                                                                        @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                        @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return friendsService.getFriendRequests(user, PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     @GetMapping(value = FriendMappings.FRIEND_SUGGESTIONS)
-    public final Page<FriendSuggestionResponse> getFriendSuggestions(@AuthUser User user,
-                                                                     @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    public final SocialPage<FriendSuggestionResponse> getFriendSuggestions(@AuthUser User user,
+                                                                           @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                           @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return friendsService.getFriendSuggestions(user, PageRequest.of(pageNumber, pageSize));
     }
 

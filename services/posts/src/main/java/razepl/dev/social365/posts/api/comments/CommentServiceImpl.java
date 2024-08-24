@@ -21,7 +21,7 @@ import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 import razepl.dev.social365.posts.utils.validators.interfaces.CommentValidator;
 
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     private final ImageService imageService;
 
     @Override
-    public CassandraPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
+    public SocialPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
         log.info("Getting comments for post with id: {}, with pageable: {}", postId, pageInfo);
 
         Slice<Comment> comments = commentRepository.findAllByPostId(UUID.fromString(postId), pageInfo.toPageable());

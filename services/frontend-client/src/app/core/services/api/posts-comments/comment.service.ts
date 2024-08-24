@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { CommentMappings } from "@enums/api/posts-comments/comment-mappings.enum";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { PostComment } from "@interfaces/posts-comments/post-comment.interface";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
-import { Optional } from "@core/types/profile/optional.type";
 import { CommentAddRequest } from "@interfaces/posts-comments/comment-add-request.interface";
 import { CommentKey } from "@interfaces/posts-comments/comment-key.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { CommentsPagingState } from "@core/utils/comments-paging-state";
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +17,13 @@ export class CommentService {
     constructor(private http: HttpClient) {
     }
 
-    getCommentsForPost(postId: string, pageSize: number,
-                       pagingState: Optional<string>): Observable<CassandraPage<PostComment>> {
-        return this.http.get<CassandraPage<PostComment>>(CommentMappings.GET_COMMENTS_FOR_POST, {
-            params: this.getPostParams(postId, pageSize, pagingState)
-        }).pipe(take(1));
+    getCommentsForPost(postId: string, pagingState: CommentsPagingState): Observable<SocialPage<PostComment, CommentsPagingState>> {
+        return this.http.get<SocialPage<PostComment, CommentsPagingState>>(CommentMappings.GET_COMMENTS_FOR_POST, {
+            params: this.getPostParams(postId, pagingState)
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<PostComment, CommentsPagingState>(json))
+        );
     }
 
     addCommentToPost(commentRequest: CommentAddRequest): Observable<PostComment> {
@@ -42,16 +44,15 @@ export class CommentService {
         return this.http.put<PostComment>(CommentMappings.UPDATE_LIKE_COMMENT_COUNT, key).pipe(take(1));
     }
 
-    private getPostParams(postId: string, pageSize: number, pagingState: Optional<string>): HttpParams {
+    private getPostParams(postId: string, pagingState: CommentsPagingState): HttpParams {
         const params: HttpParams = new HttpParams();
 
-        if (pagingState !== null) {
-            params.set('pagingState', pagingState);
+        if (pagingState.hasPagingStarted()) {
+            params.set('pagingState', pagingState.pagingState as string);
         }
         return params
-            .set('pagingState', pagingState || "")
             .set('postId', postId)
-            .set('pageSize', pageSize);
+            .set('pageSize', pagingState.pageSize);
     }
 
 }

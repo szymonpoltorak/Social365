@@ -8,7 +8,7 @@
         </div>
 
     } @else {
-        @for (post of posts.data; track post) {
+        @for (post of posts; track post) {
             @if (isPost(post)) {
                 <app-post [post]="post"
                           (deletePostEvent)="deletePost($event)"

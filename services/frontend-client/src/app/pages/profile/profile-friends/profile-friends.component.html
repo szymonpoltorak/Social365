@@ -38,7 +38,7 @@
                 </div>
 
             } @else {
-                @for (friend of friends.content; track friend) {
+                @for (friend of friends; track friend) {
                     <app-friend-profile [friend]="friend"></app-friend-profile>
                 }
             }

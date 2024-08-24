@@ -120,8 +120,6 @@ export class RegisterComponent implements OnInit {
         this.authService
             .registerUser(request)
             .subscribe((response: Auth) => {
-                console.log(response);
-
                 this.localStorage.saveUserToStorage(response.profile);
                 this.localStorage.saveTokenToStorage(response.token);
 

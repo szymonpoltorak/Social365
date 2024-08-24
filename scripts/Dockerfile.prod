@@ -1,0 +1,3 @@
+FROM alpine:3.19.1
+
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl

@@ -41,6 +41,8 @@ services:
             - "${POSTS_CASSANDRA_PORT}:${POSTS_CASSANDRA_PORT}"
         environment:
             - CASSANDRA_CLUSTER_NAME=${POSTS_CASSANDRA_CLUSTER_NAME}
+            - MAX_HEAP_SIZE=${POSTS_CASSANDRA_MAX_HEAP_SIZE}
+            - HEAP_NEWSIZE=${POSTS_CASSANDRA_HEAP_NEWSIZE}
         command: "sh /cassandra_init.sh"
         networks:
             - social365-network

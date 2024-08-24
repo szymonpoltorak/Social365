@@ -10,7 +10,7 @@
                     <mat-spinner></mat-spinner>
                 </div>
 
-            } @else if (friendRequests.content.length === 0) {
+            } @else if (friendRequests.length === 0) {
                 <div class="col-span-6 r-md:col-span-5 r-xl:col-span-7 r-xxl:col-span-8 r-sl:col-span-3 r-sm:col-span-2 r-s:col-span-1">
                     <div class="flex justify-center items-center h-96">
                         <div class="text-lg font-bold">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             } @else {
-                @for (friend of friendRequests.content; track friend) {
+                @for (friend of friendRequests; track friend) {
                     <app-friend-request (addFriend)="acceptFriendRequest($event)"
                                         (removeFriend)="declineFriendRequest($event)"
                                         [friendElement]="friend">

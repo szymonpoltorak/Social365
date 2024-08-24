@@ -18,7 +18,7 @@ import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentR
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +34,7 @@ public class RepliesServiceImpl implements RepliesService {
     private final ImageService imageService;
 
     @Override
-    public final CassandraPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
+    public final SocialPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
         log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
 
         Slice<ReplyComment> comments = replyCommentRepository.findAllRepliesByCommentId(UUID.fromString(commentId), pageInfo.toPageable());

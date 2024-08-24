@@ -1,7 +1,6 @@
 package razepl.dev.social365.images.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +22,11 @@ import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.config.AuthUser;
 import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.utils.pagination.SocialPage;
 
 import java.util.List;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,10 +44,10 @@ public class ImagesControllerImpl implements ImagesController {
     }
 
     @Override
-    @GetMapping(value = ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING)
-    public final Page<PostImageResponse> getUserUploadedImages(@RequestParam(Params.USERNAME) String username,
-                                                               @RequestParam(Params.PAGE_NUMBER) int pageNumber,
-                                                               @RequestParam(Params.PAGE_SIZE) int pageSize) {
+    @GetMapping(value = ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING, produces = APPLICATION_JSON)
+    public final SocialPage<PostImageResponse> getUserUploadedImages(@RequestParam(Params.USERNAME) String username,
+                                                                     @RequestParam(Params.PAGE_NUMBER) int pageNumber,
+                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return imagesService.getUserUploadedImages(username, PageRequest.of(pageNumber, pageSize));
     }
 

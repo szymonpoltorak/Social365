@@ -7,8 +7,8 @@ import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutCo
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
 import razepl.dev.social365.profile.config.User;
-import razepl.dev.social365.profile.exceptions.MobileNotFoundException;
-import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.MobileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
 import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;

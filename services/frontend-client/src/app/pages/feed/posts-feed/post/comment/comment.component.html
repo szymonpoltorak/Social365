@@ -97,8 +97,8 @@
     }
 
     <div [ngClass]="{ 'ml-12': replyLevel > 0 }">
-        @if (areRepliesVisible && replyComments !== undefined && replyComments.data.length > 0) {
-            @for (reply of replyComments.data; track reply) {
+        @if (areRepliesVisible && replyComments !== undefined && replyComments.length > 0) {
+            @for (reply of replyComments; track reply) {
                 <app-comment (replyCommentDeleted)="deleteReplyComment($event)"
                              [comment]="reply"
                              [replyLevel]="replyLevel - 1">

@@ -1,5 +1,8 @@
 server:
-    port: ${AUTH_SERVICE_PORT}
+    port: ${AUTH_SERVICE_PORT:8080}
+
+    servlet:
+        context-path: /
 
     server-header: ""
 
@@ -11,6 +14,17 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
 
+openapi:
+    service:
+        title: Authorisation Service
+        version: 1.0.0
+        url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
+
+springdoc:
+    api-docs:
+        path: /${AUTH_SERVICE_HOSTNAME}/v3/api-docs
+    swagger-ui:
+        path: /${AUTH_SERVICE_HOSTNAME}/swagger-ui.html
 
 spring:
     datasource:
@@ -22,6 +36,10 @@ spring:
         jwt:
             expiration-time: ${JWT_EXPIRATION_TIME}
             refresh-time: ${JWT_REFRESH_TIME}
+
+    cloud:
+        refresh:
+            enabled: false
 
     jpa:
         hibernate:

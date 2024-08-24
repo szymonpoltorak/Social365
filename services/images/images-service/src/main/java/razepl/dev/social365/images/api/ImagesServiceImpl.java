@@ -22,6 +22,8 @@ import razepl.dev.social365.images.entities.image.post.PostImage;
 import razepl.dev.social365.images.entities.image.post.interfaces.PostImagesRepository;
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 import razepl.dev.social365.images.exceptions.UserNotImageAuthorException;
+import razepl.dev.social365.images.utils.pagination.SocialPage;
+import razepl.dev.social365.images.utils.pagination.SocialPageImpl;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -64,14 +66,17 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public Page<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
+    public SocialPage<PostImageResponse> getUserUploadedImages(String username, Pageable pageable) {
         log.info("Getting user uploaded images for user: {}", username);
 
         Page<PostImage> postImages = postImagesRepository.findPostImagesByUsername(username, pageable);
 
         log.info("User uploaded images found: {}", postImages.getNumberOfElements());
 
-        return postImages.map(imagesMapper::toPostImageResponse);
+        if (postImages.isEmpty()) {
+            return SocialPageImpl.empty();
+        }
+        return SocialPageImpl.from(postImages.map(imagesMapper::toPostImageResponse));
     }
 
     @Override

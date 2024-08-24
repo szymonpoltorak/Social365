@@ -97,7 +97,7 @@
                 } @else {
                     <mat-card-content>
                         <div class="grid p-xl:grid-cols-3 max-p-xl:grid-cols-2 grid-rows-1 w-full justify-center">
-                            @for (friend of (friends | async)?.content; track friend) {
+                            @for (friend of friends | async; track friend) {
                                 <div (click)="navigateToFriendProfile(friend.username)"
                                      (keyup.enter)="navigateToFriendProfile(friend.username)"
                                      tabindex="0"

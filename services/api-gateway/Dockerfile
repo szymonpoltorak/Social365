@@ -1,6 +1,4 @@
-FROM alpine:3.19.1 AS build
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+FROM social:build AS build
 
 WORKDIR /api-gateway
 
@@ -14,11 +12,9 @@ RUN gradle build -x test
 
 RUN mv build/libs/api-gateway-0.0.1-SNAPSHOT.jar api-gateway.jar
 
-FROM alpine:3.19.1
+FROM social:prod
 
 WORKDIR /api-gateway
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
 
 COPY --from=build /api-gateway/api-gateway.jar .
 

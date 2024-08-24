@@ -3,11 +3,10 @@ import { MatCardModule } from "@angular/material/card";
 import { MatButton } from "@angular/material/button";
 import { FriendRequestComponent } from "@pages/friends/friend-requests/friend-request/friend-request.component";
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
-import { Page } from "@interfaces/utils/page.interface";
-import { LocalStorageService } from '@core/services/utils/local-storage.service';
 import { FriendsService } from "@api/profile/friends.service";
-import { Profile } from "@interfaces/feed/profile.interface";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-friend-requests',
@@ -23,28 +22,23 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 })
 export class FriendRequestsComponent implements OnInit {
 
-    protected friendRequests !: Page<FriendElement>;
-    protected currentUser !: Profile;
-    private readonly FIRST_PAGE: number = 0;
+    protected friendRequests !: SocialPage<FriendElement, PageablePagingState>;
     private readonly PAGE_SIZE: number = 20;
 
-    constructor(private friendsService: FriendsService,
-                private localStorageService: LocalStorageService,) {
+    constructor(private friendsService: FriendsService) {
     }
 
     ngOnInit(): void {
-        this.currentUser = this.localStorageService.getUserProfileFromStorage();
-
         this.friendsService
-            .getFriendRequests(this.FIRST_PAGE, this.PAGE_SIZE)
-            .subscribe((response: Page<FriendElement>) => {
+            .getFriendRequests(PageablePagingState.firstPage(this.PAGE_SIZE))
+            .subscribe((response: SocialPage<FriendElement, PageablePagingState>) => {
                 this.friendRequests = response;
             });
     }
 
     @HostListener('window:scroll', ['$event'])
     onScroll(): void {
-        if (this.friendRequests.last) {
+        if (!this.friendRequests.hasNextPage) {
             return;
         }
         const position: number = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight;
@@ -54,25 +48,20 @@ export class FriendRequestsComponent implements OnInit {
             return;
         }
         this.friendsService
-            .getFriendSuggestions(this.friendRequests.number + 1, this.PAGE_SIZE)
-            .subscribe((response: Page<FriendElement>) => this.friendRequests = response);
+            .getFriendSuggestions(this.friendRequests.nextPagingState())
+            .subscribe((response: SocialPage<FriendElement, PageablePagingState>) => this.friendRequests = response);
     }
 
     acceptFriendRequest(event: FriendElement): void {
         this.friendsService
             .acceptFriendRequest(event.profileId)
-            .subscribe(() => this.removeFriendRequest(event));
+            .subscribe(() => this.friendRequests.remove(event));
     }
 
     declineFriendRequest(event: FriendElement): void {
         this.friendsService
             .declineFriendRequest(event.profileId)
-            .subscribe(() => this.removeFriendRequest(event));
-    }
-
-    private removeFriendRequest(event: FriendElement): void {
-        this.friendRequests.content = this.friendRequests.content
-            .filter((friend: FriendElement) => friend.profileId !== event.profileId);
+            .subscribe(() => this.friendRequests.remove(event));
     }
 
 }

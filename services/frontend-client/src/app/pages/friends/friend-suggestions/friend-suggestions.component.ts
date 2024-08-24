@@ -1,11 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
 import { FriendRequestComponent } from "@pages/friends/friend-requests/friend-request/friend-request.component";
-import { Page } from "@interfaces/utils/page.interface";
-import { Profile } from "@interfaces/feed/profile.interface";
 import { FriendsService } from "@api/profile/friends.service";
-import { LocalStorageService } from "@services/utils/local-storage.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Component({
     selector: 'app-friend-suggestions',
@@ -19,26 +18,21 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 })
 export class FriendSuggestionsComponent implements OnInit {
 
-    protected friendSuggestions !: Page<FriendElement>;
-    protected currentUser !: Profile;
-    private readonly FIRST_PAGE: number = 0;
+    protected friendSuggestions !: SocialPage<FriendElement, PageablePagingState>;
     private readonly PAGE_SIZE: number = 20;
 
-    constructor(private friendsService: FriendsService,
-                private localStorageService: LocalStorageService,) {
+    constructor(private friendsService: FriendsService) {
     }
 
     ngOnInit(): void {
-        this.currentUser = this.localStorageService.getUserProfileFromStorage();
-
         this.friendsService
-            .getFriendSuggestions(this.FIRST_PAGE, this.PAGE_SIZE)
-            .subscribe((response: Page<FriendElement>) => this.friendSuggestions = response);
+            .getFriendSuggestions(PageablePagingState.firstPage(this.PAGE_SIZE))
+            .subscribe((response: SocialPage<FriendElement, PageablePagingState>) => this.friendSuggestions = response);
     }
 
     @HostListener('window:scroll', ['$event'])
     onScroll(): void {
-        if (this.friendSuggestions.last) {
+        if (!this.friendSuggestions.hasNextPage) {
             return;
         }
         const position: number = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight;
@@ -48,18 +42,18 @@ export class FriendSuggestionsComponent implements OnInit {
             return;
         }
         this.friendsService
-            .getFriendSuggestions(this.friendSuggestions.number + 1, this.PAGE_SIZE)
-            .subscribe((response: Page<FriendElement>) => this.friendSuggestions = response);
+            .getFriendSuggestions(this.friendSuggestions.nextPagingState())
+            .subscribe((response: SocialPage<FriendElement, PageablePagingState>) => this.friendSuggestions = response);
     }
 
     sendFriendRequest(event: FriendElement): void {
         this.friendsService
             .sendFriendRequest(event.profileId)
-            .subscribe(() => this.removeSuggestion(event));
+            .subscribe(() => this.friendSuggestions.remove(event));
     }
 
     removeSuggestion(event: FriendElement): void {
-        this.friendSuggestions.content = this.friendSuggestions.content
-            .filter((friend: FriendElement) => friend.profileId !== event.profileId);
+        this.friendSuggestions.remove(event);
     }
+
 }

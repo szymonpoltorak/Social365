@@ -1,6 +1,9 @@
 server:
     port: ${PROFILE_SERVICE_PORT}
 
+    servlet:
+        context-path: /
+
     server-header: ""
 
     http2:
@@ -10,6 +13,18 @@ server:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
         min-response-size: 512
+
+openapi:
+    service:
+        title: Profile Service
+        version: 1.0.0
+        url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
+
+springdoc:
+    api-docs:
+        path: /${PROFILE_SERVICE_HOSTNAME}/v3/api-docs
+    swagger-ui:
+        path: /${PROFILE_SERVICE_HOSTNAME}/swagger-ui.html
 
 logging:
     level:
@@ -21,6 +36,10 @@ spring:
         authentication:
             username: ${NEO4J_USERNAME}
             password: ${NEO4J_PASSWORD}
+
+    cloud:
+        refresh:
+            enabled: false
 
     security:
         oauth2:

@@ -3,27 +3,27 @@
         <mat-spinner></mat-spinner>
     </div>
 
-} @else if (birthdayInfos.content.length !== 0) {
+} @else if (birthdayInfos.length !== 0) {
     <div>
         <h1 class="text-xl mb-2">Birthdays</h1>
 
         <button mat-button class="birthday-button mb-4" aria-label="Birthday" (click)="isExpanded = !isExpanded">
             <mat-icon>cake</mat-icon>
 
-            @if (birthdayInfos.content.length === 1) {
-                <strong>{{ birthdayInfos.content[0].profile.fullName }}'s</strong> birthday is today!
+            @if (birthdayInfos.length === 1) {
+                <strong>{{ birthdayInfos.first.profile.fullName }}'s</strong> birthday is today!
             } @else {
-                <strong>{{ birthdayInfos.content[0].profile.fullName }}</strong> and
-                <strong>{{ birthdayInfos.content.length - 1 }}</strong> others have birthday today!
+                <strong>{{ birthdayInfos.first.profile.fullName }}</strong> and
+                <strong>{{ birthdayInfos.length - 1 }}</strong> others have birthday today!
             }
         </button>
 
         @if (isExpanded) {
-            @for (birthdayInfo of birthdayInfos.content; track birthdayInfo) {
+            @for (birthdayInfo of birthdayInfos; track birthdayInfo) {
                 <app-birthday-info [birthdayInfo]="birthdayInfo"></app-birthday-info>
             }
 
-            @if (!birthdayInfos.last) {
+            @if (birthdayInfos.hasNextPage) {
                 <button mat-button class="birthday-button mb-3"
                         (click)="showInfosDialog()"
                         aria-label="Show more">

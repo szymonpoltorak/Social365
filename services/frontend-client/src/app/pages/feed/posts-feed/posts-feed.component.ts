@@ -20,13 +20,13 @@ import { SharedPostComponent } from "@pages/feed/posts-feed/shared-post/shared-p
 import { MatMenu, MatMenuItem } from "@angular/material/menu";
 import { DropImageComponent } from "@shared/drop-image/drop-image.component";
 import { PostService } from "@api/posts-comments/post.service";
-import { Optional } from "@core/types/profile/optional.type";
-import { CassandraPage } from "@interfaces/utils/cassandra-page.interface";
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SharePostData } from "@interfaces/posts-comments/share-post-data.interface";
 import { PostCreateHeaderComponent } from "@pages/feed/posts-feed/post-create-header/post-create-header.component";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SocialPage } from "@core/utils/social-page";
+import { PostsPagingState } from "@core/utils/posts-paging-state";
 
 
 @Component({
@@ -66,11 +66,9 @@ export class PostsFeedComponent implements OnInit {
 
     @Input() presentedProfileId !: string;
     @Input() postsUrl !: PostMappings;
-    protected posts !: CassandraPage<Either<Post, SharedPost>>;
+    protected posts !: SocialPage<Either<Post, SharedPost>, PostsPagingState>;
     protected currentUser !: Profile;
-    private readonly FIRST_PAGE: number = 0;
     private readonly PAGE_SIZE: number = 20;
-    private pagingState: Optional<string> = null;
 
     constructor(private localStorage: LocalStorageService,
                 private snackbar: MatSnackBar,
@@ -81,8 +79,8 @@ export class PostsFeedComponent implements OnInit {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
 
         this.postService
-            .getPostsFromUrl(this.presentedProfileId, this.FIRST_PAGE, this.PAGE_SIZE, this.pagingState, this.postsUrl)
-            .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
+            .getPostsFromUrl(this.presentedProfileId, PostsPagingState.firstPage(this.PAGE_SIZE), this.postsUrl)
+            .subscribe((posts: SocialPage<Either<Post, SharedPost>, PostsPagingState>) => {
                 this.posts = posts;
 
                 window.scrollTo(0, 0);
@@ -101,14 +99,9 @@ export class PostsFeedComponent implements OnInit {
             return;
         }
         this.postService
-            .getPostsFromUrl(this.presentedProfileId, this.posts.friendsPageNumber + 1,
-                this.PAGE_SIZE, this.posts.pagingState, this.postsUrl)
-            .subscribe((posts: CassandraPage<Either<Post, SharedPost>>) => {
-                const oldContent: Either<Post, SharedPost>[] = this.posts.data;
-
-                this.posts = posts;
-
-                this.posts.data = oldContent.concat(posts.data);
+            .getPostsFromUrl(this.presentedProfileId, this.posts.nextPagingState(), this.postsUrl)
+            .subscribe((posts: SocialPage<Either<Post, SharedPost>, PostsPagingState>) => {
+                this.posts.updatePage(posts);
             });
     }
 
@@ -120,7 +113,7 @@ export class PostsFeedComponent implements OnInit {
         this.postService
             .sharePost(event.post.postKey, event.content)
             .subscribe((sharedPost: SharedPost) => {
-                this.posts.data.unshift(sharedPost);
+                this.posts.addFirst(sharedPost);
 
                 this.snackbar.open("Successfully shared post!", "Close", {
                     duration: 2000,
@@ -133,7 +126,7 @@ export class PostsFeedComponent implements OnInit {
         this.postService
             .deletePost(event.postKey.postId, event.postKey.author.profileId)
             .subscribe(() => {
-                this.posts.data = this.posts.data.filter((post: Either<Post, SharedPost>) => post !== event);
+                this.posts.remove(event);
 
                 this.snackbar.open("Successfully deleted post!", "Close", {
                     duration: 2000,
@@ -142,11 +135,10 @@ export class PostsFeedComponent implements OnInit {
     }
 
     createdPost(event: Post): void {
-        this.posts.data.unshift(event);
+        this.posts.addFirst(event);
 
         this.snackbar.open("Successfully created post!", "Close", {
             duration: 2000,
         });
     }
-
 }

@@ -9,7 +9,7 @@
                 <mat-spinner></mat-spinner>
             </div>
         } @else {
-            @for (profile of profiles.content; track profile) {
+            @for (profile of profiles; track profile) {
                 <section class="flex justify-between items-center mt-3">
                     <div class="flex items-center gap-3">
 
@@ -34,7 +34,7 @@
 
                     <button mat-button
                             aria-label="Add friend"
-                            (click)="addFriend(profile.profileId)"
+                            (click)="addFriend(profile)"
                             color="primary">
                         Add friend
                     </button>

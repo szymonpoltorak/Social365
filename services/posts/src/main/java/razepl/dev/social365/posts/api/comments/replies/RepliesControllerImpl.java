@@ -19,7 +19,7 @@ import razepl.dev.social365.posts.config.AuthUser;
 import razepl.dev.social365.posts.config.User;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
-import razepl.dev.social365.posts.utils.pagination.interfaces.CassandraPage;
+import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,10 +30,10 @@ public class RepliesControllerImpl implements RepliesController {
 
     @Override
     @GetMapping(value = ReplyMappings.GET_REPLIES_FOR_COMMENT)
-    public final CassandraPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
-                                                                     @AuthUser User user,
-                                                                     @RequestParam(Params.PAGE_SIZE) int pageSize,
-                                                                     @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+    public final SocialPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                                  @AuthUser User user,
+                                                                  @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                                  @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
         return repliesService.getRepliesForComment(commentId, user.profileId(), PageInfo.of(pageSize, pagingState));
     }
 

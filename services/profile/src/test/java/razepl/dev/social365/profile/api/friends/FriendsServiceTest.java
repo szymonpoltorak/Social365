@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +13,11 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.config.User;
-import razepl.dev.social365.profile.exceptions.ProfileNotFoundException;
+import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileMapper;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
+import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,10 +66,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendDataToFriendResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Page<FriendResponse> actual = friendsService.getFriends(user, pageable);
+        SocialPage<FriendResponse> actual = friendsService.getFriends(user, pageable);
 
         // then
-        Assertions.assertEquals(expected, actual.toSet());
+        Assertions.assertEquals(expected, actual.data());
     }
 
     @Test
@@ -96,10 +96,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendSuggestionToFriendSuggestionResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Page<FriendSuggestionResponse> actual = friendsService.getFriendRequests(user, pageable);
+        SocialPage<FriendSuggestionResponse> actual = friendsService.getFriendRequests(user, pageable);
 
         // then
-        Assertions.assertEquals(expected, actual.toSet());
+        Assertions.assertEquals(expected, actual.data());
     }
 
     @Test
@@ -117,10 +117,10 @@ class FriendsServiceTest {
         when(profileRepository.findFollowedIdsByProfileId(profileId, pageable))
                 .thenReturn(new PageImpl<>(expected));
 
-        Page<String> actual = friendsService.getFollowedProfileIds(user, 0);
+        SocialPage<String> actual = friendsService.getFollowedProfileIds(user, 0);
 
         // then
-        assertEquals(expected, actual.getContent(), "Should return followed profile ids");
+        assertEquals(expected, actual.data(), "Should return followed profile ids");
     }
 
     @Test
@@ -147,10 +147,10 @@ class FriendsServiceTest {
         when(profileMapper.mapFriendSuggestionToFriendSuggestionResponse(friendData))
                 .thenReturn(friendResponse);
 
-        Page<FriendSuggestionResponse> actual = friendsService.getFriendSuggestions(user, pageable);
+        SocialPage<FriendSuggestionResponse> actual = friendsService.getFriendSuggestions(user, pageable);
 
         // then
-        Assertions.assertEquals(expected, actual.toSet());
+        Assertions.assertEquals(expected, actual.data());
     }
 
     @Test

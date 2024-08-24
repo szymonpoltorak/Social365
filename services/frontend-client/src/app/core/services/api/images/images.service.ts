@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
 import { ImagesMappings } from "@enums/api/images/images-mappings.enum";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { PostImage } from "@interfaces/images/post-image.interface";
-import { Page } from "@interfaces/utils/page.interface";
 import { Image } from "@interfaces/images/image.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Injectable({
     providedIn: 'root'
@@ -67,14 +68,17 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    getUserUploadedImages(username: string, pageNumber: number, pageSize: number): Observable<Page<PostImage>> {
-        return this.http.get<Page<PostImage>>(ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING, {
+    getUserUploadedImages(username: string, pagingState: PageablePagingState): Observable<SocialPage<PostImage, PageablePagingState>> {
+        return this.http.get<SocialPage<PostImage, PageablePagingState>>(ImagesMappings.GET_USER_UPLOADED_IMAGES_MAPPING, {
             params: {
                 username: username,
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json))
+        );
     }
 
     deleteImage(imageId: number): Observable<void> {

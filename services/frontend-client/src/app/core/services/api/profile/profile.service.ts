@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { ProfileSummary } from "@interfaces/feed/profile-summary.interface";
 import { ProfileMappings } from "@enums/api/profile/profile-mappings.enum";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { BirthdayInfo } from "@interfaces/feed/birthday-info.interface";
-import { Page } from "@interfaces/utils/page.interface";
 import { ProfileRequest } from "@interfaces/profile/profile-request.interface";
 import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interface";
+import { SocialPage } from "@core/utils/social-page";
+import { PageablePagingState } from "@core/utils/pageable-paging-state";
 
 @Injectable({
     providedIn: 'root'
@@ -19,22 +20,28 @@ export class ProfileService {
     constructor(private http: HttpClient) {
     }
 
-    getTodayBirthdays(pageNumber: number): Observable<Page<BirthdayInfo>> {
-        return this.http.get<Page<BirthdayInfo>>(ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING, {
+    getTodayBirthdays(pagingState: PageablePagingState): Observable<SocialPage<BirthdayInfo, PageablePagingState>> {
+        return this.http.get<SocialPage<BirthdayInfo, PageablePagingState>>(ProfileMappings.GET_TODAY_BIRTHDAYS_MAPPING, {
             params: {
-                pageNumber: pageNumber
+                pageNumber: pagingState.pageNumber
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<BirthdayInfo, PageablePagingState>(json))
+        );
     }
 
-    getProfilesByPattern(pattern: string, pageNumber: number, pageSize: number): Observable<Page<ProfileQuery>> {
-        return this.http.get<Page<ProfileQuery>>(ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING, {
+    getProfilesByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<ProfileQuery, PageablePagingState>> {
+        return this.http.get<SocialPage<ProfileQuery, PageablePagingState>>(ProfileMappings.GET_PROFILES_BY_PATTERN_MAPPING, {
             params: {
                 pattern: pattern,
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<ProfileQuery, PageablePagingState>(json))
+        );
     }
 
     getProfileSummary(): Observable<ProfileSummary> {
@@ -45,7 +52,7 @@ export class ProfileService {
         return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING).pipe(take(1));
     }
 
-    updateProfileBio(profileId: string, bio: string): Observable<ProfileRequest> {
+    updateProfileBio(bio: string): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BIO_MAPPING, {}, {
             params: {
                 bio: bio
@@ -61,14 +68,18 @@ export class ProfileService {
         }).pipe(take(1));
     }
 
-    getProfilesSearchByPattern(pattern: string, pageNumber: number, pageSize: number): Observable<Page<ProfileSearch>> {
-        return this.http.get<Page<ProfileSearch>>(ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING, {
+    getProfilesSearchByPattern(pattern: string,
+                               pagingState: PageablePagingState): Observable<SocialPage<ProfileSearch, PageablePagingState>> {
+        return this.http.get<SocialPage<ProfileSearch, PageablePagingState>>(ProfileMappings.GET_PROFILES_SEARCH_BY_PATTERN_MAPPING, {
             params: {
                 pattern: pattern,
-                pageNumber: pageNumber,
-                pageSize: pageSize
+                pageNumber: pagingState.pageNumber,
+                pageSize: pagingState.pageSize
             }
-        }).pipe(take(1));
+        }).pipe(
+            take(1),
+            map(json => SocialPage.fromJson<ProfileSearch, PageablePagingState>(json))
+        );
     }
 
     updateProfilePicture(profilePictureId: number): Observable<ProfileRequest> {

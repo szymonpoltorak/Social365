@@ -4,22 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.profile.api.profile.about.overview.data.AboutOptionResponse;
-import razepl.dev.social365.profile.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
-import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;
 import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
-import razepl.dev.social365.profile.nodes.about.details.enums.DetailsType;
-import razepl.dev.social365.profile.nodes.about.details.interfaces.AboutDetailsRepository;
 import razepl.dev.social365.profile.nodes.about.gender.Gender;
-import razepl.dev.social365.profile.nodes.about.gender.GenderRepository;
 import razepl.dev.social365.profile.nodes.about.mail.Email;
-import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.about.mobile.Mobile;
-import razepl.dev.social365.profile.nodes.about.mobile.interfaces.MobileRepository;
 import razepl.dev.social365.profile.nodes.about.relationship.RelationshipStatus;
-import razepl.dev.social365.profile.nodes.about.relationship.interfaces.RelationshipStatusRepository;
 import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
-import razepl.dev.social365.profile.nodes.about.workplace.interfaces.WorkplaceRepository;
 
 @Slf4j
 @Component
