@@ -3,9 +3,7 @@ services:
         container_name: ${PROFILE_NEO4J_HOSTNAME}
         hostname: ${PROFILE_NEO4J_HOSTNAME}
         image: neo4j:5.18-community-bullseye
-        env_file:
-            -   path: "../.env"
-                required: true
+        env_file: "../.env"
         ports:
             - "${NEO4J_PORT}:${NEO4J_PORT}"
             - "${NEO4J_HTTP_PORT}:${NEO4J_HTTP_PORT}"
@@ -19,9 +17,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.dev
-        env_file:
-            -   path: "../.env"
-                required: true
+        env_file: "../.env"
         networks:
             - social365-network
             - profiles-network

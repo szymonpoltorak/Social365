@@ -14,14 +14,10 @@ services:
                 condition: service_healthy
             images-service:
                 condition: service_healthy
-            frontend-client:
-                condition: service_healthy
         build:
             context: .
             dockerfile: Dockerfile.dev
-        env_file:
-            - path: "../.env"
-              required: true
+        env_file: "../.env"
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${API_GATEWAY_PORT}/actuator/health" ]
             start_period: 45s

@@ -3,9 +3,7 @@ services:
         container_name: ${POSTS_SERVICE_HOSTNAME}
         hostname: ${POSTS_SERVICE_HOSTNAME}
         image: ${POSTS_SERVICE_HOSTNAME}
-        env_file:
-            -   path: "../.env"
-                required: true
+        env_file: "../.env"
         build:
             context: .
             dockerfile: Dockerfile.dev
@@ -37,9 +35,7 @@ services:
         container_name: ${POSTS_CASSANDRA_HOSTNAME}
         hostname: ${POSTS_CASSANDRA_HOSTNAME}
         image: ${POSTS_CASSANDRA_HOSTNAME}
-        env_file:
-            -   path: "../.env"
-                required: true
+        env_file: "../.env"
         build:
             context: cassandra
             dockerfile: Dockerfile

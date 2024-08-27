@@ -6,9 +6,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.dev
-        env_file:
-            - path: "../.env"
-              required: true
+        env_file: "../.env"
         ports:
             - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
         networks:

@@ -6,9 +6,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        env_file:
-            -   path: "../.env"
-                required: true
+        env_file: "../.env"
         networks:
             - social365-network
         ports:

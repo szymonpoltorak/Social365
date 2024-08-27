@@ -1,0 +1,57 @@
+services:
+    kafka-broker:
+        image: apache/kafka-native:3.8.0
+        env_file: "../.env"
+        container_name: kafka-broker
+        ports:
+            - "${KAFKA_PORT}:${KAFKA_PORT}"
+        healthcheck:
+            test: ["CMD", "kafka-broker-api-versions.sh --bootstrap-server kafka:9092 | grep -q 'Supported'"]
+            interval: 30s
+            timeout: 15s
+            retries: 15
+        networks:
+            - social365_network
+
+    notifications-mongodb:
+        image: mongo:7.0.14-jammy
+        env_file: "../.env"
+        container_name: notifications-mongodb
+        restart: always
+        ports:
+            - "${NOTIFICATIONS_MONGODB_PORT}:${NOTIFICATIONS_MONGODB_PORT}"
+        healthcheck:
+            test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+            interval: 30s
+            timeout: 15s
+            retries: 15
+        networks:
+            - social365_network
+
+    notifications-service:
+        container_name: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        image: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        hostname: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file: "../.env"
+        networks:
+            - social365-network
+        ports:
+            - "${NOTIFICATIONS_SERVICE_PORT}:${PROFILE_SERVICE_PORT}"
+        depends_on:
+            config-server:
+                condition: service_healthy
+            eureka-registry:
+                condition: service_healthy
+            notifications-mongodb:
+                condition: service_healthy
+            kafka-broker:
+                condition: service_healthy
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${NOTIFICATIONS_SERVICE_PORT}/actuator/health" ]
+            start_period: 35s
+            interval: 10s
+            timeout: 5s
+            retries: 3
