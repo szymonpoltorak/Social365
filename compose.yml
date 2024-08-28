@@ -18,6 +18,8 @@ include:
     -   path:
             - ./services/posts/compose.yml
     -   path:
+            - ./services/notifications-service/compose.yml
+    -   path:
             - ./services/data-init/compose.yml
 
 services: {}

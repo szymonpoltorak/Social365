@@ -11,7 +11,7 @@ services:
             timeout: 15s
             retries: 15
         networks:
-            - social365_network
+            - social365-network
 
     notifications-mongodb:
         image: mongo:7.0.14-jammy
@@ -26,7 +26,7 @@ services:
             timeout: 15s
             retries: 15
         networks:
-            - social365_network
+            - social365-network
 
     notifications-service:
         container_name: ${NOTIFICATIONS_SERVICE_HOSTNAME}

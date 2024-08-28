@@ -1,6 +1,6 @@
 FROM social:build
 
-WORKDIR /home/notifications
+WORKDIR /notifications
 
 EXPOSE 8080
 
