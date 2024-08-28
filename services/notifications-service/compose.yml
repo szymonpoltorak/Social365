@@ -19,7 +19,7 @@ services:
         container_name: notifications-mongodb
         restart: always
         ports:
-            - "${NOTIFICATIONS_MONGODB_PORT}:${NOTIFICATIONS_MONGODB_PORT}"
+            - "${MONGO_NOTIFICATIONS_PORT}:${MONGO_NOTIFICATIONS_PORT}"
         healthcheck:
             test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
             interval: 30s
@@ -39,7 +39,7 @@ services:
         networks:
             - social365-network
         ports:
-            - "${NOTIFICATIONS_SERVICE_PORT}:${PROFILE_SERVICE_PORT}"
+            - "${NOTIFICATIONS_SERVICE_PORT}:${NOTIFICATIONS_SERVICE_PORT}"
         depends_on:
             config-server:
                 condition: service_healthy

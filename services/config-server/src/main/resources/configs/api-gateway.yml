@@ -58,6 +58,10 @@ springdoc:
                 name: Profile Service
                 display-name: Profile Service
 
+            -   url: /${NOTIFICATIONS_SERVICE_HOSTNAME}/v3/api-docs
+                name: Notifications Service
+                display-name: Notifications Service
+
 spring:
     cloud:
         gateway:
@@ -124,6 +128,17 @@ spring:
                     uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
                     predicates:
                         - Path=/api/v1/auth/**
+
+                -   id: ${NOTIFICATIONS_SERVICE_HOSTNAME}-swagger
+                    uri: http://${NOTIFICATIONS_SERVICE_HOSTNAME}:${NOTIFICATIONS_SERVICE_PORT}
+                    predicates:
+                        - Path=/${NOTIFICATIONS_SERVICE_HOSTNAME}/v3/api-docs
+                        - Method=GET
+
+                -   id: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+                    uri: http://${NOTIFICATIONS_SERVICE_HOSTNAME}:${NOTIFICATIONS_SERVICE_PORT}
+                    predicates:
+                        - Path=/api/v1/notifications/**
 
 management:
     endpoints:

@@ -14,6 +14,8 @@ services:
                 condition: service_healthy
             images-service:
                 condition: service_healthy
+            notifications-service:
+                condition: service_healthy
         build:
             context: .
             dockerfile: Dockerfile.dev

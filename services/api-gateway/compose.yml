@@ -14,7 +14,7 @@ services:
                 condition: service_healthy
             images-service:
                 condition: service_healthy
-            frontend-client:
+            notifications-service:
                 condition: service_healthy
         build:
             context: .

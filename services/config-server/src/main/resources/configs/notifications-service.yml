@@ -1,0 +1,56 @@
+server:
+    port: ${NOTIFICATIONS_SERVICE_PORT}
+
+    servlet:
+        context-path: /
+
+    server-header: ""
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+openapi:
+    service:
+        title: Notifications Service
+        version: 1.0.0
+        url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
+
+springdoc:
+    api-docs:
+        path: /${NOTIFICATIONS_SERVICE_HOSTNAME}/v3/api-docs
+    swagger-ui:
+        path: /${NOTIFICATIONS_SERVICE_HOSTNAME}/swagger-ui.html
+
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true
+
+    instance:
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}
+
+spring:
+    data:
+        mongodb:
+            username: ${MONGO_INITDB_ROOT_USERNAME}
+            password: ${MONGO_INITDB_ROOT_PASSWORD}
+            authentication-database: admin
+            database: ${MONGO_NOTIFICATIONS_DB}
+            port: ${MONGO_NOTIFICATIONS_PORT}
+            host: ${MONGO_NOTIFICATIONS_HOST}
+
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
+                    jws-algorithms: ${JWS_ALGORITHM}

@@ -5,11 +5,6 @@ services:
         container_name: kafka-broker
         ports:
             - "${KAFKA_PORT}:${KAFKA_PORT}"
-        # healthcheck:
-        #     test: ["CMD", "kafka-broker-api-versions.sh --bootstrap-server kafka:9092 | grep -q 'Supported'"]
-        #     interval: 30s
-        #     timeout: 15s
-        #     retries: 15
         networks:
             - social365-network
 
@@ -19,7 +14,7 @@ services:
         container_name: notifications-mongodb
         restart: always
         ports:
-            - "${NOTIFICATIONS_MONGODB_PORT}:${NOTIFICATIONS_MONGODB_PORT}"
+            - "${MONGO_NOTIFICATIONS_PORT}:${MONGO_NOTIFICATIONS_PORT}"
         healthcheck:
             test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
             interval: 30s
@@ -39,7 +34,7 @@ services:
         networks:
             - social365-network
         ports:
-            - "${NOTIFICATIONS_SERVICE_PORT}:${PROFILE_SERVICE_PORT}"
+            - "${NOTIFICATIONS_SERVICE_PORT}:${NOTIFICATIONS_SERVICE_PORT}"
         volumes:
             -   "./:/notifications"
         depends_on:
