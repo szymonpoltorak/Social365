@@ -1,10 +1,11 @@
-package razepl.dev.social365.notifications.documents;
+package razepl.dev.social365.notifications.documents.posts.comments;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import razepl.dev.social365.notifications.documents.Notification;
 
 import java.util.UUID;
 
@@ -15,7 +16,6 @@ import java.util.UUID;
 public class PostLikedNotification extends Notification {
 
     private String postId;
-
     private int currentNumOfLikes;
 
     @Builder
