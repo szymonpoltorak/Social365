@@ -20,8 +20,8 @@ public class CommentLikedNotification extends Notification {
 
     @Builder
     public CommentLikedNotification(UUID notificationId, String eventId, String targetProfileId, String timestamp,
-                                    String notificationText, String replyCommentId, String commentId) {
-        super(notificationId, eventId, targetProfileId, timestamp, notificationText);
+                                    String notificationText, String replyCommentId, String commentId, String sourceProfileId) {
+        super(notificationId, eventId, targetProfileId, timestamp, notificationText, sourceProfileId, false);
 
         this.replyCommentId = replyCommentId;
         this.commentId = commentId;

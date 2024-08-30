@@ -20,8 +20,8 @@ public class PostCommentedNotification extends Notification {
 
     @Builder
     public PostCommentedNotification(UUID notificationId, String eventId, String targetProfileId, String timestamp,
-                                     String notificationText, String postId, String commentId) {
-        super(notificationId, eventId, targetProfileId, timestamp, notificationText);
+                                     String notificationText, String postId, String commentId, String sourceProfileId) {
+        super(notificationId, eventId, targetProfileId, timestamp, notificationText, sourceProfileId, false);
 
         this.postId = postId;
         this.commentId = commentId;

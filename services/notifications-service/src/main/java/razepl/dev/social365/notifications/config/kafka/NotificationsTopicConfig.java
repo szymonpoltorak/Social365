@@ -25,7 +25,6 @@ public class NotificationsTopicConfig {
         return admin;
     }
 
-
     @Bean
     public KafkaAdmin.NewTopics kafkaTopics(
             @Value(KafkaConfigNames.FRIENDSHIP_ACCEPTED_TOPIC) String friendshipAcceptedTopic,

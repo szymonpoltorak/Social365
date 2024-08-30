@@ -20,6 +20,18 @@ public final class KafkaConfigNames {
 
     public static final String NOTIFICATIONS_GROUP_ID = "${kafka.group-ids.notifications}";
 
+    public static final String FRIENDSHIP_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.FriendshipEvent";
+
+    public static final String FRIENDSHIP_REJECTED_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.FriendshipRejectedEvent";
+
+    public static final String POST_LIKED_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.PostLikedEvent";
+
+    public static final String POST_COMMENTED_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.PostCommentedEvent";
+
+    public static final String COMMENT_LIKED_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.CommentLikedEvent";
+
+    public static final String COMMENT_REPLIED_EVENT_TYPE_PROPERTY = "spring.json.value.default.type=razepl.dev.social365.notifications.consumer.data.CommentRepliedEvent";
+
     private KafkaConfigNames() {
     }
 

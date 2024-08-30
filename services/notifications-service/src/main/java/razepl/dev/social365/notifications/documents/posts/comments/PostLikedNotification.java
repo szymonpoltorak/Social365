@@ -20,8 +20,8 @@ public class PostLikedNotification extends Notification {
 
     @Builder
     public PostLikedNotification(UUID notificationId, String eventId, String targetProfileId, String timestamp,
-                                 String notificationText, String postId, int currentNumOfLikes) {
-        super(notificationId, eventId, targetProfileId, timestamp, notificationText);
+                                 String notificationText, String postId, int currentNumOfLikes, String sourceProfileId) {
+        super(notificationId, eventId, targetProfileId, timestamp, notificationText, sourceProfileId, false);
 
         this.postId = postId;
         this.currentNumOfLikes = currentNumOfLikes;

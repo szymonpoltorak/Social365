@@ -27,4 +27,8 @@ public class Notification {
 
     private String notificationText;
 
+    private String sourceProfileId;
+
+    private boolean read;
+
 }
