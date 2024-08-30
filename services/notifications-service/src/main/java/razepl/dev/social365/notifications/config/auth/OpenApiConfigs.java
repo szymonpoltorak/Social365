@@ -1,4 +1,4 @@
-package razepl.dev.social365.notifications.config;
+package razepl.dev.social365.notifications.config.auth;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

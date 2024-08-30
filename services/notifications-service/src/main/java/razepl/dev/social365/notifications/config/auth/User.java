@@ -1,4 +1,4 @@
-package razepl.dev.social365.notifications.config;
+package razepl.dev.social365.notifications.config.auth;
 
 import lombok.Builder;
 

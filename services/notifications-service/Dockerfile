@@ -1,6 +1,6 @@
 FROM social:build AS build
 
-WORKDIR /notifications
+WORKDIR /home/notifications
 
 COPY build.gradle .
 
@@ -14,9 +14,9 @@ RUN mv build/libs/notifications-service-0.0.1-SNAPSHOT.jar notifications-service
 
 FROM social:prod
 
-WORKDIR /notifications
+WORKDIR /home/notifications
 
-COPY --from=build /notifications/notifications-service.jar .
+COPY --from=build /home/notifications/notifications-service.jar .
 
 EXPOSE 8080
 
