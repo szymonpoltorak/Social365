@@ -4,3 +4,19 @@ spring:
 
     config:
         import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME}:${CONFIG_SERVER_PORT}
+
+kafka:
+    topics:
+        friendship-requested: ${KAFKA_FRIENDSHIP_REQUESTED_TOPIC}
+        friendship-accepted: ${KAFKA_FRIENDSHIP_ACCEPTED_TOPIC}
+        friendship-rejected: ${KAFKA_FRIENDSHIP_REJECTED_TOPIC}
+        friendship-followed: ${KAFKA_FRIENDSHIP_FOLLOWED_TOPIC}
+
+        post-liked: ${KAFKA_POST_LIKED_TOPIC}
+        post-commented: ${KAFKA_POST_COMMENTED_TOPIC}
+
+        comment-liked: ${KAFKA_COMMENT_LIKED_TOPIC}
+        comment-replied: ${KAFKA_COMMENT_REPLIED_TOPIC}
+
+    group-ids:
+        notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}

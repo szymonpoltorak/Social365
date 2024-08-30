@@ -58,9 +58,6 @@ spring:
     kafka:
         consumer:
             auto-offset-reset: earliest
-            group-id: ${KAFKA_NOTIFICATIONS_GROUP_ID}
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
             value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-
-            topic: ${KAFKA_NOTIFICATIONS_TOPIC}
             bootstrap-servers: ${KAFKA_BROKER_HOSTNAME}:${KAFKA_PORT}
