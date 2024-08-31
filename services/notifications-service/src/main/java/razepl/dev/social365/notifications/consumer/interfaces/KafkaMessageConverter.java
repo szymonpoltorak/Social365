@@ -4,15 +4,12 @@ import razepl.dev.social365.notifications.consumer.FriendshipTopic;
 import razepl.dev.social365.notifications.consumer.data.CommentLikedEvent;
 import razepl.dev.social365.notifications.consumer.data.CommentRepliedEvent;
 import razepl.dev.social365.notifications.consumer.data.FriendshipEvent;
-import razepl.dev.social365.notifications.consumer.data.FriendshipRejectedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostCommentedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostLikedEvent;
 
 public interface KafkaMessageConverter {
 
     String convert(FriendshipEvent event, FriendshipTopic topic);
-
-    String convert(FriendshipRejectedEvent event);
 
     String convert(CommentLikedEvent event);
 

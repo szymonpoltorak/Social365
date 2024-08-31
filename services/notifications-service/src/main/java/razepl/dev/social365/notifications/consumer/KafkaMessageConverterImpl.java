@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.notifications.consumer.data.CommentLikedEvent;
 import razepl.dev.social365.notifications.consumer.data.CommentRepliedEvent;
 import razepl.dev.social365.notifications.consumer.data.FriendshipEvent;
-import razepl.dev.social365.notifications.consumer.data.FriendshipRejectedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostCommentedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostLikedEvent;
 import razepl.dev.social365.notifications.consumer.interfaces.KafkaMessageConverter;
@@ -22,28 +21,23 @@ public class KafkaMessageConverterImpl implements KafkaMessageConverter {
     }
 
     @Override
-    public final String convert(FriendshipRejectedEvent event) {
-        return "";
-    }
-
-    @Override
     public final String convert(CommentLikedEvent event) {
-        return "";
+        return "%s liked your comment".formatted(event.likeAuthorFullName());
     }
 
     @Override
     public final String convert(CommentRepliedEvent event) {
-        return "";
+        return "%s replied to your comment".formatted(event.replyAuthorFullName());
     }
 
     @Override
     public final String convert(PostCommentedEvent event) {
-        return "";
+        return "%s commented on your post".formatted(event.commentAuthorFullName());
     }
 
     @Override
     public final String convert(PostLikedEvent event) {
-        return "";
+        return "%s liked your post".formatted(event.likeAuthorFullName());
     }
 
 }
