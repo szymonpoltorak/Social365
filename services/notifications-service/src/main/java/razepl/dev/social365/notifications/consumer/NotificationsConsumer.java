@@ -1,19 +1,39 @@
 package razepl.dev.social365.notifications.consumer;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import razepl.dev.social365.notifications.api.notifications.data.NotificationResponse;
 import razepl.dev.social365.notifications.config.kafka.KafkaConfigNames;
+import razepl.dev.social365.notifications.config.rabbitmq.RabbitMQSettings;
 import razepl.dev.social365.notifications.consumer.data.CommentLikedEvent;
 import razepl.dev.social365.notifications.consumer.data.CommentRepliedEvent;
 import razepl.dev.social365.notifications.consumer.data.FriendshipEvent;
 import razepl.dev.social365.notifications.consumer.data.FriendshipRejectedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostCommentedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostLikedEvent;
+import razepl.dev.social365.notifications.consumer.interfaces.KafkaMessageConverter;
+import razepl.dev.social365.notifications.documents.Notification;
+import razepl.dev.social365.notifications.documents.NotificationRepository;
+import razepl.dev.social365.notifications.documents.NotificationsMapper;
+import razepl.dev.social365.notifications.documents.posts.comments.CommentLikedNotification;
+import razepl.dev.social365.notifications.documents.posts.comments.CommentRepliedNotification;
+import razepl.dev.social365.notifications.documents.posts.comments.PostCommentedNotification;
+import razepl.dev.social365.notifications.documents.posts.comments.PostLikedNotification;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NotificationsConsumer {
+
+    private final KafkaMessageConverter messageConverter;
+    private final NotificationRepository notificationRepository;
+    private final RabbitTemplate rabbitTemplate;
+    private final NotificationsMapper notificationsMapper;
 
     @KafkaListener(
             topics = KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC,
@@ -22,6 +42,8 @@ public class NotificationsConsumer {
     )
     public final void consumeFriendshipRequested(FriendshipEvent event) {
         log.info("Consumed friendship.requested event: {}", event);
+
+        sendNotificationToRabbitMQ(event, FriendshipTopic.REQUESTED);
     }
 
     @KafkaListener(
@@ -31,6 +53,8 @@ public class NotificationsConsumer {
     )
     public final void consumeFriendshipAccepted(FriendshipEvent event) {
         log.info("Consumed friendship.accepted event: {}", event);
+
+        sendNotificationToRabbitMQ(event, FriendshipTopic.ACCEPTED);
     }
 
     @KafkaListener(
@@ -40,6 +64,8 @@ public class NotificationsConsumer {
     )
     public final void consumeFriendshipFollowed(FriendshipEvent event) {
         log.info("Consumed friendship.followed event: {}", event);
+
+        sendNotificationToRabbitMQ(event, FriendshipTopic.FOLLOWED);
     }
 
     @KafkaListener(
@@ -49,6 +75,8 @@ public class NotificationsConsumer {
     )
     public final void consumeFriendshipRejected(FriendshipRejectedEvent event) {
         log.info("Consumed friendship.rejected event: {}", event);
+
+        notificationRepository.deleteBySourceProfileIdAndTargetProfileId(event.sourceProfileId(), event.targetProfileId());
     }
 
     @KafkaListener(
@@ -58,6 +86,22 @@ public class NotificationsConsumer {
     )
     public final void consumePostLiked(PostLikedEvent event) {
         log.info("Consumed post.liked event: {}", event);
+
+        String notificationsText = messageConverter.convert(event);
+
+        PostLikedNotification notification = PostLikedNotification
+                .builder()
+                .notificationId(UUID.randomUUID())
+                .eventId(event.eventId())
+                .postId(event.postId())
+                .currentNumOfLikes(event.currentNumOfLikes())
+                .targetProfileId(event.targetProfileId())
+                .timestamp(event.timeStamp())
+                .sourceProfileId(event.sourceProfileId())
+                .notificationText(notificationsText)
+                .build();
+
+        sendNotification(notification);
     }
 
     @KafkaListener(
@@ -67,6 +111,21 @@ public class NotificationsConsumer {
     )
     public final void consumePostCommented(PostCommentedEvent event) {
         log.info("Consumed post.commented event: {}", event);
+
+        String notificationsText = messageConverter.convert(event);
+
+        PostCommentedNotification notification = PostCommentedNotification
+                .builder()
+                .notificationId(UUID.randomUUID())
+                .eventId(event.eventId())
+                .postId(event.postId())
+                .targetProfileId(event.targetProfileId())
+                .timestamp(event.timeStamp())
+                .sourceProfileId(event.sourceProfileId())
+                .notificationText(notificationsText)
+                .build();
+
+        sendNotification(notification);
     }
 
     @KafkaListener(
@@ -76,6 +135,21 @@ public class NotificationsConsumer {
     )
     public final void consumeCommentLiked(CommentLikedEvent event) {
         log.info("Consumed comment.liked event: {}", event);
+
+        String notificationsText = messageConverter.convert(event);
+
+        CommentLikedNotification notification = CommentLikedNotification
+                .builder()
+                .notificationId(UUID.randomUUID())
+                .eventId(event.eventId())
+                .commentId(event.commentId())
+                .targetProfileId(event.targetProfileId())
+                .timestamp(event.timeStamp())
+                .sourceProfileId(event.sourceProfileId())
+                .notificationText(notificationsText)
+                .build();
+
+        sendNotification(notification);
     }
 
     @KafkaListener(
@@ -85,6 +159,50 @@ public class NotificationsConsumer {
     )
     public final void consumeCommentReplied(CommentRepliedEvent event) {
         log.info("Consumed comment.replied event: {}", event);
+
+        String notificationsText = messageConverter.convert(event);
+
+        CommentRepliedNotification notification = CommentRepliedNotification
+                .builder()
+                .notificationId(UUID.randomUUID())
+                .eventId(event.eventId())
+                .commentId(event.commentId())
+                .targetProfileId(event.targetProfileId())
+                .timestamp(event.timeStamp())
+                .sourceProfileId(event.sourceProfileId())
+                .notificationText(notificationsText)
+                .build();
+
+        sendNotification(notification);
+    }
+
+    private void sendNotificationToRabbitMQ(FriendshipEvent event, FriendshipTopic topic) {
+        String notificationsText = messageConverter.convert(event, topic);
+
+        Notification notification = Notification
+                .builder()
+                .notificationId(UUID.randomUUID())
+                .eventId(event.eventId())
+                .read(false)
+                .timestamp(event.timeStamp())
+                .sourceProfileId(event.sourceProfileId())
+                .targetProfileId(event.targetProfileId())
+                .notificationText(notificationsText)
+                .build();
+
+        sendNotification(notification);
+    }
+
+    private void sendNotification(Notification notification) {
+        notificationRepository.save(notification);
+
+        NotificationResponse notificationResponse = notificationsMapper.mapNotificationToNotificationResponse(notification);
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQSettings.NOTIFICATIONS_EXCHANGE_NAME,
+                RabbitMQSettings.NOTIFICATIONS_ROUTING_KEY,
+                notificationResponse
+        );
     }
 
 }
