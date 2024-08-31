@@ -30,6 +30,8 @@ public final class ImagesMappings {
 
     public static final String DELETE_IMAGES_BY_POST_ID_MAPPING = "/deleteImagesByPostId";
 
+    public static final String GET_PROFILE_IMAGE_BY_PROFILE_ID_MAPPING = "/getProfileImageByProfileId";
+
     private ImagesMappings() {
     }
 }

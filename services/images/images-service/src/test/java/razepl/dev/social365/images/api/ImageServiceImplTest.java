@@ -10,6 +10,7 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.config.User;
 import razepl.dev.social365.images.entities.image.Image;
+import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
@@ -48,6 +49,7 @@ class ImageServiceImplTest {
                 "image".getBytes(StandardCharsets.UTF_8)
         );
         String username = "user@gmail.com";
+        User user = User.builder().userId(1L).username(username).build();
         String filePath = String.format("tmp/%s/%s", username, image.getOriginalFilename());
         Image imageToSave = Image.builder().imageId(0L).imagePath(filePath).username(username).build();
         ImageResponse expected = new ImageResponse(0L, username, filePath);
@@ -58,7 +60,7 @@ class ImageServiceImplTest {
         when(imagesMapper.toImageResponse(imageToSave))
                 .thenReturn(expected);
 
-        ImageResponse actual = imagesService.uploadImage(username, image);
+        ImageResponse actual = imagesService.uploadImage(user, ImageType.PROFILE_IMAGE, image);
 
         // then
         assertEquals(expected, actual, SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH);

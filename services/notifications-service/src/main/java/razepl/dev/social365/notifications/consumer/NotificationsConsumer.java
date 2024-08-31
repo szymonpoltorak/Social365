@@ -7,6 +7,7 @@ import razepl.dev.social365.notifications.config.kafka.KafkaConfigNames;
 import razepl.dev.social365.notifications.consumer.data.CommentLikedEvent;
 import razepl.dev.social365.notifications.consumer.data.CommentRepliedEvent;
 import razepl.dev.social365.notifications.consumer.data.FriendshipEvent;
+import razepl.dev.social365.notifications.consumer.data.FriendshipRejectedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostCommentedEvent;
 import razepl.dev.social365.notifications.consumer.data.PostLikedEvent;
 
@@ -46,7 +47,7 @@ public class NotificationsConsumer {
             groupId = KafkaConfigNames.NOTIFICATIONS_GROUP_ID,
             properties = KafkaConfigNames.FRIENDSHIP_REJECTED_EVENT_TYPE_PROPERTY
     )
-    public final void consumeFriendshipRejected(FriendshipEvent event) {
+    public final void consumeFriendshipRejected(FriendshipRejectedEvent event) {
         log.info("Consumed friendship.rejected event: {}", event);
     }
 

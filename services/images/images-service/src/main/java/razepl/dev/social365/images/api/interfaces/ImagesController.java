@@ -11,7 +11,9 @@ import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
+import razepl.dev.social365.images.utils.pagination.SocialPageImpl;
 
 import java.util.List;
 
@@ -23,11 +25,12 @@ public interface ImagesController {
     })
     ImageResponse uploadImage(
             @Parameter(description = "User uploading the image", required = true) User user,
+            @Parameter(description = "Type of a image", required = true) ImageType imageType,
             @Parameter(description = "Image file to upload", required = true) MultipartFile image
     );
 
     @Operation(summary = "Get user uploaded images", description = "Retrieves images uploaded by a user", responses = {
-            @ApiResponse(responseCode = "200", description = "Images retrieved successfully", content = @Content(schema = @Schema(implementation = SocialPage.class)))
+            @ApiResponse(responseCode = "200", description = "Images retrieved successfully", content = @Content(schema = @Schema(implementation = SocialPageImpl.class)))
     })
     SocialPage<PostImageResponse> getUserUploadedImages(
             @Parameter(description = "Username of the user", required = true) String username,
@@ -79,6 +82,7 @@ public interface ImagesController {
     })
     ImageResponse updateImage(
             @Parameter(description = "Image URL", required = true) String imageUrl,
+            @Parameter(description = "Type of an image", required = true) ImageType imageType,
             @Parameter(description = "User updating the image", required = true) User user,
             @Parameter(description = "New image file", required = true) MultipartFile image
     );
@@ -122,4 +126,10 @@ public interface ImagesController {
             @Parameter(description = "Post ID", required = true) String postId,
             @Parameter(description = "User deleting the images", required = true) User user
     );
+
+    @Operation(summary = "Get profile image by profile ID", description = "Retrieves the profile image by profile ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Profile image retrieved successfully", content = @Content(schema = @Schema(implementation = ImageResponse.class)))
+    })
+    ImageResponse getProfileImageByProfileId(@Parameter(description = "Id of a profile", required = true) String profileId);
+
 }

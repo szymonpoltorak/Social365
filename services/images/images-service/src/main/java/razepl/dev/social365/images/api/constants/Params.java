@@ -24,6 +24,10 @@ public final class Params {
 
     public static final String IMAGE_PATH = "imagePath";
 
+    public static final String PROFILE_ID = "profileId";
+
+    public static final String IMAGE_TYPE = "imageType";
+
     private Params() {
     }
 
