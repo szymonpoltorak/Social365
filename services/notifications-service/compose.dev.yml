@@ -1,6 +1,6 @@
 services:
     kafka-broker:
-        image: 'bitnami/kafka:latest'
+        image: apache/kafka-native:3.8.0
         env_file: "../.env"
         container_name: ${KAFKA_BROKER_HOSTNAME}
         hostname: ${KAFKA_BROKER_HOSTNAME}
