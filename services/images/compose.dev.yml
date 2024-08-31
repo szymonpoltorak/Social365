@@ -21,7 +21,7 @@ services:
     images-service:
         env_file: "../.env"
         container_name: ${IMAGES_SERVICE_HOSTNAME}
-        image: ${IMAGES_SERVICE_HOSTNAME}
+        image: ${IMAGES_SERVICE_HOSTNAME}:dev
         hostname: ${IMAGES_SERVICE_HOSTNAME}
         build:
             context: images-service

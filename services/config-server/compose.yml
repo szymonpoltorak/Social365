@@ -2,7 +2,7 @@ services:
     config-server:
         container_name: ${CONFIG_SERVER_HOSTNAME}
         hostname: ${CONFIG_SERVER_HOSTNAME}
-        image: ${CONFIG_SERVER_HOSTNAME}
+        image: ${CONFIG_SERVER_HOSTNAME}:prod
         build:
             context: .
             dockerfile: Dockerfile

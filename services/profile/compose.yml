@@ -12,7 +12,7 @@ services:
 
     profile-service:
         container_name: ${PROFILE_SERVICE_HOSTNAME}
-        image: ${PROFILE_SERVICE_HOSTNAME}
+        image: ${PROFILE_SERVICE_HOSTNAME}:prod
         hostname: ${PROFILE_SERVICE_HOSTNAME}
         build:
             context: .

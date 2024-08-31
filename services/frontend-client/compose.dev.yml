@@ -1,7 +1,8 @@
 services:
     frontend-client:
-        container_name: frontend-client
-        image: frontend-client
+        container_name: ${FRONTEND_HOSTNAME}
+        image: ${FRONTEND_HOSTNAME}:dev
+        hostname: ${FRONTEND_HOSTNAME}
         build:
             context: .
             dockerfile: Dockerfile.dev

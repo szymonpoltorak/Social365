@@ -21,7 +21,7 @@ services:
     auth-service:
         env_file: "../.env"
         container_name: ${AUTH_SERVICE_HOSTNAME}
-        image: ${AUTH_SERVICE_HOSTNAME}
+        image: ${AUTH_SERVICE_HOSTNAME}:prod
         hostname: ${AUTH_SERVICE_HOSTNAME}
         build:
             context: .

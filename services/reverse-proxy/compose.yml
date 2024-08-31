@@ -1,7 +1,8 @@
 services:
     reverse-proxy:
-        container_name: reverse-proxy
-        image: reverse-proxy
+        container_name: ${REVERSE_PROXY_HOSTNAME}
+        image: ${REVERSE_PROXY_HOSTNAME}:prod
+        hostname: ${REVERSE_PROXY_HOSTNAME}
         env_file: "../.env"
         build:
             context: .

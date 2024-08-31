@@ -1,7 +1,7 @@
 services:
     eureka-registry:
         container_name: ${EUREKA_REGISTRY_HOSTNAME}
-        image: ${EUREKA_REGISTRY_HOSTNAME}
+        image: ${EUREKA_REGISTRY_HOSTNAME}:prod
         hostname: ${EUREKA_REGISTRY_HOSTNAME}
         depends_on:
             config-server:

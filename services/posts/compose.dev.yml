@@ -2,7 +2,7 @@ services:
     posts-comments:
         container_name: ${POSTS_SERVICE_HOSTNAME}
         hostname: ${POSTS_SERVICE_HOSTNAME}
-        image: ${POSTS_SERVICE_HOSTNAME}
+        image: ${POSTS_SERVICE_HOSTNAME}:dev
         env_file: "../.env"
         build:
             context: .

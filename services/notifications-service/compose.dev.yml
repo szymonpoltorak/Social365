@@ -9,6 +9,17 @@ services:
         networks:
             - social365-network
 
+    rabbitmq:
+        image: rabbitmq:3.13.7-management-alpine
+        env_file: "../.env"
+        container_name: ${RABBITMQ_HOSTNAME}
+        hostname: ${RABBITMQ_HOSTNAME}
+        ports:
+            - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+            - "${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
+        networks:
+            - social365-network
+
     notifications-mongodb:
         image: mongo:7.0.14-jammy
         env_file: "../.env"
@@ -26,7 +37,7 @@ services:
 
     notifications-service:
         container_name: ${NOTIFICATIONS_SERVICE_HOSTNAME}
-        image: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        image: ${NOTIFICATIONS_SERVICE_HOSTNAME}:dev
         hostname: ${NOTIFICATIONS_SERVICE_HOSTNAME}
         build:
             context: .
@@ -46,6 +57,8 @@ services:
             notifications-mongodb:
                 condition: service_healthy
             kafka-broker:
+                condition: service_started
+            rabbitmq:
                 condition: service_started
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${NOTIFICATIONS_SERVICE_PORT}/actuator/health" ]

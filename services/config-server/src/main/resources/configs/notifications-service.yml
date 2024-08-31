@@ -67,6 +67,13 @@ spring:
                 spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
             group-id: ${KAFKA_NOTIFICATIONS_GROUP_ID}
 
+    rabbitmq:
+        host: ${RABBITMQ_HOSTNAME}
+        port: ${RABBITMQ_PORT}
+        username: ${RABBITMQ_DEFAULT_USER}
+        password: ${RABBITMQ_DEFAULT_PASS}
+        virtual-host: ${RABBITMQ_DEFAULT_VHOST}
+
 kafka:
     topics:
         friendship-requested: ${KAFKA_FRIENDSHIP_REQUESTED_TOPIC}

@@ -1,7 +1,7 @@
 services:
     api-gateway:
         container_name: ${API_GATEWAY_HOSTNAME}
-        image: ${API_GATEWAY_HOSTNAME}
+        image: ${API_GATEWAY_HOSTNAME}:prod
         hostname: ${API_GATEWAY_HOSTNAME}
         depends_on:
             eureka-registry:

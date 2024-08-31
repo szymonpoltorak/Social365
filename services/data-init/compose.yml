@@ -1,7 +1,7 @@
 services:
     data-initializer:
         container_name: data-initializer
-        image: data-initializer
+        image: data-initializer:prod
         hostname: data-initializer
         build:
             context: .
