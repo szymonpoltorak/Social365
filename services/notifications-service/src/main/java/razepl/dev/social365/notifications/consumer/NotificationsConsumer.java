@@ -87,19 +87,9 @@ public class NotificationsConsumer {
     public final void consumePostLiked(PostLikedEvent event) {
         log.info("Consumed post.liked event: {}", event);
 
-        String notificationsText = messageConverter.convert(event);
+        PostLikedNotification notification = notificationsMapper.mapPostLikedEventToPostLikedNotification(event);
 
-        PostLikedNotification notification = PostLikedNotification
-                .builder()
-                .notificationId(UUID.randomUUID())
-                .eventId(event.eventId())
-                .postId(event.postId())
-                .currentNumOfLikes(event.currentNumOfLikes())
-                .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
-                .sourceProfileId(event.sourceProfileId())
-                .notificationText(notificationsText)
-                .build();
+        log.info("Notification from post liked event: {}", notification);
 
         sendNotification(notification);
     }
@@ -112,18 +102,9 @@ public class NotificationsConsumer {
     public final void consumePostCommented(PostCommentedEvent event) {
         log.info("Consumed post.commented event: {}", event);
 
-        String notificationsText = messageConverter.convert(event);
+        PostCommentedNotification notification = notificationsMapper.mapPostCommentedEventToPostCommentedNotification(event);
 
-        PostCommentedNotification notification = PostCommentedNotification
-                .builder()
-                .notificationId(UUID.randomUUID())
-                .eventId(event.eventId())
-                .postId(event.postId())
-                .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
-                .sourceProfileId(event.sourceProfileId())
-                .notificationText(notificationsText)
-                .build();
+        log.info("Notification from post commented event: {}", notification);
 
         sendNotification(notification);
     }
@@ -136,18 +117,9 @@ public class NotificationsConsumer {
     public final void consumeCommentLiked(CommentLikedEvent event) {
         log.info("Consumed comment.liked event: {}", event);
 
-        String notificationsText = messageConverter.convert(event);
+        CommentLikedNotification notification = notificationsMapper.mapCommentLikedEventToCommentLikedNotification(event);
 
-        CommentLikedNotification notification = CommentLikedNotification
-                .builder()
-                .notificationId(UUID.randomUUID())
-                .eventId(event.eventId())
-                .commentId(event.commentId())
-                .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
-                .sourceProfileId(event.sourceProfileId())
-                .notificationText(notificationsText)
-                .build();
+        log.info("Notification from comment liked event: {}", notification);
 
         sendNotification(notification);
     }
@@ -160,18 +132,9 @@ public class NotificationsConsumer {
     public final void consumeCommentReplied(CommentRepliedEvent event) {
         log.info("Consumed comment.replied event: {}", event);
 
-        String notificationsText = messageConverter.convert(event);
+        CommentRepliedNotification notification = notificationsMapper.mapCommentRepliedEventToCommentRepliedNotification(event);
 
-        CommentRepliedNotification notification = CommentRepliedNotification
-                .builder()
-                .notificationId(UUID.randomUUID())
-                .eventId(event.eventId())
-                .commentId(event.commentId())
-                .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
-                .sourceProfileId(event.sourceProfileId())
-                .notificationText(notificationsText)
-                .build();
+        log.info("Notification from comment replied event: {}", notification);
 
         sendNotification(notification);
     }
@@ -190,6 +153,8 @@ public class NotificationsConsumer {
                 .notificationText(notificationsText)
                 .build();
 
+        log.info("Notification from friendship event: {}, topic : {}", notification, topic.name());
+
         sendNotification(notification);
     }
 
@@ -197,6 +162,8 @@ public class NotificationsConsumer {
         notificationRepository.save(notification);
 
         NotificationResponse notificationResponse = notificationsMapper.mapNotificationToNotificationResponse(notification);
+
+        log.info("Sending notification to RabbitMQ: {}", notificationResponse);
 
         rabbitTemplate.convertAndSend(
                 RabbitMQSettings.NOTIFICATIONS_EXCHANGE_NAME,
