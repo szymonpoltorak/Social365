@@ -1,5 +1,7 @@
 package razepl.dev.social365.notifications.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -34,6 +36,7 @@ public class NotificationsConsumer {
     private final NotificationRepository notificationRepository;
     private final RabbitTemplate rabbitTemplate;
     private final NotificationsMapper notificationsMapper;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(
             topics = KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC,
@@ -143,7 +146,7 @@ public class NotificationsConsumer {
         String notificationsText = messageConverter.convert(event, topic);
 
         Notification notification = Notification
-                .builder()
+                .notificationBuilder()
                 .notificationId(UUID.randomUUID())
                 .eventId(event.eventId())
                 .read(false)
@@ -165,11 +168,15 @@ public class NotificationsConsumer {
 
         log.info("Sending notification to RabbitMQ: {}", notificationResponse);
 
-        rabbitTemplate.convertAndSend(
-                RabbitMQSettings.NOTIFICATIONS_EXCHANGE_NAME,
-                RabbitMQSettings.NOTIFICATIONS_ROUTING_KEY,
-                notificationResponse
-        );
+        try {
+            rabbitTemplate.convertAndSend(
+                    RabbitMQSettings.NOTIFICATIONS_EXCHANGE_NAME,
+                    RabbitMQSettings.NOTIFICATIONS_ROUTING_KEY,
+                    objectMapper.writeValueAsString(notificationResponse)
+            );
+        } catch (JsonProcessingException exception) {
+            log.error("Error while writing notification object to json : {}", exception.getMessage());
+        }
     }
 
 }

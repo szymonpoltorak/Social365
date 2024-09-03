@@ -1,7 +1,6 @@
 package razepl.dev.social365.notifications.documents;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
 @Document
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,5 +30,9 @@ public class Notification {
     private String sourceProfileId;
 
     private boolean read;
+
+    public static NotificationBuilder notificationBuilder() {
+        return new NotificationBuilder();
+    }
 
 }

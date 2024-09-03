@@ -100,7 +100,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
     }
 
     private String getUsersProfileImageUrl(String sourceProfileId) {
-        return imageService.getProfileImageByProfileId(sourceProfileId).imagePath();
+        return "imageService.getProfileImageByProfileId(sourceProfileId).imagePath()";
     }
 
 }

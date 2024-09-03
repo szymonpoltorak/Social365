@@ -48,7 +48,7 @@ services:
     images-nginx:
         env_file: "../.env"
         container_name: ${IMAGES_NGINX_HOSTNAME}
-        image: ${IMAGES_NGINX_HOSTNAME}
+        image: ${IMAGES_NGINX_HOSTNAME}:prod
         hostname: ${IMAGES_NGINX_HOSTNAME}
         build:
             context: images-nginx
