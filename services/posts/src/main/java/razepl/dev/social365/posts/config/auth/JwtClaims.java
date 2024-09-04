@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.config;
+package razepl.dev.social365.posts.config.auth;
 
 final class JwtClaims {
 

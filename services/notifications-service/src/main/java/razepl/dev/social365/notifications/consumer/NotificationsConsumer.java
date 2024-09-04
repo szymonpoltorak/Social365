@@ -36,7 +36,7 @@ public class NotificationsConsumer {
     private final NotificationRepository notificationRepository;
     private final RabbitTemplate rabbitTemplate;
     private final NotificationsMapper notificationsMapper;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper jsonMapper;
 
     @KafkaListener(
             topics = KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC,
@@ -172,7 +172,7 @@ public class NotificationsConsumer {
             rabbitTemplate.convertAndSend(
                     RabbitMQSettings.NOTIFICATIONS_EXCHANGE_NAME,
                     RabbitMQSettings.NOTIFICATIONS_ROUTING_KEY,
-                    objectMapper.writeValueAsString(notificationResponse)
+                    jsonMapper.writeValueAsString(notificationResponse)
             );
         } catch (JsonProcessingException exception) {
             log.error("Error while writing notification object to json : {}", exception.getMessage());

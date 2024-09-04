@@ -10,13 +10,14 @@ import razepl.dev.social365.posts.api.comments.data.CommentEditRequest;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.interfaces.CommentService;
 import razepl.dev.social365.posts.clients.images.ImageService;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.CommentKey;
 import razepl.dev.social365.posts.entities.comment.data.CommentKeyResponse;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
+import razepl.dev.social365.posts.producer.KafkaProducer;
 import razepl.dev.social365.posts.utils.exceptions.CommentDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
@@ -38,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentValidator commentValidator;
     private final ReplyCommentRepository replyCommentRepository;
     private final ImageService imageService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public SocialPage<CommentResponse> getCommentsForPost(String postId, String profileId, PageInfo pageInfo) {
@@ -72,6 +74,10 @@ public class CommentServiceImpl implements CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         log.info("Added comment with id: {}", savedComment.getCommentId());
+
+        kafkaProducer.sendPostCommentedEvent(savedComment, user, user.profileId());
+
+        log.info("Sent post commented event for comment with id: {}", savedComment.getCommentId());
 
         return commentMapper.toCommentResponseNoImage(savedComment, user.profileId());
     }
@@ -134,6 +140,8 @@ public class CommentServiceImpl implements CommentService {
             comment.getUserLikedIds().remove(user.profileId());
         } else {
             comment.addUserLikedId(user.profileId());
+
+            kafkaProducer.sendCommentLikedEvent(comment, user, user.profileId());
         }
         Comment savedComment = commentRepository.save(comment);
 

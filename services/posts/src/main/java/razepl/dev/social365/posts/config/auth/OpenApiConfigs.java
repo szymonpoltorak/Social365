@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.config;
+package razepl.dev.social365.posts.config.auth;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

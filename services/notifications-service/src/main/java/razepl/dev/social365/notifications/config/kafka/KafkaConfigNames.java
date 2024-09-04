@@ -2,6 +2,8 @@ package razepl.dev.social365.notifications.config.kafka;
 
 public final class KafkaConfigNames {
 
+    public static final String CONSUMER_BOOTSTRAP_SERVERS = "${spring.kafka.consumer.bootstrap-servers}";
+
     public static final String FRIENDSHIP_REQUESTED_TOPIC = "${kafka.topics.friendship-requested}";
 
     public static final String FRIENDSHIP_ACCEPTED_TOPIC = "${kafka.topics.friendship-accepted}";

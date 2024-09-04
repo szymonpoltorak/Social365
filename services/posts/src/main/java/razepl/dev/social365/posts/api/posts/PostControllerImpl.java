@@ -15,8 +15,8 @@ import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.interfaces.PostController;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
-import razepl.dev.social365.posts.config.AuthUser;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.AuthUser;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
@@ -56,7 +56,7 @@ public class PostControllerImpl implements PostController {
     public final PostData updateLikePostCount(@AuthUser User user,
                                               @RequestParam(Params.AUTHOR_ID) String authorId,
                                               @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateLikePostCount(user.profileId(), postId, authorId);
+        return postService.updateLikePostCount(user, postId, authorId);
     }
 
     @Override

@@ -52,6 +52,27 @@ spring:
         contact-points: ${POSTS_CASSANDRA_HOSTNAME}
         local-datacenter: ${POSTS_CASSANDRA_DATACENTER}
 
+    kafka:
+        producer:
+            bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+            key-serializer: org.apache.kafka.common.serialization.ErrorHandlingSerializer
+            value-serializer: org.springframework.kafka.support.serializer.ErrorHandlingSerializer
+            properties:
+                spring.json.trusted.packages: '*'
+                spring.serializer.key.delegate.class: org.apache.kafka.common.serialization.StringSerializer
+                spring.serializer.value.delegate.class: org.springframework.kafka.support.serializer.StringSerializer
+
+kafka:
+    topics:
+        post-liked: ${KAFKA_POST_LIKED_TOPIC}
+        post-commented: ${KAFKA_POST_COMMENTED_TOPIC}
+
+        comment-liked: ${KAFKA_COMMENT_LIKED_TOPIC}
+        comment-replied: ${KAFKA_COMMENT_REPLIED_TOPIC}
+
+    group-ids:
+        notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}
+
 eureka:
     client:
         service-url:

@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 @Tag(name = "PostController", description = "API for managing posts")

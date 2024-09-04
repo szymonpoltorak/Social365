@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.config;
+package razepl.dev.social365.posts.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

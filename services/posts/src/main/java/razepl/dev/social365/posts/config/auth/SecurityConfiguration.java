@@ -1,4 +1,4 @@
-package razepl.dev.social365.posts.config;
+package razepl.dev.social365.posts.config.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
