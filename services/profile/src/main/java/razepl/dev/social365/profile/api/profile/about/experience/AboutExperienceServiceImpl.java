@@ -7,7 +7,7 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetai
 import razepl.dev.social365.profile.api.profile.about.experience.data.WorkPlaceRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.interfaces.AboutExperienceService;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.exceptions.IllegalDetailsTypeException;
 import razepl.dev.social365.profile.utils.exceptions.ProfileDetailsNotFoundException;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;

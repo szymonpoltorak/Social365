@@ -10,7 +10,7 @@ include:
     -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
-            - ./services/images/compose.yml
+            - ./services/images/compose.dev.yml
     -   path:
             - ./services/api-gateway/compose.yml
     -   path:

@@ -1,16 +1,14 @@
 package razepl.dev.social365.notifications.documents;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @Document
 @NoArgsConstructor
 @AllArgsConstructor

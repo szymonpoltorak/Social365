@@ -53,7 +53,9 @@ public class KafkaProducerImpl implements KafkaProducer {
         PostLikedEvent postLikedEvent = PostLikedEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
+                .username(likeAuthor.username())
                 .timeStamp(Instant.now().toString())
+                .postId(post.getPostId().toString())
                 .targetProfileId(targetProfileId)
                 .likeAuthorFullName(profile.fullName())
                 .sourceProfileId(likeAuthor.profileId())
@@ -72,6 +74,7 @@ public class KafkaProducerImpl implements KafkaProducer {
                 .builder()
                 .eventId(UUID.randomUUID().toString())
                 .timeStamp(Instant.now().toString())
+                .username(commentAuthor.username())
                 .targetProfileId(targetProfileId)
                 .commentAuthorFullName(profile.fullName())
                 .sourceProfileId(commentAuthor.profileId())
@@ -90,6 +93,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         CommentRepliedEvent commentRepliedEvent = CommentRepliedEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
+                .username(replyAuthor.username())
                 .timeStamp(Instant.now().toString())
                 .targetProfileId(targetProfileId)
                 .replyAuthorFullName(profile.fullName())
@@ -109,6 +113,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         CommentLikedEvent postLikedEvent = CommentLikedEvent
                 .builder()
                 .commentId(comment.getCommentId().toString())
+                .username(likeAuthor.username())
                 .postId(comment.getPostId().toString())
                 .eventId(UUID.randomUUID().toString())
                 .timeStamp(Instant.now().toString())
@@ -129,6 +134,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         Profile profile = profileService.getProfileDetails(likeAuthor.profileId());
         CommentLikedEvent postLikedEvent = CommentLikedEvent
                 .builder()
+                .username(likeAuthor.username())
                 .commentId(comment.getReplyCommentId().toString())
                 .eventId(UUID.randomUUID().toString())
                 .timeStamp(Instant.now().toString())

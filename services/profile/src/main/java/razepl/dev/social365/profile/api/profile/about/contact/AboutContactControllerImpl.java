@@ -13,8 +13,8 @@ import razepl.dev.social365.profile.api.profile.about.contact.interfaces.AboutCo
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.constants.Params;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.config.AuthUser;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.AuthUser;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.nodes.enums.PrivacyLevel;
 
 @RestController

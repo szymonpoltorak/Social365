@@ -1,5 +1,6 @@
 package razepl.dev.social365.posts.api.posts.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 
@@ -17,6 +18,7 @@ public record PostResponse(PostKeyResponse postKey, boolean areNotificationTurne
     }
 
     @Override
+    @JsonIgnore
     public LocalDateTime getCreationDateTime() {
         return LocalDateTime.parse(postKey.creationDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }

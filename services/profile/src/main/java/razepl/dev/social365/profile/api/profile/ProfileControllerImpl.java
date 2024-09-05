@@ -21,8 +21,8 @@ import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileController;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
-import razepl.dev.social365.profile.config.AuthUser;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.AuthUser;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 @RestController

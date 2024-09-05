@@ -1,6 +1,8 @@
 package razepl.dev.social365.notifications.documents;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.notifications.api.notifications.data.NotificationResponse;
 import razepl.dev.social365.notifications.clients.images.ImageService;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NotificationsMapperImpl implements NotificationsMapper {
 
+    private static final String DEFAULT_IMAGE_PATH = "/images/nouser@example.com/shiba1.jpg";
     private final ImageService imageService;
     private final KafkaMessageConverter messageConverter;
 
@@ -99,8 +102,15 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .build();
     }
 
-    private String getUsersProfileImageUrl(String sourceProfileId) {
-        return imageService.getProfileImageByProfileId(sourceProfileId).imagePath();
+    private String getUsersProfileImageUrl(String profileId) {
+        try {
+            return imageService.getProfileImageByProfileId(profileId).imagePath();
+        } catch (FeignException.FeignClientException exception) {
+            if (exception.status() != HttpStatus.NOT_FOUND.value()) {
+                throw exception;
+            }
+            return DEFAULT_IMAGE_PATH;
+        }
     }
 
 }

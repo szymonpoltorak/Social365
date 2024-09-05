@@ -17,7 +17,7 @@ import razepl.dev.social365.profile.api.profile.data.ProfileResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSearchResponse;
 import razepl.dev.social365.profile.api.profile.data.ProfileSummaryResponse;
 import razepl.dev.social365.profile.api.profile.interfaces.ProfileService;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDate;
 import razepl.dev.social365.profile.nodes.about.birthdate.BirthDateRepository;

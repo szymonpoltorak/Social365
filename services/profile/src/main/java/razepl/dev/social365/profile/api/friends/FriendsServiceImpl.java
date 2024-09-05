@@ -12,7 +12,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadySendFriendRequestException;

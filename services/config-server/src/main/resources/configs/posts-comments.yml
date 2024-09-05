@@ -54,13 +54,9 @@ spring:
 
     kafka:
         producer:
-            bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-            key-serializer: org.apache.kafka.common.serialization.ErrorHandlingSerializer
-            value-serializer: org.springframework.kafka.support.serializer.ErrorHandlingSerializer
-            properties:
-                spring.json.trusted.packages: '*'
-                spring.serializer.key.delegate.class: org.apache.kafka.common.serialization.StringSerializer
-                spring.serializer.value.delegate.class: org.springframework.kafka.support.serializer.StringSerializer
+            bootstrap-servers: ${KAFKA_BROKER_HOSTNAME}:${KAFKA_PORT}
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 kafka:
     topics:

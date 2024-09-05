@@ -294,7 +294,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public final ImageResponse getProfileImageByProfileId(String profileId) {
+    public ImageResponse getProfileImageByProfileId(String profileId) {
         log.info("Getting profile image for profileId: {}", profileId);
 
         Image image = imagesRepository.findImageByProfileIdAndImageType(profileId, ImageType.PROFILE_IMAGE)

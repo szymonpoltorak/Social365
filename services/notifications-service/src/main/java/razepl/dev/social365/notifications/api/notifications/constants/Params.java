@@ -8,6 +8,8 @@ public final class Params {
 
     public static final String PROFILE_ID = "profileId";
 
+    public static final String USERNAME = "username";
+
     private Params() {
     }
 

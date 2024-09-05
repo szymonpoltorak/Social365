@@ -16,8 +16,8 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsController;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.api.profile.constants.Params;
-import razepl.dev.social365.profile.config.AuthUser;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.AuthUser;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 @RestController

@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.notifications.api.notifications.data.NotificationResponse;
 import razepl.dev.social365.notifications.config.kafka.KafkaConfigNames;
@@ -37,6 +40,7 @@ public class NotificationsConsumer {
     private final RabbitTemplate rabbitTemplate;
     private final NotificationsMapper notificationsMapper;
     private final ObjectMapper jsonMapper;
+    private final Jwt kafkaJwt;
 
     @KafkaListener(
             topics = KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC,
@@ -163,6 +167,8 @@ public class NotificationsConsumer {
 
     private void sendNotification(Notification notification) {
         notificationRepository.save(notification);
+
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(kafkaJwt));
 
         NotificationResponse notificationResponse = notificationsMapper.mapNotificationToNotificationResponse(notification);
 

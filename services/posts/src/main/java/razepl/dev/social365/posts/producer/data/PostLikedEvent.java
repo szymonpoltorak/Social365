@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record PostLikedEvent(String eventId, String timeStamp, String targetProfileId, String likeAuthorFullName,
-                             String postId, int currentNumOfLikes, String sourceProfileId) {
+                             String postId, int currentNumOfLikes, String sourceProfileId, String username) {
 }

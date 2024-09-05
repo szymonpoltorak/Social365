@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record CommentRepliedEvent(String eventId, String timeStamp, String sourceProfileId, String targetProfileId,
-                                  String commentId, String replyCommentId, String replyAuthorFullName) {
+                                  String commentId, String replyCommentId, String replyAuthorFullName, String username) {
 }

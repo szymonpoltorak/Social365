@@ -89,3 +89,6 @@ kafka:
 
     group-ids:
         notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}
+
+    jwt: ${JWT_SERVICE_TO_SERVICE}
+
