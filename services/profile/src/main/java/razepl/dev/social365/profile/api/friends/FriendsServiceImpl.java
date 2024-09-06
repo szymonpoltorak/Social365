@@ -220,7 +220,7 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Accepting friend request. from user : {} ...", profileId);
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
-        
+
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
 
         kafkaProducer.sendFriendshipAcceptedEvent(profile, user);

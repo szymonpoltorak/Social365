@@ -1,7 +1,7 @@
 services:
     kafka-broker:
         image: 'bitnami/kafka:latest'
-        env_file: "../.env"
+        env_file: "../../.env"
         container_name: ${KAFKA_BROKER_HOSTNAME}
         hostname: ${KAFKA_BROKER_HOSTNAME}
         ports:
@@ -11,7 +11,7 @@ services:
 
     rabbitmq:
         image: rabbitmq:3.13.7-management-alpine
-        env_file: "../.env"
+        env_file: "../../.env"
         container_name: ${RABBITMQ_HOSTNAME}
         hostname: ${RABBITMQ_HOSTNAME}
         ports:
@@ -22,7 +22,7 @@ services:
 
     notifications-mongodb:
         image: mongo:7.0.14-jammy
-        env_file: "../.env"
+        env_file: "../../.env"
         container_name: ${MONGO_NOTIFICATIONS_HOST}
         hostname: ${MONGO_NOTIFICATIONS_HOST}
         ports:

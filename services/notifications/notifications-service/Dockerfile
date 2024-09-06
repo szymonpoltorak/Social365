@@ -6,7 +6,7 @@ COPY build.gradle .
 
 COPY settings.gradle .
 
-COPY src/ src/
+COPY src src/
 
 RUN gradle build -x test
 
