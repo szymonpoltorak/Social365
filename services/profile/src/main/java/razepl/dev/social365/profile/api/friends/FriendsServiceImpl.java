@@ -13,6 +13,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.config.auth.User;
+import razepl.dev.social365.profile.producer.KafkaProducer;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadySendFriendRequestException;
@@ -36,6 +37,7 @@ public class FriendsServiceImpl implements FriendsService {
 
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public final SocialPage<FriendResponse> getFriends(User user, Pageable pageable) {
@@ -128,7 +130,8 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Adding follow relation...");
 
         profileRepository.createFollowsRelation(profileId, friendId);
-        profileRepository.createFollowsRelation(friendId, profileId);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(profile, user);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -159,6 +162,8 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Following user with id : {} ...", toFollowId);
 
         profileRepository.createFollowsRelation(profileId, toFollowId);
+
+        kafkaProducer.sendFriendshipFollowedEvent(profile, user);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -197,6 +202,8 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.createWantsToBeFriendWithRelation(profileId, friendId);
 
+        kafkaProducer.sendFriendshipRequestedEvent(profile, user);
+
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
@@ -213,7 +220,10 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Accepting friend request. from user : {} ...", profileId);
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
+        
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(profile, user);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -231,6 +241,7 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Declining friend request. from user : {} ...", profileId);
 
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
+        kafkaProducer.sendFriendshipRejectedEvent(profile, user);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }

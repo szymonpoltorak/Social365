@@ -34,7 +34,7 @@ services:
     posts-cassandra:
         container_name: ${POSTS_CASSANDRA_HOSTNAME}
         hostname: ${POSTS_CASSANDRA_HOSTNAME}
-        image: ${POSTS_CASSANDRA_HOSTNAME}
+        image: ${POSTS_CASSANDRA_HOSTNAME}:dev
         env_file: "../.env"
         build:
             context: cassandra

@@ -23,6 +23,7 @@ import java.util.UUID;
 public class NotificationsMapperImpl implements NotificationsMapper {
 
     private static final String DEFAULT_IMAGE_PATH = "/images/nouser@example.com/shiba1.jpg";
+
     private final ImageService imageService;
     private final KafkaMessageConverter messageConverter;
 
