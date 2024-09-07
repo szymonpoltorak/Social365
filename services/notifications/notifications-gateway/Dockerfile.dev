@@ -1,0 +1,7 @@
+FROM social:build
+
+WORKDIR /notifications-gateway
+
+EXPOSE 8080
+
+CMD ["gradle", "bootRun"]

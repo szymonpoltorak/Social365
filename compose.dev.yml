@@ -21,6 +21,8 @@ include:
             - ./services/notifications-service/compose.dev.yml
     -   path:
             - ./services/data-init/compose.yml
+    -   path:
+            - ./services/notifications-gateway/compose.dev.yml
 
 services: {}
 

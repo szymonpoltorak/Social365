@@ -21,8 +21,10 @@ include:
             - ./services/notifications-service/compose.yml
     -   path:
             - ./services/data-init/compose.yml
+    -   path:
+            - ./services/notifications-gateway/compose.yml
 
-services: {}
+services: { }
 
 networks:
     social365-network:
