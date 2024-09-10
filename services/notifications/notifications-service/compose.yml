@@ -56,6 +56,8 @@ services:
                 condition: service_healthy
             kafka-broker:
                 condition: service_healthy
+            rabbitmq:
+                condition: service_started
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${NOTIFICATIONS_SERVICE_PORT}/actuator/health" ]
             start_period: 35s

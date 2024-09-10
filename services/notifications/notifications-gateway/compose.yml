@@ -6,7 +6,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        env_file: "../.env"
+        env_file: "../../.env"
         networks:
             - social365-network
         ports:
@@ -17,7 +17,7 @@ services:
             eureka-registry:
                 condition: service_healthy
             rabbitmq:
-                condition: service_healthy
+                condition: service_started
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${NOTIFICATIONS_GATEWAY_PORT}/actuator/health" ]
             start_period: 35s

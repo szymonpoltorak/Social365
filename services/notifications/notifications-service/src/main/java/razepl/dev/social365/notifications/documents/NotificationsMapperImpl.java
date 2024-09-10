@@ -35,6 +35,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .notificationText(notification.getNotificationText())
                 .isRead(notification.isRead())
                 .authorsProfileImageUrl(getUsersProfileImageUrl(notification.getSourceProfileId()))
+                .targetProfileId(notification.getTargetProfileId())
                 .build();
     }
 

@@ -14,7 +14,7 @@ public class RabbitMQSettings {
 
     public static final String NOTIFICATIONS_ROUTING_KEY = "notificationsKey";
 
-    private static final String NOTIFICATIONS_QUEUE_NAME = "notifications";
+    public static final String NOTIFICATIONS_QUEUE_NAME = "notifications";
 
     @Bean
     public Queue notificationsQueue() {

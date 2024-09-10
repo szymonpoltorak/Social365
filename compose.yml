@@ -18,13 +18,13 @@ include:
     -   path:
             - ./services/posts/compose.yml
     -   path:
-            - ./services/notifications-service/compose.yml
+            - ./services/notifications/notifications-service/compose.yml
     -   path:
             - ./services/data-init/compose.yml
     -   path:
-            - ./services/notifications-gateway/compose.yml
+            - ./services/notifications/notifications-gateway/compose.yml
 
-services: { }
+services: {}
 
 networks:
     social365-network:

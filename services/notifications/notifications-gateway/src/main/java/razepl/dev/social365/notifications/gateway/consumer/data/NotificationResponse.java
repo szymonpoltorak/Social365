@@ -1,4 +1,4 @@
-package razepl.dev.social365.notifications.api.notifications.data;
+package razepl.dev.social365.notifications.gateway.consumer.data;
 
 import lombok.Builder;
 
