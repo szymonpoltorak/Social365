@@ -2,7 +2,7 @@ include:
     -   path:
             - ./services/config-server/compose.yml
     -   path:
-            - ./services/frontend-client/compose.yml
+            - ./services/frontend-client/compose.dev.yml
     -   path:
             - ./services/eureka-registry/compose.yml
     -   path:
@@ -10,7 +10,7 @@ include:
     -   path:
             - ./services/reverse-proxy/compose.yml
     -   path:
-            - ./services/images/compose.dev.yml
+            - ./services/images/compose.yml
     -   path:
             - ./services/api-gateway/compose.yml
     -   path:
