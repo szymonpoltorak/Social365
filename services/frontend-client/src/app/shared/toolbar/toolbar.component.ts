@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from "@angular/material/autocomplete";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
@@ -20,6 +20,9 @@ import { ProfileQuery } from "@interfaces/feed/profile-query.interface";
 import { AuthService } from "@api/auth/auth.service";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { CdkMenu, CdkMenuTrigger } from "@angular/cdk/menu";
+import { Notification } from "@interfaces/notifications/notification.interface";
+import { MatRipple } from "@angular/material/core";
 
 @Component({
     selector: 'app-toolbar',
@@ -41,7 +44,11 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
         MatTabsModule,
         MatBadge,
         AvatarPhotoComponent,
-        FormsModule
+        FormsModule,
+        CdkMenuTrigger,
+        CdkMenu,
+        NgClass,
+        MatRipple
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -49,13 +56,28 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
 export class ToolbarComponent implements OnInit {
 
     @Input() isOnFeed!: boolean;
-    filteredOptions$ !: Observable<SocialPage<ProfileQuery, PageablePagingState>>;
-    newMessages: number = 5;
-    newNotifications: number = 0;
+    protected filteredOptions$ !: Observable<SocialPage<ProfileQuery, PageablePagingState>>;
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
     private readonly PAGE_SIZE: number = 5;
+    protected notifications: Notification[] = [
+        {
+            notificationId: "1",
+            notificationText: "You have a new message",
+            isRead: false,
+            authorsProfileImageUrl: "/images/nouser@example.com/shiba1.jpg",
+            targetProfileId: "1"
+        },
+        {
+            notificationId: "1",
+            notificationText: "Andrzej Kowalski liked your post",
+            isRead: true,
+            authorsProfileImageUrl: "/images/nouser@example.com/shiba1.jpg",
+            targetProfileId: "1"
+        },
+    ];
+    newNotifications: number = this.notifications.filter(notification => !notification.isRead).length;
 
     constructor(protected router: Router,
                 private profileService: ProfileService,
@@ -105,4 +127,8 @@ export class ToolbarComponent implements OnInit {
             });
     }
 
+    readNotification(notification: Notification): void {
+        notification.isRead = true;
+        this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
+    }
 }

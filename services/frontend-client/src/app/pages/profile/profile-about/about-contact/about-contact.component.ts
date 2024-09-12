@@ -16,7 +16,7 @@ import { AboutSelectOptionComponent } from "@shared/profile/about-select-option/
 import { AboutDateOptionComponent } from "@shared/profile/about-date-option/about-date-option.component";
 import { DatePipe } from "@angular/common";
 import { DetailsType } from "@enums/profile/details-type.enum";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { AboutDataService } from "@api/profile/about/about-data.service";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";

@@ -8,7 +8,7 @@ import { ProfileService } from "@api/profile/profile.service";
 import { ProfileSearch } from "@interfaces/search/profile-search.interface";
 import { FriendsService } from "@api/profile/friends.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";
 

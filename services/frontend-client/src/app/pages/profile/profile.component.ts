@@ -12,7 +12,7 @@ import { MatButton, MatIconButton, MatMiniFabButton } from "@angular/material/bu
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { Subject, takeUntil } from "rxjs";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";

@@ -6,7 +6,7 @@ import { MatRipple } from "@angular/material/core";
 import { RouterOutlet } from "@angular/router";
 import { ListSelectOptionComponent } from "@shared/list-select-option/list-select-option.component";
 import { Subject, takeUntil } from "rxjs";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 

@@ -45,9 +45,9 @@ public class PostControllerImpl implements PostController {
     @Override
     @GetMapping(value = PostMappings.GET_USERS_POSTS)
     public final SocialPage<PostData> getUsersPosts(@RequestParam(Params.PROFILE_ID) String profileId,
-                                                       @RequestParam(Params.FRIENDS_PAGE_NUMBER) int friendsPageNumber,
-                                                       @RequestParam(Params.PAGE_SIZE) int pageSize,
-                                                       @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
+                                                    @RequestParam(Params.FRIENDS_PAGE_NUMBER) int friendsPageNumber,
+                                                    @RequestParam(Params.PAGE_SIZE) int pageSize,
+                                                    @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
         return postService.getUsersPosts(profileId, PageInfo.of(friendsPageNumber, pageSize, pagingState));
     }
 

@@ -7,7 +7,7 @@ import { MatFormField, MatInputModule } from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import { MatDivider } from "@angular/material/divider";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-option/about-unfilled-option.component";
 import { AboutDetailsService } from "@api/profile/about/about-details.service";
 import { DateOfBirthRequest } from "@interfaces/profile/about/date-of-birth-request.interface";

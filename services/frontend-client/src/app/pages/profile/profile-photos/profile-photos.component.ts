@@ -4,7 +4,7 @@ import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ImagesService } from "@api/images/images.service";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { PostImage } from "@interfaces/images/post-image.interface";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";

@@ -8,7 +8,7 @@ import { MatDivider } from "@angular/material/divider";
 import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { WorkPlaceRequest } from "@interfaces/profile/about/workplace-request.interface";
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";

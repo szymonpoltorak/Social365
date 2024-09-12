@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatDivider } from "@angular/material/divider";
 import { MatButton } from "@angular/material/button";
 import { AboutUnfilledOptionComponent } from "@shared/profile/about-unfilled-option/about-unfilled-option.component";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { AboutApiHelperService } from "@api/profile/about/about-api-helper.service";
 import { Either } from "@core/types/feed/either.type";
 import { MatSnackBar } from "@angular/material/snack-bar";

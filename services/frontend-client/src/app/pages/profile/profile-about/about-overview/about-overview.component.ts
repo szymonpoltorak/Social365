@@ -16,7 +16,7 @@ import { MatOption, MatSelect } from "@angular/material/select";
 import { AboutSelectOptionComponent } from "@shared/profile/about-select-option/about-select-option.component";
 import { AboutTypicalOptionComponent } from "@shared/profile/about-typical-option/about-typical-option.component";
 import { AboutDataService } from "@api/profile/about/about-data.service";
-import { RoutingService } from '@core/services/profile/routing.service';
+import { RoutingService } from '@services/utils/routing.service';
 import { AboutWorkplaceComponent } from "@shared/profile/about-workplace/about-workplace.component";
 import { DetailsType } from "@enums/profile/details-type.enum";
 import { OverviewData } from "@interfaces/profile/about/overview-data.interface";

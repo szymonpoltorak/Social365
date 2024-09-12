@@ -65,6 +65,9 @@ public class PostServiceImpl implements PostService {
             ProfileSocialPage<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
             List<String> friendsIds = friendsPage.data();
 
+            if (friendsIds.isEmpty() && result.isEmpty()) {
+                return getUsersPosts(profileId, pageInfo);
+            }
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
