@@ -3,6 +3,7 @@ package razepl.dev.social365.notifications.api.notifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,12 @@ public class NotificationsControllerImpl implements NotificationsController {
                                                                           @RequestParam(Params.PAGE_NUMBER) int pageNumber,
                                                                           @RequestParam(Params.PAGE_SIZE) int pageSize) {
         return notificationsService.getNotificationsForUser(user, PageRequest.of(pageNumber, pageSize));
+    }
+
+    @Override
+    @PutMapping(NotificationsMappings.READ_NOTIFICATIONS_MAPPING)
+    public final NotificationResponse readNotifications(@AuthUser User user) {
+        return notificationsService.readNotifications(user);
     }
 
 }

@@ -45,6 +45,7 @@
                 class="toolbar-button"
                 color="primary"
                 mat-mini-fab
+                (click)="readNotifications()"
                 [cdkMenuTriggerFor]="notificationsMenu"
                 matBadge="{{ newNotifications }}"
                 matBadgeColor="warn"
@@ -58,6 +59,7 @@
                     <div class="w-96 gap-3 p-2 inline-flex items-center mat-button-ripple rounded-xl mb-2"
                          [ngClass]="!notification.isRead ? 'bg-[#534f63]' : ''"
                          (click)="readNotification(notification)"
+                         (mouseleave)="readNotification(notification)"
                          (keyup)="readNotification(notification)"
                          tabindex="0"
                          matRipple

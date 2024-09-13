@@ -66,4 +66,12 @@ export class SocialPage<T, S extends SocialPagingState<S>> implements Iterable<T
         this._data = this._data.filter(value => value !== element);
     }
 
+    filter(callback: (value: T) => boolean): T[] {
+        return this._data.filter(callback);
+    }
+
+    contains(value: T): boolean {
+        return this._data.includes(value);
+    }
+
 }

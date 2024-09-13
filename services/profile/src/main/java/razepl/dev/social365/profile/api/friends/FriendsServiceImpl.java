@@ -131,7 +131,10 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.createFollowsRelation(profileId, friendId);
 
-        kafkaProducer.sendFriendshipAcceptedEvent(profile, user);
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -163,7 +166,10 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.createFollowsRelation(profileId, toFollowId);
 
-        kafkaProducer.sendFriendshipFollowedEvent(profile, user);
+        Profile friend = profileRepository.findByProfileId(toFollowId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipFollowedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -202,7 +208,10 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.createWantsToBeFriendWithRelation(profileId, friendId);
 
-        kafkaProducer.sendFriendshipRequestedEvent(profile, user);
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipRequestedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -223,7 +232,10 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
 
-        kafkaProducer.sendFriendshipAcceptedEvent(profile, user);
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -241,7 +253,11 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Declining friend request. from user : {} ...", profileId);
 
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
-        kafkaProducer.sendFriendshipRejectedEvent(profile, user);
+
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipRejectedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }

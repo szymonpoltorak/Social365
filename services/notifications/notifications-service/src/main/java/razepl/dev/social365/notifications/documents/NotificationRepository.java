@@ -5,6 +5,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -18,4 +19,7 @@ public interface NotificationRepository extends MongoRepository<Notification, UU
     @DeleteQuery("{ 'sourceProfileId' : ?0, 'targetProfileId' : ?1 }")
     void deleteBySourceProfileIdAndTargetProfileId(String sourceProfileId, String targetProfileId);
 
+    @Query("{ 'targetProfileId' : ?0, 'read' : false }")
+    @Update(value = "{ $set: { 'read' : true } }")
+    void readNotifications(String profileId);
 }

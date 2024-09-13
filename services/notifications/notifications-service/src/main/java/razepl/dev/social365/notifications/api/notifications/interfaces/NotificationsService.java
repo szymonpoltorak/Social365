@@ -5,9 +5,10 @@ import razepl.dev.social365.notifications.api.notifications.data.NotificationRes
 import razepl.dev.social365.notifications.config.auth.User;
 import razepl.dev.social365.notifications.utils.pagination.SocialPage;
 
-@FunctionalInterface
 public interface NotificationsService {
 
     SocialPage<NotificationResponse> getNotificationsForUser(User user, Pageable pageable);
+
+    NotificationResponse readNotifications(User user);
 
 }

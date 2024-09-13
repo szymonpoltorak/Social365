@@ -11,7 +11,6 @@ import razepl.dev.social365.notifications.config.auth.User;
 import razepl.dev.social365.notifications.utils.pagination.SocialPage;
 import razepl.dev.social365.notifications.utils.pagination.SocialPageImpl;
 
-@FunctionalInterface
 @Tag(name = "NotificationsController", description = "Operations pertaining to notifications in Social365")
 public interface NotificationsController {
 
@@ -21,5 +20,12 @@ public interface NotificationsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     SocialPage<NotificationResponse> getNotificationsForUser(User user, int page, int size);
+
+    @Operation(summary = "Read notifications by user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully read notifications"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    NotificationResponse readNotifications(User user);
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe, NgClass } from "@angular/common";
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from "@angular/material/autocomplete";
 import { MatIcon } from "@angular/material/icon";
@@ -8,7 +8,18 @@ import { MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, Observable, startWith, switchMap } from "rxjs";
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    EMPTY,
+    Observable,
+    startWith,
+    Subject,
+    Subscription,
+    switchMap,
+    takeUntil
+} from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatBadge } from "@angular/material/badge";
 import { RouterPaths } from "@enums/router-paths.enum";
@@ -23,6 +34,8 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
 import { CdkMenu, CdkMenuTrigger } from "@angular/cdk/menu";
 import { Notification } from "@interfaces/notifications/notification.interface";
 import { MatRipple } from "@angular/material/core";
+import { NotificationsGatewayService } from "@api/notifications/notifications-gateway.service";
+import { NotificationsService } from "@api/notifications/notifications.service";
 
 @Component({
     selector: 'app-toolbar',
@@ -53,44 +66,56 @@ import { MatRipple } from "@angular/material/core";
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
 
     @Input() isOnFeed!: boolean;
+    private notificationsSubscription$ !: Subscription;
+    private notificationsDestroy$: Subject<void> = new Subject<void>();
     protected filteredOptions$ !: Observable<SocialPage<ProfileQuery, PageablePagingState>>;
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
     private readonly PAGE_SIZE: number = 5;
-    protected notifications: Notification[] = [
-        {
-            notificationId: "1",
-            notificationText: "You have a new message",
-            isRead: false,
-            authorsProfileImageUrl: "/images/nouser@example.com/shiba1.jpg",
-            targetProfileId: "1"
-        },
-        {
-            notificationId: "1",
-            notificationText: "Andrzej Kowalski liked your post",
-            isRead: true,
-            authorsProfileImageUrl: "/images/nouser@example.com/shiba1.jpg",
-            targetProfileId: "1"
-        },
-    ];
-    newNotifications: number = this.notifications.filter(notification => !notification.isRead).length;
+    protected notifications !: SocialPage<Notification, PageablePagingState>;
+    protected newNotifications !: number;
 
     constructor(protected router: Router,
                 private profileService: ProfileService,
                 private authService: AuthService,
+                private notificationsService: NotificationsService,
+                private notificationsGatewayService: NotificationsGatewayService,
                 private localStorageService: LocalStorageService) {
     }
 
     ngOnInit(): void {
+        this.notificationsService
+            .getNotificationsForUser(PageablePagingState.firstPage(this.PAGE_SIZE))
+            .subscribe((notifications: SocialPage<Notification, PageablePagingState>) => {
+                console.log('Notifications:', notifications);
+
+                this.notifications = notifications;
+                this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
+            });
+
+        this.notificationsSubscription$ = this.notificationsGatewayService.connect().subscribe({
+            next: (notification: Notification) => {
+                console.log('WebSocket message:', notification);
+                if (this.notifications.contains(notification)) {
+                    return;
+                }
+                this.notifications.add(notification);
+                this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
+            },
+            error: (err) => console.error('WebSocket error:', err),
+            complete: () => console.log('WebSocket connection closed'),
+        });
+
         this.filteredOptions$ = this.searchSocialControl.valueChanges.pipe(
             startWith(""),
             distinctUntilChanged(),
             debounceTime(750),
-            switchMap((pattern: string) => this.fetchProfiles(pattern))
+            switchMap((pattern: string) => this.fetchProfiles(pattern)),
+            takeUntil(this.notificationsDestroy$)
         );
         this.user = this.localStorageService.getUserProfileFromStorage();
     }
@@ -131,4 +156,20 @@ export class ToolbarComponent implements OnInit {
         notification.isRead = true;
         this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
     }
+
+    ngOnDestroy(): void {
+        if (this.notificationsSubscription$) {
+            this.notificationsSubscription$.unsubscribe();
+        }
+        this.notificationsGatewayService.disconnect();
+        this.notificationsDestroy$.next();
+        this.notificationsDestroy$.complete();
+    }
+
+    readNotifications(): void {
+        this.notificationsService
+            .readNotifications()
+            .subscribe(() => this.newNotifications = 0);
+    }
+
 }

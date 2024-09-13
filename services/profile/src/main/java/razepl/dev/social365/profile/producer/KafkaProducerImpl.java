@@ -6,15 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.config.kafka.KafkaConfigNames;
 import razepl.dev.social365.profile.nodes.profile.Profile;
-import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 import razepl.dev.social365.profile.producer.data.FriendshipEvent;
 import razepl.dev.social365.profile.producer.data.FriendshipRejectedEvent;
-import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Slf4j
@@ -23,13 +21,12 @@ public class KafkaProducerImpl implements KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper jsonMapper;
-    private final ProfileRepository profileRepository;
     private final String friendshipAcceptedTopic;
     private final String friendshipRejectedTopic;
     private final String friendshipFollowedTopic;
     private final String friendshipRequestedTopic;
 
-    public KafkaProducerImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper jsonMapper, ProfileRepository profileRepository,
+    public KafkaProducerImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper jsonMapper,
                              @Value(KafkaConfigNames.FRIENDSHIP_ACCEPTED_TOPIC) String friendshipAcceptedTopic,
                              @Value(KafkaConfigNames.FRIENDSHIP_REJECTED_TOPIC) String friendshipRejectedTopic,
                              @Value(KafkaConfigNames.FRIENDSHIP_FOLLOWED_TOPIC) String friendshipFollowedTopic,
@@ -40,11 +37,10 @@ public class KafkaProducerImpl implements KafkaProducer {
         this.friendshipRejectedTopic = friendshipRejectedTopic;
         this.friendshipFollowedTopic = friendshipFollowedTopic;
         this.friendshipRequestedTopic = friendshipRequestedTopic;
-        this.profileRepository = profileRepository;
     }
 
     @Override
-    public final void sendFriendshipAcceptedEvent(Profile targetProfile, User sourceProfile) {
+    public final void sendFriendshipAcceptedEvent(Profile targetProfile, Profile sourceProfile) {
         log.info("Sending friendship accepted event for target profile: {} and source profile: {}", targetProfile, sourceProfile);
 
         FriendshipEvent event = toFriendshipEvent(targetProfile, sourceProfile);
@@ -55,7 +51,7 @@ public class KafkaProducerImpl implements KafkaProducer {
     }
 
     @Override
-    public final void sendFriendshipRequestedEvent(Profile targetProfile, User sourceProfile) {
+    public final void sendFriendshipRequestedEvent(Profile targetProfile, Profile sourceProfile) {
         log.info("Sending friendship requested event for target profile: {} and source profile: {}", targetProfile, sourceProfile);
 
         FriendshipEvent event = toFriendshipEvent(targetProfile, sourceProfile);
@@ -66,7 +62,7 @@ public class KafkaProducerImpl implements KafkaProducer {
     }
 
     @Override
-    public final void sendFriendshipFollowedEvent(Profile targetProfile, User sourceProfile) {
+    public final void sendFriendshipFollowedEvent(Profile targetProfile, Profile sourceProfile) {
         log.info("Sending friendship followed event for target profile: {} and source profile: {}", targetProfile, sourceProfile);
 
         FriendshipEvent event = toFriendshipEvent(targetProfile, sourceProfile);
@@ -77,14 +73,14 @@ public class KafkaProducerImpl implements KafkaProducer {
     }
 
     @Override
-    public final void sendFriendshipRejectedEvent(Profile targetProfile, User sourceProfile) {
+    public final void sendFriendshipRejectedEvent(Profile targetProfile, Profile sourceProfile) {
         log.info("Sending friendship rejected event for target profile: {} and source profile: {}", targetProfile, sourceProfile);
 
         FriendshipRejectedEvent event = FriendshipRejectedEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(Instant.now().toString())
-                .sourceProfileId(sourceProfile.profileId())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                .sourceProfileId(sourceProfile.getProfileId())
                 .targetProfileId(targetProfile.getProfileId())
                 .build();
 
@@ -93,14 +89,11 @@ public class KafkaProducerImpl implements KafkaProducer {
         sendMessage(friendshipRejectedTopic, event);
     }
 
-    private FriendshipEvent toFriendshipEvent(Profile targetProfile, User sourceUser) {
-        Profile sourceProfile = profileRepository.findByProfileId(sourceUser.profileId())
-                .orElseThrow(ProfileNotFoundException::new);
-
+    private FriendshipEvent toFriendshipEvent(Profile targetProfile, Profile sourceProfile) {
         return FriendshipEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .friendFullName(sourceProfile.getFullName())
                 .sourceProfileId(sourceProfile.getProfileId())
                 .targetProfileId(targetProfile.getProfileId())

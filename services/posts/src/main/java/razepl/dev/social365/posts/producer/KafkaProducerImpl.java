@@ -18,7 +18,8 @@ import razepl.dev.social365.posts.producer.data.CommentRepliedEvent;
 import razepl.dev.social365.posts.producer.data.PostCommentedEvent;
 import razepl.dev.social365.posts.producer.data.PostLikedEvent;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Slf4j
@@ -54,7 +55,7 @@ public class KafkaProducerImpl implements KafkaProducer {
                 .builder()
                 .eventId(UUID.randomUUID().toString())
                 .username(likeAuthor.username())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .postId(post.getPostId().toString())
                 .targetProfileId(targetProfileId)
                 .likeAuthorFullName(profile.fullName())
@@ -73,7 +74,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         PostCommentedEvent postCommentedEvent = PostCommentedEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .username(commentAuthor.username())
                 .targetProfileId(targetProfileId)
                 .commentAuthorFullName(profile.fullName())
@@ -94,7 +95,7 @@ public class KafkaProducerImpl implements KafkaProducer {
                 .builder()
                 .eventId(UUID.randomUUID().toString())
                 .username(replyAuthor.username())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .targetProfileId(targetProfileId)
                 .replyAuthorFullName(profile.fullName())
                 .sourceProfileId(replyAuthor.profileId())
@@ -116,7 +117,7 @@ public class KafkaProducerImpl implements KafkaProducer {
                 .username(likeAuthor.username())
                 .postId(comment.getPostId().toString())
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .targetProfileId(targetProfileId)
                 .likeAuthorFullName(profile.fullName())
                 .sourceProfileId(likeAuthor.profileId())
@@ -137,7 +138,7 @@ public class KafkaProducerImpl implements KafkaProducer {
                 .username(likeAuthor.username())
                 .commentId(comment.getReplyCommentId().toString())
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(Instant.now().toString())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .targetProfileId(targetProfileId)
                 .likeAuthorFullName(profile.fullName())
                 .sourceProfileId(likeAuthor.profileId())
