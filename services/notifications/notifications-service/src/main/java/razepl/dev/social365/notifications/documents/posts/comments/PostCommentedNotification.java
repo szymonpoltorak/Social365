@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import razepl.dev.social365.notifications.documents.Notification;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -19,7 +20,7 @@ public class PostCommentedNotification extends Notification {
     private String commentId;
 
     @Builder
-    public PostCommentedNotification(UUID notificationId, String eventId, String targetProfileId, String timestamp,
+    public PostCommentedNotification(UUID notificationId, String eventId, String targetProfileId, Instant timestamp,
                                      String notificationText, String postId, String commentId, String sourceProfileId) {
         super(notificationId, eventId, targetProfileId, timestamp, notificationText, sourceProfileId, false);
 

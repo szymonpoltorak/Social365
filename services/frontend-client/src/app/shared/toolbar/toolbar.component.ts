@@ -4,7 +4,7 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from "@angular/mat
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { MatMiniFabButton } from "@angular/material/button";
+import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
@@ -61,7 +61,8 @@ import { NotificationsService } from "@api/notifications/notifications.service";
         CdkMenuTrigger,
         CdkMenu,
         NgClass,
-        MatRipple
+        MatRipple,
+        MatButton
     ],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss'
@@ -75,7 +76,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     protected readonly searchSocialControl: FormControl<string> = new FormControl();
     protected user !: Profile;
     protected readonly RouterPaths = RouterPaths;
-    private readonly PAGE_SIZE: number = 5;
+    private readonly PAGE_SIZE: number = 4;
     protected notifications !: SocialPage<Notification, PageablePagingState>;
     protected newNotifications !: number;
 
@@ -91,15 +92,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.notificationsService
             .getNotificationsForUser(PageablePagingState.firstPage(this.PAGE_SIZE))
             .subscribe((notifications: SocialPage<Notification, PageablePagingState>) => {
-                console.log('Notifications:', notifications);
-
                 this.notifications = notifications;
                 this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
             });
 
         this.notificationsSubscription$ = this.notificationsGatewayService.connect().subscribe({
             next: (notification: Notification) => {
-                console.log('WebSocket message:', notification);
                 if (this.notifications.contains(notification)) {
                     return;
                 }
@@ -172,4 +170,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             .subscribe(() => this.newNotifications = 0);
     }
 
+    loadMoreNotifications(): void {
+        this.notificationsService
+            .getNotificationsForUser(this.notifications.nextPagingState())
+            .subscribe((notifications: SocialPage<Notification, PageablePagingState>) => {
+                this.notifications.concatAndUpdate(notifications);
+            });
+    }
 }

@@ -69,6 +69,15 @@
                         <span>{{ notification.notificationText }}</span>
                     </div>
                 }
+                @if (notifications.hasNextPage) {
+                    <button mat-button aria-label="Load more notifications"
+                            cdkMenu
+                            (click)="loadMoreNotifications()"
+                            class="mt-2" type="button">
+                        <mat-icon>expand_more</mat-icon>
+                        Load more
+                    </button>
+                }
             </div>
         </ng-template>
 

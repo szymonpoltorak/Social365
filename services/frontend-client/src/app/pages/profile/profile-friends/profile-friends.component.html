@@ -39,7 +39,7 @@
 
             } @else {
                 @for (friend of friends; track friend) {
-                    <app-friend-profile [friend]="friend"></app-friend-profile>
+                    <app-friend-profile (navigateToProfile)="navigateToUserProfile($event)" [friend]="friend"></app-friend-profile>
                 }
             }
         </div>

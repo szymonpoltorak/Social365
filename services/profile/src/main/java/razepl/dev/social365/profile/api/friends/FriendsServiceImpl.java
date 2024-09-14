@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
@@ -130,6 +131,8 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Adding follow relation...");
 
         profileRepository.createFollowsRelation(profileId, friendId);
+
+        profileRepository.createFollowsRelation(friendId, profileId);
 
         Profile friend = profileRepository.findByProfileId(friendId)
                 .orElseThrow(ProfileNotFoundException::new);
@@ -262,7 +265,7 @@ public class FriendsServiceImpl implements FriendsService {
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
-    private SocialPage<FriendResponse> mapFriendDataPageToFriendResponse(Page<FriendData> friends, String profileId) {
+    private SocialPage<FriendResponse> mapFriendDataPageToFriendResponse(Slice<FriendData> friends, String profileId) {
         log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
 
         return SocialPageImpl.of(friends.map(profileMapper::mapFriendDataToFriendResponse));

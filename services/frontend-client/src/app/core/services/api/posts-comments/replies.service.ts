@@ -23,7 +23,7 @@ export class RepliesService {
             params: this.getCommentParams(commentId, pagingState)
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<ReplyComment, CommentsPagingState>(json))
+            map(json => SocialPage.fromJson<ReplyComment, CommentsPagingState>(json, CommentsPagingState.fromJson))
         );
     }
 

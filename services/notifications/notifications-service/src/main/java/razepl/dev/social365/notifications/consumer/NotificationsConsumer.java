@@ -28,6 +28,7 @@ import razepl.dev.social365.notifications.documents.posts.comments.CommentReplie
 import razepl.dev.social365.notifications.documents.posts.comments.PostCommentedNotification;
 import razepl.dev.social365.notifications.documents.posts.comments.PostLikedNotification;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -154,7 +155,7 @@ public class NotificationsConsumer {
                 .notificationId(UUID.randomUUID())
                 .eventId(event.eventId())
                 .read(false)
-                .timestamp(event.timeStamp())
+                .timestamp(Instant.parse(event.timeStamp()))
                 .sourceProfileId(event.sourceProfileId())
                 .targetProfileId(event.targetProfileId())
                 .notificationText(notificationsText)

@@ -83,7 +83,7 @@ export class ImagesService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 

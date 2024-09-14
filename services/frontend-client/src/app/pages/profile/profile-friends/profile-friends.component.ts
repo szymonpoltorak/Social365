@@ -6,15 +6,16 @@ import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
-import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { FriendProfileComponent } from "@pages/profile/profile-friends/friend-profile/friend-profile.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { FriendsService } from "@api/profile/friends.service";
 import { debounceTime, distinctUntilChanged, startWith, tap } from "rxjs";
 import { Optional } from "@core/types/profile/optional.type";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { RouterPaths } from "@enums/router-paths.enum";
+import { FriendElement } from "@interfaces/friends/friend-element.interface";
 
 @Component({
     selector: 'app-profile-friends',
@@ -42,10 +43,11 @@ import { PageablePagingState } from "@core/utils/pageable-paging-state";
 export class ProfileFriendsComponent implements OnInit {
 
     protected searchSocialControl: FormControl<Optional<string>> = new FormControl<string>("");
-    protected friends !: SocialPage<FriendProfileOption, PageablePagingState>;
+    protected friends !: SocialPage<FriendElement, PageablePagingState>;
     private readonly PAGE_SIZE: number = 15;
 
-    constructor(private friendsService: FriendsService) {
+    constructor(private friendsService: FriendsService,
+                private router: Router) {
     }
 
     ngOnInit(): void {
@@ -82,16 +84,19 @@ export class ProfileFriendsComponent implements OnInit {
         if (value === "") {
             this.friendsService
                 .getFriends(pagingState)
-                .subscribe((friends: SocialPage<FriendProfileOption, PageablePagingState>) => {
+                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => {
                     this.friends = friends;
                 });
         } else if (value !== null) {
             this.friendsService
                 .getFriendsByPattern(value as string, pagingState)
-                .subscribe((friends: SocialPage<FriendProfileOption, PageablePagingState>) => {
+                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => {
                     this.friends = friends;
                 });
         }
     }
 
+    navigateToUserProfile(username: string): void {
+        this.router.navigate([RouterPaths.PROFILE_DIRECT, username, RouterPaths.PROFILE_POSTS]);
+    }
 }

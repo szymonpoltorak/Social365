@@ -25,4 +25,9 @@ export class PageablePagingState implements SocialPagingState<PageablePagingStat
     static firstPage(pageSize: number) {
         return new PageablePagingState(pageSize, 0);
     }
+
+    static fromJson(json: any): PageablePagingState {
+        return new PageablePagingState(json.pageSize, json.pageNumber);
+    }
+
 }

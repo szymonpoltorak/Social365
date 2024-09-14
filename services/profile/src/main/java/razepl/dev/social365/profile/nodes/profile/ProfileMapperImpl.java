@@ -177,6 +177,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .profileId(profile.getProfileId())
                 .numOfMutualFriends(numOfMutualFriends)
+                .username(profile.getEmail().getEmailValue())
                 .isFollowed(isFollowed)
                 .build();
     }

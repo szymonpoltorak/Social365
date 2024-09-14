@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends MongoRepository<Notification, UUID> {
 
-    @Query("{ 'targetProfileId' : ?0 }")
+    @Query(value = "{ 'targetProfileId' : ?0 }", sort = "{ 'timestamp' : -1 }")
     Slice<Notification> findAllByTargetProfileId(String targetProfileId, Pageable pageable);
 
     @DeleteQuery("{ 'sourceProfileId' : ?0, 'targetProfileId' : ?1 }")
@@ -22,4 +22,5 @@ public interface NotificationRepository extends MongoRepository<Notification, UU
     @Query("{ 'targetProfileId' : ?0, 'read' : false }")
     @Update(value = "{ $set: { 'read' : true } }")
     void readNotifications(String profileId);
+
 }

@@ -27,7 +27,7 @@ export class ProfileService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<BirthdayInfo, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<BirthdayInfo, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
@@ -40,7 +40,7 @@ export class ProfileService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<ProfileQuery, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<ProfileQuery, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
@@ -78,7 +78,7 @@ export class ProfileService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<ProfileSearch, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<ProfileSearch, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 

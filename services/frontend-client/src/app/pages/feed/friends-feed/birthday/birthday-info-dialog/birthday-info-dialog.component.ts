@@ -34,13 +34,13 @@ export class BirthdayInfoDialogComponent implements OnInit {
     ngOnInit(): void {
         this.profileService
             .getTodayBirthdays(this.page.nextPagingState())
-            .subscribe(data => this.page.updatePage(data));
+            .subscribe(data => this.page.concatAndUpdate(data));
     }
 
     showMoreBirthdays(): void {
         this.profileService
             .getTodayBirthdays(this.page.nextPagingState())
-            .subscribe(data => this.page.updatePage(data));
+            .subscribe(data => this.page.concatAndUpdate(data));
     }
 
 }

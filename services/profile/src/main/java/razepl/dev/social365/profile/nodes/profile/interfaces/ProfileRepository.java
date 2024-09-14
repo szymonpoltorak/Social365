@@ -117,7 +117,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
             value = """
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
-                    WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
+                    WITH f, EXISTS((f)-[:FOLLOWS]-(p)) as isFollowed
                     MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
                     RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
@@ -141,7 +141,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
-                    MATCH (p:Profile)-[:FRIENDS_WITH]->(f:Profile)
+                    MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
                     RETURN COUNT(f)
                     """
@@ -209,8 +209,8 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
-                    MATCH (p1:Profile)-[:FRIENDS_WITH]->(f:Profile)<-[:FRIENDS_WITH]-(p:Profile)
-                    WHERE NOT (p)<-[:FRIENDS_WITH]-(p1:Profile) AND p.profileId = $profileId
+                    MATCH (p1:Profile)-[:FRIENDS_WITH]-(f:Profile)-[:FRIENDS_WITH]-(p:Profile)
+                    WHERE NOT (p)-[:FRIENDS_WITH]-(p1:Profile) AND p.profileId = $profileId
                     RETURN COUNT(p1)
                     """
     )
@@ -225,7 +225,7 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
     int getFollowersCount(@Param(Params.PROFILE_ID) String profileId);
 
     @Query("""
-            MATCH (p:Profile)<-[:FRIENDS_WITH]-(f:Profile)
+            MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
             WHERE p.profileId = $profileId
             RETURN COUNT(f)
             """)

@@ -39,4 +39,8 @@ export class PostsPagingState implements SocialPagingState<PostsPagingState> {
         return new PostsPagingState(pageSize, null, 0);
     }
 
+    static fromJson(json: any): PostsPagingState {
+        return new PostsPagingState(json.pageSize, json.pagingState, json.friendsPageNumber);
+    }
+
 }

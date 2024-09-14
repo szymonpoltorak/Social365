@@ -7,7 +7,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -23,29 +22,44 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
     @Override
     public final Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-        log.info("Headers: {}", accessor);
-
-        if (accessor == null || StompCommand.CONNECT != accessor.getCommand()) {
-            return message;
-        }
-        String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
-
-        log.info("Authorization header: {}", authorizationHeader);
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return message;
-        }
-        String token = authorizationHeader.substring(7);
-
-        log.info("Token: {}", token);
-
-        Jwt jwt = jwtDecoder.decode(token);
-
-        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
+//        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+//
+//        if (StompCommand.CONNECT != accessor.getCommand()) {
+//            return message;
+//        }
+//        String token = accessor.getFirstNativeHeader("Authorization");
+//
+//        log.info("Authorization header: {}", token);
+//
+//        if (token == null) {
+//            return message;
+//        }
+//        Jwt jwt = jwtDecoder.decode(token);
+//
+//        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
 
         return message;
+    }
+
+    @Override
+    public final void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
+        log.info("afterSendCompletion Message: {}", message);
+        log.info("afterSendCompletion Channel: {}", channel);
+        log.info("afterSendCompletion Sent: {}", sent);
+        log.info("afterSendCompletion Exception: {}", ex);
+    }
+
+    @Override
+    public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
+        log.info("postSend Message: {}", message);
+        log.info("postSend Channel: {}", channel);
+        log.info("postSend Sent: {}", sent);
+    }
+
+    @Override
+    public boolean preReceive(MessageChannel mc) {
+        log.info("In preReceive");
+        return true;
     }
 
 }

@@ -101,7 +101,7 @@ export class PostsFeedComponent implements OnInit {
         this.postService
             .getPostsFromUrl(this.presentedProfileId, this.posts.nextPagingState(), this.postsUrl)
             .subscribe((posts: SocialPage<Either<Post, SharedPost>, PostsPagingState>) => {
-                this.posts.updatePage(posts);
+                this.posts.concatAndUpdate(posts);
             });
     }
 

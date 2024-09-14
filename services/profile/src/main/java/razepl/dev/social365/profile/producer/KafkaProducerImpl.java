@@ -11,8 +11,7 @@ import razepl.dev.social365.profile.nodes.profile.Profile;
 import razepl.dev.social365.profile.producer.data.FriendshipEvent;
 import razepl.dev.social365.profile.producer.data.FriendshipRejectedEvent;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -79,7 +78,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         FriendshipRejectedEvent event = FriendshipRejectedEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                .timeStamp(Instant.now().toString())
                 .sourceProfileId(sourceProfile.getProfileId())
                 .targetProfileId(targetProfile.getProfileId())
                 .build();
@@ -93,7 +92,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         return FriendshipEvent
                 .builder()
                 .eventId(UUID.randomUUID().toString())
-                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                .timeStamp(Instant.now().toString())
                 .friendFullName(sourceProfile.getFullName())
                 .sourceProfileId(sourceProfile.getProfileId())
                 .targetProfileId(targetProfile.getProfileId())

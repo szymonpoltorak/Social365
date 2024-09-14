@@ -62,7 +62,7 @@ export class SearchComponent implements OnInit {
         }
         this.profileService
             .getProfilesSearchByPattern(this.pattern, this.profiles.nextPagingState())
-            .subscribe((profiles: SocialPage<ProfileSearch, PageablePagingState>) => this.profiles.updatePage(profiles));
+            .subscribe((profiles: SocialPage<ProfileSearch, PageablePagingState>) => this.profiles.concatAndUpdate(profiles));
     }
 
     addFriend(friend: ProfileSearch): void {

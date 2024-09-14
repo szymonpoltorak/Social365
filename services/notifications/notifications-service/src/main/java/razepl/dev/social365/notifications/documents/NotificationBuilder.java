@@ -1,5 +1,6 @@
 package razepl.dev.social365.notifications.documents;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class NotificationBuilder {
@@ -7,7 +8,7 @@ public class NotificationBuilder {
     private UUID notificationId = null;
     private String eventId = null;
     private String targetProfileId = null;
-    private String timestamp = null;
+    private Instant timestamp = null;
     private String notificationText = null;
     private String sourceProfileId = null;
     private boolean read = false;
@@ -27,7 +28,7 @@ public class NotificationBuilder {
         return this;
     }
 
-    public final NotificationBuilder timestamp(String timestamp) {
+    public final NotificationBuilder timestamp(Instant timestamp) {
         this.timestamp = timestamp;
         return this;
     }

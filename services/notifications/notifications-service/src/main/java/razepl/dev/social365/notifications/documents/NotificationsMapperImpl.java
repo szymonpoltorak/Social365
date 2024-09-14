@@ -16,6 +16,7 @@ import razepl.dev.social365.notifications.documents.posts.comments.CommentReplie
 import razepl.dev.social365.notifications.documents.posts.comments.PostCommentedNotification;
 import razepl.dev.social365.notifications.documents.posts.comments.PostLikedNotification;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Component
@@ -50,7 +51,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .postId(event.postId())
                 .currentNumOfLikes(event.currentNumOfLikes())
                 .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
+                .timestamp(Instant.parse(event.timeStamp()))
                 .sourceProfileId(event.sourceProfileId())
                 .notificationText(notificationsText)
                 .build();
@@ -66,7 +67,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .eventId(event.eventId())
                 .postId(event.postId())
                 .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
+                .timestamp(Instant.parse(event.timeStamp()))
                 .sourceProfileId(event.sourceProfileId())
                 .notificationText(notificationsText)
                 .build();
@@ -82,7 +83,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .eventId(event.eventId())
                 .commentId(event.commentId())
                 .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
+                .timestamp(Instant.parse(event.timeStamp()))
                 .sourceProfileId(event.sourceProfileId())
                 .notificationText(notificationsText)
                 .build();
@@ -98,7 +99,7 @@ public class NotificationsMapperImpl implements NotificationsMapper {
                 .eventId(event.eventId())
                 .commentId(event.commentId())
                 .targetProfileId(event.targetProfileId())
-                .timestamp(event.timeStamp())
+                .timestamp(Instant.parse(event.timeStamp()))
                 .sourceProfileId(event.sourceProfileId())
                 .notificationText(notificationsText)
                 .build();
