@@ -47,7 +47,7 @@
                 mat-mini-fab
                 (click)="readNotifications()"
                 [cdkMenuTriggerFor]="notificationsMenu"
-                matBadge="{{ newNotifications }}"
+                matBadge="{{ newNotifications }}{{ notifications !== undefined && notifications.hasNextPage ? '+' : '' }}"
                 matBadgeColor="warn"
                 matBadgeHidden="{{ newNotifications === 0 }}">
             <mat-icon>notifications</mat-icon>

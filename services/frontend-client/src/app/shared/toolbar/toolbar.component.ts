@@ -101,7 +101,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 if (this.notifications.contains(notification)) {
                     return;
                 }
-                this.notifications.add(notification);
+                this.notifications.addFirst(notification);
                 this.newNotifications = this.notifications.filter(notification => !notification.isRead).length;
             },
             error: (err) => console.error('WebSocket error:', err),

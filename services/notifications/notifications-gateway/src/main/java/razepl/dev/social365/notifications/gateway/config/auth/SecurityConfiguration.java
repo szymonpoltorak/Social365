@@ -43,11 +43,10 @@ public class SecurityConfiguration {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/actuator/**", "/notifications/**")
-//                        .permitAll()
+                        .requestMatchers("/actuator/**", "/notifications/**")
+                        .permitAll()
                         .anyRequest()
-                                .permitAll()
-//                        .authenticated()
+                        .authenticated()
                 )
                 .cors(Customizer.withDefaults())
                 .headers(headers -> headers

@@ -19,13 +19,11 @@ export class NotificationsGatewayService {
     }
 
     connect(): Observable<Notification> {
-        const socket = new SockJs(`http://localhost:8085/notifications?token=${this.localStorage.getValueFromStorage(StorageKeys.AUTH_TOKEN)}`);
+        const socket = new SockJs(`/notifications?token=${ this.localStorage.getValueFromStorage(StorageKeys.AUTH_TOKEN) }`);
 
         this.socketClient = Stomp.over(socket);
 
-        this.socketClient.connect({
-            // Authorization: `Bearer ${this.localStorage.getValueFromStorage(StorageKeys.AUTH_TOKEN)}`
-        }, () => {
+        this.socketClient.connect({}, () => {
             console.log(this.socketClient.ws.url);
 
             this.isConnected = true;

@@ -1,9 +1,9 @@
 package razepl.dev.social365.notifications.gateway.config.auth;
 
-final class JwtClaims {
+public final class JwtClaims {
 
-    static final String USER_ID = "userId";
-    static final String PROFILE_ID = "profileId";
+    public static final String USER_ID = "userId";
+    public static final String PROFILE_ID = "profileId";
 
     private JwtClaims() {
     }
