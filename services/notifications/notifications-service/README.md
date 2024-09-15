@@ -8,6 +8,10 @@ The following diagram shows what events are sent to the `notifications` topic in
 
 ![Kafka Notifications Diagram](diagrams/notifications-kafka.drawio.png)
 
+Below you can see which services produce notifications.
+
+![Kafka Producers Diagram](diagrams/kafka-notifications.drawio.png)
+
 ## MongoDB Schema Diagram
 
 The following diagram shows the schema for the `notifications` collection in MongoDB.
