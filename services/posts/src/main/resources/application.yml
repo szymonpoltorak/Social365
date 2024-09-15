@@ -4,4 +4,3 @@ spring:
 
     config:
         import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME}:${CONFIG_SERVER_PORT}
-

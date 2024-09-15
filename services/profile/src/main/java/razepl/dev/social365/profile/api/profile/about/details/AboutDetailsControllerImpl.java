@@ -14,8 +14,8 @@ import razepl.dev.social365.profile.api.profile.about.experience.data.DateOfBirt
 import razepl.dev.social365.profile.api.profile.about.experience.data.GenderRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.RelationshipStatusRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.config.AuthUser;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.AuthUser;
+import razepl.dev.social365.profile.config.auth.User;
 
 @RestController
 @RequiredArgsConstructor

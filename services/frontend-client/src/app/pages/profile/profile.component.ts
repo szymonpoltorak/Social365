@@ -12,7 +12,7 @@ import { MatButton, MatIconButton, MatMiniFabButton } from "@angular/material/bu
 import { LocalStorageService } from "@services/utils/local-storage.service";
 import { Profile } from "@interfaces/feed/profile.interface";
 import { Subject, takeUntil } from "rxjs";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { ProfileService } from "@api/profile/profile.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AttachImage } from "@interfaces/feed/attach-image.interface";
@@ -25,6 +25,7 @@ import { ProfileBasicInfo } from "@interfaces/profile/profile-basic-info.interfa
 import { MatDialog } from "@angular/material/dialog";
 import { ImageDialogComponent } from "@shared/post-image-viewer/image-dialog/image-dialog.component";
 import { FriendsService } from "@api/profile/friends.service";
+import { ImageType } from "@enums/api/images/image-type.enum";
 
 @Component({
     selector: 'app-profile',
@@ -112,7 +113,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
         if (this.profileInfo.profileBannerUrl === "") {
             this.imageService
-                .uploadImage(profileBanner)
+                .uploadImage(profileBanner, ImageType.BANNER_IMAGE)
                 .subscribe((image: Image) => {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
@@ -122,7 +123,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 });
         } else {
             this.imageService
-                .updateImage(this.profileInfo.profileBannerUrl, profileBanner)
+                .updateImage(this.profileInfo.profileBannerUrl, profileBanner, ImageType.BANNER_IMAGE)
                 .subscribe((image: Image) => {
                     this.profileInfo.profileBannerUrl = image.imagePath;
 
@@ -140,7 +141,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             return;
         }
         this.imageService
-            .updateImage(this.profileInfo.username, profilePicture)
+            .updateImage(this.profileInfo.username, profilePicture, ImageType.PROFILE_IMAGE)
             .subscribe((image: Image) => {
                 this.profileInfo.profileBannerUrl = image.imagePath;
 

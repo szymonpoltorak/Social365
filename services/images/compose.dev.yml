@@ -1,8 +1,6 @@
 services:
     images-postgres:
-        env_file:
-            - path: ../.env
-              required: true
+        env_file: "../.env"
         image: postgres:alpine
         container_name: ${IMAGES_POSTGRES_HOSTNAME}
         hostname: ${IMAGES_POSTGRES_HOSTNAME}
@@ -21,11 +19,9 @@ services:
             retries: 10
 
     images-service:
-        env_file:
-            - path: ../.env
-              required: true
+        env_file: "../.env"
         container_name: ${IMAGES_SERVICE_HOSTNAME}
-        image: ${IMAGES_SERVICE_HOSTNAME}
+        image: ${IMAGES_SERVICE_HOSTNAME}:dev
         hostname: ${IMAGES_SERVICE_HOSTNAME}
         build:
             context: images-service
@@ -54,11 +50,9 @@ services:
                 condition: service_healthy
 
     images-nginx:
-        env_file:
-            - path: ../.env
-              required: true
+        env_file: "../.env"
         container_name: ${IMAGES_NGINX_HOSTNAME}
-        image: ${IMAGES_NGINX_HOSTNAME}
+        image: ${IMAGES_NGINX_HOSTNAME}:dev
         hostname: ${IMAGES_NGINX_HOSTNAME}
         build:
             context: images-nginx

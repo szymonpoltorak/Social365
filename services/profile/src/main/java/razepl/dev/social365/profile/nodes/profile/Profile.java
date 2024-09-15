@@ -89,7 +89,7 @@ public class Profile {
     @Relationship(type = "FROM", direction = Relationship.Direction.OUTGOING)
     private AboutDetails homeTown;
 
-    final String getFullName() {
+    public final String getFullName() {
         return String.format("%s %s", firstName, lastName);
     }
 

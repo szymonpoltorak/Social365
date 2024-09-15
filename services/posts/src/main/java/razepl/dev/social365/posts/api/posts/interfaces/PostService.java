@@ -1,7 +1,7 @@
 package razepl.dev.social365.posts.api.posts.interfaces;
 
 import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
 import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
@@ -13,7 +13,7 @@ public interface PostService {
 
     SocialPage<PostData> getUsersPosts(String profileId, PageInfo pageInfo);
 
-    PostData updateLikePostCount(String profileId, String postId, String creationDateTime);
+    PostData updateLikePostCount(User user, String postId, String creationDateTime);
 
     PostData updateNotificationStatus(String profileId, String postId, String creationDateTime);
 

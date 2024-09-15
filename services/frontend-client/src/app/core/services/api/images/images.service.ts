@@ -7,6 +7,7 @@ import { PostImage } from "@interfaces/images/post-image.interface";
 import { Image } from "@interfaces/images/image.interface";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from "@core/utils/pageable-paging-state";
+import { ImageType } from "@enums/api/images/image-type.enum";
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +33,12 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    uploadImage(image: AttachImage): Observable<Image> {
-        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image)).pipe(take(1));
+    uploadImage(image: AttachImage, imageType: ImageType): Observable<Image> {
+        return this.http.post<Image>(ImagesMappings.UPLOAD_IMAGE_MAPPING, this.toFormData(image), {
+            params: {
+                imageType: imageType
+            }
+        }).pipe(take(1));
     }
 
     getCommentImage(commentId: string): Observable<void> {
@@ -60,10 +65,11 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    updateImage(imageUrl: string, image: AttachImage): Observable<Image> {
+    updateImage(imageUrl: string, image: AttachImage, imageType: ImageType): Observable<Image> {
         return this.http.put<Image>(ImagesMappings.UPDATE_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                imageType: imageType
             }
         }).pipe(take(1));
     }
@@ -77,7 +83,7 @@ export class ImagesService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<PostImage, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 

@@ -1,0 +1,68 @@
+services:
+    kafka-broker:
+        image: apache/kafka-native:3.8.0
+        env_file: "../../.env"
+        container_name: ${KAFKA_BROKER_HOSTNAME}
+        hostname: ${KAFKA_BROKER_HOSTNAME}
+        ports:
+            - "${KAFKA_EXTERNAL_PORT}:${KAFKA_EXTERNAL_PORT}"
+        networks:
+            - social365-network
+
+    rabbitmq:
+        image: rabbitmq:3.13.7-management-alpine
+        env_file: "../../.env"
+        container_name: ${RABBITMQ_HOSTNAME}
+        hostname: ${RABBITMQ_HOSTNAME}
+        ports:
+            - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+            - "${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
+        networks:
+            - social365-network
+
+    notifications-mongodb:
+        image: mongo:7.0.14-jammy
+        env_file: "../../.env"
+        container_name: ${MONGO_NOTIFICATIONS_HOST}
+        hostname: ${MONGO_NOTIFICATIONS_HOST}
+        ports:
+            - "${MONGO_NOTIFICATIONS_PORT}:${MONGO_NOTIFICATIONS_PORT}"
+        healthcheck:
+            test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+            interval: 30s
+            timeout: 15s
+            retries: 15
+        networks:
+            - social365-network
+
+    notifications-service:
+        container_name: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        image: ${NOTIFICATIONS_SERVICE_HOSTNAME}:dev
+        hostname: ${NOTIFICATIONS_SERVICE_HOSTNAME}
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        env_file: "../../.env"
+        networks:
+            - social365-network
+        ports:
+            - "${NOTIFICATIONS_SERVICE_PORT}:${NOTIFICATIONS_SERVICE_PORT}"
+        volumes:
+            -   "./:/notifications"
+        depends_on:
+            config-server:
+                condition: service_healthy
+            eureka-registry:
+                condition: service_healthy
+            notifications-mongodb:
+                condition: service_healthy
+            kafka-broker:
+                condition: service_started
+            rabbitmq:
+                condition: service_started
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost:${NOTIFICATIONS_SERVICE_PORT}/actuator/health" ]
+            start_period: 35s
+            interval: 15s
+            timeout: 15s
+            retries: 15

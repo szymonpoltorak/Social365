@@ -14,6 +14,7 @@ import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.config.User;
 import razepl.dev.social365.images.entities.image.Image;
+import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.entities.image.comment.CommentImage;
 import razepl.dev.social365.images.entities.image.comment.interfaces.CommentImageRepository;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
@@ -45,15 +46,17 @@ public class ImagesServiceImpl implements ImagesService {
     private final CommentImageRepository commentImageRepository;
 
     @Override
-    public ImageResponse uploadImage(String username, MultipartFile image) {
-        log.info("Uploading image for user: {}", username);
+    public ImageResponse uploadImage(User user, ImageType imageType, MultipartFile image) {
+        log.info("Uploading image for user: {}", user);
 
         String newFilename = String.format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
-        String imagePath = Path.of(IMAGE_VOLUME_PATH, username, newFilename).toString();
+        String imagePath = Path.of(IMAGE_VOLUME_PATH, user.username(), newFilename).toString();
 
         Image imageEntity = Image
                 .builder()
-                .username(username)
+                .username(user.username())
+                .imageType(imageType)
+                .profileId(user.profileId())
                 .imagePath(imagePath)
                 .build();
         Image savedImage = imagesRepository.save(imageEntity);
@@ -161,7 +164,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
-    public ImageResponse updateImage(String imageUrl, MultipartFile image, User user) {
+    public ImageResponse updateImage(String imageUrl, MultipartFile image, User user, ImageType imageType) {
         log.info("Updating image with imagePath: {}", imageUrl);
 
         Image imageEntity = imagesRepository.findImageByImagePath(imageUrl)
@@ -177,6 +180,11 @@ public class ImagesServiceImpl implements ImagesService {
                 .format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
 
         log.info("Saving new image: {}", newFilePath);
+
+        imageEntity.setImageType(imageType);
+        imageEntity.setImagePath(newFilePath);
+
+        imageEntity = imagesRepository.save(imageEntity);
 
         saveFile(newFilePath, image);
 
@@ -283,6 +291,18 @@ public class ImagesServiceImpl implements ImagesService {
                 .stream()
                 .map(imagesMapper::toPostImageResponse)
                 .toList();
+    }
+
+    @Override
+    public ImageResponse getProfileImageByProfileId(String profileId) {
+        log.info("Getting profile image for profileId: {}", profileId);
+
+        Image image = imagesRepository.findImageByProfileIdAndImageType(profileId, ImageType.PROFILE_IMAGE)
+                .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+
+        log.info("Profile image found: {}", image);
+
+        return imagesMapper.toImageResponse(image);
     }
 
     private void saveFile(String imagePath, MultipartFile image) {

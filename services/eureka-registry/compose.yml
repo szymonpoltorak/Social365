@@ -1,7 +1,7 @@
 services:
     eureka-registry:
         container_name: ${EUREKA_REGISTRY_HOSTNAME}
-        image: ${EUREKA_REGISTRY_HOSTNAME}
+        image: ${EUREKA_REGISTRY_HOSTNAME}:prod
         hostname: ${EUREKA_REGISTRY_HOSTNAME}
         depends_on:
             config-server:
@@ -9,9 +9,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        env_file:
-            - path: "../.env"
-              required: true
+        env_file: "../.env"
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://${EUREKA_REGISTRY_HOSTNAME}:${EUREKA_REGISTRY_PORT}/actuator/health" ]
             interval: 10s

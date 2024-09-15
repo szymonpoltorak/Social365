@@ -39,6 +39,7 @@ import java.time.LocalDate;
 public class ProfileMapperImpl implements ProfileMapper {
 
     private static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/nouser@example.com/shiba1.jpg";
+
     private final ImagesServiceClient imagesServiceClient;
     private final AboutMapper aboutMapper;
     private final PostCommentsService postCommentsService;
@@ -176,6 +177,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .profilePictureUrl(getProfilePicturePath(profile.getProfilePictureId()))
                 .profileId(profile.getProfileId())
                 .numOfMutualFriends(numOfMutualFriends)
+                .username(profile.getEmail().getEmailValue())
                 .isFollowed(isFollowed)
                 .build();
     }

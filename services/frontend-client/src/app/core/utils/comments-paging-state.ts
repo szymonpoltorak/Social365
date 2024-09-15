@@ -27,4 +27,8 @@ export class CommentsPagingState implements SocialPagingState<CommentsPagingStat
         return this._pagingState !== null;
     }
 
+    static fromJson(json: any): CommentsPagingState {
+        return new CommentsPagingState(json.pageSize, json.pageNumber);
+    }
+
 }

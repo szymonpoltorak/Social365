@@ -1,7 +1,7 @@
 services:
     api-gateway:
         container_name: ${API_GATEWAY_HOSTNAME}
-        image: ${API_GATEWAY_HOSTNAME}
+        image: ${API_GATEWAY_HOSTNAME}:prod
         hostname: ${API_GATEWAY_HOSTNAME}
         depends_on:
             eureka-registry:
@@ -14,14 +14,12 @@ services:
                 condition: service_healthy
             images-service:
                 condition: service_healthy
-            frontend-client:
+            notifications-service:
                 condition: service_healthy
         build:
             context: .
             dockerfile: Dockerfile
-        env_file:
-            - path: "../.env"
-              required: true
+        env_file: "../.env"
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost:${API_GATEWAY_PORT}/actuator/health" ]
             interval: 10s

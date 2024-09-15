@@ -6,13 +6,14 @@ import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
 
 import java.util.List;
 
 public interface ImagesService {
 
-    ImageResponse uploadImage(String username, MultipartFile image);
+    ImageResponse uploadImage(User user, ImageType imageType, MultipartFile image);
 
     SocialPage<PostImageResponse> getUserUploadedImages(String username, Pageable pageable);
 
@@ -26,7 +27,7 @@ public interface ImagesService {
 
     ImageResponse getImagePath(long imageId);
 
-    ImageResponse updateImage(String imageUrl, MultipartFile image, User user);
+    ImageResponse updateImage(String imageUrl, MultipartFile image, User user, ImageType imageType);
 
     ImageResponse deleteImage(long imageId, User user);
 
@@ -37,5 +38,7 @@ public interface ImagesService {
     CommentImageResponse deleteCommentImageById(String commentId, User user);
 
     List<PostImageResponse> deleteImagesByPostId(String postId, User user);
+
+    ImageResponse getProfileImageByProfileId(String profileId);
 
 }

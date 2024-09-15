@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import razepl.dev.social365.profile.api.profile.about.experience.data.AboutDetailsRequest;
 import razepl.dev.social365.profile.api.profile.about.experience.data.WorkPlaceRequest;
 import razepl.dev.social365.profile.api.profile.data.ProfileRequest;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
 
 @Tag(name = "AboutExperienceController", description = "Operations pertaining to user experience in Social365")
 public interface AboutExperienceController {

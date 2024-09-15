@@ -133,7 +133,6 @@ public class Initializer implements CommandLineRunner {
                         String commentContent = commentContents.get(random.nextInt(commentsContentCount));
                         CommentAddRequest commentAddRequest = CommentAddRequest
                                 .builder()
-                                .profileId(profile.profileId())
                                 .postId(postResponse.postKey().postId())
                                 .content(commentContent)
                                 .hasAttachment(false)

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
@@ -12,7 +13,8 @@ import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
+import razepl.dev.social365.profile.producer.KafkaProducer;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadySendFriendRequestException;
@@ -36,6 +38,7 @@ public class FriendsServiceImpl implements FriendsService {
 
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public final SocialPage<FriendResponse> getFriends(User user, Pageable pageable) {
@@ -128,7 +131,13 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Adding follow relation...");
 
         profileRepository.createFollowsRelation(profileId, friendId);
+
         profileRepository.createFollowsRelation(friendId, profileId);
+
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -159,6 +168,11 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Following user with id : {} ...", toFollowId);
 
         profileRepository.createFollowsRelation(profileId, toFollowId);
+
+        Profile friend = profileRepository.findByProfileId(toFollowId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipFollowedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -197,6 +211,11 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.createWantsToBeFriendWithRelation(profileId, friendId);
 
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipRequestedEvent(friend, profile);
+
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
@@ -213,7 +232,13 @@ public class FriendsServiceImpl implements FriendsService {
         log.info("Accepting friend request. from user : {} ...", profileId);
 
         profileRepository.createFriendsWithRelation(profileId, friendId);
+
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
+
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipAcceptedEvent(friend, profile);
 
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
@@ -232,10 +257,15 @@ public class FriendsServiceImpl implements FriendsService {
 
         profileRepository.deleteWantsToBeFriendWithRelation(profileId, friendId);
 
+        Profile friend = profileRepository.findByProfileId(friendId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        kafkaProducer.sendFriendshipRejectedEvent(friend, profile);
+
         return profileMapper.mapProfileToFriendResponse(profile, -1, false);
     }
 
-    private SocialPage<FriendResponse> mapFriendDataPageToFriendResponse(Page<FriendData> friends, String profileId) {
+    private SocialPage<FriendResponse> mapFriendDataPageToFriendResponse(Slice<FriendData> friends, String profileId) {
         log.info("Found {} friends for profile with id: {}", friends.getNumberOfElements(), profileId);
 
         return SocialPageImpl.of(friends.map(profileMapper::mapFriendDataToFriendResponse));

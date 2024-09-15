@@ -1,0 +1,94 @@
+server:
+    port: ${NOTIFICATIONS_SERVICE_PORT}
+
+    servlet:
+        context-path: /
+
+    server-header: ""
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+openapi:
+    service:
+        title: Notifications Service
+        version: 1.0.0
+        url: http://${API_GATEWAY_HOSTNAME}:${API_GATEWAY_PORT}
+
+springdoc:
+    api-docs:
+        path: /${NOTIFICATIONS_SERVICE_HOSTNAME}/v3/api-docs
+    swagger-ui:
+        path: /${NOTIFICATIONS_SERVICE_HOSTNAME}/swagger-ui.html
+
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true
+
+    instance:
+        hostname: ${EUREKA_REGISTRY_HOSTNAME}
+
+spring:
+    data:
+        mongodb:
+            username: ${MONGO_INITDB_ROOT_USERNAME}
+            password: ${MONGO_INITDB_ROOT_PASSWORD}
+            authentication-database: admin
+            database: ${MONGO_NOTIFICATIONS_DB}
+            port: ${MONGO_NOTIFICATIONS_PORT}
+            host: ${MONGO_NOTIFICATIONS_HOST}
+
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
+                    jws-algorithms: ${JWS_ALGORITHM}
+
+    kafka:
+        consumer:
+            auto-offset-reset: earliest
+            key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            bootstrap-servers: ${KAFKA_BROKER_HOSTNAME}:${KAFKA_PORT}
+            properties:
+                spring.json.trusted.packages: '*'
+                spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+                spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+            group-id: ${KAFKA_NOTIFICATIONS_GROUP_ID}
+
+    rabbitmq:
+        host: ${RABBITMQ_HOSTNAME}
+        port: ${RABBITMQ_PORT}
+        username: ${RABBITMQ_DEFAULT_USER}
+        password: ${RABBITMQ_DEFAULT_PASS}
+        virtual-host: ${RABBITMQ_DEFAULT_VHOST}
+
+kafka:
+    topics:
+        friendship-requested: ${KAFKA_FRIENDSHIP_REQUESTED_TOPIC}
+        friendship-accepted: ${KAFKA_FRIENDSHIP_ACCEPTED_TOPIC}
+        friendship-rejected: ${KAFKA_FRIENDSHIP_REJECTED_TOPIC}
+        friendship-followed: ${KAFKA_FRIENDSHIP_FOLLOWED_TOPIC}
+
+        post-liked: ${KAFKA_POST_LIKED_TOPIC}
+        post-commented: ${KAFKA_POST_COMMENTED_TOPIC}
+
+        comment-liked: ${KAFKA_COMMENT_LIKED_TOPIC}
+        comment-replied: ${KAFKA_COMMENT_REPLIED_TOPIC}
+
+    group-ids:
+        notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}
+
+    jwt: ${JWT_SERVICE_TO_SERVICE}
+

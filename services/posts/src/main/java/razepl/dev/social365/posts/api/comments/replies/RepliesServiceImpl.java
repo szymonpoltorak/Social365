@@ -9,12 +9,13 @@ import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesService;
 import razepl.dev.social365.posts.clients.images.ImageService;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
+import razepl.dev.social365.posts.producer.KafkaProducer;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.CommentsCassandraPage;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
@@ -32,6 +33,7 @@ public class RepliesServiceImpl implements RepliesService {
     private final ReplyCommentRepository replyCommentRepository;
     private final CommentMapper commentMapper;
     private final ImageService imageService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public final SocialPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
@@ -67,6 +69,8 @@ public class RepliesServiceImpl implements RepliesService {
         replyComment = replyCommentRepository.save(replyComment);
 
         log.info("Added reply : {}", replyComment);
+
+        kafkaProducer.sendCommentRepliedEvent(replyComment, user, replyComment.getAuthorId());
 
         return commentMapper.toCommentResponse(replyComment, user.profileId());
     }
@@ -122,6 +126,8 @@ public class RepliesServiceImpl implements RepliesService {
             replyComment.getUserLikedIds().remove(user.profileId());
         } else {
             replyComment.addUserLikedId(user.profileId());
+
+            kafkaProducer.sendCommentLikedEvent(replyComment, user, replyComment.getAuthorId());
         }
         ReplyComment savedReplyComment = replyCommentRepository.save(replyComment);
 

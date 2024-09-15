@@ -6,7 +6,7 @@ import { FormControl } from "@angular/forms";
 import { PrivacyLevel } from "@enums/profile/privacy-level.enum";
 import { DetailsType } from "@enums/profile/details-type.enum";
 import { AboutDataService } from "@api/profile/about/about-data.service";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { Locations } from "@interfaces/profile/about/locations.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";

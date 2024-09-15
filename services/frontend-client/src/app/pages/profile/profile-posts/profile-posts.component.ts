@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendsService } from '@core/services/api/profile/friends.service';
 import { Observable } from "rxjs";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
-import { RoutingService } from '@core/services/profile/routing.service';
+import { RoutingService } from '@services/utils/routing.service';
 import { PostMappings } from "@enums/api/posts-comments/post-mappings.enum";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { ImagesService } from "@api/images/images.service";

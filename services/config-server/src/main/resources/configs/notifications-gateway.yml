@@ -1,0 +1,42 @@
+server:
+    port: ${NOTIFICATIONS_GATEWAY_PORT}
+
+    servlet:
+        context-path: /
+
+    server-header: ""
+
+    http2:
+        enabled: true
+
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+        min-response-size: 512
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}
+                    jwk-set-uri: http://${AUTH_SERVICE_HOSTNAME}:${AUTH_SERVICE_PORT}/oauth2/jwks
+                    jws-algorithms: ${JWS_ALGORITHM}
+
+    rabbitmq:
+        host: ${RABBITMQ_HOSTNAME}
+        port: ${RABBITMQ_PORT}
+        username: ${RABBITMQ_DEFAULT_USER}
+        password: ${RABBITMQ_DEFAULT_PASS}
+        virtual-host: ${RABBITMQ_DEFAULT_VHOST}
+
+eureka:
+    client:
+        instance:
+            hostname: ${EUREKA_REGISTRY_HOSTNAME}
+
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI}
+
+        register-with-eureka: true
+        fetch-registry: true

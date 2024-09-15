@@ -1,6 +1,4 @@
-FROM alpine:3.19.1 AS build
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache gradle
+FROM social:build AS build
 
 WORKDIR /eureka-server
 
@@ -14,11 +12,9 @@ RUN gradle build -x test
 
 RUN mv build/libs/eureka-registry-0.0.1-SNAPSHOT.jar eureka-registry.jar
 
-FROM alpine:3.19.1
+FROM social:prod
 
 WORKDIR /eureka-server
-
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache openjdk17-jre curl
 
 COPY --from=build /eureka-server/eureka-registry.jar .
 

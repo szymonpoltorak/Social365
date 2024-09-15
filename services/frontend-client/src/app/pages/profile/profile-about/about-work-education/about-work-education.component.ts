@@ -13,7 +13,7 @@ import { AboutOption } from "@interfaces/profile/about/about-option.interface";
 import { AboutTypicalOptionComponent } from "@shared/profile/about-typical-option/about-typical-option.component";
 import { DetailsType } from "@enums/profile/details-type.enum";
 import { AboutDataService } from "@api/profile/about/about-data.service";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { WorkEducation } from "@interfaces/profile/about/work-education.interface";
 import { Optional } from "@core/types/profile/optional.type";
 import { AboutOptionData } from "@interfaces/profile/about/about-option-data.interface";

@@ -12,7 +12,7 @@ import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
-import razepl.dev.social365.posts.config.User;
+import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
@@ -20,6 +20,7 @@ import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.entities.post.PostKey;
 import razepl.dev.social365.posts.entities.post.interfaces.PostMapper;
 import razepl.dev.social365.posts.entities.post.interfaces.PostRepository;
+import razepl.dev.social365.posts.producer.KafkaProducer;
 import razepl.dev.social365.posts.utils.exceptions.PostDoesNotExistException;
 import razepl.dev.social365.posts.utils.exceptions.UserIsNotAuthorException;
 import razepl.dev.social365.posts.utils.pagination.data.PageInfo;
@@ -49,6 +50,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final ReplyCommentRepository replyCommentRepository;
     private final ImageService imageService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public SocialPage<PostData> getPostsOnPage(String profileId, PageInfo pageInfo) {
@@ -63,6 +65,9 @@ public class PostServiceImpl implements PostService {
             ProfileSocialPage<String> friendsPage = profileService.getFriendsIds(profileId, currentFriendPage);
             List<String> friendsIds = friendsPage.data();
 
+            if (friendsIds.isEmpty() && result.isEmpty()) {
+                return getUsersPosts(profileId, pageInfo);
+            }
             if (friendsIds.isEmpty()) {
                 log.info("No friends found for profile with id: {} on page {}", profileId, currentFriendPage);
 
@@ -159,15 +164,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostData updateLikePostCount(String profileId, String postId, String authorId) {
-        log.info("Updating like count for post with id: {} for profileId: {}", postId, profileId);
+    public PostData updateLikePostCount(User user, String postId, String authorId) {
+        log.info("Updating like count for post with id: {} for profile: {}", postId, user);
 
         Post post = getPostFromRepository(authorId, postId);
+        String profileId = user.profileId();
 
         if (post.isLikedBy(profileId)) {
             post.getUserLikedIds().remove(profileId);
         } else {
             post.addUserLikedId(profileId);
+
+            kafkaProducer.sendPostLikedEvent(post, user, authorId);
         }
         Post savedPost = postRepository.save(post);
 

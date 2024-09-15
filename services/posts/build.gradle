@@ -8,8 +8,6 @@ plugins {
 group = 'razepl.dev.social365'
 version = '0.0.1-SNAPSHOT'
 
-def swaggerVer = '2.6.0'
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -36,6 +34,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2023.0.3")
+	set('swaggerVer', "2.6.0")
 }
 
 dependencies {
@@ -51,6 +50,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
 
+	implementation 'org.springframework.kafka:spring-kafka'
+
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerVer}"
 
 	compileOnly 'org.projectlombok:lombok'
@@ -58,6 +59,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.testcontainers:cassandra'
 	testImplementation 'org.testcontainers:junit-jupiter'
 }

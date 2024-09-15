@@ -24,7 +24,7 @@ import { PostImageViewerComponent } from "@shared/post-image-viewer/post-image-v
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { CommentEditRequest } from "@interfaces/posts-comments/comment-request.interface";
 import { ReplyEditRequest } from "@interfaces/posts-comments/reply-edit-request.interface";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 import { SocialPage } from "@core/utils/social-page";
 import { CommentsPagingState } from "@core/utils/comments-paging-state";
 

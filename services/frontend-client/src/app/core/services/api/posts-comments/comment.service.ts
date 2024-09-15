@@ -22,7 +22,7 @@ export class CommentService {
             params: this.getPostParams(postId, pagingState)
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<PostComment, CommentsPagingState>(json))
+            map(json => SocialPage.fromJson<PostComment, CommentsPagingState>(json, CommentsPagingState.fromJson))
         );
     }
 

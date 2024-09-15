@@ -24,7 +24,7 @@ export class PostService {
             params: this.getHttpParams(profileId, pagingState)
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json))
+            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json, PostsPagingState.fromJson))
         );
     }
 

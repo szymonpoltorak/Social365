@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
-import razepl.dev.social365.profile.config.User;
+import razepl.dev.social365.profile.config.auth.User;
 import razepl.dev.social365.profile.utils.pagination.SocialPage;
 
 public interface FriendsService {

@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { FriendElement } from "@interfaces/friends/friend-element.interface";
 
 @Component({
     selector: 'app-friend-profile',
@@ -20,5 +20,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
     styleUrl: './friend-profile.component.scss'
 })
 export class FriendProfileComponent {
-    @Input() friend!: FriendProfileOption;
+
+    @Input() friend !: FriendElement;
+    @Output() navigateToProfile: EventEmitter<string> = new EventEmitter<string>();
+
 }

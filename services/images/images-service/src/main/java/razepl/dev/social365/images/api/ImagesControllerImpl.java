@@ -22,6 +22,7 @@ import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.config.AuthUser;
 import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
 
 import java.util.List;
@@ -39,8 +40,9 @@ public class ImagesControllerImpl implements ImagesController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_IMAGE_MAPPING)
     public final ImageResponse uploadImage(@AuthUser User user,
+                                           @RequestParam(Params.IMAGE_TYPE) ImageType imageType,
                                            @RequestBody MultipartFile image) {
-        return imagesService.uploadImage(user.username(), image);
+        return imagesService.uploadImage(user, imageType, image);
     }
 
     @Override
@@ -90,9 +92,10 @@ public class ImagesControllerImpl implements ImagesController {
     @Override
     @PutMapping(value = ImagesMappings.UPDATE_IMAGE_MAPPING)
     public final ImageResponse updateImage(@RequestParam(Params.IMAGE_URL) String imageUrl,
+                                           @RequestParam(Params.IMAGE_TYPE) ImageType imageType,
                                            @AuthUser User user,
                                            @RequestBody MultipartFile image) {
-        return imagesService.updateImage(imageUrl, image, user);
+        return imagesService.updateImage(imageUrl, image, user, imageType);
     }
 
     @Override
@@ -127,5 +130,11 @@ public class ImagesControllerImpl implements ImagesController {
     public final List<PostImageResponse> deleteImagesByPostId(@RequestParam(Params.POST_ID) String postId,
                                                               @AuthUser User user) {
         return imagesService.deleteImagesByPostId(postId, user);
+    }
+
+    @Override
+    @GetMapping(value = ImagesMappings.GET_PROFILE_IMAGE_BY_PROFILE_ID_MAPPING)
+    public final ImageResponse getProfileImageByProfileId(@RequestParam(Params.PROFILE_ID) String profileId) {
+        return imagesService.getProfileImageByProfileId(profileId);
     }
 }

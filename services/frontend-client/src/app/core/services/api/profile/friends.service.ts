@@ -4,7 +4,6 @@ import { map, Observable, take } from 'rxjs';
 import { FriendsMappings } from "@enums/api/profile/friends-mappings.enum";
 import { FriendElement } from "@interfaces/friends/friend-element.interface";
 import { FriendFeedOption } from "@interfaces/feed/friend-feed-option.interface";
-import { FriendProfileOption } from "@interfaces/profile/friend-profile-option.interface";
 import { SocialPage } from "@core/utils/social-page";
 import { PageablePagingState } from '@core/utils/pageable-paging-state';
 
@@ -16,20 +15,20 @@ export class FriendsService {
     constructor(private http: HttpClient) {
     }
 
-    getFriends(pagingState: PageablePagingState): Observable<SocialPage<FriendProfileOption, PageablePagingState>> {
-        return this.http.get<SocialPage<FriendProfileOption, PageablePagingState>>(FriendsMappings.GET_FRIENDS_ON_PAGE, {
+    getFriends(pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendElement, PageablePagingState>>(FriendsMappings.GET_FRIENDS_ON_PAGE, {
             params: {
                 pageNumber: pagingState.pageNumber,
                 pageSize: pagingState.pageSize
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendProfileOption, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
-    getFriendsByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<FriendProfileOption, PageablePagingState>> {
-        return this.http.get<SocialPage<FriendProfileOption, PageablePagingState>>(FriendsMappings.GET_FRIENDS_BY_PATTERN, {
+    getFriendsByPattern(pattern: string, pagingState: PageablePagingState): Observable<SocialPage<FriendElement, PageablePagingState>> {
+        return this.http.get<SocialPage<FriendElement, PageablePagingState>>(FriendsMappings.GET_FRIENDS_BY_PATTERN, {
             params: {
                 pattern: pattern,
                 pageNumber: pagingState.pageNumber,
@@ -37,7 +36,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendProfileOption, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
@@ -50,7 +49,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendFeedOption, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<FriendFeedOption, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
@@ -62,7 +61,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 
@@ -74,7 +73,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
         );
     }
 

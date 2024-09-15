@@ -1,4 +1,4 @@
-<div class="bg-secondary w-full h-fit top-0 flex sm:p-3 max-sm:p-1.5 items-center fixed z-50">
+<nav class="bg-secondary w-full h-fit top-0 flex sm:p-3 max-sm:p-1.5 items-center fixed z-50">
     <h1 class="hover:cursor-pointer ml:text-xl max-ml:text-sm font-bold"
         matTooltip="Get back to the feed"
         routerLink="/feed">
@@ -41,25 +41,45 @@
     <span class="flex flex-grow flex-shrink flex-auto"></span>
 
     <div class="flex gap-5">
-        <button aria-label="Messages"
-                class="toolbar-button"
-                color="primary"
-                mat-mini-fab
-                matBadge="{{ newMessages }}"
-                matBadgeColor="warn"
-                matBadgeHidden="{{ newMessages === 0 }}">
-            <mat-icon>message</mat-icon>
-        </button>
-
         <button aria-label="Notifications"
                 class="toolbar-button"
                 color="primary"
                 mat-mini-fab
-                matBadge="{{ newNotifications }}"
+                (click)="readNotifications()"
+                [cdkMenuTriggerFor]="notificationsMenu"
+                matBadge="{{ newNotifications }}{{ notifications !== undefined && notifications.hasNextPage ? '+' : '' }}"
                 matBadgeColor="warn"
                 matBadgeHidden="{{ newNotifications === 0 }}">
             <mat-icon>notifications</mat-icon>
         </button>
+
+        <ng-template #notificationsMenu class="rounded">
+            <div class="menu-container p-2 flex flex-col">
+                @for (notification of notifications; track notification) {
+                    <div class="w-96 gap-3 p-2 inline-flex items-center mat-button-ripple rounded-xl mb-2"
+                         [ngClass]="!notification.isRead ? 'bg-[#534f63]' : ''"
+                         (click)="readNotification(notification)"
+                         (mouseleave)="readNotification(notification)"
+                         (keyup)="readNotification(notification)"
+                         tabindex="0"
+                         matRipple
+                         cdkMenu>
+                        <app-avatar-photo [imageLink]="notification.authorsProfileImageUrl"></app-avatar-photo>
+
+                        <span>{{ notification.notificationText }}</span>
+                    </div>
+                }
+                @if (notifications.hasNextPage) {
+                    <button mat-button aria-label="Load more notifications"
+                            cdkMenu
+                            (click)="loadMoreNotifications()"
+                            class="mt-2" type="button">
+                        <mat-icon>expand_more</mat-icon>
+                        Load more
+                    </button>
+                }
+            </div>
+        </ng-template>
 
         <button [matMenuTriggerFor]="menu"
                 aria-label="Menu"
@@ -122,4 +142,4 @@
             </button>
         </mat-menu>
     </div>
-</div>
+</nav>

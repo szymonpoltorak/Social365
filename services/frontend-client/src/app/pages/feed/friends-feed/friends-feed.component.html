@@ -21,23 +21,5 @@
                 }
             }
         </div>
-
-        <div class="mb-4 mt-4">
-            <mat-divider></mat-divider>
-        </div>
-
-        <div class="flex flex-col">
-            <h1 class="text-xl mb-2">Group Chats</h1>
-
-            @for (chat of groupChats | async; track chat) {
-                <app-friend-feed-option [feedOption]="chat"></app-friend-feed-option>
-            }
-
-            <button aria-label="New chat" class="birthday-button" mat-button>
-                <mat-icon>add</mat-icon>
-
-                New group chat
-            </button>
-        </div>
     </mat-card>
 </div>

@@ -151,7 +151,7 @@ export class SharedPostComponent implements OnInit {
     loadMoreComments(): void {
         this.commentService
             .getCommentsForPost(this.post.sharingPost.postKey.postId, this.comments.pagingState)
-            .subscribe((comments: SocialPage<PostComment, CommentsPagingState>) => this.comments.updatePage(comments));
+            .subscribe((comments: SocialPage<PostComment, CommentsPagingState>) => this.comments.concatAndUpdate(comments));
     }
 
     deleteComment(commentKey: CommentKey): void {

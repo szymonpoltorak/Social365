@@ -13,7 +13,7 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 import { RouteOption } from "@interfaces/profile/route-option.interface";
 import { RouterPaths } from "@enums/router-paths.enum";
 import { Subject, takeUntil } from "rxjs";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 
 @Component({
     selector: 'app-profile-about',

@@ -12,7 +12,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { PostEditDialogComponent } from "@pages/feed/posts-feed/post-edit-dialog/post-edit-dialog.component";
 import { take } from "rxjs";
 import { EditDialogOutput } from "@interfaces/posts-comments/edit-dialog-output.interface";
-import { RoutingService } from "@services/profile/routing.service";
+import { RoutingService } from "@services/utils/routing.service";
 
 @Component({
     selector: 'app-post-header',
