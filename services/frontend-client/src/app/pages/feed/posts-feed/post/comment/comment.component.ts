@@ -77,22 +77,14 @@ export class CommentComponent implements OnInit {
     }
 
     onLikeComment(): void {
-        if (this.isPostComment()) {
+        if (this.comment.isPostComment()) {
             this.commentService
                 .updateLikeCommentCount(this.comment.commentKey as CommentKey)
-                .subscribe(() => {
-                    this.comment.isLiked = !this.comment.isLiked;
-
-                    this.comment.commentLikesCount = this.comment.isLiked ? this.comment.commentLikesCount + 1 : this.comment.commentLikesCount - 1;
-                })
+                .subscribe(() => this.comment.updateLikesCount());
         } else {
             this.repliesService
                 .updateLikeCommentCount(this.comment.commentKey as ReplyKey)
-                .subscribe(() => {
-                    this.comment.isLiked = !this.comment.isLiked;
-
-                    this.comment.commentLikesCount = this.comment.isLiked ? this.comment.commentLikesCount + 1 : this.comment.commentLikesCount - 1;
-                })
+                .subscribe(() => this.comment.updateLikesCount());
         }
     }
 
@@ -101,9 +93,7 @@ export class CommentComponent implements OnInit {
 
         this.repliesService
             .getRepliesForComment(this.getProperCommentId(), new CommentsPagingState(this.PAGE_SIZE, null))
-            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => {
-                this.replyComments = replies;
-            });
+            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
     }
 
     createReplyComment(event: CommentCreateData): void {
@@ -132,13 +122,11 @@ export class CommentComponent implements OnInit {
     loadMoreReplies(): void {
         this.repliesService
             .getRepliesForComment(this.getProperCommentId(), this.replyComments.pagingState)
-            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => {
-                this.replyComments = replies;
-            });
+            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
     }
 
     deleteComment(): void {
-        if (this.isPostComment()) {
+        if (this.comment.isPostComment()) {
             this.commentDeleted.emit(this.comment.commentKey as CommentKey);
         } else {
             this.replyCommentDeleted.emit(this.comment.commentKey as ReplyKey);
@@ -148,9 +136,7 @@ export class CommentComponent implements OnInit {
     deleteReplyComment(replyKey: ReplyKey): void {
         this.repliesService
             .deleteReplyComment(replyKey)
-            .subscribe((replyComment: ReplyComment) => {
-                this.replyComments.remove(replyComment);
-            });
+            .subscribe((replyComment: ReplyComment) => this.replyComments.remove(replyComment));
     }
 
     editComment(event: CommentCreateData): void {
@@ -159,7 +145,7 @@ export class CommentComponent implements OnInit {
 
             return;
         }
-        if (this.isPostComment()) {
+        if (this.comment.isPostComment()) {
             this.handleCommentEdit(event);
         } else {
             this.handleReplyCommentEdit(event);
@@ -168,14 +154,10 @@ export class CommentComponent implements OnInit {
     }
 
     private getProperCommentId(): string {
-        if (this.isPostComment()) {
+        if (this.comment.isPostComment()) {
             return (this.comment.commentKey as CommentKey).commentId;
         }
         return (this.comment.commentKey as ReplyKey).replyCommentId;
-    }
-
-    private isPostComment(): boolean {
-        return (this.comment.commentKey as CommentKey).commentId !== undefined;
     }
 
     private handleCommentEdit(event: CommentCreateData): void {
@@ -199,10 +181,7 @@ export class CommentComponent implements OnInit {
         if (this.comment.content !== event.content || hasAttachment !== request.hasAttachment) {
             this.commentService
                 .editComment(request)
-                .subscribe(() => {
-                    this.comment.content = event.content;
-                    this.comment.imageUrl = event.attachedImage !== null ? event.attachedImage.fileUrl : "";
-                });
+                .subscribe(() => this.comment.updateCommentContent(event.content, event.attachedImage));
         }
     }
 
@@ -227,10 +206,7 @@ export class CommentComponent implements OnInit {
         if (this.comment.content !== event.content || hasAttachment !== request.hasAttachment) {
             this.repliesService
                 .editReplyComment(request)
-                .subscribe(() => {
-                    this.comment.content = event.content;
-                    this.comment.imageUrl = event.attachedImage !== null ? event.attachedImage.fileUrl : "";
-                });
+                .subscribe(() => this.comment.updateCommentContent(event.content, event.attachedImage));
         }
     }
 

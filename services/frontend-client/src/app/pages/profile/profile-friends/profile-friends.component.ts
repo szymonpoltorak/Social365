@@ -84,15 +84,11 @@ export class ProfileFriendsComponent implements OnInit {
         if (value === "") {
             this.friendsService
                 .getFriends(pagingState)
-                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => {
-                    this.friends = friends;
-                });
+                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => this.friends = friends);
         } else if (value !== null) {
             this.friendsService
                 .getFriendsByPattern(value as string, pagingState)
-                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => {
-                    this.friends = friends;
-                });
+                .subscribe((friends: SocialPage<FriendElement, PageablePagingState>) => this.friends = friends);
         }
     }
 

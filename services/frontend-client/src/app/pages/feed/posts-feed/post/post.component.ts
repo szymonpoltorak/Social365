@@ -93,11 +93,7 @@ export class PostComponent implements OnInit {
     likePost(): void {
         this.postService
             .updateLikePostCount(this.post.postKey.postId, this.post.postKey.author.profileId)
-            .subscribe(() => {
-                this.post.isPostLiked = !this.post.isPostLiked;
-
-                this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
-            });
+            .subscribe(() => this.post.updateLikeCount());
     }
 
     getCommentsForPost(): void {
