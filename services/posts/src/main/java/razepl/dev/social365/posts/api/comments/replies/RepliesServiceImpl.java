@@ -117,7 +117,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse updateLikeCommentCount(User user,ReplyKeyResponse replyKey) {
+    public final CommentResponse updateLikeCommentCount(User user, ReplyKeyResponse replyKey) {
         log.info("Updating like count for reply with id: {}", replyKey);
 
         ReplyComment replyComment = getReplyComment(replyKey);

@@ -28,6 +28,10 @@ public final class Params {
 
     public static final String REPLY_ID = "replyId";
 
+    public static final String REPLY_COMMENT_ID = "replyCommentId";
+
+    public static final String REPLY_TO_COMMENT_ID = "replyToCommentId";
+
     private Params() {
     }
 }

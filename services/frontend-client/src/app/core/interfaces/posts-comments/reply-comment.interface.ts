@@ -78,4 +78,16 @@ export class ReplyComment implements Comment {
         return this._commentLikesCount;
     }
 
+    static fromJson(json: any): ReplyComment {
+        return new ReplyComment(
+            json.commentKey,
+            json.author,
+            json.likesCount,
+            json.content,
+            json.hasReplies,
+            json.imageUrl,
+            json.isLiked,
+            json.commentLikesCount
+        );
+    }
 }

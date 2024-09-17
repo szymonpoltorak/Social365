@@ -25,6 +25,18 @@ export class PostComment implements Comment {
         this._commentLikesCount = commentLikesCount;
     }
 
+    static fromJson(json: any): PostComment {
+        return new PostComment(
+            json.commentKey,
+            json.author,
+            json.content,
+            json.hasReplies,
+            json.imageUrl,
+            json.isLiked,
+            json.commentLikesCount
+        );
+    }
+
     isPostComment(): boolean {
         return true;
     }

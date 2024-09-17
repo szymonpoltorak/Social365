@@ -78,6 +78,7 @@ export class CommentComponent implements OnInit {
 
     onLikeComment(): void {
         if (this.comment.isPostComment()) {
+            console.log(this.comment.commentKey);
             this.commentService
                 .updateLikeCommentCount(this.comment.commentKey as CommentKey)
                 .subscribe(() => this.comment.updateLikesCount());

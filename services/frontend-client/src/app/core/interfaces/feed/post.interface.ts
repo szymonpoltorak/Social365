@@ -29,6 +29,18 @@ export class Post {
         this._imageUrls = imageUrls;
     }
 
+    static fromJson(json: any): Post {
+        return new Post(
+            json.postKey,
+            json.areNotificationTurnedOn,
+            json.isBookmarked,
+            json.content,
+            json.statistics,
+            json.isPostLiked,
+            json.imageUrls
+        );
+    }
+
     updateLikeCount(): void {
         this._isPostLiked = !this._isPostLiked;
 
@@ -73,10 +85,6 @@ export class Post {
 
     get isPostLiked(): boolean {
         return this._isPostLiked;
-    }
-
-    set isPostLiked(value: boolean) {
-        this._isPostLiked = value;
     }
 
     get imageUrls(): string[] {

@@ -40,20 +40,30 @@ export class SocialPage<T, S extends SocialPagingState<S>> implements Iterable<T
         this._data.push(...element);
     }
 
-    static fromJson<T, S extends SocialPagingState<S>>(json: any, pagingStateMapper: (jsonProperty: any) => S): SocialPage<T, S> {
+    static fromJson<T, S extends SocialPagingState<S>>(json: any,
+                                                       pagingStateMapper: (jsonProperty: any) => S,
+                                                       dataMapper: (jsonProperty: any) => T): SocialPage<T, S> {
         return new SocialPage<T, S>(
-            json.data,
+            json.data.map(dataMapper),
             pagingStateMapper(json.pagingState),
             json.hasNextPage
         );
+    }
+
+    static of<T, S extends SocialPagingState<S>>(data: T[], pagingState: S, hasNextPage: boolean): SocialPage<T, S> {
+        return new SocialPage<T, S>(data, pagingState, hasNextPage);
     }
 
     addFirst(...element: T[]): void {
         this._data.unshift(...element);
     }
 
-    map<V>(callback: (value: T) => V): V[] {
-        return this._data.map(callback);
+    map<V>(callback: (value: T) => V): SocialPage<V, S> {
+        return SocialPage.of(this._data.map(callback), this._pagingState, this._hasNextPage);
+    }
+
+    toArray(): T[] {
+        return this._data;
     }
 
     concatAndUpdate(page: SocialPage<T, S>): void {

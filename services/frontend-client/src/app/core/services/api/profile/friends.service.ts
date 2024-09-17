@@ -23,7 +23,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson, val => val as FriendElement))
         );
     }
 
@@ -36,7 +36,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson, val => val as FriendElement))
         );
     }
 
@@ -49,7 +49,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendFeedOption, PageablePagingState>(json, PageablePagingState.fromJson))
+            map(json => SocialPage.fromJson<FriendFeedOption, PageablePagingState>(json, PageablePagingState.fromJson, val => val as FriendFeedOption))
         );
     }
 
@@ -61,7 +61,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson, val => val as FriendElement))
         );
     }
 
@@ -73,7 +73,7 @@ export class FriendsService {
             }
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson))
+            map(json => SocialPage.fromJson<FriendElement, PageablePagingState>(json, PageablePagingState.fromJson, val => val as FriendElement))
         );
     }
 

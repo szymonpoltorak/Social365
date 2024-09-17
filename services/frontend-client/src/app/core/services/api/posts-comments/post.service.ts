@@ -24,7 +24,7 @@ export class PostService {
             params: this.getHttpParams(profileId, pagingState)
         }).pipe(
             take(1),
-            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json, PostsPagingState.fromJson))
+            map(json => SocialPage.fromJson<Either<Post, SharedPost>, PostsPagingState>(json, PostsPagingState.fromJson, this.mapPosts))
         );
     }
 
@@ -85,6 +85,10 @@ export class PostService {
                 authorId: authorId
             }
         }).pipe(take(1));
+    }
+
+    private mapPosts(json: any): Either<Post, SharedPost> {
+        return json.sharedPost !== undefined ? SharedPost.fromJson(json) : Post.fromJson(json);
     }
 
     private getHttpParams(profileId: string, pagingState: PostsPagingState): HttpParams {
