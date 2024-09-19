@@ -8,7 +8,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
-import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;

@@ -9,6 +9,7 @@ import razepl.dev.social365.images.exceptions.FileCouldNotBeCreatedException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Slf4j
 @Service
@@ -18,15 +19,7 @@ public class FileManagementServiceImpl implements FileManagementService {
     public final void saveFile(String filePath, MultipartFile file) {
         try {
             File out = new File(filePath);
-            File parentDir = out.getParentFile();
 
-            if (!parentDir.exists()) {
-                boolean isDirectoryCreated = parentDir.mkdirs();
-
-                if (!isDirectoryCreated && !parentDir.exists()) {
-                    throw new IOException("Failed to create directory: %s".formatted(parentDir.getAbsolutePath()));
-                }
-            }
             file.transferTo(out);
         } catch (IOException exception) {
             log.error(exception.getLocalizedMessage());
@@ -47,4 +40,16 @@ public class FileManagementServiceImpl implements FileManagementService {
             throw new FileCouldNotBeCreatedException(String.format("File on path '%s' was not able to be deleted!", imagePath));
         }
     }
+
+    @Override
+    public final void createProfileFolder(String username) {
+        String profileFolderPath = Path.of(ImagesServiceImpl.IMAGE_VOLUME_PATH, username).toString();
+
+        File profileFolder = new File(profileFolderPath);
+
+        if (!profileFolder.exists()) {
+            profileFolder.mkdirs();
+        }
+    }
+
 }

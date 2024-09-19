@@ -12,7 +12,7 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
-import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.entities.image.comment.CommentImage;
@@ -36,7 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImagesServiceImpl implements ImagesService {
 
-    private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
+    public static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
     private static final String IMAGE_NOT_FOUND = "Image not found";
 
     private final ImagesRepository imagesRepository;

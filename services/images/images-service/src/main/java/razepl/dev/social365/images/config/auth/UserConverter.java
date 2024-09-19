@@ -1,4 +1,4 @@
-package razepl.dev.social365.images.config;
+package razepl.dev.social365.images.config.auth;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.jwt.Jwt;

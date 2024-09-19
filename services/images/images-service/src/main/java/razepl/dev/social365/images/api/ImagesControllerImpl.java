@@ -20,8 +20,8 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
-import razepl.dev.social365.images.config.AuthUser;
-import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.config.auth.AuthUser;
+import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
 

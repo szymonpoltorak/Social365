@@ -27,6 +27,7 @@ import razepl.dev.social365.auth.entities.attempts.LoginAttempt;
 import razepl.dev.social365.auth.entities.attempts.interfaces.LoginAttemptRepository;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
+import razepl.dev.social365.auth.kafka.producer.KafkaProducer;
 import razepl.dev.social365.auth.utils.exceptions.InvalidTokenException;
 import razepl.dev.social365.auth.utils.exceptions.TokenDoesNotExistException;
 import razepl.dev.social365.auth.utils.exceptions.UserAccountIsLockedException;
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthHelperService authHelperService;
     private final ProfileService profileService;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     @Transactional
@@ -81,6 +83,8 @@ public class AuthServiceImpl implements AuthService {
         newUser = userRepository.save(user);
 
         log.info("Building token response for user : {}", newUser);
+
+        kafkaProducer.sendAccountCreatedEvent(newUser.getUsername());
 
         return authHelperService.buildTokensIntoResponse(newUser, profile, TokenRevokeStatus.TO_REVOKE);
     }
