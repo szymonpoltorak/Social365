@@ -17,7 +17,7 @@ public interface ImagesService {
 
     SocialPage<PostImageResponse> getUserUploadedImages(String username, Pageable pageable);
 
-    CommentImageResponse uploadCommentImage(String commentId, String username, MultipartFile image);
+    CommentImageResponse uploadCommentImage(String commentId, String username, String postId, MultipartFile image);
 
     PostImageResponse uploadPostImage(String postId, String username, MultipartFile image);
 

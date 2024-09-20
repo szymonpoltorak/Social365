@@ -117,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         }
         log.info("Deleting replies for comment with id: {}", comment.getCommentId());
 
-        replyCommentRepository.deleteAllByCommentId(comment.getCommentId());
+        replyCommentRepository.deleteAllByCommentId(comment.getCommentId(), comment.getPostId());
 
         imageService.deleteCommentImageById(comment.getCommentId().toString());
 

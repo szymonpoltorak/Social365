@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
         addJwtSecurityContext(newUser);
 
-        Profile profile = profileService.createUsersProfile(ProfileRequest.of(user, registerRequest.dateOfBirth()));
+        Profile profile = profileService.createUsersProfile(ProfileRequest.of(user, registerRequest.getDateOfBirth()));
 
         log.info("Profile created for user : {}", profile);
 

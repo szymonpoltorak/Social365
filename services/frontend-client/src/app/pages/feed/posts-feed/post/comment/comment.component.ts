@@ -93,7 +93,7 @@ export class CommentComponent implements OnInit {
         this.areRepliesVisible = true;
 
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), new CommentsPagingState(this.PAGE_SIZE, null))
+            .getRepliesForComment(this.getProperCommentId(), this.comment.commentKey.postId, CommentsPagingState.first(this.PAGE_SIZE))
             .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
     }
 
@@ -101,13 +101,14 @@ export class CommentComponent implements OnInit {
         const replyAddRequest: ReplyAddRequest = {
             commentId: this.getProperCommentId(),
             hasAttachment: event.attachedImage !== null,
-            content: event.content
+            content: event.content,
+            postId: this.comment.commentKey.postId
         };
         const image: AttachImage = event.attachedImage as AttachImage;
 
         if (replyAddRequest.hasAttachment) {
             this.imagesService
-                .uploadCommentImage(image, replyAddRequest.commentId)
+                .uploadCommentImage(image, replyAddRequest.commentId, this.comment.commentKey.postId)
                 .subscribe();
         }
         this.repliesService
@@ -122,7 +123,7 @@ export class CommentComponent implements OnInit {
 
     loadMoreReplies(): void {
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.replyComments.pagingState)
+            .getRepliesForComment(this.getProperCommentId(), this.comment.commentKey.postId, this.replyComments.pagingState)
             .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
     }
 
@@ -170,7 +171,7 @@ export class CommentComponent implements OnInit {
 
         if (event.attachedImage !== null && event.attachedImage.fileUrl !== this.comment.imageUrl) {
             this.imagesService
-                .uploadCommentImage(event.attachedImage, request.commentKey.commentId)
+                .uploadCommentImage(event.attachedImage, request.commentKey.commentId, request.commentKey.postId)
                 .subscribe();
         } else if (event.attachedImage === null && this.comment.imageUrl !== "") {
             this.imagesService
@@ -195,7 +196,7 @@ export class CommentComponent implements OnInit {
 
         if (event.attachedImage !== null && event.attachedImage.fileUrl !== this.comment.imageUrl) {
             this.imagesService
-                .uploadCommentImage(event.attachedImage, request.replyKey.replyCommentId)
+                .uploadCommentImage(event.attachedImage, request.replyKey.replyCommentId, request.replyKey.postId)
                 .subscribe();
         } else if (event.attachedImage === null && this.comment.imageUrl !== "") {
             this.imagesService

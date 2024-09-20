@@ -18,9 +18,10 @@ export class RepliesService {
     }
 
     getRepliesForComment(commentId: string,
+                         postId: string,
                          pagingState: CommentsPagingState): Observable<SocialPage<ReplyComment, CommentsPagingState>> {
         return this.http.get<SocialPage<ReplyComment, CommentsPagingState>>(RepliesMappings.GET_REPLIES_FOR_COMMENT, {
-            params: this.getCommentParams(commentId, pagingState)
+            params: this.getCommentParams(commentId, pagingState, postId)
         }).pipe(
             take(1),
             map(json => SocialPage.fromJson<ReplyComment, CommentsPagingState>(json, CommentsPagingState.fromJson, ReplyComment.fromJson)),
@@ -43,7 +44,7 @@ export class RepliesService {
         return this.http.put<ReplyComment>(RepliesMappings.UPDATE_LIKE_REPLY_COUNT, key).pipe(take(1));
     }
 
-    private getCommentParams(commentId: string, pagingState: CommentsPagingState): HttpParams {
+    private getCommentParams(commentId: string, pagingState: CommentsPagingState, postId: string): HttpParams {
         const params: HttpParams = new HttpParams();
 
         if (pagingState.hasPagingStarted()) {
@@ -51,6 +52,7 @@ export class RepliesService {
         }
         return params
             .set('commentId', commentId)
+            .set('postId', postId)
             .set('pageSize', pagingState.pageSize);
     }
 

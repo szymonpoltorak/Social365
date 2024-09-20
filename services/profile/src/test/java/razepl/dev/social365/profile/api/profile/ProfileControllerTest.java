@@ -28,6 +28,7 @@ import razepl.dev.social365.profile.nodes.about.mail.interfaces.EmailRepository;
 import razepl.dev.social365.profile.nodes.profile.interfaces.ProfileRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import static org.mockito.Mockito.when;
@@ -85,7 +86,7 @@ class ProfileControllerTest {
                 .firstName("No")
                 .lastName("User")
                 .username("nouser@example.com")
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(LocalDate.now().minusYears(20).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
 
         when(imagesServiceClient.getImagePath(1L))
@@ -112,7 +113,7 @@ class ProfileControllerTest {
                 .firstName("No")
                 .lastName("User")
                 .username("nouser@example.com")
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(LocalDate.now().minusYears(20).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
 
         when(imagesServiceClient.getImagePath(1L))
@@ -139,7 +140,7 @@ class ProfileControllerTest {
                 .firstName("No")
                 .lastName("User")
                 .username("nouser@example.com")
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(LocalDate.now().minusYears(20).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
 
         when(imagesServiceClient.getImagePath(1L))
@@ -170,7 +171,7 @@ class ProfileControllerTest {
                 .firstName("No")
                 .lastName("User")
                 .username("nouser@example.com")
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(LocalDate.now().minusYears(20).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
 
         when(imagesServiceClient.getImagePath(1L))

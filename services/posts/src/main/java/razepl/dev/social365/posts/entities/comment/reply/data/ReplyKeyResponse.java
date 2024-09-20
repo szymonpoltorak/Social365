@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Builder
 public record ReplyKeyResponse(@JsonProperty(Params.REPLY_COMMENT_ID) String replyCommentId,
+                               @JsonProperty(Params.POST_ID) String postId,
                                @JsonProperty(Params.REPLY_TO_COMMENT_ID) String replyToCommentId,
                                @JsonProperty(Params.CREATION_DATE_TIME) String creationDateTime) implements CommentKeyData {
 

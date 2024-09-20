@@ -57,9 +57,10 @@ public class ImagesControllerImpl implements ImagesController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_COMMENT_IMAGE_MAPPING)
     public final CommentImageResponse uploadCommentImage(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                         @RequestParam(Params.POST_ID) String postId,
                                                          @AuthUser User user,
                                                          @RequestBody MultipartFile image) {
-        return imagesService.uploadCommentImage(commentId, user.username(), image);
+        return imagesService.uploadCommentImage(commentId, user.username(), postId, image);
     }
 
     @Override

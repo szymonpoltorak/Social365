@@ -156,7 +156,7 @@ class ProfileServiceImplTest {
         // given
         ProfileRequest profileRequest = ProfileRequest
                 .builder()
-                .dateOfBirth(LocalDate.now().minusYears(20))
+                .dateOfBirth(LocalDate.now().minusYears(20).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
         Profile profile = Profile
                 .builder()
@@ -166,7 +166,7 @@ class ProfileServiceImplTest {
                 .isOnline(true)
                 .birthDate(BirthDate
                         .builder()
-                        .dateOfBirth(profileRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .dateOfBirth(profileRequest.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                         .privacyLevel(PrivacyLevel.ONLY_ME)
                         .build()
                 )

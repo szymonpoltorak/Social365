@@ -103,6 +103,6 @@ public class PostControllerImpl implements PostController {
     public final PostData deletePost(@AuthUser User user,
                                      @RequestParam(Params.AUTHOR_ID) String authorId,
                                      @RequestParam(Params.POST_ID) String postId) {
-        return postService.deletePost(user.profileId(), postId, authorId);
+        return postService.deletePost(user, postId, authorId);
     }
 }

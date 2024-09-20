@@ -43,6 +43,7 @@ public interface ImagesController {
     })
     CommentImageResponse uploadCommentImage(
             @Parameter(description = "Comment ID", required = true) String commentId,
+            @Parameter(description = "Id of post connected to comment", required = true) String postId,
             @Parameter(description = "User uploading the image", required = true) User user,
             @Parameter(description = "Image file to upload", required = true) MultipartFile image
     );

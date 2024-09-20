@@ -8,5 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface CommentImageRepository extends JpaRepository<CommentImage, Long> {
+
     Optional<CommentImage> findCommentImageByCommentId(String commentId);
+
+    void deleteAllByPostId(String commentId);
+
 }

@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.interfaces.FileManagementService;
 import razepl.dev.social365.images.exceptions.FileCouldNotBeCreatedException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,11 +15,10 @@ import java.nio.file.Path;
 public class FileManagementServiceImpl implements FileManagementService {
 
     @Override
-    public final void saveFile(String filePath, MultipartFile file) {
+    public final void saveFile(Path filePath, MultipartFile file) {
         try {
-            File out = new File(filePath);
+            Files.createFile(filePath);
 
-            file.transferTo(out);
         } catch (IOException exception) {
             log.error(exception.getLocalizedMessage());
 
@@ -29,11 +27,10 @@ public class FileManagementServiceImpl implements FileManagementService {
     }
 
     @Override
-    public final void deleteFile(String imagePath) {
+    public final void deleteFile(Path imagePath) {
         try {
-            File file = new File(imagePath);
+            Files.delete(imagePath);
 
-            Files.delete(file.toPath());
         } catch (IOException exception) {
             log.error(exception.getLocalizedMessage());
 
@@ -43,12 +40,16 @@ public class FileManagementServiceImpl implements FileManagementService {
 
     @Override
     public final void createProfileFolder(String username) {
-        String profileFolderPath = Path.of(ImagesServiceImpl.IMAGE_VOLUME_PATH, username).toString();
+        Path profileFolderPath = Path.of(ImagesServiceImpl.IMAGE_VOLUME_PATH, username);
 
-        File profileFolder = new File(profileFolderPath);
+        log.info("Creating profile folder for user: {}", username);
 
-        if (!profileFolder.exists()) {
-            profileFolder.mkdirs();
+        try {
+            Files.createDirectory(profileFolderPath);
+        } catch (IOException exception) {
+            log.error(exception.getLocalizedMessage());
+
+            throw new FileCouldNotBeCreatedException(String.format("Profile folder for user '%s' was not able to be created!", username));
         }
     }
 

@@ -136,7 +136,7 @@ export class SharedPostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId, comment.commentKey.postId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;

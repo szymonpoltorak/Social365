@@ -31,10 +31,11 @@ public class RepliesControllerImpl implements RepliesController {
     @Override
     @GetMapping(value = ReplyMappings.GET_REPLIES_FOR_COMMENT)
     public final SocialPage<CommentResponse> getRepliesForComment(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                                  @RequestParam(Params.POST_ID) String postId,
                                                                   @AuthUser User user,
                                                                   @RequestParam(Params.PAGE_SIZE) int pageSize,
                                                                   @RequestParam(value = Params.PAGING_STATE, required = false) String pagingState) {
-        return repliesService.getRepliesForComment(commentId, user.profileId(), PageInfo.of(pageSize, pagingState));
+        return repliesService.getRepliesForComment(commentId, user.profileId(), postId, PageInfo.of(pageSize, pagingState));
     }
 
     @Override

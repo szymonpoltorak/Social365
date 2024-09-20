@@ -16,6 +16,7 @@ import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
 import razepl.dev.social365.images.exceptions.ImageNotFoundException;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,7 +65,7 @@ class ImageServiceImplTest {
 
         // then
         assertEquals(expected, actual, SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH);
-        verify(fileManagementService).saveFile(filePath, image);
+        verify(fileManagementService).saveFile(Path.of(filePath), image);
     }
 
     @Test
@@ -103,7 +104,7 @@ class ImageServiceImplTest {
         ImageResponse result = imagesService.deleteImage(imageId, user);
 
         verify(imagesRepository, times(1)).delete(image);
-        verify(fileManagementService, times(1)).deleteFile(image.getImagePath());
+        verify(fileManagementService, times(1)).deleteFile(Path.of(image.getImagePath()));
         assertEquals(imageResponse, result, SHOULD_RETURN_IMAGE_RESPONSE_WITH_IMAGE_ID_USERNAME_AND_IMAGE_PATH);
     }
 

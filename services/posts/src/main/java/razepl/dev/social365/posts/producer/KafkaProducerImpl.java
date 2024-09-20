@@ -16,6 +16,7 @@ import razepl.dev.social365.posts.entities.post.Post;
 import razepl.dev.social365.posts.producer.data.CommentLikedEvent;
 import razepl.dev.social365.posts.producer.data.CommentRepliedEvent;
 import razepl.dev.social365.posts.producer.data.PostCommentedEvent;
+import razepl.dev.social365.posts.producer.data.PostDeletedEvent;
 import razepl.dev.social365.posts.producer.data.PostLikedEvent;
 
 import java.time.Instant;
@@ -32,11 +33,13 @@ public class KafkaProducerImpl implements KafkaProducer {
     private final String postCommentedTopic;
     private final String commentLikedTopic;
     private final String commentRepliedTopic;
+    private final String postDeletedTopic;
 
     public KafkaProducerImpl(KafkaTemplate<String, String> kafkaTemplate, ProfileService profileService, ObjectMapper jsonMapper,
                              @Value(KafkaConfigNames.POST_LIKED_TOPIC) String postLikedTopic,
                              @Value(KafkaConfigNames.POST_COMMENTED_TOPIC) String postCommentedTopic,
                              @Value(KafkaConfigNames.COMMENT_LIKED_TOPIC) String commentLikedTopic,
+                             @Value(KafkaConfigNames.POST_DELETED_TOPIC) String postDeletedTopic,
                              @Value(KafkaConfigNames.COMMENT_REPLIED_TOPIC) String commentRepliedTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.profileService = profileService;
@@ -45,6 +48,7 @@ public class KafkaProducerImpl implements KafkaProducer {
         this.postCommentedTopic = postCommentedTopic;
         this.commentLikedTopic = commentLikedTopic;
         this.commentRepliedTopic = commentRepliedTopic;
+        this.postDeletedTopic = postDeletedTopic;
     }
 
     @Override
@@ -147,6 +151,20 @@ public class KafkaProducerImpl implements KafkaProducer {
         log.info("Sending reply comment liked event: {}", postLikedEvent);
 
         sendMessage(commentLikedTopic, postLikedEvent);
+    }
+
+    @Override
+    public final void sendPostDeletedEvent(Post post, User author) {
+        PostDeletedEvent postDeletedEvent = PostDeletedEvent
+                .builder()
+                .eventId(UUID.randomUUID().toString())
+                .timeStamp(Instant.now().toString())
+                .postId(post.getPostId().toString())
+                .build();
+
+        log.info("Sending post deleted event: {}", postDeletedEvent);
+
+        sendMessage(postDeletedTopic, postDeletedEvent);
     }
 
     private void sendMessage(String topic, Object event) {

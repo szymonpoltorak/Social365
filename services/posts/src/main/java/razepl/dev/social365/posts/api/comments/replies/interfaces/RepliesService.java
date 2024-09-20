@@ -10,7 +10,7 @@ import razepl.dev.social365.posts.utils.pagination.interfaces.SocialPage;
 
 public interface RepliesService {
 
-    SocialPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo);
+    SocialPage<CommentResponse> getRepliesForComment(String replyToCommentId, String profileId, String postId, PageInfo pageInfo);
 
     CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest);
 

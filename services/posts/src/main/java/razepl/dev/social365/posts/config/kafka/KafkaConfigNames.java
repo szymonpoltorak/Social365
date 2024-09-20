@@ -2,6 +2,8 @@ package razepl.dev.social365.posts.config.kafka;
 
 public final class KafkaConfigNames {
 
+    public static final String POST_DELETED_TOPIC = "${kafka.topics.post-deleted}";
+
     static final String PRODUCER_BOOTSTRAP_SERVERS = "${spring.kafka.producer.bootstrap-servers}";
 
     public static final String POST_LIKED_TOPIC = "${kafka.topics.post-liked}";

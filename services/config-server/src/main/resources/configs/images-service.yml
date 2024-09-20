@@ -55,7 +55,7 @@ spring:
             properties:
                 spring.json.trusted.packages: '*'
                 spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-                spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+                spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
             group-id: ${KAFKA_NOTIFICATIONS_GROUP_ID}
 
     jpa:
@@ -75,6 +75,7 @@ spring:
 kafka:
     topics:
         account-created: ${KAFKA_ACCOUNT_CREATED_TOPIC}
+        post-deleted: ${KAFKA_POST_DELETED_TOPIC}
 
     group-ids:
         notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}

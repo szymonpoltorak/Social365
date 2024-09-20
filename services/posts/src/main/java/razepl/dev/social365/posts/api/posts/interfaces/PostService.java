@@ -25,6 +25,6 @@ public interface PostService {
 
     PostData editPost(User user, EditPostRequest editPostRequest);
 
-    PostData deletePost(String profileId, String postId, String creationDateTime);
+    PostData deletePost(User user, String postId, String creationDateTime);
 
 }

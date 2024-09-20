@@ -38,6 +38,8 @@ public class CommentImage {
 
     private String commentId;
 
+    private String postId;
+
     @Column(unique = true, nullable = false)
     private String imagePath;
 

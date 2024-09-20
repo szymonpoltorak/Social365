@@ -111,6 +111,7 @@ public class CommentMapperImpl implements CommentMapper {
     public final ReplyCommentKey toCommentReplyKey(ReplyKeyResponse replyKeyResponse) {
         return ReplyCommentKey
                 .builder()
+                .postId(UUID.fromString(replyKeyResponse.postId()))
                 .replyToCommentId(UUID.fromString(replyKeyResponse.replyToCommentId()))
                 .replyCommentId(UUID.fromString(replyKeyResponse.replyCommentId()))
                 .creationDateTime(replyKeyResponse.creationDateTime())

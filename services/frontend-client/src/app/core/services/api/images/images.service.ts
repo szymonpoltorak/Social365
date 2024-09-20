@@ -25,10 +25,11 @@ export class ImagesService {
         }).pipe(take(1));
     }
 
-    uploadCommentImage(image: AttachImage, commentId: string): Observable<void> {
+    uploadCommentImage(image: AttachImage, commentId: string, postId: string): Observable<void> {
         return this.http.post<void>(ImagesMappings.UPLOAD_COMMENT_IMAGE_MAPPING, this.toFormData(image), {
             params: {
-                commentId: commentId
+                commentId: commentId,
+                postId: postId
             }
         }).pipe(take(1));
     }

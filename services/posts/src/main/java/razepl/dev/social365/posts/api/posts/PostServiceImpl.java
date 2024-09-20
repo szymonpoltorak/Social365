@@ -13,7 +13,6 @@ import razepl.dev.social365.posts.api.posts.interfaces.PostService;
 import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.config.auth.User;
-import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.intefaces.ReplyCommentRepository;
 import razepl.dev.social365.posts.entities.post.Post;
@@ -42,6 +41,7 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     private static final int NOT_NEEDED = -1;
+    private static final int DELETE_PAGE_SIZE = 300;
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
@@ -251,37 +251,25 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostData deletePost(String profileId, String postId, String authorId) {
-        log.info("Deleting post with id: {} for profileId: {}", postId, profileId);
+    public PostData deletePost(User user, String postId, String authorId) {
+        log.info("Deleting post with id: {} for user: {}", postId, user);
 
         Post post = getPostFromRepository(authorId, postId);
 
-        if (!post.isAuthorId(profileId)) {
-            throw new UserIsNotAuthorException(profileId);
+        if (!post.isAuthorId(user.profileId())) {
+            throw new UserIsNotAuthorException(user.profileId());
         }
         log.info("Deleting all comments connected with post with id: {}", post.getPostId());
 
-        List<Comment> comments = commentRepository.findAllByPostId(post.getPostId());
-
         commentRepository.deleteAllByPostId(post.getPostId());
 
-        log.info("Deleting all images connected with post with id: {}", post.getPostId());
+        replyCommentRepository.deleteAllByPostId(post.getPostId());
 
-        comments
-                .parallelStream()
-                .forEach(comment -> imageService.deleteCommentImageById(comment.getCommentId().toString()));
-
-        log.info("Deleting all replies connected with post with id: {}", post.getPostId());
-
-        comments
-                .parallelStream()
-                .forEach(comment -> replyCommentRepository.deleteAllByCommentId(comment.getCommentId()));
+        kafkaProducer.sendPostDeletedEvent(post, user);
 
         log.info("Deleting post with id: {}", post.getKey());
 
         postRepository.deleteByPostId(post.getPostId(), post.getCreationDateTime(), post.getAuthorId());
-
-        imageService.deleteImagesByPostId(post.getPostId().toString());
 
         return PostResponse.builder().build();
     }

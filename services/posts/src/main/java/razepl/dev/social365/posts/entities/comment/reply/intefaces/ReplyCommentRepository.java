@@ -16,19 +16,29 @@ import java.util.UUID;
 @Repository
 public interface ReplyCommentRepository extends CassandraRepository<ReplyComment, ReplyCommentKey> {
 
-    @Query("select * from reply_comments where reply_to_comment_id = :commentId ALLOW FILTERING")
-    Slice<ReplyComment> findAllRepliesByCommentId(@Param(Params.COMMENT_ID) UUID commentId, Pageable pageable);
+    @Query("select * from reply_comments where reply_to_comment_id = :commentId and post_id = :postId")
+    Slice<ReplyComment> findAllRepliesByCommentId(@Param(Params.COMMENT_ID) UUID commentId,
+                                                  @Param(Params.POST_ID) UUID postId,
+                                                  Pageable pageable);
 
-    @Query("select * from reply_comments where reply_to_comment_id = :commentId and reply_comment_id = :replyId and creation_date_time = :authorId")
+    @Query("""
+            select * from reply_comments
+            where reply_to_comment_id = :commentId
+             and reply_comment_id = :replyId and creation_date_time = :authorId and post_id = :postId
+            """)
     Optional<ReplyComment> findReplyById(@Param(Params.COMMENT_ID) UUID commentId,
-                                        @Param(Params.REPLY_ID) UUID replyId,
-                                        @Param(Params.CREATION_DATE_TIME) String creationDateTime);
+                                         @Param(Params.REPLY_ID) UUID replyId,
+                                         @Param(Params.CREATION_DATE_TIME) String creationDateTime,
+                                         @Param(Params.POST_ID) UUID postId);
 
     default Optional<ReplyComment> findByKey(ReplyCommentKey key) {
-        return findReplyById(key.getReplyToCommentId(), key.getReplyCommentId(), key.getCreationDateTime());
+        return findReplyById(key.getReplyToCommentId(), key.getReplyCommentId(), key.getCreationDateTime(), key.getPostId());
     }
 
-    @Query("delete from reply_comments where reply_to_comment_id = :commentId")
-    void deleteAllByCommentId(@Param(Params.COMMENT_ID) UUID commentId);
+    @Query("delete from reply_comments where reply_to_comment_id = :commentId and post_id = :postId")
+    void deleteAllByCommentId(@Param(Params.COMMENT_ID) UUID commentId, @Param(Params.POST_ID) UUID postId);
+
+    @Query("delete from reply_comments where post_id = :postId")
+    void deleteAllByPostId(@Param(Params.POST_ID) UUID postId);
 
 }
