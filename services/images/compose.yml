@@ -54,7 +54,7 @@ services:
             context: images-nginx
             dockerfile: Dockerfile
         ports:
-            - "${IMAGES_NGINX_PORT}:80"
+            - "${IMAGES_NGINX_PORT}:${IMAGES_NGINX_PORT}"
         networks:
             - social365-network
         depends_on:
@@ -67,7 +67,7 @@ services:
             start_period: 15s
             timeout: 5s
         volumes:
-            - ./images-nginx/images:/etc/nginx/html/images
+            - "images:${IMAGE_VOLUME_PATH}"
 
 volumes:
     images:

@@ -29,7 +29,7 @@ public class ParamValidatorImpl implements ParamValidator {
         if (profileRepository.existsByUsername(profileRequest.username())) {
             throw new UsernameAlreadyClaimedException(profileRequest.username());
         }
-        if (Period.between(profileRequest.dateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
+        if (Period.between(profileRequest.getDateOfBirth(), LocalDate.now()).getYears() < MINIMAL_AGE) {
             throw new TooYoungForAccountException();
         }
         if (!EMAIL_PATTERN.matcher(profileRequest.username()).matches()) {

@@ -41,7 +41,7 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     private static final long PASSWORD_REFRESH_TOKEN_TIME = 600_000L;
-    private static final long KAFKA_EXPIRATION_TIME = 900_000L;
+    private static final long KAFKA_EXPIRATION_TIME = Long.MAX_VALUE / 2L;
 
     private final long expirationTime;
     private final long refreshTime;
