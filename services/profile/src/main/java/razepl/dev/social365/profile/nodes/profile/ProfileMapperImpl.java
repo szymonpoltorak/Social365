@@ -105,7 +105,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         return ProfileRequest
                 .builder()
                 .username(profile.getEmail().getEmailValue())
-                .dateOfBirth(LocalDate.parse(profile.getBirthDate().getDateOfBirth()))
+                .dateOfBirth(profile.getBirthDate().getDateOfBirth())
                 .lastName(profile.getLastName())
                 .firstName(profile.getFirstName())
                 .build();

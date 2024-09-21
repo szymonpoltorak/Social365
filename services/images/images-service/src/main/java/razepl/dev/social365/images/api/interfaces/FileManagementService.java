@@ -2,8 +2,14 @@ package razepl.dev.social365.images.api.interfaces;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileManagementService {
-    void saveFile(String filePath, MultipartFile file);
+import java.nio.file.Path;
 
-    void deleteFile(String imagePath);
+public interface FileManagementService {
+
+    void saveFile(Path filePath, MultipartFile file);
+
+    void deleteFile(Path imagePath);
+
+    void createProfileFolder(String username);
+
 }

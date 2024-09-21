@@ -24,6 +24,7 @@ public interface RepliesController {
             @ApiResponse(responseCode = "400", description = "Invalid parameters supplied", content = @Content)
     })
     SocialPage<CommentResponse> getRepliesForComment(@Parameter(description = "Comment ID") @RequestParam String commentId,
+                                                     @Parameter(description = "Post ID") @RequestParam String postId,
                                                      @Parameter(description = "Authenticated user") User user,
                                                      @Parameter(description = "Page size") @RequestParam int pageSize,
                                                      @Parameter(description = "Paging state", required = false) @RequestParam(required = false) String pagingState);

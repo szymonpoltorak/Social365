@@ -32,4 +32,6 @@ public interface JwtService extends OAuth2TokenValidator<Jwt>, JwtDecoder {
 
     User revokeUserTokens(User user);
 
+    String generateKafkaJwtToken();
+
 }

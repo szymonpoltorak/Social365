@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Added comment with id: {}", savedComment.getCommentId());
 
-        kafkaProducer.sendPostCommentedEvent(savedComment, user, user.profileId());
+        kafkaProducer.sendPostCommentedEvent(savedComment, user, savedComment.getAuthorId());
 
         log.info("Sent post commented event for comment with id: {}", savedComment.getCommentId());
 
@@ -117,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         }
         log.info("Deleting replies for comment with id: {}", comment.getCommentId());
 
-        replyCommentRepository.deleteAllByCommentId(comment.getCommentId());
+        replyCommentRepository.deleteAllByCommentId(comment.getCommentId(), comment.getPostId());
 
         imageService.deleteCommentImageById(comment.getCommentId().toString());
 
@@ -141,7 +141,7 @@ public class CommentServiceImpl implements CommentService {
         } else {
             comment.addUserLikedId(user.profileId());
 
-            kafkaProducer.sendCommentLikedEvent(comment, user, user.profileId());
+            kafkaProducer.sendCommentLikedEvent(comment, user, comment.getAuthorId());
         }
         Comment savedComment = commentRepository.save(comment);
 

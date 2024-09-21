@@ -74,10 +74,7 @@ export class SharedPostComponent implements OnInit {
     }
 
     likePost(): void {
-        this.post.sharingPost.isPostLiked = !this.post.sharingPost.isPostLiked;
-
-        this.post.sharingPost.statistics.likes = this.post.sharingPost.isPostLiked ? this.post
-            .sharingPost.statistics.likes + 1 : this.post.sharingPost.statistics.likes - 1;
+        this.post.sharingPost.updateLikeCount();
     }
 
     getCommentsForPost(): void {
@@ -139,7 +136,7 @@ export class SharedPostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId, comment.commentKey.postId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;

@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import razepl.dev.social365.images.api.data.CommentImageResponse;
 import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
-import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
 import razepl.dev.social365.images.utils.pagination.SocialPageImpl;
@@ -43,6 +43,7 @@ public interface ImagesController {
     })
     CommentImageResponse uploadCommentImage(
             @Parameter(description = "Comment ID", required = true) String commentId,
+            @Parameter(description = "Id of post connected to comment", required = true) String postId,
             @Parameter(description = "User uploading the image", required = true) User user,
             @Parameter(description = "Image file to upload", required = true) MultipartFile image
     );

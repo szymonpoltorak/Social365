@@ -19,6 +19,7 @@ import razepl.dev.social365.init.clients.api.data.Profile;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -61,7 +62,7 @@ public class Initializer implements CommandLineRunner {
                             .password(PASSWORD)
                             .firstName(firstName)
                             .lastName(lastName)
-                            .dateOfBirth(dateOfBirth)
+                            .dateOfBirth(dateOfBirth.format(DateTimeFormatter.ISO_LOCAL_DATE))
                             .build();
                 })
                 .toList();

@@ -90,7 +90,7 @@ export class ProfilePostsComponent implements OnInit {
         this.imagesService
             .getUserUploadedImages(username, PageablePagingState.firstPage(this.numberOfItemsToDisplay))
             .subscribe((imageUrls: SocialPage<PostImage, PageablePagingState>) => {
-                this.imageUrls = imageUrls.map((image: PostImage) => image.imagePath);
+                this.imageUrls = imageUrls.map((image: PostImage) => image.imagePath).toArray();
             });
 
         this.fetchFriendsAndProfileInfo(username);

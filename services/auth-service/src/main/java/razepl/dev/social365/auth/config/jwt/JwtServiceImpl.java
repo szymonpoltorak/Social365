@@ -41,6 +41,7 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     private static final long PASSWORD_REFRESH_TOKEN_TIME = 600_000L;
+    private static final long KAFKA_EXPIRATION_TIME = Long.MAX_VALUE / 2L;
 
     private final long expirationTime;
     private final long refreshTime;
@@ -67,6 +68,18 @@ public class JwtServiceImpl implements JwtService {
         log.info("User with revoked tokens : {}", updatedUser);
 
         return updatedUser;
+    }
+
+    @Override
+    public final String generateKafkaJwtToken() {
+        User user = User
+                .builder()
+                .username("kafka@social365.com")
+                .jwtVersion(0L)
+                .userId(-1L)
+                .build();
+
+        return buildToken(buildMinimumClaimsForUser(user), user, KAFKA_EXPIRATION_TIME);
     }
 
     @Override

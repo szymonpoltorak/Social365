@@ -229,7 +229,7 @@ public class ProfileServiceImpl implements ProfileService {
     private BirthDate getBirthDate(ProfileRequest profileRequest) {
         BirthDate birthDate = BirthDate
                 .builder()
-                .dateOfBirth(profileRequest.dateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .dateOfBirth(profileRequest.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .privacyLevel(PrivacyLevel.ONLY_ME)
                 .build();
         BirthDate savedBirthDate = birthDateRepository.save(birthDate);

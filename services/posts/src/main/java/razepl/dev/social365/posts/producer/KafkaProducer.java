@@ -17,4 +17,6 @@ public interface KafkaProducer {
 
     void sendCommentLikedEvent(ReplyComment comment, User likeAuthor, String targetProfileId);
 
+    void sendPostDeletedEvent(Post post, User author);
+
 }

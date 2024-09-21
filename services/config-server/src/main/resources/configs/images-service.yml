@@ -46,6 +46,18 @@ spring:
             max-request-size: 20MB
             enabled: true
 
+    kafka:
+        consumer:
+            auto-offset-reset: earliest
+            key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            bootstrap-servers: ${KAFKA_BROKER_HOSTNAME}:${KAFKA_PORT}
+            properties:
+                spring.json.trusted.packages: '*'
+                spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+                spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+            group-id: ${KAFKA_NOTIFICATIONS_GROUP_ID}
+
     jpa:
         hibernate:
             ddl-auto: update
@@ -59,6 +71,14 @@ spring:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
 
                 format_sql: true
+
+kafka:
+    topics:
+        account-created: ${KAFKA_ACCOUNT_CREATED_TOPIC}
+        post-deleted: ${KAFKA_POST_DELETED_TOPIC}
+
+    group-ids:
+        notifications: ${KAFKA_NOTIFICATIONS_GROUP_ID}
 
 eureka:
     client:

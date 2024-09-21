@@ -36,22 +36,24 @@ public class RepliesServiceImpl implements RepliesService {
     private final KafkaProducer kafkaProducer;
 
     @Override
-    public final SocialPage<CommentResponse> getRepliesForComment(String commentId, String profileId, PageInfo pageInfo) {
-        log.info("Getting replies for comment with id: {}, with pageable: {}", commentId, pageInfo);
+    public final SocialPage<CommentResponse> getRepliesForComment(String replyToCommentId, String profileId, String postId, PageInfo pageInfo) {
+        log.info("Getting replies for comment with id: {}, with pageable: {}", replyToCommentId, pageInfo);
 
-        Slice<ReplyComment> comments = replyCommentRepository.findAllRepliesByCommentId(UUID.fromString(commentId), pageInfo.toPageable());
+        Slice<ReplyComment> comments = replyCommentRepository
+                .findAllRepliesByCommentId(UUID.fromString(replyToCommentId), UUID.fromString(postId), pageInfo.toPageable());
 
-        log.info("Found {} replies for comment with id: {}", comments.getSize(), commentId);
+        log.info("Found {} replies for comment with id: {}", comments.getSize(), replyToCommentId);
 
         return CommentsCassandraPage.of(comments, replyComment -> commentMapper.toCommentResponse(replyComment, profileId));
     }
 
     @Override
     public final CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest) {
-        log.info("Adding reply to comment with id: {}, with content: {}", commentRequest.commentId(), commentRequest.content());
+        log.info("Adding reply to comment with data: {}", commentRequest);
 
         ReplyCommentKey key = ReplyCommentKey
                 .builder()
+                .postId(UUID.fromString(commentRequest.postId()))
                 .replyToCommentId(UUID.fromString(commentRequest.commentId()))
                 .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .replyCommentId(UUID.randomUUID())
@@ -77,7 +79,7 @@ public class RepliesServiceImpl implements RepliesService {
 
     @Override
     public final CommentResponse editReplyComment(User user, ReplyEditRequest commentRequest) {
-        log.info("Editing reply with id: {}, with content: {}", commentRequest.replyKey().replyToCommentId(), commentRequest.content());
+        log.info("Editing reply with data: {}", commentRequest);
 
         ReplyComment replyComment = getReplyComment(commentRequest.replyKey());
 
@@ -117,7 +119,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse updateLikeCommentCount(User user,ReplyKeyResponse replyKey) {
+    public final CommentResponse updateLikeCommentCount(User user, ReplyKeyResponse replyKey) {
         log.info("Updating like count for reply with id: {}", replyKey);
 
         ReplyComment replyComment = getReplyComment(replyKey);

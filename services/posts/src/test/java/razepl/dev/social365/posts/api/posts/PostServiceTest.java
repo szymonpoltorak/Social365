@@ -139,6 +139,7 @@ class PostServiceTest {
     @Test
     final void deletePost_deletesPostAndComments() {
         String profileId = "profileId";
+        User user = User.builder().profileId(profileId).build();
         UUID postId = UUID.randomUUID();
         Post post = Post
                 .builder()
@@ -149,7 +150,7 @@ class PostServiceTest {
         when(postRepository.findByPostId(post.getAuthorId(), post.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        postService.deletePost(profileId, postId.toString(), post.getAuthorId());
+        postService.deletePost(user, postId.toString(), post.getAuthorId());
 
         verify(postRepository).deleteByPostId(postId, post.getCreationDateTime(), profileId);
     }
@@ -158,6 +159,7 @@ class PostServiceTest {
     final void deletePost_throwsException_whenUserIsNotAuthor() {
         String profileId = "profileId";
         String postId = UUID.randomUUID().toString();
+        User user = User.builder().profileId(profileId).build();
         PostKey key = PostKey
                 .builder()
                 .authorId("id")
@@ -173,6 +175,6 @@ class PostServiceTest {
         when(postRepository.findByPostId(key.getAuthorId(), key.getPostId()))
                 .thenReturn(Optional.of(post));
 
-        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(profileId, postId, key.getAuthorId()));
+        assertThrows(UserIsNotAuthorException.class, () -> postService.deletePost(user, postId, key.getAuthorId()));
     }
 }

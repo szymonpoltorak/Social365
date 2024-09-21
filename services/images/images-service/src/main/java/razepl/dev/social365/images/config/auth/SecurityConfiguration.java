@@ -1,4 +1,4 @@
-package razepl.dev.social365.images.config;
+package razepl.dev.social365.images.config.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

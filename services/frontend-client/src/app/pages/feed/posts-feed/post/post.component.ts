@@ -93,11 +93,7 @@ export class PostComponent implements OnInit {
     likePost(): void {
         this.postService
             .updateLikePostCount(this.post.postKey.postId, this.post.postKey.author.profileId)
-            .subscribe(() => {
-                this.post.isPostLiked = !this.post.isPostLiked;
-
-                this.post.statistics.likes = this.post.isPostLiked ? this.post.statistics.likes + 1 : this.post.statistics.likes - 1;
-            });
+            .subscribe(() => this.post.updateLikeCount());
     }
 
     getCommentsForPost(): void {
@@ -179,7 +175,7 @@ export class PostComponent implements OnInit {
             .subscribe((comment: PostComment) => {
                 if (request.hasAttachment) {
                     this.imagesService
-                        .uploadCommentImage(image, comment.commentKey.commentId)
+                        .uploadCommentImage(image, comment.commentKey.commentId, comment.commentKey.postId)
                         .subscribe();
 
                     comment.imageUrl = image.fileUrl;

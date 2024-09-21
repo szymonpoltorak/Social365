@@ -62,6 +62,7 @@ kafka:
     topics:
         post-liked: ${KAFKA_POST_LIKED_TOPIC}
         post-commented: ${KAFKA_POST_COMMENTED_TOPIC}
+        post-deleted: ${KAFKA_POST_DELETED_TOPIC}
 
         comment-liked: ${KAFKA_COMMENT_LIKED_TOPIC}
         comment-replied: ${KAFKA_COMMENT_REPLIED_TOPIC}

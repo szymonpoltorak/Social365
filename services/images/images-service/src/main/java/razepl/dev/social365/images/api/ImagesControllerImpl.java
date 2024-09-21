@@ -20,8 +20,8 @@ import razepl.dev.social365.images.api.data.ImageResponse;
 import razepl.dev.social365.images.api.data.PostImageResponse;
 import razepl.dev.social365.images.api.interfaces.ImagesController;
 import razepl.dev.social365.images.api.interfaces.ImagesService;
-import razepl.dev.social365.images.config.AuthUser;
-import razepl.dev.social365.images.config.User;
+import razepl.dev.social365.images.config.auth.AuthUser;
+import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.utils.pagination.SocialPage;
 
@@ -57,9 +57,10 @@ public class ImagesControllerImpl implements ImagesController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = ImagesMappings.UPLOAD_COMMENT_IMAGE_MAPPING)
     public final CommentImageResponse uploadCommentImage(@RequestParam(Params.COMMENT_ID) String commentId,
+                                                         @RequestParam(Params.POST_ID) String postId,
                                                          @AuthUser User user,
                                                          @RequestBody MultipartFile image) {
-        return imagesService.uploadCommentImage(commentId, user.username(), image);
+        return imagesService.uploadCommentImage(commentId, user.username(), postId, image);
     }
 
     @Override

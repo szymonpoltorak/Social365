@@ -23,7 +23,7 @@ export class NotificationsService {
         })
             .pipe(
                 take(1),
-                map(json => SocialPage.fromJson<Notification, PageablePagingState>(json, PageablePagingState.fromJson))
+                map(json => SocialPage.fromJson<Notification, PageablePagingState>(json, PageablePagingState.fromJson, (val) => val as Notification))
             );
     }
 

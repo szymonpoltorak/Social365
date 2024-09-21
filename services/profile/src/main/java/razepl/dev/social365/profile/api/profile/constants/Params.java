@@ -32,7 +32,13 @@ public final class Params {
 
     public static final String PROFILE_BANNER_ID = "profileBannerId";
     
-    public static final String CURRENT_USER_ID = "currentUserId";
+    public static final String DATE_OF_BIRTH = "dateOfBirth";
+
+    public static final String USER_ID = "userId";
+
+    public static final String FIRST_NAME = "firstName";
+
+    public static final String LAST_NAME = "lastName";
 
     private Params() {
     }

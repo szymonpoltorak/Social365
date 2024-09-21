@@ -1,5 +1,6 @@
 package razepl.dev.social365.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,11 @@ public class AppConfiguration {
 
     private final UserRepository userRepository;
     private final JwtKeyService jwtKeyService;
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {

@@ -1,4 +1,4 @@
-package razepl.dev.social365.images.config;
+package razepl.dev.social365.images.config.auth;
 
 import lombok.Builder;
 
