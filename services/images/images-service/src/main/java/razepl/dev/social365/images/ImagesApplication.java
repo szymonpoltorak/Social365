@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import razepl.dev.social365.images.api.FileManagementServiceImpl;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.ImageType;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesRepository;
@@ -22,7 +23,7 @@ public class ImagesApplication {
     @Bean
     CommandLineRunner commandLineRunner(ImagesRepository imagesRepository) {
         return args -> {
-            String username = "nouser@example.com";
+            String username = FileManagementServiceImpl.DEFAULT_USER_MAIL;
 
             if (!imagesRepository.existsByUsername(username)) {
                 String path = Path.of(IMAGE_VOLUME_PATH, username, "shiba1.jpg").toString();

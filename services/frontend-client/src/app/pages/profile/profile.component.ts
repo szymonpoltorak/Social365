@@ -138,8 +138,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (profilePicture === null) {
             return;
         }
+        if (this.profileInfo.profilePictureUrl.includes("nouser@example.com")) {
+            this.imageService
+                .uploadImage(profilePicture, ImageType.PROFILE_IMAGE)
+                .subscribe((image: Image) => {
+                    this.profileInfo.profilePictureUrl = image.imagePath;
+
+                    this.profileService
+                        .updateProfilePicture(image.imageId)
+                        .subscribe();
+                });
+            return
+
+        }
         this.imageService
-            .updateImage(this.profileInfo.username, profilePicture, ImageType.PROFILE_IMAGE)
+            .updateImage(this.profileInfo.profilePictureUrl, profilePicture, ImageType.PROFILE_IMAGE)
             .subscribe((image: Image) => {
                 this.profileInfo.profileBannerUrl = image.imagePath;
 

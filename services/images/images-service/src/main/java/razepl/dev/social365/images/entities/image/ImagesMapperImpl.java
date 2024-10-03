@@ -12,6 +12,7 @@ import razepl.dev.social365.images.entities.image.post.PostImage;
 public class ImagesMapperImpl implements ImagesMapper {
 
     private static final String IMAGE_VOLUME_PATH = System.getenv("IMAGE_VOLUME_PATH");
+    public static final String IMAGES = "/images";
 
     @Override
     public final ImageResponse toImageResponse(Image image) {
@@ -55,7 +56,7 @@ public class ImagesMapperImpl implements ImagesMapper {
     }
 
     private String getNginxImagePath(String imagePath) {
-        return imagePath.replace(IMAGE_VOLUME_PATH, "/images");
+        return imagePath.replace(IMAGE_VOLUME_PATH, IMAGES);
     }
 
 }

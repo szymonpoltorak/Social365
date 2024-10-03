@@ -15,6 +15,7 @@ import razepl.dev.social365.images.api.interfaces.ImagesService;
 import razepl.dev.social365.images.config.auth.User;
 import razepl.dev.social365.images.entities.image.Image;
 import razepl.dev.social365.images.entities.image.ImageType;
+import razepl.dev.social365.images.entities.image.ImagesMapperImpl;
 import razepl.dev.social365.images.entities.image.comment.CommentImage;
 import razepl.dev.social365.images.entities.image.comment.interfaces.CommentImageRepository;
 import razepl.dev.social365.images.entities.image.interfaces.ImagesMapper;
@@ -165,17 +166,20 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
+    @Transactional
     public ImageResponse updateImage(String imageUrl, MultipartFile image, User user, ImageType imageType) {
         log.info("Updating image with imagePath: {}", imageUrl);
 
-        Image imageEntity = imagesRepository.findImageByImagePath(imageUrl)
+        Path imageUrlPath = Path.of(IMAGE_VOLUME_PATH.replace(ImagesMapperImpl.IMAGES, ""), imageUrl);
+
+        Image imageEntity = imagesRepository.findImageByImagePath(imageUrlPath.toString())
                 .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
 
         log.info("Found image: {}", imageEntity);
 
-        log.info("Deleting old image: {}", imageUrl);
+        log.info("Deleting old image: {}", imageUrlPath);
 
-        fileManagementService.deleteFile(Path.of(imageUrl));
+        fileManagementService.deleteFile(imageUrlPath);
 
         String newFilePath = String
                 .format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
@@ -187,7 +191,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         imageEntity = imagesRepository.save(imageEntity);
 
-        saveFile(Path.of(newFilePath), image);
+        saveFile(Path.of(IMAGE_VOLUME_PATH, newFilePath), image);
 
         return imagesMapper.toImageResponse(imageEntity);
     }
@@ -227,6 +231,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
+    @Transactional
     public PostImageResponse deletePostImageByImageUrl(String imageUrl, User user) {
         log.info("Deleting post image with imageUrl: {}", imageUrl);
 
@@ -248,6 +253,7 @@ public class ImagesServiceImpl implements ImagesService {
     }
 
     @Override
+    @Transactional
     public CommentImageResponse deleteCommentImageById(String commentId, User user) {
         log.info("Deleting comment image with commentId: {}", commentId);
 
