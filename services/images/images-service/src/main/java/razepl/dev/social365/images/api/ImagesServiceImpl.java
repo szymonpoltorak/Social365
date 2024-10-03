@@ -181,8 +181,9 @@ public class ImagesServiceImpl implements ImagesService {
 
         fileManagementService.deleteFile(imageUrlPath);
 
-        String newFilePath = String
+        String newFileName = String
                 .format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
+        String newFilePath = Path.of(IMAGE_VOLUME_PATH, newFileName).toString();
 
         log.info("Saving new image: {}", newFilePath);
 
@@ -191,7 +192,7 @@ public class ImagesServiceImpl implements ImagesService {
 
         imageEntity = imagesRepository.save(imageEntity);
 
-        saveFile(Path.of(IMAGE_VOLUME_PATH, newFilePath), image);
+        saveFile(Path.of(newFilePath), image);
 
         return imagesMapper.toImageResponse(imageEntity);
     }
