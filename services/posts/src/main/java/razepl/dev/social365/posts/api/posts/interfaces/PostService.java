@@ -17,8 +17,6 @@ public interface PostService {
 
     PostData updateNotificationStatus(String profileId, String postId, String creationDateTime);
 
-    PostData updateBookmarkStatus(String profileId, String postId, String creationDateTime);
-
     PostData sharePost(String profileId, String postId, String content, String creationDateTime);
 
     PostData createPost(String profileId, String content, boolean hasAttachments);

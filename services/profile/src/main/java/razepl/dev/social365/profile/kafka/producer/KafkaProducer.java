@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.producer;
+package razepl.dev.social365.profile.kafka.producer;
 
 import razepl.dev.social365.profile.nodes.profile.Profile;
 

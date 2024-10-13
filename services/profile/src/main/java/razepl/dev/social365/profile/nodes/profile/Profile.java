@@ -53,7 +53,6 @@ public class Profile {
 
     private long bannerPictureId;
 
-    //TODO: Add updating if user is online
     private boolean isOnline;
 
     @Version

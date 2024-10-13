@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import razepl.dev.social365.auth.config.jwt.interfaces.JwtService;
 import razepl.dev.social365.auth.entities.user.User;
 import razepl.dev.social365.auth.entities.user.interfaces.UserRepository;
+import razepl.dev.social365.auth.kafka.producer.KafkaProducer;
 import razepl.dev.social365.auth.utils.exceptions.InvalidTokenException;
 import razepl.dev.social365.auth.utils.exceptions.UserDoesNotExistException;
 
@@ -26,6 +27,7 @@ public class LogoutServiceImpl implements LogoutHandler {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public final void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -49,6 +51,8 @@ public class LogoutServiceImpl implements LogoutHandler {
         log.info("User : {} is logging out!", user.getUsername());
 
         jwtService.revokeUserTokens(user);
+
+        kafkaProducer.sendAccountLogoutEvent(user);
 
         SecurityContextHolder.clearContext();
     }

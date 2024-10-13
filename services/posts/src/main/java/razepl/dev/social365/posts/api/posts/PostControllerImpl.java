@@ -68,14 +68,6 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    @PutMapping(value = PostMappings.UPDATE_BOOKMARK_STATUS)
-    public final PostData updateBookmarkStatus(@AuthUser User user,
-                                               @RequestParam(Params.AUTHOR_ID) String authorId,
-                                               @RequestParam(Params.POST_ID) String postId) {
-        return postService.updateBookmarkStatus(user.profileId(), postId, authorId);
-    }
-
-    @Override
     @PutMapping(value = PostMappings.SHARE_POST)
     public final PostData sharePost(@AuthUser User user,
                                     @RequestParam(Params.POST_ID) String postId,

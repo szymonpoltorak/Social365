@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.producer;
+package razepl.dev.social365.profile.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +8,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import razepl.dev.social365.profile.config.kafka.KafkaConfigNames;
 import razepl.dev.social365.profile.nodes.profile.Profile;
-import razepl.dev.social365.profile.producer.data.FriendshipEvent;
-import razepl.dev.social365.profile.producer.data.FriendshipRejectedEvent;
+import razepl.dev.social365.profile.kafka.producer.data.FriendshipEvent;
+import razepl.dev.social365.profile.kafka.producer.data.FriendshipRejectedEvent;
 
 import java.time.Instant;
 import java.util.UUID;

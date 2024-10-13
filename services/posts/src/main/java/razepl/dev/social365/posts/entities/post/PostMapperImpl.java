@@ -124,7 +124,7 @@ public class PostMapperImpl implements PostMapper {
                 .isPostLiked(post.isLikedBy(profileId))
                 .areNotificationTurnedOn(post.areNotificationsTurnedOnBy(profileId))
                 .statistics(statistics)
-                .isBookmarked(post.isBookmarkedBy(profileId))
+                .isBookmarked(false)
                 .content(post.getContent())
                 .imageUrls(imagePaths)
                 .build();

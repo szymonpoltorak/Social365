@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Version;
 import razepl.dev.social365.auth.entities.devices.constants.DeviceType;
 import razepl.dev.social365.auth.entities.user.User;
 
@@ -36,6 +37,9 @@ public class LoggedDevice {
     private DeviceType deviceType;
 
     private String ipAddress;
+
+    @Version
+    private long version;
 
     @ManyToOne
     private User user;

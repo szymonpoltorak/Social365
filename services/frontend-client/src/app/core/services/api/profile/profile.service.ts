@@ -48,10 +48,6 @@ export class ProfileService {
         return this.http.get<ProfileSummary>(ProfileMappings.GET_PROFILE_SUMMARY_MAPPING).pipe(take(1));
     }
 
-    getBasicProfileInfo(): Observable<Profile> {
-        return this.http.get<Profile>(ProfileMappings.GET_BASIC_PROFILE_INFO_MAPPING).pipe(take(1));
-    }
-
     updateProfileBio(bio: string): Observable<ProfileRequest> {
         return this.http.put<ProfileRequest>(ProfileMappings.UPDATE_PROFILE_BIO_MAPPING, {}, {
             params: {

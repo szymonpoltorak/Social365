@@ -56,14 +56,15 @@ public class ReplyComment {
         return userLikedIds != null ? userLikedIds.size() : 0;
     }
 
-    public void addUserLikedId(String profileId) {
+    public final void addUserLikedId(String profileId) {
         if (userLikedIds == null) {
             userLikedIds = new HashSet<>();
         }
         userLikedIds.add(profileId);
     }
 
-    public boolean isAuthor(String profileId) {
-        return false;
+    public final boolean isAuthor(String profileId) {
+        return profileId.equals(authorId);
     }
+
 }

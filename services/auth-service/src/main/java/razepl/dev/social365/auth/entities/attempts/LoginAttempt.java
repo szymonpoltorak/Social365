@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Version;
 import razepl.dev.social365.auth.entities.attempts.interfaces.AttemptController;
 
 import java.time.LocalTime;
@@ -32,6 +33,9 @@ public class LoginAttempt implements AttemptController {
     private long attempts;
 
     private LocalTime dateOfLock;
+
+    @Version
+    private long version;
 
     @Override
     public final void incrementAttempts() {

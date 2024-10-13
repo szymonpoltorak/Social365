@@ -44,9 +44,6 @@ public class Post {
     @Column(value = "user_shared_ids")
     private Set<String> userSharedIds;
 
-    @Column(value = "bookmarked_user_ids")
-    private Set<String> bookmarkedUserIds;
-
     @Version
     private long version;
 
@@ -88,13 +85,6 @@ public class Post {
         userNotificationIds.add(profileId);
     }
 
-    public final void addBookmarkedUserId(String profileId) {
-        if (bookmarkedUserIds == null) {
-            bookmarkedUserIds = new HashSet<>();
-        }
-        bookmarkedUserIds.add(profileId);
-    }
-
     public final void sharePostByProfile(String profileId) {
         if (userSharedIds == null) {
             userSharedIds = new HashSet<>();
@@ -118,10 +108,6 @@ public class Post {
 
     public final boolean areNotificationsTurnedOnBy(String profileId) {
         return userNotificationIds != null && userNotificationIds.contains(profileId);
-    }
-
-    public final boolean isBookmarkedBy(String profileId) {
-        return bookmarkedUserIds != null && bookmarkedUserIds.contains(profileId);
     }
 
     public final boolean isLikedBy(String profileId) {

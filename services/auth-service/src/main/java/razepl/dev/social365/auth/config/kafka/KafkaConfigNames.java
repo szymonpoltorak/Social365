@@ -2,6 +2,8 @@ package razepl.dev.social365.auth.config.kafka;
 
 public final class KafkaConfigNames {
 
+    public static final String ACCOUNT_LOGOUT_TOPIC = "${kafka.topics.account-logout}";
+
     static final String PRODUCER_BOOTSTRAP_SERVERS = "${spring.kafka.producer.bootstrap-servers}";
 
     public static final String ACCOUNT_CREATED_TOPIC = "${kafka.topics.account-created}";

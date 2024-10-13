@@ -26,13 +26,15 @@ public class NotificationsTopicConfig {
             @Value(KafkaConfigNames.FRIENDSHIP_ACCEPTED_TOPIC) String friendshipAcceptedTopic,
             @Value(KafkaConfigNames.FRIENDSHIP_FOLLOWED_TOPIC) String friendshipFollowedTopic,
             @Value(KafkaConfigNames.FRIENDSHIP_REJECTED_TOPIC) String friendshipRejectedTopic,
-            @Value(KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC) String friendshipRequestedTopic
+            @Value(KafkaConfigNames.FRIENDSHIP_REQUESTED_TOPIC) String friendshipRequestedTopic,
+            @Value(KafkaConfigNames.ACCOUNT_LOGOUT_TOPIC) String accountLogoutTopic
     ) {
         return new KafkaAdmin.NewTopics(
                 TopicBuilder.name(friendshipAcceptedTopic).build(),
                 TopicBuilder.name(friendshipFollowedTopic).build(),
                 TopicBuilder.name(friendshipRejectedTopic).build(),
-                TopicBuilder.name(friendshipRequestedTopic).build()
+                TopicBuilder.name(friendshipRequestedTopic).build(),
+                TopicBuilder.name(accountLogoutTopic).build()
         );
     }
 

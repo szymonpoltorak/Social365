@@ -14,7 +14,7 @@ import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
 import razepl.dev.social365.profile.api.friends.interfaces.FriendsService;
 import razepl.dev.social365.profile.config.auth.User;
-import razepl.dev.social365.profile.producer.KafkaProducer;
+import razepl.dev.social365.profile.kafka.producer.KafkaProducer;
 import razepl.dev.social365.profile.utils.exceptions.ProfileNotFoundException;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadyFollows;
 import razepl.dev.social365.profile.utils.exceptions.UserAlreadySendFriendRequestException;

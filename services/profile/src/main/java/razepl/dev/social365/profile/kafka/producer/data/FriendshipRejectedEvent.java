@@ -1,4 +1,4 @@
-package razepl.dev.social365.profile.producer.data;
+package razepl.dev.social365.profile.kafka.producer.data;
 
 import lombok.Builder;
 

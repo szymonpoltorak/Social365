@@ -61,15 +61,6 @@ public interface PostController {
                                       @Parameter(description = "Author ID") @RequestParam String authorId,
                                       @Parameter(description = "Post ID") @RequestParam String postId);
 
-    @Operation(summary = "Update bookmark status")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated bookmark status"),
-            @ApiResponse(responseCode = "400", description = "Invalid parameters supplied", content = @Content)
-    })
-    PostData updateBookmarkStatus(@Parameter(description = "Authenticated user") User user,
-                                  @Parameter(description = "Author ID") @RequestParam String authorId,
-                                  @Parameter(description = "Post ID") @RequestParam String postId);
-
     @Operation(summary = "Share a post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully shared the post"),

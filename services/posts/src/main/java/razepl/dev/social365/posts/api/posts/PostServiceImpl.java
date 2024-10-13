@@ -10,7 +10,6 @@ import razepl.dev.social365.posts.api.posts.data.EditPostRequest;
 import razepl.dev.social365.posts.api.posts.data.PostResponse;
 import razepl.dev.social365.posts.api.posts.interfaces.PostData;
 import razepl.dev.social365.posts.api.posts.interfaces.PostService;
-import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.clients.profile.ProfileService;
 import razepl.dev.social365.posts.config.auth.User;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
@@ -41,7 +40,6 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     private static final int NOT_NEEDED = -1;
-    private static final int DELETE_PAGE_SIZE = 300;
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
@@ -49,7 +47,6 @@ public class PostServiceImpl implements PostService {
     private final PostValidator postValidator;
     private final CommentRepository commentRepository;
     private final ReplyCommentRepository replyCommentRepository;
-    private final ImageService imageService;
     private final KafkaProducer kafkaProducer;
 
     @Override
@@ -198,24 +195,6 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
 
         log.info("Post with id: {} notification status updated for profile with id: {}", savedPost.getPostId(), profileId);
-
-        return postMapper.toPostResponse(savedPost, profileId);
-    }
-
-    @Override
-    public PostData updateBookmarkStatus(String profileId, String postId, String authorId) {
-        log.info("Updating bookmark status for post with id: {} for profileId: {}", postId, profileId);
-
-        Post post = getPostFromRepository(authorId, postId);
-
-        if (post.isBookmarkedBy(profileId)) {
-            post.getBookmarkedUserIds().remove(profileId);
-        } else {
-            post.addBookmarkedUserId(profileId);
-        }
-        Post savedPost = postRepository.save(post);
-
-        log.info("Post with id: {} bookmark status updated for profile with id: {}", savedPost.getPostId(), profileId);
 
         return postMapper.toPostResponse(savedPost, profileId);
     }

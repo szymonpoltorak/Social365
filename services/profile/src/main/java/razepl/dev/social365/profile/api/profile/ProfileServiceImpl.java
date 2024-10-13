@@ -155,7 +155,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    @Transactional(transactionManager = "transactionManager")
+    @Transactional
     public ProfileResponse createUsersProfile(ProfileRequest profileRequest) {
         log.info("Creating profile for user with id: {}", profileRequest.userId());
         log.info("Profile request: {}", profileRequest);
@@ -188,6 +188,10 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("Getting basic profile info for user: {}", user);
 
         Profile profile = getProfileFromRepository(user.profileId());
+
+        profile.setOnline(true);
+
+        profileRepository.save(profile);
 
         return profileMapper.mapProfileToProfileResponse(profile);
     }
