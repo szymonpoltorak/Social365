@@ -106,20 +106,11 @@
             }
         }
 
-        @if (comment.hasReplies) {
+        @if (comment.hasReplies && replyComments.hasNextPage) {
             <button mat-button (click)="loadReplies()" class="mb-3">
                 <mat-icon>expand_more</mat-icon>
                 Load replies
             </button>
-        }
-
-        @if (replyComments !== undefined && replyComments.hasNextPage) {
-            <div class="m-2">
-                <button mat-button (click)="loadMoreReplies()">
-                    <mat-icon>expand_more</mat-icon>
-                    Load more replies
-                </button>
-            </div>
         }
     </div>
 </section>

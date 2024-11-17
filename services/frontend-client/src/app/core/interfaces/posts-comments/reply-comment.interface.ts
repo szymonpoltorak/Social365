@@ -42,6 +42,10 @@ export class ReplyComment implements Comment {
         this._commentLikesCount = this._isLiked ? this._commentLikesCount + 1 : this._commentLikesCount - 1;
     }
 
+    set hasReplies(value: boolean) {
+        this._hasReplies = value;
+    }
+
     get commentKey(): ReplyKey {
         return this._commentKey;
     }

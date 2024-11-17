@@ -74,6 +74,7 @@ export class CommentComponent implements OnInit {
     ngOnInit(): void {
         this.currentUser = this.localStorage.getUserProfileFromStorage();
         this.creationDateTime = new Date(this.comment.commentKey.creationDateTime);
+        this.replyComments = SocialPage.emptyPage<ReplyComment, CommentsPagingState>(CommentsPagingState.first(this.PAGE_SIZE));
     }
 
     onLikeComment(): void {
@@ -93,8 +94,8 @@ export class CommentComponent implements OnInit {
         this.areRepliesVisible = true;
 
         this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.comment.commentKey.postId, CommentsPagingState.first(this.PAGE_SIZE))
-            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
+            .getRepliesForComment(this.getProperCommentId(), this.comment.commentKey.postId, this.replyComments.pagingState)
+            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments.concatAndUpdate(replies));
     }
 
     createReplyComment(event: CommentCreateData): void {
@@ -118,13 +119,9 @@ export class CommentComponent implements OnInit {
                     reply.imageUrl = image.fileUrl;
                 }
                 this.replyComments.add(reply);
+                this.comment.hasReplies = true;
+                this.areRepliesVisible = true;
             });
-    }
-
-    loadMoreReplies(): void {
-        this.repliesService
-            .getRepliesForComment(this.getProperCommentId(), this.comment.commentKey.postId, this.replyComments.pagingState)
-            .subscribe((replies: SocialPage<ReplyComment, CommentsPagingState>) => this.replyComments = replies);
     }
 
     deleteComment(): void {

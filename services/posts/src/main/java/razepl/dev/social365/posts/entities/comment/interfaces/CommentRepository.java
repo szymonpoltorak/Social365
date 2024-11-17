@@ -44,4 +44,6 @@ public interface CommentRepository extends CassandraRepository<Comment, CommentK
         deleteCommentById(key.getPostId(), key.getCommentId(), key.getCreationDateTime());
     }
 
+    @Query("select * from comments where post_id = :postId and comment_id = :commentId")
+    Optional<Comment> findByCommentIdAndPostId(@Param(Params.COMMENT_ID) UUID commentId, @Param(Params.POST_ID) UUID postId);
 }

@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import razepl.dev.social365.posts.api.comments.data.CommentResponse;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyAddRequest;
 import razepl.dev.social365.posts.api.comments.replies.data.ReplyEditRequest;
 import razepl.dev.social365.posts.api.comments.replies.interfaces.RepliesService;
 import razepl.dev.social365.posts.clients.images.ImageService;
 import razepl.dev.social365.posts.config.auth.User;
+import razepl.dev.social365.posts.entities.comment.Comment;
 import razepl.dev.social365.posts.entities.comment.interfaces.CommentMapper;
+import razepl.dev.social365.posts.entities.comment.interfaces.CommentRepository;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyComment;
 import razepl.dev.social365.posts.entities.comment.reply.ReplyCommentKey;
 import razepl.dev.social365.posts.entities.comment.reply.data.ReplyKeyResponse;
@@ -31,12 +34,13 @@ import java.util.UUID;
 public class RepliesServiceImpl implements RepliesService {
 
     private final ReplyCommentRepository replyCommentRepository;
+    private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final ImageService imageService;
     private final KafkaProducer kafkaProducer;
 
     @Override
-    public final SocialPage<CommentResponse> getRepliesForComment(String replyToCommentId, String profileId, String postId, PageInfo pageInfo) {
+    public SocialPage<CommentResponse> getRepliesForComment(String replyToCommentId, String profileId, String postId, PageInfo pageInfo) {
         log.info("Getting replies for comment with id: {}, with pageable: {}", replyToCommentId, pageInfo);
 
         Slice<ReplyComment> comments = replyCommentRepository
@@ -48,13 +52,20 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest) {
+    @Transactional
+    public CommentResponse addReplyToComment(User user, ReplyAddRequest commentRequest) {
         log.info("Adding reply to comment with data: {}", commentRequest);
+
+        UUID commentId = UUID.fromString(commentRequest.commentId());
+        UUID postId = UUID.fromString(commentRequest.postId());
+        Comment comment = commentRepository.findByCommentIdAndPostId(commentId, postId).orElseThrow();
+
+        comment.setHasReplies(true);
 
         ReplyCommentKey key = ReplyCommentKey
                 .builder()
-                .postId(UUID.fromString(commentRequest.postId()))
-                .replyToCommentId(UUID.fromString(commentRequest.commentId()))
+                .postId(postId)
+                .replyToCommentId(commentId)
                 .creationDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .replyCommentId(UUID.randomUUID())
                 .build();
@@ -69,6 +80,7 @@ public class RepliesServiceImpl implements RepliesService {
                 .build();
 
         replyComment = replyCommentRepository.save(replyComment);
+        commentRepository.save(comment);
 
         log.info("Added reply : {}", replyComment);
 
@@ -78,7 +90,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse editReplyComment(User user, ReplyEditRequest commentRequest) {
+    public CommentResponse editReplyComment(User user, ReplyEditRequest commentRequest) {
         log.info("Editing reply with data: {}", commentRequest);
 
         ReplyComment replyComment = getReplyComment(commentRequest.replyKey());
@@ -97,7 +109,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse deleteReplyComment(User user, ReplyKeyResponse replyKey) {
+    public CommentResponse deleteReplyComment(User user, ReplyKeyResponse replyKey) {
         log.info("Deleting reply with id: {}", replyKey);
 
         ReplyComment replyComment = getReplyComment(replyKey);
@@ -119,7 +131,7 @@ public class RepliesServiceImpl implements RepliesService {
     }
 
     @Override
-    public final CommentResponse updateLikeCommentCount(User user, ReplyKeyResponse replyKey) {
+    public CommentResponse updateLikeCommentCount(User user, ReplyKeyResponse replyKey) {
         log.info("Updating like count for reply with id: {}", replyKey);
 
         ReplyComment replyComment = getReplyComment(replyKey);

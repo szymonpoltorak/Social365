@@ -1,6 +1,6 @@
 export enum RepliesMappings {
 
-    REPLIES_MAPPING = "/api/v1/comments/replies",
+    REPLIES_MAPPING = "/api/v1/posts/comments/replies",
 
     GET_REPLIES_FOR_COMMENT = REPLIES_MAPPING + "/get",
 

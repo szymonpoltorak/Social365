@@ -10,6 +10,7 @@ import razepl.dev.social365.posts.utils.exceptions.MicroserviceRequestException;
 import razepl.dev.social365.posts.utils.handlers.data.ExceptionResponse;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RestControllerAdvice
@@ -26,7 +27,7 @@ public class PostExceptionHandler {
                 .message(exception.getMessage())
                 .statusCode(exception.getStatusCode().value())
                 .status(exception.getStatusCode().toString())
-                .timeStamp(LocalDateTime.now())
+                .timeStamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .build();
 
         return new ResponseEntity<>(response, exception.getStatusCode());

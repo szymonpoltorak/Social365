@@ -40,6 +40,10 @@ export class SocialPage<T, S extends SocialPagingState<S>> implements Iterable<T
         this._data.push(...element);
     }
 
+    static emptyPage<T, S extends SocialPagingState<S>>(pagingState: S): SocialPage<T, S> {
+        return new SocialPage<T, S>([], pagingState, true);
+    }
+
     static fromJson<T, S extends SocialPagingState<S>>(json: any,
                                                        pagingStateMapper: (jsonProperty: any) => S,
                                                        dataMapper: (jsonProperty: any) => T): SocialPage<T, S> {

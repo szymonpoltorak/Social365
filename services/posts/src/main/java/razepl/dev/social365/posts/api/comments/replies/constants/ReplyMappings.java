@@ -2,7 +2,7 @@ package razepl.dev.social365.posts.api.comments.replies.constants;
 
 public final class ReplyMappings {
 
-    public static final String REPLIES_MAPPING = "/api/v1/comments/replies";
+    public static final String REPLIES_MAPPING = "/api/v1/posts/comments/replies";
 
     public static final String GET_REPLIES_FOR_COMMENT = "/get";
 
