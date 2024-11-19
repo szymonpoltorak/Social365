@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -50,7 +51,7 @@ public class ImagesServiceImpl implements ImagesService {
     public ImageResponse uploadImage(User user, ImageType imageType, MultipartFile image) {
         log.info("Uploading image for user: {}", user);
 
-        String newFilename = String.format("%s_%s", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), image.getOriginalFilename());
+        String newFilename = String.format("%s_%s", UUID.randomUUID(), UUID.randomUUID());
         Path imagePath = Path.of(IMAGE_VOLUME_PATH, user.username(), newFilename);
 
         Image imageEntity = Image

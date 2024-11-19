@@ -4,5 +4,5 @@ import lombok.Builder;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
 @Builder
-public record FriendData(Profile profile, int mutualFriendsCount, boolean isFollowed) {
+public record FriendData(FriendProfile profile, int mutualFriendsCount, boolean isFollowed) {
 }

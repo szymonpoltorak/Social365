@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendFeedResponse;
+import razepl.dev.social365.profile.api.friends.data.FriendProfile;
 import razepl.dev.social365.profile.api.friends.data.FriendResponse;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestionResponse;
@@ -204,11 +205,19 @@ public class ProfileMapperImpl implements ProfileMapper {
 
     @Override
     public final FriendResponse mapFriendDataToFriendResponse(FriendData friendData) {
-        return mapProfileToFriendResponse(
-                friendData.profile(),
-                friendData.mutualFriendsCount(),
-                friendData.isFollowed()
-        );
+        FriendProfile profile = friendData.profile();
+
+        log.info("Friend profile: {}", profile);
+
+        return FriendResponse
+                .builder()
+                .fullName(profile.getFullName())
+                .profilePictureUrl(getProfilePicturePath(profile.profilePictureId()))
+                .profileId(profile.profileId())
+                .numOfMutualFriends(friendData.mutualFriendsCount())
+                .username(profile.email())
+                .isFollowed(friendData.isFollowed())
+                .build();
     }
 
     @Override

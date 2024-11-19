@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import razepl.dev.social365.profile.api.friends.data.FriendData;
 import razepl.dev.social365.profile.api.friends.data.FriendSuggestion;
 import razepl.dev.social365.profile.api.profile.constants.Params;
-import razepl.dev.social365.profile.nodes.about.details.AboutDetails;
-import razepl.dev.social365.profile.nodes.about.workplace.Workplace;
 import razepl.dev.social365.profile.nodes.profile.Profile;
 
 import java.util.Optional;
@@ -118,8 +116,9 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     MATCH (p:Profile)-[:FRIENDS_WITH]-(f:Profile)
                     WHERE p.profileId = $profileId
                     WITH f, EXISTS((f)-[:FOLLOWS]-(p)) as isFollowed
+                    MATCH (f)-[:HAS]->(e:Email)
                     MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
-                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
+                    RETURN f {.*, email: e.emailValue } as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
@@ -136,8 +135,9 @@ public interface ProfileRepository extends Neo4jRepository<Profile, String> {
                     WHERE p.profileId = $profileId
                         and (toLower(f.firstName) contains $pattern or toLower(f.lastName) contains $pattern)
                     WITH f, EXISTS((f)<-[:FOLLOWS]-(p)) as isFollowed
+                    MATCH (f)-[:HAS]->(e:Email)
                     MATCH (p)-[:FRIENDS_WITH]-(f1:Profile)-[:FRIENDS_WITH]-(f)
-                    RETURN f as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
+                    RETURN f {.*, email: e.emailValue } as profile, COUNT(DISTINCT f1) as mutualFriendsCount, isFollowed
                     SKIP $skip LIMIT $limit
                     """,
             countQuery = """
