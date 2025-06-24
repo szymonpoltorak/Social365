@@ -1,0 +1,99 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" version="24.8.3">
+  <diagram name="Page-1" id="xZRTG_FwkdOJTgMBIkSW">
+    <mxGraphModel dx="1805" dy="1151" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="WDBcrYtazgStfnG_qtjG-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=0;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-1" target="WDBcrYtazgStfnG_qtjG-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=0;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-1" target="WDBcrYtazgStfnG_qtjG-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-1" value="Użytkownik" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="410" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=classic;startFill=1;dashed=1;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-4" target="WDBcrYtazgStfnG_qtjG-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-9" value="&amp;lt;&amp;lt;invoke&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WDBcrYtazgStfnG_qtjG-8">
+          <mxGeometry x="-0.0727" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-4" target="WDBcrYtazgStfnG_qtjG-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="335" />
+              <mxPoint x="340" y="265" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-17" value="&amp;lt;&amp;lt;invoke&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WDBcrYtazgStfnG_qtjG-12">
+          <mxGeometry x="-0.0923" y="1" relative="1" as="geometry">
+            <mxPoint y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-4" target="WDBcrYtazgStfnG_qtjG-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="335" />
+              <mxPoint x="340" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-18" value="&amp;lt;&amp;lt;invoke&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WDBcrYtazgStfnG_qtjG-16">
+          <mxGeometry x="0.6129" y="-2" relative="1" as="geometry">
+            <mxPoint x="-27" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-4" value="Wyświetlenie widoku zaproszeń do znajomych" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="300" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" target="WDBcrYtazgStfnG_qtjG-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="279" y="545" as="sourcePoint" />
+            <mxPoint x="389" y="595" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="339" y="545" />
+              <mxPoint x="339" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-20" value="&amp;lt;&amp;lt;invoke&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WDBcrYtazgStfnG_qtjG-14">
+          <mxGeometry x="-0.0444" y="-4" relative="1" as="geometry">
+            <mxPoint x="4" y="3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="WDBcrYtazgStfnG_qtjG-5" target="WDBcrYtazgStfnG_qtjG-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="545" />
+              <mxPoint x="340" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-23" value="&amp;lt;&amp;lt;invoke&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WDBcrYtazgStfnG_qtjG-22">
+          <mxGeometry x="-0.0625" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-5" value="Wyświetlenie widoku propozycji znajomych" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="510" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-10" value="Dodaj użytkownika do znajomych" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="360" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-11" value="Usunięcie zaproszenia do znajomych" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="230" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-13" value="Usunięcie propozycji z listy" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WDBcrYtazgStfnG_qtjG-21" value="Wysłanie zaproszenia do znajomych" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="460" width="140" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
